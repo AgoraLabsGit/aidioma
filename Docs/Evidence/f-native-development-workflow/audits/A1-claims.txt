@@ -1,0 +1,11 @@
+TARGET: Docs/Evidence/f-native-development-workflow/target.json
+LENS: Claims / Proof evidence
+RESULT: FAIL
+CANDIDATE: 8d59dff50cc97c400a738488190197a0989e03268a3e50ac4066bb917f88890e
+BLOCKERS: The candidate contradicts its promised single consistent workflow and relies on incomplete or vacuous proof.
+FINDINGS:
+- `Docs/NOW.md:17-20` says both `/close` and `/phase-close` never publish without a separate request, while `Docs/CLOSE.md:329-330` says an explicitly requested roadmap phase close publishes automatically. This directly contradicts the target’s `target.json:7` claim that publication commands agree.
+- `Docs/NOW.md:5,32-40` says PHASE-004 is closed, but `Docs/NOW.md:80` says it remains active. The validator misses this because `tooling/docs/validate.mjs:341-349` only recognizes F/T rows under a literal `## Active` section.
+- `implementation.md:21-22` claims eight tests and native command-routing coverage, while retained proof `checks/C1-01.json` reports thirteen tests and `package.json:30` runs only docs-tooling and coordinator tests. Command mirrors are checked for existence at `validate.mjs:300-307`, not correct routing.
+- The declared hygiene command at `target.json:39-45` is vacuous for this retained candidate: `candidate-round-1.json` records `files: []`, and candidate commit `9629443…` has the same tree as parent `506be35…`; therefore `git diff --check HEAD^ HEAD` checks no F-006 change.
+REMEDIATION: Reconcile the active instructions and phase state, correct the proof claims, and bind diff hygiene plus command-routing proof to the actual F-006 change from its fixed base commit.

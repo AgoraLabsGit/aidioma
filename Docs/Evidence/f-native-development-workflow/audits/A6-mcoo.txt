@@ -1,0 +1,11 @@
+TARGET: Docs/Evidence/f-native-development-workflow/target.json
+LENS: MCOO
+RESULT: PASS
+CANDIDATE: 6e91371344cb5e469089c993cb2264b06ddb44e7d0257cd600cf40910c59eb0f
+BLOCKERS: none
+FINDINGS:
+- `Docs/NOW.md` was reduced from 189 lines to 32 and now contains only current pointers, authority links, operating rules, and the next-session instruction.
+- `tooling/docs/workflow.mjs:197-218` uses the single canonical phase template instead of maintaining a second hand-built phase format.
+- Unsupported state-changing shortcuts were deleted, leaving the terminal helper limited to logging, spec/phase scaffolding, and read-only status at `workflow.mjs:246-252`.
+- Candidate validation confirms obsolete support trees, generated work state, mutation hooks, packaged extension code, and old skill aliases are absent while native command links remain direct consumers.
+REMEDIATION: none

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "candidate": "8d59dff50cc97c400a738488190197a0989e03268a3e50ac4066bb917f88890e",
+  "commit": "96294439a9d2daf5ac4e2c5bb21af717e7f80456",
+  "tree": "1446a6ad047ee909b3c62e01d2d7e2ae3663a07d",
+  "command": [
+    "npm",
+    "run",
+    "contract:typecheck"
+  ],
+  "started_at": "2026-08-27T15:38:18Z",
+  "finished_at": "2026-08-27T15:38:37Z",
+  "exit_code": 0,
+  "signal": null,
+  "stdout": "\n> aidioma@0.1.0 contract:typecheck\n> npm run typecheck --workspace @aidioma/lesson-schema\n\n\n> @aidioma/lesson-schema@1.0.0 typecheck\n> tsc -p tsconfig.build.json --noEmit\n\n",
+  "stderr": ""
+}

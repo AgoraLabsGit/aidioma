@@ -1,0 +1,11 @@
+TARGET: Docs/Evidence/f-native-development-workflow/target.json
+LENS: MCOO
+RESULT: FAIL
+CANDIDATE: 8d59dff50cc97c400a738488190197a0989e03268a3e50ac4066bb917f88890e
+BLOCKERS: The candidate retains duplicate authorities and avoidable state-changing commands instead of one minimal native workflow.
+FINDINGS:
+- `implementation.md:5-7` calls `Docs/NOW.md` a short handoff, but the scoped candidate retains 189 lines of phase proofs, implementation history, product constraints, commands, and future work at `Docs/NOW.md:24-189`. This duplicates phase, evidence, spec, and backlog authorities and has already produced conflicting PHASE-004 state.
+- The executable phase builder hand-assembles a second phase template at `workflow.mjs:192-247` instead of consuming or parity-checking `Docs/Development/Templates/phase-spec.md`; the two copies have already drifted on `workflow_version`, kickoff instructions, and delivery detail.
+- `workflow.mjs:104-127,257-265` retains `start` and `done` commands that are absent from the supported command set and cannot preserve target/proof authority. They add machinery while making the primary task/fix path less reliable.
+- The candidate removes the obsolete dashboard and generated state successfully, but replaces part of that complexity with a validator that checks command-file presence rather than correspondence and a long NOW projection. This does not reach the promised minimum complete outcome of one authority per concern.
+REMEDIATION: Reduce NOW to current pointers and links, use one canonical phase template or enforce exact parity, and remove unsupported state commands or make them atomically maintain the required target and proof authority.

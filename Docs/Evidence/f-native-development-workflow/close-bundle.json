@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "target": "f-native-development-workflow",
+  "candidate": "6e91371344cb5e469089c993cb2264b06ddb44e7d0257cd600cf40910c59eb0f",
+  "candidate_manifest": "Docs/Evidence/f-native-development-workflow/candidate-round-2.json",
+  "files": [
+    {
+      "role": "audit_results",
+      "path": "Docs/Evidence/f-native-development-workflow/audit-results.json",
+      "bytes": 4097,
+      "sha256": "930c54642f6a315029091de2fa0b123e30652ee69616eeefb3f77855afa65741"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/f-native-development-workflow/audits/A1-claims.txt",
+      "bytes": 1621,
+      "sha256": "aef72040767cb107913f5353373c6199c6e41c0033f37e1dd9993fca3ac5fb98"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/f-native-development-workflow/audits/A2-standards.txt",
+      "bytes": 1878,
+      "sha256": "9ae845efc6159d5d6901020464cfbdaead78aa5c3dc8c869ef87430431ffa634"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/f-native-development-workflow/audits/A3-mcoo.txt",
+      "bytes": 1693,
+      "sha256": "d2b84eb504882abf8b1d1e430d15d7ca6080015cb1b0fc2a8ea6ff11001cfee1"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/f-native-development-workflow/audits/A4-claims.txt",
+      "bytes": 877,
+      "sha256": "1794e31a752ed003414249a1493c5f86df1f3cd214c1bbbfd079d4d38be31bb0"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/f-native-development-workflow/audits/A5-standards.txt",
+      "bytes": 981,
+      "sha256": "7fbbb5c6b9e56a31a6b37d97b11621d1dcf95268ffae881c3b668d4bbff90d4b"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/f-native-development-workflow/audits/A6-mcoo.txt",
+      "bytes": 877,
+      "sha256": "642b9071057eaf2c0e19bd13f4fd7cfe47b85c15ee84ac89226294d41668c71e"
+    },
+    {
+      "role": "history_manifest",
+      "path": "Docs/Evidence/f-native-development-workflow/candidate-round-1.json",
+      "bytes": 1967,
+      "sha256": "0e71d132fd1365e89a2b37362f6bc774450c354a3f040498061ad8c3712666bb"
+    },
+    {
+      "role": "candidate_manifest",
+      "path": "Docs/Evidence/f-native-development-workflow/candidate-round-2.json",
+      "bytes": 1967,
+      "sha256": "771d49fa56fece1ce1670e6babada3aebd87cc109d577ab1a4c68b96469bb99f"
+    },
+    {
+      "role": "check_results",
+      "path": "Docs/Evidence/f-native-development-workflow/check-results.json",
+      "bytes": 4020,
+      "sha256": "b68805c5a82e57153c35d8fbd3ae043783cb595840b33319c068528125238bc5"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/f-native-development-workflow/checks/C1-01.json",
+      "bytes": 3279,
+      "sha256": "933817b5740c37f01e93a70ffb627cf8b3ee4167f769f8b9cc1d82eb3e4de1db"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/f-native-development-workflow/checks/C1-02.json",
+      "bytes": 609,
+      "sha256": "4ec8c6c3b2c6dc647e13970a2ce35ba654b57b34a4437b18729c8ca3d5b9d2df"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/f-native-development-workflow/checks/C1-03.json",
+      "bytes": 3976,
+      "sha256": "bfc3228f4fe0ba0e17a3088e8ec4b31a6c254c46338bf11d680a816e7e592638"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/f-native-development-workflow/checks/C1-04.json",
+      "bytes": 443,
+      "sha256": "794e68d6470f815a2ed2f7e4eab10989f3faba33323f6061185a71e7d9adecdf"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/f-native-development-workflow/checks/C2-01.json",
+      "bytes": 3678,
+      "sha256": "ce4627c7c4ae1dbdd02968ba6cb33f9433c6f1ec632d4eff926b9ff8087dba06"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/f-native-development-workflow/checks/C2-02.json",
+      "bytes": 6270,
+      "sha256": "f8ebfad706bb7a4b3944d867215e81da264d06a2242286480519ae2a259b0317"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/f-native-development-workflow/checks/C2-03.json",
+      "bytes": 609,
+      "sha256": "de9440da99c89270c5041913b13bd9649379c5672c9023b63fda07082dc050c6"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/f-native-development-workflow/checks/C2-04.json",
+      "bytes": 3976,
+      "sha256": "81c15db0a2ead8ab5a22d42227db55253caeab959b1244a499a3e5f0d7059ce8"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/f-native-development-workflow/checks/C2-05.json",
+      "bytes": 478,
+      "sha256": "919666e4831d75e2a9ea5592b5941798f4dc569eb72d632b5a05c839ce85d5d1"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/f-native-development-workflow/checks/C3-01.json",
+      "bytes": 3678,
+      "sha256": "25585a52973e691d09983762177516049a19f115667f1d43e3942a8fc1bd4006"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/f-native-development-workflow/checks/C3-02.json",
+      "bytes": 6271,
+      "sha256": "db7640b324b80a6c5da095d97b7f23f159f8534fd39c85db9c8a4255a58c1134"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/f-native-development-workflow/checks/C3-03.json",
+      "bytes": 609,
+      "sha256": "509c03bd4773404f0dcdf37dfe7f508ed0bb8296d192db5dcd963e15344d1f68"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/f-native-development-workflow/checks/C3-04.json",
+      "bytes": 3976,
+      "sha256": "06f3502b72e353e1ad52ecd24034686ff3cb36039f2010d7dfbbd4cdff18efc2"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/f-native-development-workflow/checks/C3-05.json",
+      "bytes": 478,
+      "sha256": "fcaf871673b8b8a224533d265bee813a3567d38d15079cf1fda8d02500c4e4ab"
+    },
+    {
+      "role": "audit_report",
+      "path": "Docs/Evidence/f-native-development-workflow/close-audits.md",
+      "bytes": 3689,
+      "sha256": "c615875b9e7965db309e047efd88c17e5316b0a00130ff1de3960578f11cfb23"
+    },
+    {
+      "role": "close_record",
+      "path": "Docs/Evidence/f-native-development-workflow/close-record.json",
+      "bytes": 908,
+      "sha256": "c516871e65da112cd3d543c1c1ab109d2264b0e94f0dfdb42c1be89ade3590c5"
+    },
+    {
+      "role": "target_contract",
+      "path": "Docs/Evidence/f-native-development-workflow/target.json",
+      "bytes": 3254,
+      "sha256": "261ce5aa7fee355f3de8092aabb2c28c72b41b53d90d50eb5cde96ca49e6ebbf"
+    }
+  ]
+}

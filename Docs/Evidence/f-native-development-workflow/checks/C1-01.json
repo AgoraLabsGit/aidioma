@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "candidate": "8d59dff50cc97c400a738488190197a0989e03268a3e50ac4066bb917f88890e",
+  "commit": "96294439a9d2daf5ac4e2c5bb21af717e7f80456",
+  "tree": "1446a6ad047ee909b3c62e01d2d7e2ae3663a07d",
+  "command": [
+    "npm",
+    "run",
+    "docs:check"
+  ],
+  "started_at": "2026-08-27T15:38:01Z",
+  "finished_at": "2026-08-27T15:38:18Z",
+  "exit_code": 0,
+  "signal": null,
+  "stdout": "\n> aidioma@0.1.0 docs:check\n> npm run docs:test --silent && node tooling/docs/validate.mjs\n\nTAP version 13\n# Subtest: run skill requires a coordinating phase agent\nok 1 - run skill requires a coordinating phase agent\n  ---\n  duration_ms: 1.408982\n  type: 'test'\n  ...\n# Subtest: phase template kickoff tells the agent to coordinate\nok 2 - phase template kickoff tells the agent to coordinate\n  ---\n  duration_ms: 0.360149\n  type: 'test'\n  ...\n# Subtest: AGENTS.md routes phase /run through the coordinator\nok 3 - AGENTS.md routes phase /run through the coordinator\n  ---\n  duration_ms: 0.269221\n  type: 'test'\n  ...\n# Subtest: frontmatter parser accepts the canonical delimiter shape\nok 4 - frontmatter parser accepts the canonical delimiter shape\n  ---\n  duration_ms: 7.021721\n  type: 'test'\n  ...\n# Subtest: work validation catches duplicate IDs and unfinished done entries\nok 5 - work validation catches duplicate IDs and unfinished done entries\n  ---\n  duration_ms: 0.479255\n  type: 'test'\n  ...\n# Subtest: work validation requires authority for active and promoted work\nok 6 - work validation requires authority for active and promoted work\n  ---\n  duration_ms: 0.266475\n  type: 'test'\n  ...\n# Subtest: workflow-version 2 phase state cannot claim closure without proof authority\nok 7 - workflow-version 2 phase state cannot claim closure without proof authority\n  ---\n  duration_ms: 0.279389\n  type: 'test'\n  ...\n# Subtest: workflow-version 2 active phase cannot carry closed metadata\nok 8 - workflow-version 2 active phase cannot carry closed metadata\n  ---\n  duration_ms: 0.202844\n  type: 'test'\n  ...\n# Subtest: only native workflow-version 2 live phases require target authority\nok 9 - only native workflow-version 2 live phases require target authority\n  ---\n  duration_ms: 0.161552\n  type: 'test'\n  ...\n# Subtest: roadmap index must agree with canonical workflow-version 2 phase state\nok 10 - roadmap index must agree with canonical workflow-version 2 phase state\n  ---\n  duration_ms: 0.524443\n  type: 'test'\n  ...\n# Subtest: log allocates the next kind-specific ID and preserves the register comment\nok 11 - log allocates the next kind-specific ID and preserves the register comment\n  ---\n  duration_ms: 18.611945\n  type: 'test'\n  ...\n# Subtest: spec scaffolding refuses overwrite and creates valid frontmatter\nok 12 - spec scaffolding refuses overwrite and creates valid frontmatter\n  ---\n  duration_ms: 1.789323\n  type: 'test'\n  ...\n# Subtest: phase scaffolding creates one canonical phase and target pair\nok 13 - phase scaffolding creates one canonical phase and target pair\n  ---\n  duration_ms: 2.731456\n  type: 'test'\n  ...\n1..13\n# tests 13\n# suites 0\n# pass 13\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 182.155884\ndocs:check passed\n",
+  "stderr": ""
+}
