@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "id": "PHASE-004",
+  "kind": "phase",
+  "evidence_dir": "Docs/Evidence/phase-004",
+  "risk_tier": 3,
+  "authority": "Docs/Roadmap/Phases/PHASE-004.md",
+  "required_lenses": [
+    "Claims / Proof evidence",
+    "Code quality / Standards",
+    "MCOO",
+    "Seams / Integration",
+    "Security / Privacy",
+    "API / Provider usage",
+    "Product / Learner journey"
+  ],
+  "check_commands": [
+    [
+      "npm",
+      "run",
+      "contract:smoke"
+    ],
+    [
+      "npm",
+      "run",
+      "content:validate"
+    ],
+    [
+      "node",
+      "--import",
+      "tsx",
+      "tooling/content/validate-promoted-journey.ts"
+    ],
+    [
+      "npm",
+      "run",
+      "app:typecheck"
+    ],
+    [
+      "npm",
+      "run",
+      "app:lint"
+    ],
+    [
+      "npm",
+      "run",
+      "app:test"
+    ],
+    [
+      "npm",
+      "run",
+      "prove:journey",
+      "--workspace",
+      "@aidioma/web"
+    ],
+    [
+      "git",
+      "diff",
+      "--check",
+      "HEAD^",
+      "HEAD"
+    ]
+  ],
+  "check_environment": [
+    "AIDIOMA_DB_TARGET",
+    "CLERK_SECRET_KEY",
+    "DATABASE_URL",
+    "EVALUATION_AI_GATEWAY_API_KEY",
+    "PHASE_004_PROOF_CLERK_USER_ID"
+  ],
+  "check_timeout_ms": 900000,
+  "scopes": [
+    "Docs/DECISIONS.md",
+    "Docs/Evidence/phase-004/target.json",
+    "Docs/PRODUCT.md",
+    "Docs/Roadmap/MVP-SEQUENCE.md",
+    "Docs/Roadmap/Phases/PHASE-004.md",
+    "Docs/Specs/Areas/SPEC-A-CONTENT.md",
+    "Docs/Specs/Areas/SPEC-A-LEARNER.md",
+    "Docs/Specs/Areas/SPEC-A-PLATFORM.md",
+    "Docs/Specs/Features/SPEC-F-CONTENT-PIPELINE.md",
+    "Docs/Specs/Features/SPEC-F-CONTEXTUAL-QUESTIONS.md",
+    "Docs/Specs/Features/SPEC-F-LEARNING-LOOP.md",
+    "apps/web/.env.example",
+    "apps/web/drizzle",
+    "apps/web/package.json",
+    "apps/web/src/app/api/practice/evaluate",
+    "apps/web/src/app/api/practice/session",
+    "apps/web/src/app/globals.css",
+    "apps/web/src/app/lessons",
+    "apps/web/src/app/page.test.tsx",
+    "apps/web/src/app/page.tsx",
+    "apps/web/src/app/practice",
+    "apps/web/src/components/home-dashboard.tsx",
+    "apps/web/src/components/learning-workspace.test.tsx",
+    "apps/web/src/components/learning-workspace.tsx",
+    "apps/web/src/components/lesson-catalog.tsx",
+    "apps/web/src/components/lesson-row.tsx",
+    "apps/web/src/components/practice-sets-prototype.test.tsx",
+    "apps/web/src/components/practice-workspace.tsx",
+    "apps/web/src/components/screen-semantics.test.tsx",
+    "apps/web/src/lib/auth",
+    "apps/web/src/lib/contextual-help",
+    "apps/web/src/lib/course.ts",
+    "apps/web/src/lib/db",
+    "apps/web/src/lib/learning-journey",
+    "apps/web/src/lib/practice-serving",
+    "content/placements",
+    "content/promotions",
+    "content/review",
+    "content/units",
+    "packages/lesson-schema",
+    "tooling/content"
+  ]
+}

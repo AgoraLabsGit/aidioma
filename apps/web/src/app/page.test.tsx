@@ -20,7 +20,7 @@ describe("HomePage", () => {
     expect(screen.getAllByText("0")).toHaveLength(3);
     expect(screen.getByText("0 due")).toBeInTheDocument();
     expect(
-      screen.getByText("Lesson 1 · Hola: greetings and introducing yourself"),
+      screen.getByText("Lesson 1 · Living here"),
     ).toBeInTheDocument();
     expect(
       screen.getByText("No weak areas yet", { exact: true }),

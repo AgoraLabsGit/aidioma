@@ -62,3 +62,15 @@ Date: 2026-08-24 · Phase: PHASE-001 · Affects: [SPEC-F-CONTENT-PIPELINE, SPEC-
 Chose: Structure and internally release content level by level, but market the complete beginner-through-advanced path only after A1–C1 coverage, dialect, answer, and review gates pass.
 Why: The pipeline should make scale repeatable, but generation volume does not substitute for curriculum coherence or trustworthy grading.
 Revisit if: The market proposition intentionally changes to a narrower level-specific product.
+
+## D-024 — Real providers at first consumer
+Date: 2026-08-25 · Phase: PHASE-003 · Affects: [SPEC-A-PLATFORM, SPEC-F-LEARNING-LOOP, SPEC-A-LEARNER]
+Chose: Wire Clerk identity, Neon development Postgres, and Vercel AI Gateway as soon as a learner journey writes, resumes, or grades. Do not defer first integration to market readiness. In-memory repositories, Clerk keyless mode, and synthetic learner IDs are tests or explicit local opt-in only.
+Why: Durable progress, evaluation, and resume are the product; a second fake stack would be rebuilt after content volume. Production hardening (least-privilege roles, CSP, onboarding telemetry) still belongs to Phase 9.
+Revisit if: A provider is unavailable and a time-boxed local opt-in is the only way to keep the learner loop moving.
+
+## D-025 — Contextual open questions are core; an unrestricted tutor is not
+Date: 2026-08-25 · Phase: PHASE-004 · Affects: [SPEC-F-CONTEXTUAL-QUESTIONS, SPEC-F-LEARNING-LOOP, SPEC-A-LEARNER, SPEC-A-CONTENT, SPEC-A-PLATFORM]
+Chose: Let an authenticated learner use Ask AIdioma from the active lesson, cue, or feedback card. AI Gateway receives only bounded promoted context, relevant recent feedback, learner level, and the active Spanish profile. Its visibly generated answer may explain or illustrate the topic but cannot grade, add accepted answers, unlock content, or change serving. A question before a scored answer marks that attempt assisted so it cannot increase mastery; a direct request for the answer reveals only the next authored hint. Retain the exchange with the learner's session for resume while excluding raw question text from logs, proof, analytics, and curriculum promotion. Redirect unrelated questions instead of opening an unrestricted tutor mode.
+Why: Immediate questions turn a fixed teaching sequence into responsive learning without giving the model control over curriculum, assessment, or progression. Keeping the feature inside the shared workspace preserves one learner journey and makes its authority, assistance, and privacy boundaries testable.
+Revisit if: Learner evidence shows that the context boundary blocks useful language questions, or privacy requirements call for shorter session retention.

@@ -5,6 +5,8 @@ import {
   pendingMigrations,
   type Migration,
 } from "./migrations";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 const migrations: Migration[] = [
   { name: "0000_first.sql", checksum: "aaa", statements: ["SELECT 1"] },
@@ -69,5 +71,15 @@ describe("lesson ordinal drift assertion", () => {
     expect(() => assertDeferredLessonOrdinalConstraint([correct, correct])).toThrow(
       /Database drift/,
     );
+  });
+});
+
+describe("Practice state migration", () => {
+  it("makes answer evidence idempotent and keeps mastery undirected", () => {
+    const sql = readFileSync(resolve(process.cwd(), "drizzle/0002_practice_state.sql"), "utf8");
+    expect(sql).toContain('"practice_attempts_session_offer_unique"');
+    expect(sql).toContain('"learner_item_states_identity_unique"');
+    expect(sql).toContain('"saved_practice_items_identity_unique"');
+    expect(sql).not.toMatch(/"direction"/i);
   });
 });
