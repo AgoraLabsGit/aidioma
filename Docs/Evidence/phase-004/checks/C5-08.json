@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "candidate": "c21a27af3be2aa232595624356899f81e216160437b60d7b42763804647ea05a",
+  "commit": "52f37c1ee1793df7e0f6a5982d1109524aa2709e",
+  "tree": "6446ad2ea5accfc10fe6cf19e86b2a07aa3cef5b",
+  "command": [
+    "git",
+    "diff",
+    "--check",
+    "HEAD^",
+    "HEAD"
+  ],
+  "started_at": "2026-08-26T15:17:47Z",
+  "finished_at": "2026-08-26T15:18:04Z",
+  "exit_code": 2,
+  "signal": null,
+  "stdout": "apps/web/src/lib/learning-journey/in-memory-lesson-repository.ts:57: new blank line at EOF.\napps/web/src/lib/learning-journey/lesson-api-contract.ts:96: new blank line at EOF.\napps/web/src/lib/learning-journey/promoted-lesson.ts:118: new blank line at EOF.\napps/web/src/lib/learning-journey/prove-journey.ts:186: new blank line at EOF.\n",
+  "stderr": ""
+}

@@ -3,7 +3,7 @@ id: PHASE-004
 title: "Complete lesson and collection journeys"
 type: build
 proof_kind: visual
-state: active
+state: closed
 order: 4
 depends_on:
   - "PHASE-003"
@@ -40,8 +40,8 @@ context_paths:
   - "content/promotions/**"
   - "packages/lesson-schema/**"
 opened: 2026-08-25
-closed: null
-lessons: null
+closed: 2026-08-26
+lessons: "The frozen Phase 4 contract closed after a bounded creation-race identity guard; unrelated winners now conflict without termination, while same-source stale replacement remains."
 ---
 
 # PHASE-004 — Complete lesson and collection journeys

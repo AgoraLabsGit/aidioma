@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "candidate": "f0896ecece5ffa6fbfe91fca3ea6f25de4852d2ac1023a47a0df7b4f8de72c1d",
+  "commit": "25dbdf95478b5ae20ff2d8ea4237c349455a5333",
+  "tree": "b3313e473f9584f492eea5d2819dad42ac41b769",
+  "command": [
+    "node",
+    "--import",
+    "tsx",
+    "tooling/content/validate-promoted-journey.ts"
+  ],
+  "started_at": "2026-08-26T15:19:24Z",
+  "finished_at": "2026-08-26T15:19:45Z",
+  "exit_code": 0,
+  "signal": null,
+  "stdout": "Promoted journey content valid: placement.a1.you-live-here@1\n",
+  "stderr": ""
+}

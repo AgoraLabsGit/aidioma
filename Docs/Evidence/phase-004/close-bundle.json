@@ -1,0 +1,668 @@
+{
+  "version": 1,
+  "target": "phase-004",
+  "candidate": "edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7",
+  "candidate_manifest": "Docs/Evidence/phase-004/candidate-round-10.json",
+  "files": [
+    {
+      "role": "artifact",
+      "path": "Docs/Evidence/phase-004/01-signed-in-lesson-start.png",
+      "bytes": 49385,
+      "sha256": "3951d1914418480b9b257dffcda746780e81a9fff2c1fc7084b5e7e2614a483e"
+    },
+    {
+      "role": "artifact",
+      "path": "Docs/Evidence/phase-004/02-authored-hint-and-contextual-help.png",
+      "bytes": 59007,
+      "sha256": "8fa0232fd54de6ac28b462736741fd99cc09d87f12a419634f2ed3c28f974299"
+    },
+    {
+      "role": "artifact",
+      "path": "Docs/Evidence/phase-004/03-reload-retains-question.png",
+      "bytes": 57141,
+      "sha256": "7e96ea145de892eb39494f24b4fa037b7b36b98050aa1e27ee086c46dfd649bf"
+    },
+    {
+      "role": "artifact",
+      "path": "Docs/Evidence/phase-004/04-miss-and-correction.png",
+      "bytes": 82515,
+      "sha256": "0dc3443f071fa8dd3d4c8ce0ad47ef850d63fc0cfa68e7f1c228574b49b3cb1a"
+    },
+    {
+      "role": "artifact",
+      "path": "Docs/Evidence/phase-004/05-completion-unlocks-recommendation.png",
+      "bytes": 47841,
+      "sha256": "307ae03f4cb80e06e11c511bdf542343a583da4f34d037850dc068072a377f38"
+    },
+    {
+      "role": "artifact",
+      "path": "Docs/Evidence/phase-004/06-recommended-review.png",
+      "bytes": 26529,
+      "sha256": "970ef8038b8a4fb568c9402900044186570634ce80776cc8e1ed3d4f8ba22660"
+    },
+    {
+      "role": "audit_results",
+      "path": "Docs/Evidence/phase-004/audit-results.json",
+      "bytes": 11096,
+      "sha256": "da0a5f43d61e6288a1d8ebca527c63037b78af0ccdb92af071f0896b3bc9a78a"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A1-claims.txt",
+      "bytes": 3376,
+      "sha256": "7af527db615a6ee6a232b17511dea715511b743e2a85b5261792aa75dc66a74f"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A10-mcoo.txt",
+      "bytes": 3282,
+      "sha256": "ee3aac20d6a130a4baaf2bfe50fe8387fdf544b01118ccf6aaabc10ec7a3cbb6"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A11-standards.txt",
+      "bytes": 3240,
+      "sha256": "adb1f4a64327db7977557c839fcce9adebe4ca000ee6b947362614c8b695025c"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A12-claims.txt",
+      "bytes": 2228,
+      "sha256": "67e6f2028e7496cc49a51c7f819692aeb391017aa2dd9298344431698f844f29"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A13-standards.txt",
+      "bytes": 1708,
+      "sha256": "e2c337df792f0f183c6789eb2166ead8da388d3b3a557cddaffa6013f2b96bb6"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A14-mcoo.txt",
+      "bytes": 1925,
+      "sha256": "fc6c93e2543f69c759b9d8af943ebdcbe3b2ed1e721777080331805f71eae3e8"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A15-seams.txt",
+      "bytes": 1589,
+      "sha256": "68ef59482d65c7ec5c709db83dc96bd6b5cdb71630b382d47b03e97e3aa63714"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A16-security.txt",
+      "bytes": 1841,
+      "sha256": "ffb9c19e163c640c6cf4e4d8f103d7ed6cce64f3ce3e059f90b528d29854369a"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A17-provider.txt",
+      "bytes": 1948,
+      "sha256": "f4b6192d6802fe4d5792502f81d842f18fab4dd8fe224f9a511c833bebc0bf17"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A18-product.txt",
+      "bytes": 1937,
+      "sha256": "82eb43bfe7f0d96ed9a95b07413899de45334f029c34b20321cbb5667214c12d"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A2-standards.txt",
+      "bytes": 3906,
+      "sha256": "9adee8f1bf96744cb14d534767b17e3d69811d0918f6c47a658415eef3031a9d"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A3-mcoo.txt",
+      "bytes": 2220,
+      "sha256": "99d5aefea97c664f7bcd773d31e1664565661128cbeca176b26db02512d8a421"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A4-standards.txt",
+      "bytes": 2713,
+      "sha256": "96766cea27e3b7fe5035bb9acc12eb7c45f9a4371cc72a1688bc4ccd259b9e83"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A5-mcoo.txt",
+      "bytes": 2631,
+      "sha256": "c4dea3da0922cdd95c6238b7c8b3e6f9ad2788a49ddd958715e1780e7eac9ebb"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A6-seams.txt",
+      "bytes": 3253,
+      "sha256": "1cfec21800c9d6dda21785e47779d340e48e3b220edfe8e08250b056e832b65e"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A7-claims.txt",
+      "bytes": 2584,
+      "sha256": "5041569f5a0c3169aa5c96d57f5c9b12dc7be82eea4d6ed3717230f2d3e4b00f"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A8-seams.txt",
+      "bytes": 3223,
+      "sha256": "8979a1374c74813597ed6e55bd8098e9579ca8a5d2f622c95d8aa5eff5e33827"
+    },
+    {
+      "role": "audit_response",
+      "path": "Docs/Evidence/phase-004/audits/A9-standards.txt",
+      "bytes": 3940,
+      "sha256": "c03a9da41b836d449be60db6a246096bf39161f66b9e7fb3c61c27293662204b"
+    },
+    {
+      "role": "artifact",
+      "path": "Docs/Evidence/phase-004/browser-journey.md",
+      "bytes": 2445,
+      "sha256": "837825468aa791156f074fb7cc6eb08c5eafca443f0461e4576dc7d3d08d2b03"
+    },
+    {
+      "role": "history_manifest",
+      "path": "Docs/Evidence/phase-004/candidate-round-1.json",
+      "bytes": 14177,
+      "sha256": "60c175200b42722e800ad1ad928582df831a55eff20b4412c0f96992eaf81199"
+    },
+    {
+      "role": "candidate_manifest",
+      "path": "Docs/Evidence/phase-004/candidate-round-10.json",
+      "bytes": 16712,
+      "sha256": "1922c951c60a8399e0879f40cb4ca7dbc0cb25bfed94362e1ab432a119f5048c"
+    },
+    {
+      "role": "history_manifest",
+      "path": "Docs/Evidence/phase-004/candidate-round-3.json",
+      "bytes": 15476,
+      "sha256": "4ac446608523493b44de3a7461b9f476cc29c9f209afaa6013cc821f193109a3"
+    },
+    {
+      "role": "history_manifest",
+      "path": "Docs/Evidence/phase-004/candidate-round-4.json",
+      "bytes": 15476,
+      "sha256": "791d5cf894de0ce7a80436a236cb1c29425996d82242e6368965d06990d53b92"
+    },
+    {
+      "role": "history_manifest",
+      "path": "Docs/Evidence/phase-004/candidate-round-5.json",
+      "bytes": 15476,
+      "sha256": "e08c1c99f1c238b78b1be607d1a5845b6833c8ade7d7a826374df030e0efb5f0"
+    },
+    {
+      "role": "history_manifest",
+      "path": "Docs/Evidence/phase-004/candidate-round-6.json",
+      "bytes": 15476,
+      "sha256": "56cd87379a1e45575d5f35853f29571fd159d3668175272b80e00e1cbc218157"
+    },
+    {
+      "role": "history_manifest",
+      "path": "Docs/Evidence/phase-004/candidate-round-7.json",
+      "bytes": 15476,
+      "sha256": "1af3627a710028cbd26018c410f2126d1aeba88a527fec463da64fc923de902e"
+    },
+    {
+      "role": "history_manifest",
+      "path": "Docs/Evidence/phase-004/candidate-round-8.json",
+      "bytes": 15476,
+      "sha256": "bc8749c60a1ce79627c8833de7551a08a5ef3fca94d2471d7919724b36b5ab8c"
+    },
+    {
+      "role": "history_manifest",
+      "path": "Docs/Evidence/phase-004/candidate-round-9.json",
+      "bytes": 16712,
+      "sha256": "7921cabfc1d82859581c7ad5751536ef75a6fdab5d3b5f48a948c952f0ac7ce5"
+    },
+    {
+      "role": "check_results",
+      "path": "Docs/Evidence/phase-004/check-results.json",
+      "bytes": 17010,
+      "sha256": "699e15cfa4be7e07cb9bdf736524ec62c170034d5636a1515f5525848abece40"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C10-01.json",
+      "bytes": 1357,
+      "sha256": "8dc9acdf5ec8efaed71d31b55aade7b47560416732c6e84b65bc83457cad9df0"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C10-02.json",
+      "bytes": 1825,
+      "sha256": "bd0d2d0e4ba625c0087e6fd8df5e011aa86237294a15fcdcef776372f5835433"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C10-03.json",
+      "bytes": 533,
+      "sha256": "9bf50133136dabde0701d0ede9673d0a4ac0f9eebcf7690d69f5d320e1268e1c"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C10-04.json",
+      "bytes": 863,
+      "sha256": "30ed48b904fb59866c0b91379d005e9807098384cbc0bee185d264b547324b9c"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C10-05.json",
+      "bytes": 774,
+      "sha256": "05cd96264f9aafab6e1250dea286f387796fa392e07f80c55e87d721dfa7b5d8"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C10-06.json",
+      "bytes": 4636,
+      "sha256": "a2e103c1ad51c577f01de4ecba9ab11efff40485d2bb2ad04bd7f9fd44fca8dc"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C10-07.json",
+      "bytes": 2288,
+      "sha256": "7e49fde2db50c09021eb5f9a764485fd73d8b9f47fc4942b0af71994516a13ae"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C11-01.json",
+      "bytes": 1357,
+      "sha256": "f7c6d2a568c2fa4342f4877c765d965a9c5d2c8e41582f191e7c963bfe84d2cc"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C11-02.json",
+      "bytes": 1825,
+      "sha256": "aa41da638f7f372e6c8caf977ce766802c8e77ddb3945d56e38d373f9784669b"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C11-03.json",
+      "bytes": 533,
+      "sha256": "8185caed35693d85e70f6c900ecd076092697fda05292983aaa018eaa8c43e5a"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C11-04.json",
+      "bytes": 863,
+      "sha256": "d95362a951122b62b3583c70226158b59640af69bc00ef33bfec9fdc0c0ac00d"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C11-05.json",
+      "bytes": 774,
+      "sha256": "d26d202f3589d31881468cefe5e7773ac0e41d5d26ecfc9f24a1c9d58c7d5472"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C11-06.json",
+      "bytes": 4584,
+      "sha256": "c263b2ade48ba7d110c7a9c5d8a3554604a1b159ac92e2c2bfd4b0fba314ce14"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C11-07.json",
+      "bytes": 1022,
+      "sha256": "7772f145433223dfc1532c8e1353af969cc6a418f1bffd4d7a1fc6b0d143a70e"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C11-08.json",
+      "bytes": 443,
+      "sha256": "9a089f218f03a99bf454a76285d08fc8e1be034f0cd8430e7dd6f53da954b466"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C2-01.json",
+      "bytes": 1357,
+      "sha256": "da117afbd941d45a15e2d33c0073edcf1e2350f9b39855515626c63ec2af41cd"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C2-02.json",
+      "bytes": 1825,
+      "sha256": "548a896c1040daa1b8acf09f933f7188db294438506454267d97b7d4804c71db"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C2-03.json",
+      "bytes": 4377,
+      "sha256": "8b04007d57c18ace04a00f458261ab3362a1fdcb998902f846be62f6524f2e8d"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C3-01.json",
+      "bytes": 1357,
+      "sha256": "9a0c3998e060882b469a81fa54d78d81773832b3cc9b23f4c095d0db7b14b5dc"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C3-02.json",
+      "bytes": 1825,
+      "sha256": "2e1eb37394bfb51d9f2d2feedf12a7530769d6d28d2c90aaf80a2ff58cc29034"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C3-03.json",
+      "bytes": 2133,
+      "sha256": "88e69ceca067700b66bec9369d4af52275d4cccdef2cfc5084888ad9bfa2a8c0"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C4-01.json",
+      "bytes": 1357,
+      "sha256": "964eb6d63d3b4b2c2dc486b8362797f6cdaa8cf524b8bf36bdd393fa678548f9"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C4-02.json",
+      "bytes": 1825,
+      "sha256": "27bb464014349ae8095c7bf04fe9bfa3f7e4c67620ff31664f734003b01a415d"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C4-03.json",
+      "bytes": 533,
+      "sha256": "18c7c7d1cc1f86d1f61ba1d7ef12aa1188d436b3919cdff9b32a93dfb7817bc6"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C4-04.json",
+      "bytes": 863,
+      "sha256": "519c7680b30eefe218946c815f765069d132c46f7b6bf2097f46ed245a9b0130"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C4-05.json",
+      "bytes": 774,
+      "sha256": "7880fe7e15623d3f28de5b8e0553d84177373198bfa43770dfd49902d7a128e2"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C4-06.json",
+      "bytes": 4880,
+      "sha256": "0d59d9b8b4fe5e98e70eb69d209559eb9f5771919e5970a449192837f43e8de0"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C4-07.json",
+      "bytes": 2853,
+      "sha256": "c5a6c377b537660d5578d640e527e997ccc911dffa835c850408486fb0e17f04"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C5-01.json",
+      "bytes": 1357,
+      "sha256": "5e1de7ca0a98ac457da27a9751d309f3835106c1291cdcf2d0e873a0c61acb65"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C5-02.json",
+      "bytes": 1825,
+      "sha256": "d8f0c39f62c0471fcce17e5774e51899f7bc6a2c61f4414be4b58ed557fa8d92"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C5-03.json",
+      "bytes": 533,
+      "sha256": "060a6235db0d73e924671083750f87647100a1324544477e4b754ef319fdf3bc"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C5-04.json",
+      "bytes": 863,
+      "sha256": "fce5dd081a4b672be93ffba42e412384b0c6eb3cf096ba83ceb4825506b1a549"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C5-05.json",
+      "bytes": 774,
+      "sha256": "3672b08c5b9e76297e7b0816e7848c351e61f64bb7ad45dfe1cf209c08f89855"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C5-06.json",
+      "bytes": 4981,
+      "sha256": "67f57a74c631020406ebf71597d4e6f57dacd643b3c26896814a4ced1beb0199"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C5-07.json",
+      "bytes": 1022,
+      "sha256": "670dd9abe0e7d256e2c505ded2365bb074afd585656818f50275c88c625b9c48"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C5-08.json",
+      "bytes": 783,
+      "sha256": "d8d2609ef0b52fc7ed62ab9b1e451d3ffbc11e89d417dcb138934525af78c648"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C6-01.json",
+      "bytes": 1357,
+      "sha256": "28683af5b2bca4ef62f282f6a51dc24f5747460f42d4b50202ea4ef0403060c6"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C6-02.json",
+      "bytes": 1825,
+      "sha256": "c7f420938141d2fa94922f7d74a70814840ddbf1ed218b2be52ee823aa6493e9"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C6-03.json",
+      "bytes": 533,
+      "sha256": "652a365b3658e33f38a8bd01e559efac8f9e5dc7e3e9a7093fe2ac96db7d31b6"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C6-04.json",
+      "bytes": 863,
+      "sha256": "28c8b7e5574d25701592c0bcf244495393114acd06d71193f9fb30882c3e6d23"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C6-05.json",
+      "bytes": 774,
+      "sha256": "152be6ed80e836a37643f1add7033e59a9d9518ea9cdcd70c399ac6af42f9ed3"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C6-06.json",
+      "bytes": 5041,
+      "sha256": "fcf82996dc2312483d540dbe954cc66f437359dbe8be0eaad905e4b2d719292d"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C6-07.json",
+      "bytes": 1022,
+      "sha256": "a8b206f7e3c418878cf9570aa3707b5c72abcb86f8f89e9ce62e5c6e3622ef94"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C6-08.json",
+      "bytes": 443,
+      "sha256": "03a60944802b94935beedf7439e7d32c6313ed338efcc3c7b43fab8bcca77e6c"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C7-01.json",
+      "bytes": 1357,
+      "sha256": "fe5889cd03d6aff9aca5784d4c3429a59ee7ab12fbcb7ce1d5ac9ba7400f4e68"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C7-02.json",
+      "bytes": 1825,
+      "sha256": "035504adf6748dfca86906483e76058eb44ba8d23411f73ae4f7837cafcaecd3"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C7-03.json",
+      "bytes": 533,
+      "sha256": "38f317fc5454204c49b7c8db6568501401e350af908c72c278c0f602ae789373"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C7-04.json",
+      "bytes": 863,
+      "sha256": "5157be32cc350491d5c8cec63e0c24b31c00a3fbaa42e972f3bec9b08ff49fb6"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C7-05.json",
+      "bytes": 774,
+      "sha256": "68c6f99cee91a3778ebf4e13c90b823a7b6daefde14c25e671a00be9ddd95edb"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C7-06.json",
+      "bytes": 5066,
+      "sha256": "bf7a24b2d3659ca6c658395f0df598e824bd5ad64bd8b427846b8a0e9eac95fc"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C7-07.json",
+      "bytes": 1022,
+      "sha256": "6547231f7ec2bca9928196e30762868a7399b8ee3aaf9751008252fe47788edc"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C7-08.json",
+      "bytes": 443,
+      "sha256": "7ee29b6208f8764523662df4dc471e33701981c3875fe02062ddcc32c7d716c4"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C8-01.json",
+      "bytes": 1357,
+      "sha256": "54dcfe786a855f62a7e2944df473d5c96001b01381ab8f79518aca28a9608964"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C8-02.json",
+      "bytes": 1825,
+      "sha256": "4d2e2d1f16a52d6e678e98e9c2cee0fc3676ed764705e176a1802dc42abf176e"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C8-03.json",
+      "bytes": 533,
+      "sha256": "e2370396a860f735501d2459b9400274029fd022d3288b793156ff8a7ec480ee"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C8-04.json",
+      "bytes": 863,
+      "sha256": "edc342d250b600de1eb98d8a4ad3b3768731add410e315551c58a276c7d4db33"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C8-05.json",
+      "bytes": 774,
+      "sha256": "909e98020a27c4958eb03ef8d0a927d0705ce415f1ebb1219f256151bfc918a7"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C8-06.json",
+      "bytes": 4786,
+      "sha256": "c19a6d3819aa07d5483fbd069458d7aec4705514a827f8d04a6f607eb59fb1f4"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C8-07.json",
+      "bytes": 1022,
+      "sha256": "a3afdc1bb7d393b670e8e8c5dc296d7779100f48f3ecdae6bbf42625327f36af"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C8-08.json",
+      "bytes": 443,
+      "sha256": "ba98d5dfcafc569f17815ee1788f46d9702de698faaecbe26f238859bd0c555c"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C9-01.json",
+      "bytes": 1357,
+      "sha256": "2dd21a2377279b29fc080834ed78db8e08298853493d1f9651a95b10a822bc5a"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C9-02.json",
+      "bytes": 1825,
+      "sha256": "620d74df3b2db1e7ca48d872691bbe2877568f458ac1e0474e15bfb2211d25f0"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C9-03.json",
+      "bytes": 533,
+      "sha256": "8d6a0a4d19e27972874f2e7f9f852b142851bd6586baaf901c5422038288ff1e"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C9-04.json",
+      "bytes": 863,
+      "sha256": "04954563638f7a121b6183a41e4aa3b9ccce06028ae454e203ea8c24eb55f27d"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C9-05.json",
+      "bytes": 774,
+      "sha256": "e9caddde0303a38cf693f8f9b62d667a78696b6342054da17da38f1b5672e1c1"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C9-06.json",
+      "bytes": 4665,
+      "sha256": "eeb0c1c484aadacc7d7d4afbe96711c9e9803c3e55a7c1b9c9cbdf839c0d4a72"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C9-07.json",
+      "bytes": 1022,
+      "sha256": "691702cf8c2ef580face487463af9a0ab93b44157537ec5f3c77a6f900ca0f98"
+    },
+    {
+      "role": "check_proof",
+      "path": "Docs/Evidence/phase-004/checks/C9-08.json",
+      "bytes": 443,
+      "sha256": "b544d2ffb7128188ffee73d11c1de29aa9aa2d725c819cadf5a57780b2fe59e9"
+    },
+    {
+      "role": "audit_report",
+      "path": "Docs/Evidence/phase-004/close-audits.md",
+      "bytes": 13519,
+      "sha256": "f2fccdd21d0ef3d6c93ca31a98149e470c3e5349ed19097ae5be4701f0088589"
+    },
+    {
+      "role": "close_record",
+      "path": "Docs/Evidence/phase-004/close-record.json",
+      "bytes": 630,
+      "sha256": "5ad25b78d6bab47edbc3f8bb284f39d255aa870168d128abee55282d4f57fa60"
+    },
+    {
+      "role": "artifact",
+      "path": "Docs/Evidence/phase-004/history/C1-01.json",
+      "bytes": 2239,
+      "sha256": "a61d3ea51f911d9e470d9b5ce70d82cfa9b5000efc16835e303aa4d01b3d568a"
+    },
+    {
+      "role": "artifact",
+      "path": "Docs/Evidence/phase-004/implementation.md",
+      "bytes": 2890,
+      "sha256": "cc13cea838bd14ee259e7bc600b6eaf0609ec9b4846e723645bbfdd4cbbdf5a8"
+    },
+    {
+      "role": "target_contract",
+      "path": "Docs/Evidence/phase-004/target.json",
+      "bytes": 2830,
+      "sha256": "17b24fb0fb104fa809b856c4f002ba42d81fe0c52ffd5f6bc2397d7948789f61"
+    },
+    {
+      "role": "phase_authority",
+      "path": "Docs/Roadmap/Phases/PHASE-004.md",
+      "bytes": 8094,
+      "sha256": "2404b19530a65ff779c7c977347dd42723b3c91ad38f665f8c1d21abbf6cd37e"
+    }
+  ]
+}

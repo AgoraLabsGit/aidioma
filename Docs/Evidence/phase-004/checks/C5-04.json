@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "candidate": "c21a27af3be2aa232595624356899f81e216160437b60d7b42763804647ea05a",
+  "commit": "52f37c1ee1793df7e0f6a5982d1109524aa2709e",
+  "tree": "6446ad2ea5accfc10fe6cf19e86b2a07aa3cef5b",
+  "command": [
+    "npm",
+    "run",
+    "app:typecheck"
+  ],
+  "started_at": "2026-08-26T15:15:05Z",
+  "finished_at": "2026-08-26T15:15:35Z",
+  "exit_code": 0,
+  "signal": null,
+  "stdout": "\n> aidioma@0.1.0 app:typecheck\n> npm run typecheck --workspace @aidioma/web\n\n\n> @aidioma/web@0.1.0 pretypecheck\n> npm run contract:build\n\n\n> @aidioma/web@0.1.0 contract:build\n> npm run build --workspace @aidioma/lesson-schema\n\n\n> @aidioma/lesson-schema@1.0.0 build\n> tsc -p tsconfig.build.json\n\n\n> @aidioma/web@0.1.0 typecheck\n> next typegen && tsc --noEmit\n\nGenerating route types...\n✓ Types generated successfully\n",
+  "stderr": ""
+}

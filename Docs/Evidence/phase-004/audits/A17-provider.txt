@@ -1,0 +1,11 @@
+TARGET: Docs/Evidence/phase-004/target.json
+LENS: API / Provider usage
+RESULT: PASS
+CANDIDATE: edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7
+BLOCKERS: none
+FINDINGS:
+- Immutable binding verified before and after: `candidate-round-10.json:3-4,553-555` recomputes to the declared candidate; its ref resolves to commit `1c035d790a80c8c04c41dc21df1fdb66e1901860`, tree `b940bd38bb18a5625e94dbb124c758c79ac132cd`, with every manifest file object matching.
+- `apps/web/src/lib/practice-serving/database-session-repository.ts:49-71` returns the concurrent resumable winner after a uniqueness race; `session-service.ts:100-107,265-285` verifies learner, profile, source kind, and source ID after both creation returns. Unrelated winners fail with `session_conflict` before termination, while only a matching stale source reaches replacement. `session-service.test.ts:330-366` is the single regression proving an unrelated collection remains active and is never served.
+- `apps/web/src/app/api/practice/session/route.ts:30-41,87-91,141-165`, `apps/web/src/lib/db/index.ts:19-31`, and `apps/web/.env.example:1-23` keep product writes on Clerk identity, durable Neon, and the explicit Gateway credential; missing provider configuration fails closed. Development targeting is declared and enforced in `apps/web/src/lib/db/safety.ts:29-60`.
+- `apps/web/src/lib/contextual-help/gateway-provider.ts:197-264`, `contextual-answerer.ts:15-64`, and `lesson-service.ts:194-278` use the explicit credential, bounded/allowlisted request, timeout and cancellation, sanitized provider failures, and no progress mutation on failure. `checks/C10-07.json:3-18` retains the same-candidate fail-closed provider attempt; `checks/C11-07.json:3-18` retains the subsequent same-candidate successful development-Neon/Gateway journey with redacted identity, two attempts, one contextual exchange, two unlocked collections, and retained position.
+REMEDIATION: none

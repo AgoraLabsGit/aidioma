@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "target": "PHASE-004",
+  "candidate": "edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7",
+  "final_check": "PASS",
+  "gates": {
+    "Claims / Proof evidence": "PASS",
+    "Code quality / Standards": "PASS",
+    "MCOO": "PASS",
+    "Seams / Integration": "PASS",
+    "Security / Privacy": "PASS",
+    "API / Provider usage": "PASS",
+    "Product / Learner journey": "PASS"
+  },
+  "accepted_warnings": [],
+  "authority_comparison": "PASS",
+  "report": "Docs/Evidence/phase-004/close-audits.md",
+  "bundle": "Docs/Evidence/phase-004/close-bundle.json",
+  "publication_at_close": "not_requested"
+}

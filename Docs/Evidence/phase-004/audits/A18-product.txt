@@ -1,0 +1,11 @@
+TARGET: Docs/Evidence/phase-004/target.json
+LENS: Product / Learner journey
+RESULT: PASS
+CANDIDATE: edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7
+BLOCKERS: none
+FINDINGS:
+- Immutable tree `Docs/Roadmap/Phases/PHASE-004.md:12-19,61-65` bounds the promise to one representative A1 lesson-to-review path. `candidate-round-9.json:57-82` and `candidate-round-10.json:57-82` retain identical target and authority blobs, so the repair did not expand the learner contract.
+- Immutable tree `apps/web/src/components/learning-workspace.tsx:158-227,286-315,329-374` implements reload/resume, contextual questions, authored hints, typed answers, completion, unlock presentation, and recommended-review launch. `apps/web/src/components/learning-workspace.test.tsx:151-198` verifies restored explanation, miss/correction, both collection unlocks, reason copy, and recommendation handoff.
+- Evidence `Docs/Evidence/phase-004/browser-journey.md:8-24,34-41` retains six hash-matched, identity-free captures showing signed-in lesson start through the same-profile recommended Practice collection. `checks/C11-06.json:3-15` records 38 files/269 tests passing, and `checks/C11-07.json:3-18` records the real journey with two attempts, one contextual exchange, two collections, and retained position. All eight unchanged commands are candidate-bound and exit zero in `checks/C11-01.json:3-14` through `checks/C11-08.json:3-16`.
+- Immutable tree `apps/web/src/lib/practice-serving/session-service.ts:100-107,265-285` checks learner, profile, source kind, and source ID after each creation result before validation or replacement. `apps/web/src/lib/practice-serving/session-service.test.ts:286-367` preserves stale same-source replacement while proving an unrelated collection winner returns `session_conflict` and remains active; the learner cannot be served the wrong collection or have the concurrent winner terminated.
+REMEDIATION: none

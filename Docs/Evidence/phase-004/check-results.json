@@ -1,0 +1,391 @@
+{
+  "version": 1,
+  "target": "PHASE-004",
+  "candidate": "edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7",
+  "report": "Docs/Evidence/phase-004/close-audits.md",
+  "attempts": [
+    {
+      "id": "C2",
+      "at": "2026-08-26T15:04:04Z",
+      "candidate": "65827b868127075dd7dac70d655b9fbf6175cb5d0a061404c439c43c04cd5d4e",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-1.json",
+      "manifest_sha256": "60c175200b42722e800ad1ad928582df831a55eff20b4412c0f96992eaf81199",
+      "verdict": "FAIL",
+      "proofs": [
+        {
+          "path": "Docs/Evidence/phase-004/checks/C2-01.json",
+          "sha256": "da117afbd941d45a15e2d33c0073edcf1e2350f9b39855515626c63ec2af41cd"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C2-02.json",
+          "sha256": "548a896c1040daa1b8acf09f933f7188db294438506454267d97b7d4804c71db"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C2-03.json",
+          "sha256": "8b04007d57c18ace04a00f458261ab3362a1fdcb998902f846be62f6524f2e8d"
+        }
+      ],
+      "disposition": "Type checking exposed omitted shared-workspace test scopes; the target contract was expanded and the attempt superseded."
+    },
+    {
+      "id": "C3",
+      "at": "2026-08-26T15:08:32Z",
+      "candidate": "3679516e38aa68b6664a1f1b6c234f07ef9199a2c0066fa2fe84c12e0def8be2",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-3.json",
+      "manifest_sha256": "4ac446608523493b44de3a7461b9f476cc29c9f209afaa6013cc821f193109a3",
+      "verdict": "FAIL",
+      "proofs": [
+        {
+          "path": "Docs/Evidence/phase-004/checks/C3-01.json",
+          "sha256": "9a0c3998e060882b469a81fa54d78d81773832b3cc9b23f4c095d0db7b14b5dc"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C3-02.json",
+          "sha256": "2e1eb37394bfb51d9f2d2feedf12a7530769d6d28d2c90aaf80a2ff58cc29034"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C3-03.json",
+          "sha256": "88e69ceca067700b66bec9369d4af52275d4cccdef2cfc5084888ad9bfa2a8c0"
+        }
+      ],
+      "disposition": "The promoted journey validator exposed a hidden generated-schema dependency; the validator was made checkout-clean."
+    },
+    {
+      "id": "C4",
+      "at": "2026-08-26T15:13:12Z",
+      "candidate": "2939a0e65cd10d7a82cc2d080d5e35d334ae06831682e48a141f2cd4d7f9ae0b",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-4.json",
+      "manifest_sha256": "791d5cf894de0ce7a80436a236cb1c29425996d82242e6368965d06990d53b92",
+      "verdict": "FAIL",
+      "proofs": [
+        {
+          "path": "Docs/Evidence/phase-004/checks/C4-01.json",
+          "sha256": "964eb6d63d3b4b2c2dc486b8362797f6cdaa8cf524b8bf36bdd393fa678548f9"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C4-02.json",
+          "sha256": "27bb464014349ae8095c7bf04fe9bfa3f7e4c67620ff31664f734003b01a415d"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C4-03.json",
+          "sha256": "18c7c7d1cc1f86d1f61ba1d7ef12aa1188d436b3919cdff9b32a93dfb7817bc6"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C4-04.json",
+          "sha256": "519c7680b30eefe218946c815f765069d132c46f7b6bf2097f46ed245a9b0130"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C4-05.json",
+          "sha256": "7880fe7e15623d3f28de5b8e0553d84177373198bfa43770dfd49902d7a128e2"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C4-06.json",
+          "sha256": "0d59d9b8b4fe5e98e70eb69d209559eb9f5771919e5970a449192837f43e8de0"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C4-07.json",
+          "sha256": "c5a6c377b537660d5578d640e527e997ccc911dffa835c850408486fb0e17f04"
+        }
+      ],
+      "disposition": "The provider journey exposed a second hidden generated-schema dependency; the journey proof now builds its contract first."
+    },
+    {
+      "id": "C5",
+      "at": "2026-08-26T15:18:04Z",
+      "candidate": "c21a27af3be2aa232595624356899f81e216160437b60d7b42763804647ea05a",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-5.json",
+      "manifest_sha256": "e08c1c99f1c238b78b1be607d1a5845b6833c8ade7d7a826374df030e0efb5f0",
+      "verdict": "FAIL",
+      "proofs": [
+        {
+          "path": "Docs/Evidence/phase-004/checks/C5-01.json",
+          "sha256": "5e1de7ca0a98ac457da27a9751d309f3835106c1291cdcf2d0e873a0c61acb65"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C5-02.json",
+          "sha256": "d8f0c39f62c0471fcce17e5774e51899f7bc6a2c61f4414be4b58ed557fa8d92"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C5-03.json",
+          "sha256": "060a6235db0d73e924671083750f87647100a1324544477e4b754ef319fdf3bc"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C5-04.json",
+          "sha256": "fce5dd081a4b672be93ffba42e412384b0c6eb3cf096ba83ceb4825506b1a549"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C5-05.json",
+          "sha256": "3672b08c5b9e76297e7b0816e7848c351e61f64bb7ad45dfe1cf209c08f89855"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C5-06.json",
+          "sha256": "67f57a74c631020406ebf71597d4e6f57dacd643b3c26896814a4ced1beb0199"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C5-07.json",
+          "sha256": "670dd9abe0e7d256e2c505ded2365bb074afd585656818f50275c88c625b9c48"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C5-08.json",
+          "sha256": "d8d2609ef0b52fc7ed62ab9b1e451d3ffbc11e89d417dcb138934525af78c648"
+        }
+      ],
+      "disposition": "All learner and provider gates passed, then diff hygiene found four extra end-of-file blank lines; formatting was repaired."
+    },
+    {
+      "id": "C6",
+      "at": "2026-08-26T15:22:56Z",
+      "candidate": "f0896ecece5ffa6fbfe91fca3ea6f25de4852d2ac1023a47a0df7b4f8de72c1d",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-6.json",
+      "manifest_sha256": "56cd87379a1e45575d5f35853f29571fd159d3668175272b80e00e1cbc218157",
+      "verdict": "PASS",
+      "proofs": [
+        {
+          "path": "Docs/Evidence/phase-004/checks/C6-01.json",
+          "sha256": "28683af5b2bca4ef62f282f6a51dc24f5747460f42d4b50202ea4ef0403060c6"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C6-02.json",
+          "sha256": "c7f420938141d2fa94922f7d74a70814840ddbf1ed218b2be52ee823aa6493e9"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C6-03.json",
+          "sha256": "652a365b3658e33f38a8bd01e559efac8f9e5dc7e3e9a7093fe2ac96db7d31b6"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C6-04.json",
+          "sha256": "28c8b7e5574d25701592c0bcf244495393114acd06d71193f9fb30882c3e6d23"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C6-05.json",
+          "sha256": "152be6ed80e836a37643f1add7033e59a9d9518ea9cdcd70c399ac6af42f9ed3"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C6-06.json",
+          "sha256": "fcf82996dc2312483d540dbe954cc66f437359dbe8be0eaad905e4b2d719292d"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C6-07.json",
+          "sha256": "a8b206f7e3c418878cf9570aa3707b5c72abcb86f8f89e9ce62e5c6e3622ef94"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C6-08.json",
+          "sha256": "03a60944802b94935beedf7439e7d32c6313ed338efcc3c7b43fab8bcca77e6c"
+        }
+      ],
+      "disposition": "Binding baseline passed before audits; Standards and MCOO findings required a new candidate."
+    },
+    {
+      "id": "C7",
+      "at": "2026-08-26T15:39:37Z",
+      "candidate": "135ca32cbfcc696cc67a81c0cc96b2705155a74424e980eae31701e46acd0984",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-7.json",
+      "manifest_sha256": "1af3627a710028cbd26018c410f2126d1aeba88a527fec463da64fc923de902e",
+      "verdict": "PASS",
+      "proofs": [
+        {
+          "path": "Docs/Evidence/phase-004/checks/C7-01.json",
+          "sha256": "fe5889cd03d6aff9aca5784d4c3429a59ee7ab12fbcb7ce1d5ac9ba7400f4e68"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C7-02.json",
+          "sha256": "035504adf6748dfca86906483e76058eb44ba8d23411f73ae4f7837cafcaecd3"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C7-03.json",
+          "sha256": "38f317fc5454204c49b7c8db6568501401e350af908c72c278c0f602ae789373"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C7-04.json",
+          "sha256": "5157be32cc350491d5c8cec63e0c24b31c00a3fbaa42e972f3bec9b08ff49fb6"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C7-05.json",
+          "sha256": "68c6f99cee91a3778ebf4e13c90b823a7b6daefde14c25e671a00be9ddd95edb"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C7-06.json",
+          "sha256": "bf7a24b2d3659ca6c658395f0df598e824bd5ad64bd8b427846b8a0e9eac95fc"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C7-07.json",
+          "sha256": "6547231f7ec2bca9928196e30762868a7399b8ee3aaf9751008252fe47788edc"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C7-08.json",
+          "sha256": "7ee29b6208f8764523662df4dc471e33701981c3875fe02062ddcc32c7d716c4"
+        }
+      ],
+      "disposition": "First audit remediation passed all gates; Seams then found stale retained Practice content."
+    },
+    {
+      "id": "C8",
+      "at": "2026-08-26T15:54:13Z",
+      "candidate": "35c96876367b9cd26724c973f21fbc8bea53ab4702567c5aee6eb3975f074a80",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-8.json",
+      "manifest_sha256": "bc8749c60a1ce79627c8833de7551a08a5ef3fca94d2471d7919724b36b5ab8c",
+      "verdict": "PASS",
+      "proofs": [
+        {
+          "path": "Docs/Evidence/phase-004/checks/C8-01.json",
+          "sha256": "54dcfe786a855f62a7e2944df473d5c96001b01381ab8f79518aca28a9608964"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C8-02.json",
+          "sha256": "4d2e2d1f16a52d6e678e98e9c2cee0fc3676ed764705e176a1802dc42abf176e"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C8-03.json",
+          "sha256": "e2370396a860f735501d2459b9400274029fd022d3288b793156ff8a7ec480ee"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C8-04.json",
+          "sha256": "edc342d250b600de1eb98d8a4ad3b3768731add410e315551c58a276c7d4db33"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C8-05.json",
+          "sha256": "909e98020a27c4958eb03ef8d0a927d0705ce415f1ebb1219f256151bfc918a7"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C8-06.json",
+          "sha256": "c19a6d3819aa07d5483fbd069458d7aec4705514a827f8d04a6f607eb59fb1f4"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C8-07.json",
+          "sha256": "a3afdc1bb7d393b670e8e8c5dc296d7779100f48f3ecdae6bbf42625327f36af"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C8-08.json",
+          "sha256": "ba98d5dfcafc569f17815ee1788f46d9702de698faaecbe26f238859bd0c555c"
+        }
+      ],
+      "disposition": "Stale-content remediation passed all gates; final audits found missing unlock revalidation, stale restart recovery, and duplicate dead code."
+    },
+    {
+      "id": "C9",
+      "at": "2026-08-26T16:09:05Z",
+      "candidate": "1db6e520f8d32adb4f4f95273f86f030c77da4d56f0602b7c332bb587195ea01",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-9.json",
+      "manifest_sha256": "7921cabfc1d82859581c7ad5751536ef75a6fdab5d3b5f48a948c952f0ac7ce5",
+      "verdict": "PASS",
+      "proofs": [
+        {
+          "path": "Docs/Evidence/phase-004/checks/C9-01.json",
+          "sha256": "2dd21a2377279b29fc080834ed78db8e08298853493d1f9651a95b10a822bc5a"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C9-02.json",
+          "sha256": "620d74df3b2db1e7ca48d872691bbe2877568f458ac1e0474e15bfb2211d25f0"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C9-03.json",
+          "sha256": "8d6a0a4d19e27972874f2e7f9f852b142851bd6586baaf901c5422038288ff1e"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C9-04.json",
+          "sha256": "04954563638f7a121b6183a41e4aa3b9ccce06028ae454e203ea8c24eb55f27d"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C9-05.json",
+          "sha256": "e9caddde0303a38cf693f8f9b62d667a78696b6342054da17da38f1b5672e1c1"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C9-06.json",
+          "sha256": "eeb0c1c484aadacc7d7d4afbe96711c9e9803c3e55a7c1b9c9cbdf839c0d4a72"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C9-07.json",
+          "sha256": "691702cf8c2ef580face487463af9a0ab93b44157537ec5f3c77a6f900ca0f98"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C9-08.json",
+          "sha256": "b544d2ffb7128188ffee73d11c1de29aa9aa2d725c819cadf5a57780b2fe59e9"
+        }
+      ],
+      "disposition": "Bounded final remediation passed all eight gates with one live Practice authority and exact-version unlock validation."
+    },
+    {
+      "id": "C10",
+      "at": "2026-08-26T16:24:01Z",
+      "candidate": "edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-10.json",
+      "manifest_sha256": "1922c951c60a8399e0879f40cb4ca7dbc0cb25bfed94362e1ab432a119f5048c",
+      "verdict": "FAIL",
+      "proofs": [
+        {
+          "path": "Docs/Evidence/phase-004/checks/C10-01.json",
+          "sha256": "8dc9acdf5ec8efaed71d31b55aade7b47560416732c6e84b65bc83457cad9df0"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C10-02.json",
+          "sha256": "bd0d2d0e4ba625c0087e6fd8df5e011aa86237294a15fcdcef776372f5835433"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C10-03.json",
+          "sha256": "9bf50133136dabde0701d0ede9673d0a4ac0f9eebcf7690d69f5d320e1268e1c"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C10-04.json",
+          "sha256": "30ed48b904fb59866c0b91379d005e9807098384cbc0bee185d264b547324b9c"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C10-05.json",
+          "sha256": "05cd96264f9aafab6e1250dea286f387796fa392e07f80c55e87d721dfa7b5d8"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C10-06.json",
+          "sha256": "a2e103c1ad51c577f01de4ecba9ab11efff40485d2bb2ad04bd7f9fd44fca8dc"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C10-07.json",
+          "sha256": "7e49fde2db50c09021eb5f9a764485fd73d8b9f47fc4942b0af71994516a13ae"
+        }
+      ],
+      "disposition": "The first six checks passed; the real provider journey failed closed with contextual_help_unavailable, so the unchanged contract was retried on the same candidate."
+    },
+    {
+      "id": "C11",
+      "at": "2026-08-26T16:28:41Z",
+      "candidate": "edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-10.json",
+      "manifest_sha256": "1922c951c60a8399e0879f40cb4ca7dbc0cb25bfed94362e1ab432a119f5048c",
+      "verdict": "PASS",
+      "proofs": [
+        {
+          "path": "Docs/Evidence/phase-004/checks/C11-01.json",
+          "sha256": "f7c6d2a568c2fa4342f4877c765d965a9c5d2c8e41582f191e7c963bfe84d2cc"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C11-02.json",
+          "sha256": "aa41da638f7f372e6c8caf977ce766802c8e77ddb3945d56e38d373f9784669b"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C11-03.json",
+          "sha256": "8185caed35693d85e70f6c900ecd076092697fda05292983aaa018eaa8c43e5a"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C11-04.json",
+          "sha256": "d95362a951122b62b3583c70226158b59640af69bc00ef33bfec9fdc0c0ac00d"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C11-05.json",
+          "sha256": "d26d202f3589d31881468cefe5e7773ac0e41d5d26ecfc9f24a1c9d58c7d5472"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C11-06.json",
+          "sha256": "c263b2ade48ba7d110c7a9c5d8a3554604a1b159ac92e2c2bfd4b0fba314ce14"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C11-07.json",
+          "sha256": "7772f145433223dfc1532c8e1353af969cc6a418f1bffd4d7a1fc6b0d143a70e"
+        },
+        {
+          "path": "Docs/Evidence/phase-004/checks/C11-08.json",
+          "sha256": "9a089f218f03a99bf454a76285d08fc8e1be034f0cd8430e7dd6f53da954b466"
+        }
+      ],
+      "disposition": "All eight frozen commands passed on the final candidate: contracts, content, typecheck, lint, 38 files and 269 tests, real providers, and diff hygiene."
+    }
+  ],
+  "final_attempt": "C11"
+}

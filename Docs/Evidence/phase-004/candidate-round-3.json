@@ -1,0 +1,508 @@
+{
+  "version": 3,
+  "head": "50e53dae9a09e65c03e11cdff79aa3a3b82feb1f",
+  "tree": "f93f5122a037b34866a890ff3cd09c6db78f453a",
+  "scopes": [
+    "Docs/DECISIONS.md",
+    "Docs/Evidence/phase-004/target.json",
+    "Docs/PRODUCT.md",
+    "Docs/Roadmap/MVP-SEQUENCE.md",
+    "Docs/Roadmap/Phases/PHASE-004.md",
+    "Docs/Specs/Areas/SPEC-A-CONTENT.md",
+    "Docs/Specs/Areas/SPEC-A-LEARNER.md",
+    "Docs/Specs/Areas/SPEC-A-PLATFORM.md",
+    "Docs/Specs/Features/SPEC-F-CONTENT-PIPELINE.md",
+    "Docs/Specs/Features/SPEC-F-CONTEXTUAL-QUESTIONS.md",
+    "Docs/Specs/Features/SPEC-F-LEARNING-LOOP.md",
+    "apps/web/.env.example",
+    "apps/web/drizzle",
+    "apps/web/package.json",
+    "apps/web/src/app/api/practice/evaluate",
+    "apps/web/src/app/api/practice/session",
+    "apps/web/src/app/globals.css",
+    "apps/web/src/app/lessons",
+    "apps/web/src/app/page.test.tsx",
+    "apps/web/src/app/page.tsx",
+    "apps/web/src/app/practice",
+    "apps/web/src/components/home-dashboard.tsx",
+    "apps/web/src/components/learning-workspace.test.tsx",
+    "apps/web/src/components/learning-workspace.tsx",
+    "apps/web/src/components/lesson-catalog.tsx",
+    "apps/web/src/components/lesson-row.tsx",
+    "apps/web/src/components/practice-sets-prototype.test.tsx",
+    "apps/web/src/components/practice-workspace.tsx",
+    "apps/web/src/components/screen-semantics.test.tsx",
+    "apps/web/src/lib/auth",
+    "apps/web/src/lib/contextual-help",
+    "apps/web/src/lib/course.ts",
+    "apps/web/src/lib/db",
+    "apps/web/src/lib/learning-journey",
+    "apps/web/src/lib/practice-serving",
+    "content/placements",
+    "content/promotions",
+    "content/review",
+    "content/units",
+    "packages/lesson-schema",
+    "tooling/content"
+  ],
+  "files": [
+    {
+      "path": "Docs/DECISIONS.md",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "29f1fba4810adc35f135884266b90e1722e2d30a"
+    },
+    {
+      "path": "Docs/Evidence/phase-004/target.json",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "63dbb289b216a5a8294ea1cd08b34b041c448c76"
+    },
+    {
+      "path": "Docs/PRODUCT.md",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "ca75bfc79d6c3a7d54d1cdc5cfba312a5e5daddd"
+    },
+    {
+      "path": "Docs/Roadmap/MVP-SEQUENCE.md",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "9e8cf69ffe3cc904f2fc86883578955a2a566b75"
+    },
+    {
+      "path": "Docs/Roadmap/Phases/PHASE-004.md",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "9613af736a52b27664d8ae9b6aeee5f50dde4aeb"
+    },
+    {
+      "path": "Docs/Specs/Areas/SPEC-A-CONTENT.md",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "569a6fc5b7b17fb45333461b5ec1ed752c6d4d2d"
+    },
+    {
+      "path": "Docs/Specs/Areas/SPEC-A-LEARNER.md",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "2002527e655be152c4b9331ae630dec22c7bf26c"
+    },
+    {
+      "path": "Docs/Specs/Areas/SPEC-A-PLATFORM.md",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "5c2a4941d051e5d2bce615ae5c292ac1a401f0d6"
+    },
+    {
+      "path": "Docs/Specs/Features/SPEC-F-CONTENT-PIPELINE.md",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "da0c0429ed3b8a3225461a22c503f81cf92f7371"
+    },
+    {
+      "path": "Docs/Specs/Features/SPEC-F-CONTEXTUAL-QUESTIONS.md",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "a6bd430b2313e61aa2c98464f9519699e32ecaba"
+    },
+    {
+      "path": "Docs/Specs/Features/SPEC-F-LEARNING-LOOP.md",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "c09a204458575da6f0a063aa898e5cc86247dc19"
+    },
+    {
+      "path": "apps/web/.env.example",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "730a625fff6afdc8f1fe60276d8e341e88eb1bf7"
+    },
+    {
+      "path": "apps/web/drizzle/0002_practice_state.sql",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "8ca5867a723e54ce776a8d22a8e49d931cb6b67c"
+    },
+    {
+      "path": "apps/web/drizzle/0003_lesson_journey.sql",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "59c6f1f20e9bc0f16b2d0afdb30b03bc52d42b03"
+    },
+    {
+      "path": "apps/web/package.json",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "6cef7a140075d3def065724292e63608dcd0035e"
+    },
+    {
+      "path": "apps/web/src/app/api/practice/evaluate/route.test.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "fa3a5d56b3cdff4faa37ed75cd501b0c8e51e5d7"
+    },
+    {
+      "path": "apps/web/src/app/api/practice/evaluate/route.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "125ccb17007d07cbcdc88018dbb1d5067e962556"
+    },
+    {
+      "path": "apps/web/src/app/api/practice/session/lesson/route.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "9c0d4262de3553a71cf9b9ace2dc5d564e28093b"
+    },
+    {
+      "path": "apps/web/src/app/api/practice/session/route.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "084128789b532b6efae8c89eae85d970085fcc2f"
+    },
+    {
+      "path": "apps/web/src/app/globals.css",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "80454c4da00e1c96a08236a3608ed28b46f91deb"
+    },
+    {
+      "path": "apps/web/src/app/lessons/[lesson]/page.tsx",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "4bf364843751d77c865d852af3db7aa458d5ea13"
+    },
+    {
+      "path": "apps/web/src/app/page.test.tsx",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "70f04eb870c07413aa49c3e04b1f602345c26937"
+    },
+    {
+      "path": "apps/web/src/components/learning-workspace.test.tsx",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "f95b008d4e9900bef6c9979059fc30cf54e26193"
+    },
+    {
+      "path": "apps/web/src/components/learning-workspace.tsx",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "be5b5fca310bc3b9fb554d645530978e09aa25be"
+    },
+    {
+      "path": "apps/web/src/components/practice-sets-prototype.test.tsx",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "88a3032917767581ba069273bdac0fcf7ee22785"
+    },
+    {
+      "path": "apps/web/src/components/practice-workspace.tsx",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "95cca4a4af7f7a904fb7ab3e85eaf09a12d4e4f3"
+    },
+    {
+      "path": "apps/web/src/components/screen-semantics.test.tsx",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "c8ef3d1a2f40108d05f60abdc33cfbd52a7a3a1d"
+    },
+    {
+      "path": "apps/web/src/lib/auth/config.test.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "ca1b38d3910d3763f6b646cbd9cd76f703730bbc"
+    },
+    {
+      "path": "apps/web/src/lib/auth/config.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "1ee6c3e66c0bdc1993ad33f883de5b0af4a36a52"
+    },
+    {
+      "path": "apps/web/src/lib/contextual-help/contracts.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "10de75e4c8ca201f6840f0e44ffe51d1876dff02"
+    },
+    {
+      "path": "apps/web/src/lib/contextual-help/gateway-provider.test.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "73452d82c9458ce6b6237ab5057e5f54a99f6690"
+    },
+    {
+      "path": "apps/web/src/lib/contextual-help/gateway-provider.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "00491737762aae692655108d11e2fef9a8624e71"
+    },
+    {
+      "path": "apps/web/src/lib/contextual-help/index.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "5c8d9a95002e3b8a063452c4695031111e903e76"
+    },
+    {
+      "path": "apps/web/src/lib/course.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "e212572bf7fce94887080f4b492baed2c6743463"
+    },
+    {
+      "path": "apps/web/src/lib/db/migrations.test.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "01b3752ddf04188b6c7a9f1101b838feab01af30"
+    },
+    {
+      "path": "apps/web/src/lib/db/schema.test.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "69844c098bce7a20c8e700401f0bcff23e8e9ef9"
+    },
+    {
+      "path": "apps/web/src/lib/db/schema.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "374774f479ba655312a36e6928635be9ebba8f69"
+    },
+    {
+      "path": "apps/web/src/lib/learning-journey/contextual-answerer.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "909df2e0c86cbbca334ccaee34c3711eaa7aa3d6"
+    },
+    {
+      "path": "apps/web/src/lib/learning-journey/in-memory-lesson-repository.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "df037d1ef1b1ae7722824b49910939714292113d"
+    },
+    {
+      "path": "apps/web/src/lib/learning-journey/lesson-api-contract.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "aaa0e369c5a231a6086d5e031c346b8ce2e4d9de"
+    },
+    {
+      "path": "apps/web/src/lib/learning-journey/lesson-repository.test.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "c30f29643815e678ccc5ad8d44989d20922804c1"
+    },
+    {
+      "path": "apps/web/src/lib/learning-journey/lesson-repository.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "e8125a30982fb25892e060a9ab04d958555ae722"
+    },
+    {
+      "path": "apps/web/src/lib/learning-journey/lesson-service.test.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "70717c4d837804fc7ed6002d4f1dfb12db016870"
+    },
+    {
+      "path": "apps/web/src/lib/learning-journey/lesson-service.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "ee2d4d972b2f4195e38629737ab7b021ce4216a9"
+    },
+    {
+      "path": "apps/web/src/lib/learning-journey/lesson-session.test.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "840649b3a1b67ccf3225bc51ea28b2f79c185a4b"
+    },
+    {
+      "path": "apps/web/src/lib/learning-journey/lesson-session.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "0b08d999836f50d3b67e2b7833e3106c1a678a0c"
+    },
+    {
+      "path": "apps/web/src/lib/learning-journey/promoted-lesson.test.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "882cf3daeb7d3f861437cb271699e54fca310dbe"
+    },
+    {
+      "path": "apps/web/src/lib/learning-journey/promoted-lesson.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "753b512b5fe05980f9148be6ce7d186c0d2bcc5d"
+    },
+    {
+      "path": "apps/web/src/lib/learning-journey/prove-journey.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "e9a324c4d0169848c936743ab5ea50df8e6a8595"
+    },
+    {
+      "path": "apps/web/src/lib/practice-serving/adaptive-session.test.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "e27d9dc819886435a2b70083f54584ca2132bfb4"
+    },
+    {
+      "path": "apps/web/src/lib/practice-serving/adaptive-session.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "6daca8a571145b8bc96792c62663b8c6732d7caf"
+    },
+    {
+      "path": "apps/web/src/lib/practice-serving/correction-segments.test.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "30d491c03d120b4e7050f4c9beebce6ead5903e4"
+    },
+    {
+      "path": "apps/web/src/lib/practice-serving/correction-segments.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "77659e1e00cc6fe18f9be270e38370efa37da76a"
+    },
+    {
+      "path": "apps/web/src/lib/practice-serving/database-session-repository.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "5886af9c444e89f9104d143037eaa285856d0838"
+    },
+    {
+      "path": "apps/web/src/lib/practice-serving/in-memory-session-repository.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "38a806f1b6fc17547fc9bfb73041b408bec2a02b"
+    },
+    {
+      "path": "apps/web/src/lib/practice-serving/promoted-source.test.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "586d409655c0f182c2b43a4313a86acd265d9c64"
+    },
+    {
+      "path": "apps/web/src/lib/practice-serving/promoted-source.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "d50bbb1f1f7551fa3bddc5e59f109eedba0696f5"
+    },
+    {
+      "path": "apps/web/src/lib/practice-serving/prove-session.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "6aff021950c0c8f47900ef481b819b0c7fe801d4"
+    },
+    {
+      "path": "apps/web/src/lib/practice-serving/session-api-contract.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "acae0f13a27077b06d9cb76fb1bfa646e953a20f"
+    },
+    {
+      "path": "apps/web/src/lib/practice-serving/session-evaluator.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "9d52e4f600caa79f0850463f005c72b0ce17181a"
+    },
+    {
+      "path": "apps/web/src/lib/practice-serving/session-service.test.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "799df3b59479b1458ec533d193a3b4db9975a313"
+    },
+    {
+      "path": "apps/web/src/lib/practice-serving/session-service.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "21e9ac73ed79bd7557a47fcd7be06f516984713b"
+    },
+    {
+      "path": "content/placements/placement.a1.you-live-here.json",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "45e4553840168294f7f8e0a9fd18fe1e9ba69b6a"
+    },
+    {
+      "path": "packages/lesson-schema/src/index.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "e2feb9ba92daeb10851de3365d5bb9879b6e58d6"
+    },
+    {
+      "path": "tooling/content/validate-promoted-journey.ts",
+      "state": "present",
+      "mode": "100644",
+      "type": "blob",
+      "object": "103190debbd1b4fc7e91e2c7d36982ced86679ac"
+    }
+  ],
+  "candidate": "3679516e38aa68b6664a1f1b6c234f07ef9199a2c0066fa2fe84c12e0def8be2",
+  "commit": "1c2164370b3014c0eee164cfadde9b680f9b5f43",
+  "ref": "refs/aidioma/close/3679516e38aa68b6664a1f1b6c234f07ef9199a2c0066fa2fe84c12e0def8be2"
+}

@@ -1,0 +1,13 @@
+TARGET: Docs/Evidence/phase-004/target.json
+LENS: Security / Privacy
+RESULT: PASS
+CANDIDATE: edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7
+BLOCKERS: none
+FINDINGS:
+- immutable-tree apps/web/src/lib/practice-serving/session-service.ts:100-107,265-285 proves both creation returns verify learner, profile, source kind, and source ID before validation or replacement; unrelated winners fail closed without termination.
+- immutable-tree apps/web/src/lib/practice-serving/session-service.test.ts:330-367 proves the unrelated collection remains active while the request receives `session_conflict`.
+- immutable-tree apps/web/src/app/api/practice/session/route.ts:99-108 proves `session_conflict` becomes a no-store HTTP 409 response; repository ownership queries remain learner-scoped at apps/web/src/lib/practice-serving/database-session-repository.ts:75-98,207-232.
+- immutable-tree apps/web/src/lib/contextual-help/gateway-provider.ts:210-264 and apps/web/src/lib/learning-journey/contextual-answerer.ts:21-48 prove bounded payload validation, opaque hashed tracking identity, explicit credential use, and sanitized provider failures.
+- evidence Docs/Evidence/phase-004/checks/C11-01.json:3-16 through C11-08.json:3-18 binds all eight successful checks to the candidate; C11-07.json:17-18 redacts database identity and retains no learner ID, prompt, or secret. Docs/Evidence/phase-004/browser-journey.md:8-11,26-28 documents identity-free captures using only the permitted scripted non-personal exchange.
+- BACKLOG: immutable-tree apps/web/src/app/api/practice/session/route.ts:94-96 logs arbitrary unexpected Practice exception objects. Future log hardening should emit sanitized metadata to reduce possible database-detail exposure; this is production hardening, not a contradiction of a Phase 4 promise.
+REMEDIATION: none
