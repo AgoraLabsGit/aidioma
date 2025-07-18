@@ -1,0 +1,13 @@
+{
+  "name": "aidioma-shared",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "drizzle-orm": "^0.44.3",
+    "drizzle-zod": "^0.8.2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}
