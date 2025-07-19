@@ -8,11 +8,25 @@ config()
 const app = express()
 const PORT = process.env.PORT || 3001
 
+// Standardized API response helpers
+const createSuccessResponse = <T>(data: T, message?: string) => ({
+  success: true as const,
+  data,
+  message
+})
+
+const createErrorResponse = (error: string, details?: unknown, code?: string) => ({
+  success: false as const,
+  error,
+  details,
+  code
+})
+
 // Middleware
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
     ? process.env.FRONTEND_URL 
-    : 'http://localhost:3000',
+    : 'http://localhost:5000',
   credentials: true
 }))
 
@@ -21,46 +35,66 @@ app.use(express.urlencoded({ extended: true }))
 
 // Health check endpoint
 app.get('/health', (_req, res) => {
-  res.json({ 
+  res.json(createSuccessResponse({ 
     status: 'ok', 
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development'
-  })
+  }))
 })
 
-// API routes
+// API routes with standardized responses
 app.use('/api/auth', (_req, res) => {
-  res.json({ message: 'Auth routes coming soon...' })
+  res.json(createSuccessResponse(
+    { message: 'Auth routes coming soon...' },
+    'Authentication endpoints will be available soon'
+  ))
 })
 
 app.use('/api/sentences', (_req, res) => {
-  res.json({ message: 'Sentences routes coming soon...' })
+  res.json(createSuccessResponse(
+    { message: 'Sentences routes coming soon...' },
+    'Sentence management endpoints will be available soon'
+  ))
 })
 
 app.use('/api/practice', (_req, res) => {
-  res.json({ message: 'Practice routes coming soon...' })
+  res.json(createSuccessResponse(
+    { message: 'Practice routes coming soon...' },
+    'Practice session endpoints will be available soon'
+  ))
 })
 
 app.use('/api/evaluation', (_req, res) => {
-  res.json({ message: 'Evaluation routes coming soon...' })
+  res.json(createSuccessResponse(
+    { message: 'Evaluation routes coming soon...' },
+    'AI evaluation endpoints will be available soon'
+  ))
 })
 
 app.use('/api/analytics', (_req, res) => {
-  res.json({ message: 'Analytics routes coming soon...' })
+  res.json(createSuccessResponse(
+    { message: 'Analytics routes coming soon...' },
+    'Learning analytics endpoints will be available soon'
+  ))
 })
 
 // Error handling middleware
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error('Error:', err)
-  res.status(500).json({ 
-    error: 'Internal server error',
-    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
-  })
+  res.status(500).json(createErrorResponse(
+    'Internal server error',
+    process.env.NODE_ENV === 'development' ? err.message : undefined,
+    'INTERNAL_ERROR'
+  ))
 })
 
 // 404 handler
 app.use('*', (_req, res) => {
-  res.status(404).json({ error: 'Route not found' })
+  res.status(404).json(createErrorResponse(
+    'Route not found',
+    undefined,
+    'NOT_FOUND'
+  ))
 })
 
 // Start server

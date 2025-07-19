@@ -8,10 +8,22 @@
 Reusable React components following AIdioma's Strike-inspired dark theme with consistent patterns across all 6 pages.
 
 ### **Design Principles**
-- **Dark Theme**: Primary background #0A0A0B, surfaces #111113
+- **Dark Theme**: Current HSL color system with main content at 8% lightness, sidebar at 9%
 - **Minimal UI**: Clean, distraction-free learning environment
 - **Amber Accents**: Warnings and highlights use amber instead of red
-- **Mobile First**: Touch-friendly with responsive breakpoints
+- *export function StatsBox({ icon: Icon, iconColor, value, label, className = '' }: StatsBoxProps) {
+  return (
+    <div className={`flex items-center gap-3 p-2 md:p-3 bg-muted rounded-lg ${className}`}>
+      <Icon className={`w-6 h-6 ${iconColor}`} />
+      <div>
+        <div className="text-base md:text-lg font-semibold text-foreground">
+          {value}
+        </div>
+        <div className="text-xs text-muted-foreground">{label}</div>
+      </div>
+    </div>
+  );
+}**: Touch-friendly with responsive breakpoints
 - **Accessibility**: WCAG 2.1 AA compliant with proper contrast
 
 ---
@@ -21,16 +33,56 @@ Reusable React components following AIdioma's Strike-inspired dark theme with co
 ### **CSS Custom Properties**
 ```css
 :root {
-  /* Colors */
-  --background-primary: #0A0A0B;
-  --background-surface: #111113;
-  --border-subtle: #1F1F23;
-  --text-primary: #E5E5E7;
-  --text-secondary: #AAAAASD;
-  --accent-primary: #374151;
-  --success: #10B981;
-  --warning: #F59E0B;
-  --error: #EF4444;
+  /* Current HSL Color System */
+  --background: 220 13% 8%;            /* Deep black/dark main content area */
+  --foreground: 220 8% 95%;            /* White text */
+  --card: 220 8% 15%;                  /* Dark charcoal grey cards */
+  --card-foreground: 220 8% 95%;       /* White text on cards */
+  --muted: 220 8% 9%;                  /* Nearly black muted (sidebar/header) */
+  --muted-foreground: 220 8% 85%;      /* Light grey text on dark muted */
+  --border: 220 13% 25%;               /* Subtle dark grey borders */
+  --input: 220 8% 12%;                 /* Very dark input backgrounds */
+  --primary: 220 8% 40%;               /* Blue-grey primary buttons */
+  --primary-foreground: 220 8% 95%;    /* White text on primary */
+  --secondary: 220 8% 25%;             /* Dark grey secondary buttons */
+  --secondary-foreground: 220 8% 95%;  /* White text on secondary */
+  --accent: 220 8% 75%;                /* Medium grey accent (selected state) */
+  --accent-foreground: 220 8% 20%;     /* Dark text on accent */
+  --destructive: 0 84% 60%;            /* Red for errors */
+  --destructive-foreground: 210 40% 98%; /* Light text on red */
+  
+  /* Legacy Variables (for reference) */
+  --background-primary: #0A0A0B;       /* Almost black */
+  --background-surface: #111113;       /* Cards */
+  --border-subtle: #1F1F23;            /* Subtle borders */
+  --text-primary: #E5E7EB;             /* Light grey text */
+  --text-secondary: #A1A1AA;           /* Gray secondary */
+  --accent-primary: #374151;           /* Dark gray primary */
+  --success: #10B981;                  /* Green for positive */
+  --warning: #F59E0B;                  /* Amber warnings */
+
+---
+
+## 🎯 **Component Framework Standards**
+
+### **Coherent UI System**
+- **Design System Integrity**: All UI changes must be applied across ALL relevant pages
+- **Identical Styling Frameworks**: Components must have consistent interfaces and styling patterns
+- **Cross-Page Consistency**: ActionButtons, headers, and navigation must be identical across pages
+
+### **Button Framework Standards**
+- **Uniform Sizing**: `px-6 py-3` for all buttons
+- **Consistent Spacing**: `gap-3` between buttons
+- **Standard Styling**: `rounded-lg`, `font-medium`, `transition-colors`
+- **Hover States**: Defined for all interactive elements
+
+### **Color Scheme Guidelines**
+- **Primary Text Colors**: `text-gray-400` for most buttons and secondary text
+- **Accent Text**: `text-white` for primary actions (Next button only)
+- **Hover States**: `hover:text-gray-300` and `hover:text-white`
+- **Background Colors**: `bg-muted` for buttons, `hover:bg-accent` for hover states
+- **Avoid Problematic Classes**: Never use `text-muted-foreground` (doesn't apply properly)
+  --error: #EF4444;                    /* Red for errors */
   
   /* Spacing */
   --spacing-xs: 0.25rem;
@@ -102,6 +154,148 @@ export function Button({
       )}
       {children}
     </button>
+  )
+}
+```
+
+### **ActionButtons Component (Standard Pattern)**
+```typescript
+interface ActionButtonsProps {
+  onCheck: () => void
+  onNext: () => void
+  onHint: () => void
+  onReset: () => void
+  onBookmark: () => void
+  onSkip: () => void
+  onNavigatePrevious: () => void
+  onNavigateNext: () => void
+  isEvaluated: boolean
+  showHint: boolean
+  disabled: boolean
+  currentParagraph: number
+  totalParagraphs: number
+}
+
+export function ActionButtons({ 
+  onCheck, onNext, onHint, onReset, onBookmark, onSkip, 
+  onNavigatePrevious, onNavigateNext, isEvaluated, showHint, 
+  disabled, currentParagraph, totalParagraphs 
+}: ActionButtonsProps) {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-center gap-3">
+        {/* 1. Previous Button */}
+        <button
+          onClick={onNavigatePrevious}
+          disabled={currentParagraph === 0}
+          className="flex items-center gap-2 px-6 py-3 bg-muted text-gray-400 hover:text-gray-300 hover:bg-accent rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <ChevronUp className="w-4 h-4" />
+          Previous
+        </button>
+
+        {/* 2. Check Button */}
+        {!isEvaluated ? (
+          <button
+            onClick={onCheck}
+            disabled={disabled}
+            className="flex items-center gap-2 px-6 py-3 bg-muted text-gray-400 hover:text-gray-300 hover:bg-accent rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Check className="w-4 h-4" />
+            Check
+          </button>
+        ) : (
+          <button
+            onClick={onReset}
+            className="flex items-center gap-2 px-6 py-3 bg-muted text-gray-400 hover:text-gray-300 hover:bg-accent rounded-lg font-medium transition-colors"
+          >
+            <RotateCcw className="w-4 h-4" />
+            Try Again
+          </button>
+        )}
+
+        {/* 3. Next Button - ONLY button with white text */}
+        <button
+          onClick={onNavigateNext}
+          disabled={currentParagraph === totalParagraphs - 1}
+          className="flex items-center gap-2 px-6 py-3 bg-muted text-white hover:text-white hover:bg-accent rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Next
+          <ChevronDown className="w-4 h-4" />
+        </button>
+
+        {/* 4. Hint Button */}
+        <button
+          onClick={onHint}
+          className="flex items-center gap-2 px-6 py-3 bg-muted text-gray-400 hover:text-gray-300 hover:bg-accent rounded-lg font-medium transition-colors"
+        >
+          <Lightbulb className="w-4 h-4" />
+          {showHint ? 'Hide' : 'Hint'}
+        </button>
+
+        {/* 5. Skip Button */}
+        {!isEvaluated ? (
+          <button
+            onClick={onSkip}
+            className="flex items-center gap-2 px-6 py-3 bg-muted text-gray-400 hover:text-gray-300 hover:bg-accent rounded-lg font-medium transition-colors"
+          >
+            <ArrowRight className="w-4 h-4" />
+            Skip
+          </button>
+        ) : (
+          <button
+            onClick={onNext}
+            className="flex items-center gap-2 px-6 py-3 bg-muted text-gray-400 hover:text-gray-300 hover:bg-accent rounded-lg font-medium transition-colors"
+          >
+            <ArrowRight className="w-4 h-4" />
+            Next Sentence
+          </button>
+        )}
+
+        {/* 6. Bookmark Button */}
+        <button
+          onClick={onBookmark}
+          className="flex items-center gap-2 px-6 py-3 bg-muted text-gray-400 hover:text-gray-300 hover:bg-accent rounded-lg font-medium transition-colors"
+        >
+          <BookmarkPlus className="w-4 h-4" />
+          Bookmark
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// Button Layout Standards:
+// Order (left to right): Previous, Check, Next, Hint, Skip, Bookmark
+// Sizing: All buttons use px-6 py-3 for uniform sizing
+// Colors: text-gray-400 for all buttons EXCEPT Next button (text-white)
+// Spacing: gap-3 between buttons
+// Hover: hover:text-gray-300 and hover:text-white respectively
+```
+
+### **TranslationInput Component (Standard Pattern)**
+```typescript
+interface TranslationInputProps {
+  value: string
+  onChange: (value: string) => void
+  disabled?: boolean
+  placeholder?: string
+}
+
+export function TranslationInput({ 
+  value, onChange, disabled = false, 
+  placeholder = "Type your English translation here..." 
+}: TranslationInputProps) {
+  return (
+    <div className="mb-6">
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={disabled}
+        placeholder={placeholder}
+        className="w-full h-20 px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background transition-all duration-200 font-mono"
+      />
+    </div>
   )
 }
 ```
@@ -267,6 +461,58 @@ export function TranslationInput({
   )
 }
 ```
+
+### **Stats Box Component (Practice Pages)**
+```typescript
+interface StatsBoxProps {
+  icon: React.ComponentType<{ className?: string }>
+  iconColor: string
+  value: string | number
+  label: string
+  className?: string
+}
+
+export function StatsBox({ icon: Icon, iconColor, value, label, className = '' }: StatsBoxProps) {
+  return (
+    <div className={`flex items-center gap-2 p-2 md:p-3 bg-muted rounded-lg ${className}`}>
+      <Icon className={`w-6 h-6 ${iconColor}`} />
+      <div>
+        <div className="text-base md:text-lg font-semibold text-foreground">
+          {value}
+        </div>
+        <div className="text-xs text-muted-foreground">{label}</div>
+      </div>
+    </div>
+  )
+}
+```
+
+**Usage Example**:
+```tsx
+// Practice page stats implementation
+<div className="flex justify-center">
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl">
+    <StatsBox
+      icon={BookOpen}
+      iconColor="text-blue-500"
+      value={`${currentSentence}/${totalSentences}`}
+      label="Sentences"
+    />
+    <StatsBox
+      icon={CheckCircle}
+      iconColor="text-green-500"
+      value={correctCount}
+      label="Correct"
+    />
+    {/* More stats boxes... */}
+  </div>
+</div>
+```
+
+**Icon Standards**:
+- **Size**: `w-6 h-6` (24px) - 50% larger than standard icons for enhanced visibility
+- **Colors**: Semantic colors (blue, green, purple, orange, yellow) for different metrics
+- **Spacing**: `gap-3` (12px) between icon and text content - 50% increase for better visual breathing room
 
 ### **Score Display Component**
 ```typescript

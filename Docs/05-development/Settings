@@ -1,0 +1,190 @@
+//Needs Review 
+
+## **🎯 Learning Preferences** (Major Missing Category)
+
+### **Hint System Settings**
+- **Hint Behavior**: Auto-show vs. click-to-reveal
+- **Hint Penalties**: Enable/disable point deductions
+- **Progressive Hints**: Show all levels vs. one at a time
+- **Hint Timing**: Delay before hints become available (0-30 seconds)
+- **Independence Goals**: Target % of exercises completed without hints
+
+### **Difficulty & Progression**
+- **Auto-Difficulty Adjustment**: Enable adaptive difficulty based on performance
+- **Starting Difficulty Level**: 1-9 scale for new content
+- **Progression Speed**: Conservative, Normal, Aggressive
+- **Grammar Focus Areas**: Prioritize specific concepts (verb tenses, gender, etc.)
+- **Mistake Tolerance**: How many errors before content difficulty decreases
+
+### **Grading System Preferences**
+- **Scoring Strictness**: Lenient, Standard, Strict
+- **Grade Display**: Show letter grades, percentages, or both
+- **Performance Tracking**: Enable detailed analytics vs. simple progress
+
+## **🔊 Audio & Voice Settings** (Critical for Language Learning)
+
+### **Text-to-Speech**
+- **Voice Gender**: Male, Female, or Mixed
+- **Speech Speed**: 0.5x to 2.0x playback speed
+- **Regional Accent**: Match location setting (Mexican, Argentine, etc.)
+- **Auto-Pronunciation**: Read sentences aloud automatically
+- **Voice Quality**: Standard vs. Premium voices
+
+### **Voice Recognition** (Future Feature)
+- **Microphone Sensitivity**: For pronunciation practice
+- **Accent Training**: Enable pronunciation feedback
+- **Voice Commands**: Navigate app with voice
+
+## **🎨 Interface & Display Settings**
+
+### **Visual Preferences**
+- **Theme Options**: Dark (current), Light, Auto-switch by time
+- **Color Scheme**: Strike (current), High Contrast, Colorblind-friendly
+- **Font Size**: Small, Medium, Large, Extra Large
+- **Animation Speed**: Fast, Normal, Slow, Disabled
+- **Reduced Motion**: For accessibility
+
+### **Layout Options**
+- **Sidebar Behavior**: Always visible, Auto-hide, Manual toggle
+- **Compact Mode**: Reduce spacing for smaller screens
+- **Progress Indicators**: Show/hide various progress elements
+
+## **📚 Content & Reading Settings**
+
+### **Content Preferences**
+- **Content Types**: Prioritize books, news, conversations, AI stories
+- **Content Sources**: Enable/disable specific content providers
+- **Reading Goals**: Pages per day, minutes per session
+- **Complexity Preference**: Gradually increase vs. mixed difficulty
+
+### **Reading Interface**
+- **Word Highlighting**: Color-code by difficulty
+- **Click Behavior**: Instant translation vs. hover preview
+- **Context Display**: Show word usage examples
+- **Reading Speed Tracking**: Enable WPM calculations
+
+## **🧠 Memory & Flash Card Settings**
+
+### **Spaced Repetition**
+- **Algorithm Type**: Standard SM-2, Modified, or Custom intervals
+- **Review Frequency**: Daily, Every 2 days, Weekly
+- **Session Size**: Max cards per review session (10-50)
+- **Difficulty Adjustment**: Manual vs. automatic card difficulty
+
+### **Flash Card Display**
+- **Card Animation**: Flip speed and style
+- **Answer Buttons**: 2-button (Again/Good) vs. 4-button system
+- **Context Display**: Always show original sentence vs. on-demand
+- **Progress Indicators**: Show mastery level on cards
+
+## **💬 Conversation Settings**
+
+### **AI Chat Preferences**
+- **Default Persona**: Casual, Formal, Teacher, Native Speaker
+- **Correction Frequency**: Every mistake, Major errors only, End of conversation
+- **Vocabulary Complexity**: Introduce new words vs. stick to known vocabulary
+- **Conversation Length**: Short (5-10 exchanges), Medium, Long sessions
+- **Topic Preferences**: Rank favorite conversation topics
+
+### **Learning Integration**
+- **Auto-Add Vocabulary**: Automatically bookmark new words from conversations
+- **Grammar Feedback**: Real-time vs. end-of-conversation
+- **Cultural Context**: Include cultural explanations and references
+
+## **🔐 Privacy & Data Management**
+
+### **Data Control**
+- **Data Export**: Download all learning data (JSON, CSV)
+- **Data Import**: Import progress from other apps
+- **Account Deletion**: Full account removal with data cleanup
+- **Learning History**: Retention period (1 year, 2 years, Forever)
+
+### **Analytics & Tracking**
+- **Usage Analytics**: Opt-in/out of anonymous usage tracking
+- **Performance Data**: Share learning data for app improvement
+- **Third-Party Integrations**: Connect with other learning platforms
+
+## **📱 Mobile & Sync Settings**
+
+### **Offline Mode**
+- **Content Download**: Download content for offline practice
+- **Sync Frequency**: Real-time, WiFi only, Manual
+- **Storage Management**: Auto-delete old content
+- **Background Sync**: Update progress when app is closed
+
+### **Device Settings**
+- **Multi-Device Sync**: Sync progress across devices
+- **Backup Settings**: Automatic cloud backup
+- **Cache Management**: Clear cache, cache size limits
+
+## **🔔 Enhanced Notification Settings**
+
+### **Learning Reminders**
+- **Daily Practice**: Customize time and frequency
+- **Review Reminders**: Flash card review notifications
+- **Streak Alerts**: Warn before streak breaks
+- **Achievement Notifications**: Celebrate milestones
+
+### **Progress Updates**
+- **Weekly Summary**: Progress report emails
+- **Goal Reminders**: Practice target notifications
+- **Motivation Messages**: Encouraging push notifications
+- **Social Sharing**: Auto-share achievements (optional)
+
+## **🛠️ Advanced & Debug Settings**
+
+### **Developer Options** (Hidden by default)
+- **API Response Times**: Show performance metrics
+- **Cache Statistics**: View cache hit rates
+- **Debug Mode**: Enable detailed error logging
+- **Beta Features**: Access experimental features
+- **Reset Options**: Reset specific data types
+
+### **Accessibility**
+- **Screen Reader Support**: Enhanced compatibility
+- **Keyboard Navigation**: Full keyboard app control
+- **High Contrast**: Enhanced visual accessibility
+- **Motion Sensitivity**: Reduce animations for sensitive users
+
+## **📊 Goal & Target Settings**
+
+### **Enhanced Practice Targets**
+- **Daily Goals**: Sentences, words, minutes
+- **Weekly Challenges**: Cross-page activity goals
+- **Monthly Milestones**: Long-term learning objectives
+- **Adaptive Goals**: Adjust targets based on performance
+- **Goal Reminders**: Notification timing and frequency
+
+## **📋 Settings Page Organization**
+
+```typescript
+interface SettingsStructure {
+  "Learning": {
+    "Hint System": HintSettings,
+    "Difficulty & Progression": DifficultySettings,
+    "Goals & Targets": TargetSettings
+  },
+  "App Preferences": {
+    "Language & Region": LanguageSettings,
+    "Audio & Voice": AudioSettings,
+    "Interface & Display": InterfaceSettings
+  },
+  "Content Settings": {
+    "Reading Preferences": ReadingSettings,
+    "Flash Cards": FlashCardSettings,
+    "Conversations": ConversationSettings
+  },
+  "Account & Privacy": {
+    "User Profile": UserSettings,
+    "Privacy & Data": PrivacySettings,
+    "Security": SecuritySettings
+  },
+  "Device & Sync": {
+    "Notifications": NotificationSettings,
+    "Offline & Sync": SyncSettings,
+    "Advanced": AdvancedSettings
+  }
+}
+```
+
+This comprehensive settings system gives users **complete control** over their Spanish learning experience while maintaining the clean, organized interface your app is known for! 🎛️

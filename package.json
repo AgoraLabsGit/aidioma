@@ -1,7 +1,7 @@
 {
-  "name": "aidioma-v1",
+  "name": "aidioma-v2",
   "version": "1.0.0",
-  "description": "AI-powered Spanish learning platform",
+  "description": "AI-powered Spanish learning platform with intelligent translation practice",
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
@@ -11,13 +11,32 @@
     "build:client": "cd client && npm run build",
     "build:server": "cd server && npm run build",
     "type-check": "cd client && npx tsc --noEmit && cd ../server && npx tsc --noEmit",
-    "setup": "npm install && cd client && npm install && cd ../server && npm install && cd ../shared && npm install"
+    "setup": "npm install && cd client && npm install && cd ../server && npm install && cd ../shared && npm install",
+    "db:generate": "cd server && npm run db:generate",
+    "db:migrate": "cd server && npm run db:migrate",
+    "db:studio": "cd server && npm run db:studio"
   },
   "workspaces": ["client", "server", "shared"],
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "@types/node": "^20.11.24",
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "repository": {
+    "type": "git", 
+    "url": "https://github.com/AgoraLabsGit/aidioma.v2"
+  },
+  "keywords": [
+    "spanish",
+    "learning", 
+    "ai",
+    "translation",
+    "education",
+    "language"
+  ],
+  "author": "Agora Labs",
+  "license": "UNLICENSED"
 }
