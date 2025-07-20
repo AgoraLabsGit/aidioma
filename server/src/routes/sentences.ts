@@ -82,77 +82,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-// ✅ POST /api/sentences/evaluate - AI-powered translation evaluation
-router.post('/evaluate', async (req, res) => {
-  try {
-    const { sentenceId, userTranslation, timeSpent, hintsUsed } = req.body
-    
-    // Validate input
-    if (!sentenceId || !userTranslation) {
-      return res.status(400).json({
-        success: false,
-        error: 'sentenceId and userTranslation are required'
-      })
-    }
-    
-    // Find the sentence
-    const sentence = seedSentences.find(s => s.id === sentenceId && s.isActive)
-    if (!sentence) {
-      return res.status(404).json({
-        success: false,
-        error: 'Sentence not found'
-      })
-    }
-    
-    // Use AI evaluation service (with caching and fallback as per rules)
-    // TODO: Fix universal AI service integration
-    // For now, provide a simple fallback response to get server running
-    const evaluation = {
-      score: 85,
-      feedback: "Good translation! Keep practicing.",
-      isCorrect: true,
-      cached: false
-    }
-    
-    // Calculate points earned (basic gamification)
-    const basePoints = evaluation.score
-    const timeBonus = timeSpent && timeSpent < 30000 ? 10 : 0 // Bonus for quick answers
-    const hintPenalty = (hintsUsed || 0) * 5 // 5 point penalty per hint
-    const pointsEarned = Math.max(0, basePoints + timeBonus - hintPenalty)
-    
-    // Determine grade
-    const grade = evaluation.score >= 90 ? 'A' : 
-                  evaluation.score >= 80 ? 'B' :
-                  evaluation.score >= 70 ? 'C' :
-                  evaluation.score >= 60 ? 'D' : 'F'
-    
-    res.json({
-      success: true,
-      data: {
-        score: evaluation.score,
-        feedback: evaluation.feedback,
-        isCorrect: evaluation.isCorrect,
-        grade,
-        pointsEarned,
-        cached: evaluation.cached,
-        timeSpent: timeSpent || 0,
-        hintsUsed: hintsUsed || 0,
-        evaluationDetails: {
-          userTranslation,
-          correctAnswer: sentence.spanish,
-          difficulty: sentence.difficulty
-        }
-      }
-    })
-    
-  } catch (error) {
-    console.error('Error evaluating translation:', error)
-    res.status(500).json({
-      success: false,
-      error: 'Failed to evaluate translation. Please try again.'
-    })
-  }
-})
+
 
 // 🎯 ENHANCED WORD EVALUATION with Content-Aware AI
 router.post('/evaluate-word', async (req, res) => {
@@ -311,6 +241,56 @@ router.get('/meta/stats', async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Failed to fetch statistics'
+    })
+  }
+})
+
+// ✅ POST /api/sentences/evaluate - Complete translation evaluation 
+router.post('/evaluate', async (req, res) => {
+  try {
+    const { sentenceId, userTranslation, correctAnswer, pageContext = 'practice' } = req.body
+
+    if (!sentenceId || !userTranslation) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields: sentenceId and userTranslation'
+      })
+    }
+
+    // Use our Universal AI Service for complete translation evaluation
+    const evaluationResult = await universalAILearningService.evaluateWord({
+      word: userTranslation.trim(),
+      context: correctAnswer || 'Spanish sentence context',
+      difficulty: 'beginner',
+      language: 'spanish',
+      pageContext
+    })
+
+    // Convert word evaluation to sentence evaluation format
+    const score = Math.round(evaluationResult.score)
+    const grade = score >= 90 ? 'A+' : score >= 80 ? 'A' : score >= 70 ? 'B' : score >= 60 ? 'C' : 'D'
+    
+    res.json({
+      success: true,
+      data: {
+        score,
+        grade,
+        feedback: evaluationResult.feedback,
+        isCorrect: evaluationResult.status === 'correct',
+        status: evaluationResult.status,
+        confidence: evaluationResult.confidence,
+        corrections: [],
+        pointsEarned: Math.round(score / 10),
+        cached: evaluationResult.cached,
+        evaluationTime: evaluationResult.evaluationTime
+      }
+    })
+  } catch (error) {
+    console.error('Translation evaluation error:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Translation evaluation failed',
+      details: error instanceof Error ? error.message : 'Unknown error'
     })
   }
 })

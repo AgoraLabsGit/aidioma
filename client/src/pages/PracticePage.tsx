@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import SharedSidebar from '../components/Sidebar'
-import { ChevronDown, Filter, BookOpen, Lightbulb, CheckCircle, AlertCircle, X, Target, Clock, Zap } from 'lucide-react'
-import { ActionButtons, ProgressStats, ProgressWheels } from '../components/ui'
+import { ChevronDown, Filter, Lightbulb, CheckCircle, AlertCircle, X } from 'lucide-react'
+import { ActionButtons, ProgressWheels } from '../components/ui'
 import { Logo } from '../components/Logo'
 import { usePracticeWorkflow } from '../hooks/usePractice'
-import type { CurrentUser, Sentence } from '../types'
+import type { CurrentUser } from '../types'
 
 interface SentenceData {
   id: number
@@ -18,10 +18,7 @@ interface PracticeFiltersProps {
   onToggle: () => void
 }
 
-interface ErrorToastProps {
-  message: string
-  onClose: () => void
-}
+
 
 interface WordEvaluation {
   word: string
@@ -56,7 +53,7 @@ function InteractiveSentence({ sentenceData, className = '' }: InteractiveSenten
     }
     
     try {
-      const response = await fetch('http://localhost:5001/api/sentences/evaluate-word', {
+      const response = await fetch('/api/sentences/evaluate-word', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -125,7 +122,7 @@ function InteractiveSentence({ sentenceData, className = '' }: InteractiveSenten
     }
 
     try {
-      const response = await fetch('http://localhost:5001/api/sentences/progressive-hint', {
+      const response = await fetch('/api/sentences/progressive-hint', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -176,14 +173,12 @@ function InteractiveSentence({ sentenceData, className = '' }: InteractiveSenten
   const handleWordClick = useCallback(async (word: string, sentence: any) => {
     if (!sentence) return
     
-    // Evaluate word on click
+    // Only evaluate word on click - no automatic hints
     const evaluation = await evaluateWord(word, sentence)
     setWordEvaluations(prev => new Map(prev.set(word, evaluation)))
     
-    // Generate hint
-    const hint = await generateHint(word, sentence)
-    setActiveHint(hint)
-  }, [evaluateWord, generateHint])
+    // Hints are only shown when explicitly requested via the Hint button
+  }, [evaluateWord])
 
   const renderWord = useCallback((word: string, index: number) => {
     const cleanWord = word.replace(/[.,!?;:]$/, '')
@@ -229,7 +224,7 @@ function InteractiveSentence({ sentenceData, className = '' }: InteractiveSenten
     )
   }, [wordEvaluations, handleWordClick])
 
-  const words = sentenceData ? sentenceData.english.split(/\s+/) : []
+  const words: string[] = sentenceData ? sentenceData.english.split(/\s+/) : []
 
   return (
     <div className={`space-y-6 ${className}`}>
@@ -324,23 +319,7 @@ function PracticeFilters({ isOpen, onToggle }: PracticeFiltersProps) {
   )
 }
 
-// Error Toast Component
-function ErrorToast({ message, onClose }: ErrorToastProps) {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 3000)
-    return () => clearTimeout(timer)
-  }, [onClose])
 
-  return (
-    <div className="fixed bottom-4 right-4 bg-destructive text-destructive-foreground px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 z-50">
-      <AlertCircle className="w-5 h-5" />
-      <span className="text-sm">{message}</span>
-      <button onClick={onClose} className="ml-2">
-        <X className="w-4 h-4" />
-      </button>
-    </div>
-  )
-}
 
 export default function PracticePage() {
   const [currentUser] = useState<CurrentUser>({ 
@@ -361,6 +340,12 @@ export default function PracticePage() {
   const [showHint, setShowHint] = useState(false)
   const [showError, setShowError] = useState(false)
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
+  
+  // ✅ ENHANCED: Loading states and error handling from V1
+  const [isEvaluating, setIsEvaluating] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [errorType, setErrorType] = useState<'error' | 'warning' | 'info'>('error')
+  const [retryFunction, setRetryFunction] = useState<(() => void) | null>(null)
 
   // ✅ REAL DATA - From backend API with proper navigation
   const practiceStats = {
@@ -383,12 +368,14 @@ export default function PracticePage() {
   } : null
 
   const handleSubmit = async () => {
-    if (!userTranslation.trim() || !currentSentence) return
+    if (!userTranslation.trim() || !currentSentence || isEvaluating) return
 
     try {
+      setIsEvaluating(true) // ✅ ENHANCED: Show loading state
+      
       // ✅ REAL API EVALUATION - Using backend evaluation
       const startTime = Date.now()
-      const response = await fetch('http://localhost:5001/api/sentences/evaluate', {
+      const response = await fetch('/api/sentences/evaluate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -401,11 +388,18 @@ export default function PracticePage() {
         })
       })
 
+      if (!response.ok) {
+        throw new Error(`API responded with status: ${response.status}`)
+      }
+
       const result = await response.json()
       
       if (!result.success) {
         throw new Error(result.error || 'Evaluation failed')
       }
+
+      // ✅ ENHANCED: Minimum loading time for better UX
+      await new Promise(resolve => setTimeout(resolve, 500))
 
       setEvaluation({
         score: result.data.score,
@@ -417,7 +411,30 @@ export default function PracticePage() {
       setIsEvaluated(true)
     } catch (error) {
       console.error('Evaluation error:', error)
+      
+      // ✅ ENHANCED: Specific error handling with retry functionality
+      let message = 'Failed to evaluate translation. Please try again.'
+      let type: 'error' | 'warning' | 'info' = 'error'
+      
+      if (error instanceof Error) {
+        if (error.message.includes('Network') || error.message.includes('fetch')) {
+          message = 'Network error. Please check your connection and try again.'
+          type = 'warning'
+        } else if (error.message.includes('timeout')) {
+          message = 'Evaluation took too long. Please try again.'
+          type = 'warning'
+        } else if (error.message.includes('500')) {
+          message = 'Server error. Our team has been notified.'
+          type = 'error'
+        }
+      }
+      
+      setErrorMessage(message)
+      setErrorType(type)
+      setRetryFunction(() => handleSubmit) // Allow retry
       setShowError(true)
+    } finally {
+      setIsEvaluating(false) // ✅ ENHANCED: Clear loading state
     }
   }
 
@@ -523,6 +540,20 @@ export default function PracticePage() {
                 ) : (
                   <div className="text-center text-muted-foreground py-8">
                     No sentences available.
+                  </div>
+                )}
+
+                {/* ✅ ENHANCED: Loading Animation */}
+                {isEvaluating && (
+                  <div className="p-4 bg-muted border border-border rounded-lg animate-pulse">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-5 h-5 border border-primary border-t-transparent rounded-full animate-spin" />
+                      <span className="text-foreground font-medium">Evaluating your translation...</span>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="w-3/4 h-3 bg-muted-foreground/20 rounded animate-pulse" />
+                      <div className="w-1/2 h-3 bg-muted-foreground/20 rounded animate-pulse" />
+                    </div>
                   </div>
                 )}
 
@@ -646,10 +677,44 @@ export default function PracticePage() {
 
       {/* Error Toast Component */}
       {showError && (
-        <ErrorToast 
-          message="Failed to evaluate translation. Please try again."
-          onClose={() => setShowError(false)}
-        />
+        <div className="fixed bottom-4 right-4 z-50 max-w-md">
+          <div className={`p-4 rounded-lg shadow-lg border ${
+            errorType === 'error' ? 'bg-red-500/10 border-red-500/20 text-red-700 dark:text-red-400' :
+            errorType === 'warning' ? 'bg-yellow-500/10 border-yellow-500/20 text-yellow-700 dark:text-yellow-400' :
+            'bg-blue-500/10 border-blue-500/20 text-blue-700 dark:text-blue-400'
+          }`}>
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <p className="text-sm font-medium mb-1">
+                  {errorType === 'error' ? 'Error' : errorType === 'warning' ? 'Warning' : 'Info'}
+                </p>
+                <p className="text-xs">{errorMessage || 'Failed to evaluate translation. Please try again.'}</p>
+              </div>
+              <div className="flex items-center gap-2 ml-3">
+                {retryFunction && (
+                  <button
+                    onClick={() => {
+                      setShowError(false)
+                      retryFunction()
+                    }}
+                    className="text-xs px-2 py-1 rounded bg-primary/20 hover:bg-primary/30 transition-colors"
+                  >
+                    Retry
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setShowError(false)
+                    setRetryFunction(null)
+                  }}
+                  className="text-xs px-2 py-1 rounded hover:bg-muted/50 transition-colors"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

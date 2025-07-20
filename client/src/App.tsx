@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Suspense } from 'react'
 import ErrorBoundary from './components/ErrorBoundary'
 import PracticePage from './pages/PracticePage'
-import PracticePageV1 from './pages/PracticePageV1'
+
 import ReadingPage from './pages/ReadingPage'
 import MemorizePage from './pages/MemorizePage'
 import ConversationsPage from './pages/ConversationsPage'
@@ -35,7 +35,6 @@ function App() {
           <Router>
             <Route path="/" component={PracticePage} />
             <Route path="/practice" component={PracticePage} />
-            <Route path="/practice-v1" component={PracticePageV1} />
             <Route path="/reading" component={ReadingPage} />
             <Route path="/memorize" component={MemorizePage} />
             <Route path="/conversations" component={ConversationsPage} />

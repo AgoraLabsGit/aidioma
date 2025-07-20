@@ -30,7 +30,7 @@ const api = {
         limit: (params.limit || 10).toString()
       })
       
-      const response = await fetch(`http://localhost:5001/api/sentences?${queryParams}`)
+      const response = await fetch(`/api/sentences?${queryParams}`)
       const result = await response.json()
       
       if (!result.success) {
@@ -71,7 +71,7 @@ const api = {
 
   submitPractice: async (userId: string, data: SubmitPracticeData): Promise<APIResponse<PracticeSession>> => {
     try {
-      const response = await fetch('http://localhost:5001/api/sentences/evaluate', {
+      const response = await fetch('/api/sentences/evaluate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -116,7 +116,7 @@ const api = {
 
   getSentenceById: async (id: string): Promise<APIResponse<Sentence>> => {
     try {
-      const response = await fetch(`http://localhost:5001/api/sentences/${id}`)
+      const response = await fetch(`/api/sentences/${id}`)
       const result = await response.json()
       
       if (!result.success) {

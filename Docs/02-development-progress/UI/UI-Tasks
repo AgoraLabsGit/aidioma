@@ -1,0 +1,39 @@
+# UI Tasks - Incomplete & Untested Items
+
+## **🔧 Priority Issues to Fix**
+
+### **Word-Level Functionality**
+- [ ] **Progressive Hints**: Currently shows one generic hint, should show 3 levels of increasing specificity
+- [ ] **Word Click Feedback**: Generic "daily conversation" response instead of contextual Spanish hints
+- [ ] **AI Performance**: Sometimes takes 3+ seconds to load (should be <3s consistently)
+
+### **Session Management**
+- [ ] **Session Persistence**: Progress state updates even if user didn't answer or left input blank
+  - **Question**: Is this intended behavior or should progress only advance on correct answers?
+
+### **Untested Features** 
+- [ ] **Responsive Design**: Test on mobile/desktop for layout breaks
+- [ ] **Error Handling**: Test offline/network disconnection scenarios  
+- [ ] **Server Error Recovery**: Test server shutdown/restart scenarios
+- [ ] **Network Issues**: Verify retry button appears with specific error messages
+
+## **📱 Testing Priorities**
+
+### **Immediate Testing Needed**
+1. **Mobile Responsiveness** - Test across device sizes
+2. **Error Scenarios** - Disconnect network, stop server
+3. **Progressive Hints** - Verify 3-level hint system works
+4. **Performance** - Measure and optimize AI response times
+
+### **Development Questions** 
+- [ ] **Session Progress Logic**: Should progress advance without correct answers?
+- [ ] **Word Hints**: Should be contextual Spanish translations, not generic advice?
+- [ ] **Performance Standards**: Is 3+ seconds acceptable for complex AI responses?
+
+## **🎯 Success Criteria**
+- [ ] All word clicks provide contextual Spanish hints
+- [ ] Progressive hints work with 3 distinct levels
+- [ ] Consistent <3s AI response times
+- [ ] Mobile responsive across all screen sizes
+- [ ] Graceful error handling with retry functionality
+- [ ] Clear session progress logic (with/without correct answers)
