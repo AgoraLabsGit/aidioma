@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import SharedSidebar from '../components/Sidebar'
-import { ChevronDown, Filter, BookOpen, Lightbulb, CheckCircle, AlertCircle, X, Target, Clock, Zap } from 'lucide-react'
-import { ActionButtons, ProgressStats, ProgressWheels } from '../components/ui'
+import { ChevronDown, Filter, BookOpen, Volume2, CheckCircle, AlertCircle, X, Target, Clock, Zap, Lightbulb, ChevronUp, Check, RotateCcw } from 'lucide-react'
+import { Button } from '../components/ui/Button'
+import { ProgressWheels } from '../components/ProgressWheels'
 import { Logo } from '../components/Logo'
 import type { CurrentUser } from '../types'
 
@@ -15,6 +16,12 @@ interface SentenceData {
 interface PracticeFiltersProps {
   isOpen: boolean
   onToggle: () => void
+}
+
+interface AudioButtonProps {
+  text: string
+  language: string
+  className?: string
 }
 
 interface ErrorToastProps {
@@ -160,6 +167,24 @@ function InteractiveSentence({ sentence, className = '' }: InteractiveSentencePr
   )
 }
 
+// Audio Button Component
+function AudioButton({ text, language, className = '' }: AudioButtonProps) {
+  const handlePlay = () => {
+    // Mock audio play functionality
+    console.log(`Playing: "${text}" in ${language}`)
+  }
+
+  return (
+    <button
+      onClick={handlePlay}
+      className={`p-2 bg-muted hover:bg-muted/80 rounded-lg transition-colors ${className}`}
+      title={`Play ${language} audio`}
+    >
+      <Volume2 className="w-4 h-4 text-muted-foreground" />
+    </button>
+  )
+}
+
 // Practice Filters Component - Compact style like in screenshot
 function PracticeFilters({ isOpen, onToggle }: PracticeFiltersProps) {
   return (
@@ -238,7 +263,7 @@ function ErrorToast({ message, onClose }: ErrorToastProps) {
   )
 }
 
-export default function PracticePage() {
+export default function PracticePageV1() {
   const [currentUser] = useState<CurrentUser>({ 
     id: 'demo-user', 
     name: 'Demo User', 
@@ -319,14 +344,6 @@ export default function PracticePage() {
     console.log('Bookmarking sentence...')
   }
 
-  const handleNavigatePrevious = () => {
-    console.log('Previous sentence...')
-  }
-
-  const handleNavigateNext = () => {
-    handleNext()
-  }
-
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Unified Header spanning full width - responsive - Fixed Position - Match menu background */}
@@ -343,7 +360,7 @@ export default function PracticePage() {
         
         {/* Header Content - responsive */}
         <div className="flex-1 px-6 py-4 flex items-center justify-start pl-4 md:pl-12">
-          <h1 className="text-xl md:text-2xl font-semibold text-foreground tracking-tight">Translation Practice</h1>
+          <h1 className="text-xl md:text-2xl font-semibold text-foreground tracking-tight">Practice.v1</h1>
         </div>
         
         {/* Header Progress Wheels - responsive */}
@@ -397,7 +414,7 @@ export default function PracticePage() {
                   </div>
                 )}
 
-                {/* Translation Input - Increased bottom padding */}
+                {/* Simple Translation Input - Increased bottom padding */}
                 <div className="space-y-3 pb-2">
                   <textarea
                     value={userTranslation}
@@ -407,21 +424,86 @@ export default function PracticePage() {
                   />
                 </div>
 
-                {/* Action Buttons */}
-                <ActionButtons 
-                  isEvaluated={isEvaluated}
-                  userTranslation={userTranslation}
-                  onSubmit={handleSubmit}
-                  onSkip={handleSkip}
-                  onNext={handleNext}
-                  onHint={handleHint}
-                  onBookmark={handleBookmark}
-                  onNavigatePrevious={handleNavigatePrevious}
-                  onNavigateNext={handleNavigateNext}
-                  showHint={showHint}
-                  currentSentence={practiceStats.currentSentence}
-                  totalSentences={practiceStats.totalSentences}
-                />
+                {/* Action Buttons - Icon-only style with larger Check button */}
+                <div className="flex flex-col items-center gap-4 w-full max-w-md mx-auto">
+                  {/* Primary action row */}
+                  <div className="flex items-center justify-center gap-4 w-full">
+                    {/* Previous Button - Up Arrow Icon - Reduced by 30% */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleNext}
+                      disabled={practiceStats.currentSentence <= 1}
+                      className="flex items-center justify-center p-3 h-14 w-14"
+                    >
+                      <ChevronUp className="w-11 h-11" />
+                    </Button>
+
+                    {/* Check/Submit Button - Green Check Mark Icon */}
+                    {!isEvaluated ? (
+                      <Button
+                        onClick={handleSubmit}
+                        disabled={!userTranslation.trim()}
+                        className="flex items-center justify-center min-h-[44px] min-w-[44px] rounded-full bg-green-600 hover:bg-green-700 text-white"
+                      >
+                        <Check className="w-6 h-6" />
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => {
+                          setIsEvaluated(false)
+                          setEvaluation(null)
+                          setUserTranslation('')
+                        }}
+                        variant="secondary"
+                        className="flex items-center justify-center min-h-[44px] min-w-[44px] rounded-full"
+                      >
+                        <RotateCcw className="w-6 h-6" />
+                      </Button>
+                    )}
+
+                    {/* Next Button - Down Arrow Icon - Reduced by 30% */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleNext}
+                      disabled={practiceStats.currentSentence >= practiceStats.totalSentences}
+                      className="flex items-center justify-center p-3 h-14 w-14"
+                    >
+                      <ChevronDown className="w-11 h-11" />
+                    </Button>
+                  </div>
+
+                  {/* Secondary Buttons */}
+                  <div className="flex items-center justify-center gap-1">
+                    <Button
+                      variant="secondary"
+                      onClick={handleHint}
+                      className="px-3 py-2 text-sm"
+                    >
+                      💡 Hint
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={handleSkip}
+                      className="px-3 py-2 text-sm"
+                    >
+                      Skip
+                    </Button>
+                  </div>
+
+                  {/* Next Button (when evaluated) */}
+                  {isEvaluated && (
+                    <Button
+                      onClick={handleNext}
+                      variant="ghost"
+                      className="px-6 py-2 text-sm"
+                      size="md"
+                    >
+                      Next Sentence →
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
               
@@ -489,4 +571,4 @@ export default function PracticePage() {
       )}
     </div>
   )
-}
+} 

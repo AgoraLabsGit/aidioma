@@ -30,8 +30,8 @@ export default function Sidebar({ currentUser }: SidebarProps) {
 
   return (
     <aside className="hidden md:flex w-64 bg-muted border-r border-border flex-col fixed left-0 top-16 bottom-0 z-40">
-      {/* Navigation */}
-      <nav className="flex-1 p-4 pt-8">
+      {/* Navigation - Align with filter box */}
+      <nav className="flex-1 p-4 pt-12">
         <ul className="space-y-2">
           {navigationItems.map((item) => {
             const Icon = item.icon;

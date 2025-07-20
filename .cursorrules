@@ -1,0 +1,214 @@
+# AIdioma Development Rules
+
+## Project Context
+AIdioma is a Spanish-to-English language learning platform with 12 reusable modules across 6 pages. You MUST focus on module-first architecture with 64% component reusability. TypeScript-first development with ZERO any usage allowed.
+
+## Technology Stack Requirements
+You MUST use these approved libraries:
+- Frontend: React 18 + TypeScript + TanStack Query + shadcn/ui + Tailwind + wouter + react-hook-form + zod + framer-motion
+- Backend: Node.js + Express + Drizzle ORM + PostgreSQL
+- AI: OpenAI + Anthropic with mandatory caching
+- Testing: Vitest + Playwright
+
+You SHALL NOT use these duplicates: redux, react-router, styled-components, formik, axios, lodash, moment
+
+## Performance Requirements (MANDATORY)
+You MUST meet these limits:
+- AI Evaluation: <2000ms response time, >80% cache hit rate
+- UI Interactions: <100ms response time
+- Bundle Size: <10KB additions preferred, >50KB requires justification
+- Test Coverage: >90% for all modules
+
+## TypeScript Standards (REQUIRED)
+```typescript
+// REQUIRED: Strict typing, zero any usage
+interface EvaluationInput {
+  sentenceId: number
+  userTranslation: string
+  correctAnswers: string[]
+  context: EvaluationContext
+}
+
+// FORBIDDEN: any usage
+function evaluate(input: any): any { ... }
+```
+
+You MUST use strict TypeScript with zero `any` types. You SHALL define proper interfaces for all data structures.
+
+## AI Integration Pattern (MANDATORY)
+```typescript
+// MANDATORY: All AI calls MUST implement caching and timeout
+async function aiServiceCall<T>(
+  cacheKey: string,
+  aiCall: () => Promise<T>,
+  fallback: () => T
+): Promise<T & { cached: boolean }> {
+  const cached = await cache.get(cacheKey)
+  if (cached) return { ...cached, cached: true }
+  
+  try {
+    const result = await Promise.race([
+      aiCall(),
+      new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('AI timeout')), 2000)
+      )
+    ])
+    await cache.set(cacheKey, result)
+    return { ...result, cached: false }
+  } catch (error) {
+    logger.error('AI service failed', { error, cacheKey })
+    return fallback()
+  }
+}
+```
+
+You MUST implement this pattern for ALL AI service calls. Direct AI calls without caching are FORBIDDEN.
+
+## Component Reusability (REQUIRED)
+```typescript
+// REQUIRED: Multi-page reusable component
+interface ActionButtonsProps {
+  actions: ActionConfig[]
+  disabled?: boolean
+  size?: 'sm' | 'md' | 'lg'
+  variant?: 'primary' | 'secondary' | 'ghost'
+  onAction: (actionId: string) => void
+  className?: string
+}
+
+// FORBIDDEN: Page-specific component
+function PracticeSubmitButton() { ... }
+```
+
+You MUST create components that work across multiple pages. Page-specific components are FORBIDDEN unless absolutely necessary.
+
+## Design System Standards (MANDATORY)
+```typescript
+// REQUIRED: Use design tokens only
+<div className="bg-background text-foreground border-border">
+  <Button variant="default" size="md">Submit Translation</Button>
+</div>
+
+// FORBIDDEN: Custom colors
+<div style={{ backgroundColor: '#123456' }}>
+```
+
+You MUST use design system tokens exclusively. Custom colors and styles are FORBIDDEN.
+
+## Module Interface Pattern (REQUIRED)
+```typescript
+interface StandardModule<TConfig, TInput, TResult, TState> {
+  initialize(config: TConfig): Promise<void>
+  cleanup(): Promise<void>
+  [primaryMethod](input: TInput): Promise<TResult>
+  getState(): TState
+  getMetrics(): ModuleMetrics
+}
+```
+
+You MUST implement this interface pattern for all modules. Deviation from this standard is NOT PERMITTED.
+
+## Library Research Protocol (MANDATORY)
+Before adding ANY dependency, you MUST:
+1. Check existing: grep -r "library-name" package.json
+2. Score 1-5: Technical (40%) + Ecosystem (30%) + Security (20%) + Fit (10%)
+3. Decision: >4.0 = Adopt, 3.0-4.0 = POC, <3.0 = Custom
+4. Document: Create Library Decision Record
+5. Justify: 2-hour integration vs 2-week custom development
+
+Adding libraries without this evaluation is FORBIDDEN.
+
+## Pre-Commit Requirements (MANDATORY)
+You MUST run these checks before ANY commit:
+```bash
+npm run lint                    # MUST pass with zero warnings
+npm run type-check             # MUST pass with zero errors
+npm run test                   # MUST achieve >90% coverage
+npm run build                  # MUST complete bundle analysis
+```
+
+You MUST verify:
+- Module reusability across pages
+- Zero any usage in TypeScript
+- AI calls implement caching and timeout
+- Design system tokens used exclusively
+- Performance within limits (<2000ms AI, <100ms UI)
+- Documentation updated for affected areas
+
+## Red Lines (ZERO TOLERANCE)
+These are FORBIDDEN with NO exceptions:
+1. any types - All TypeScript MUST be properly typed
+2. AI calls without caching - Every AI interaction REQUIRES caching strategy
+3. >50KB bundle additions without performance justification
+4. Custom solutions when existing stack provides functionality
+5. Security vulnerabilities - Zero tolerance for known CVEs
+6. Accessibility regressions - WCAG AA compliance REQUIRED
+
+## Responsive Design (MANDATORY)
+```typescript
+<div className="
+  w-full max-w-sm mx-auto          // Mobile: constrained width
+  sm:max-w-md                      // Small: wider
+  lg:max-w-4xl lg:mx-0            // Large: full width
+  grid grid-cols-1 gap-4          // Mobile: single column
+  lg:grid-cols-3 lg:gap-6         // Large: three columns
+">
+  <SessionStats className="lg:col-span-3" />
+  <PracticeFilters />
+  <TranslationInput className="lg:col-span-2" />
+</div>
+```
+
+You MUST follow this mobile-first responsive pattern.
+
+## Accessibility (REQUIRED)
+```typescript
+<Button
+  aria-label="Submit translation for evaluation"
+  aria-describedby="translation-help"
+  className="min-h-[44px]"
+  onKeyDown={handleKeyboardNavigation}
+>
+  Check Answer
+</Button>
+```
+
+You MUST include proper ARIA labels, keyboard navigation, and 44px minimum touch targets.
+
+## Error Handling (MANDATORY)
+```typescript
+class ErrorHandler {
+  static handle(error: Error, context: ErrorContext) {
+    logger.error('Operation failed', { error: error.message, context })
+    metrics.increment('errors.total', { module: context.module })
+    
+    const userMessage = error instanceof ValidationError 
+      ? error.message 
+      : 'Something went wrong. Please try again.'
+      
+    return {
+      success: false,
+      error: userMessage,
+      fallbackData: this.getFallbackData(context)
+    }
+  }
+}
+```
+
+You MUST implement comprehensive error handling with logging, metrics, and graceful degradation.
+
+## Commit Standards (REQUIRED)
+```bash
+git commit -m "feat(module): descriptive message
+
+- Specific change 1
+- Specific change 2
+- Performance impact: [measurement]
+- Module reusability: [assessment]
+- Bundle size impact: [measurement]
+- Test coverage: [percentage]"
+```
+
+You MUST follow this commit format and include impact measurements.
+
+You MUST focus on module-first development where components are reusable across Practice, Reading, Conversation, Memorize, Progress, and Settings pages. You SHALL prioritize performance, type safety, and cost-effective AI usage above all else. 
