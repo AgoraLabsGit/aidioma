@@ -3,7 +3,8 @@ import SharedSidebar from '../components/Sidebar'
 import { ChevronDown, Filter, BookOpen, Lightbulb, CheckCircle, AlertCircle, X, Target, Clock, Zap } from 'lucide-react'
 import { ActionButtons, ProgressStats, ProgressWheels } from '../components/ui'
 import { Logo } from '../components/Logo'
-import type { CurrentUser } from '../types'
+import { usePracticeWorkflow } from '../hooks/usePractice'
+import type { CurrentUser, Sentence } from '../types'
 
 interface SentenceData {
   id: number
@@ -248,17 +249,9 @@ export default function PracticePage() {
     streakDays: 3
   })
 
-  const [currentSentence] = useState<SentenceData>({
-    id: 1,
-    english: 'I drink coffee every morning.',
-    spanish: 'Bebo café todas las mañanas.',
-    hints: [
-      'In Spanish, "drink" can be "bebo" (from beber) or "tomo" (from tomar)',
-      'Remember that "coffee" is masculine: "el café"',
-      'Morning routine verbs often use present tense'
-    ]
-  })
-
+  // ✅ REAL API INTEGRATION - Using actual backend
+  const practiceWorkflow = usePracticeWorkflow(currentUser.id, 'spanish')
+  
   const [userTranslation, setUserTranslation] = useState('')
   const [isEvaluated, setIsEvaluated] = useState(false)
   const [evaluation, setEvaluation] = useState<any>(null)
@@ -266,37 +259,68 @@ export default function PracticePage() {
   const [showError, setShowError] = useState(false)
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
 
-  // Mock practice stats
+  // ✅ REAL DATA - From backend API with proper navigation
   const practiceStats = {
-    currentSentence: 1,
-    totalSentences: 3,
-    correctCount: 12,
-    incorrectCount: 3
+    currentSentence: practiceWorkflow.currentSentenceIndex + 1, // 1-based for display
+    totalSentences: practiceWorkflow.totalSentences,
+    correctCount: 12, // TODO: Get from user progress
+    incorrectCount: 3, // TODO: Get from user progress
+    canGoPrevious: practiceWorkflow.canGoPrevious,
+    canGoNext: practiceWorkflow.canGoNext
   }
 
+  // ✅ REAL SENTENCE DATA - From backend  
+  const currentSentence = practiceWorkflow.currentSentence ? {
+    id: parseInt(practiceWorkflow.currentSentence.id),
+    english: practiceWorkflow.currentSentence.english,
+    spanish: practiceWorkflow.currentSentence.spanish,
+    hints: Array.isArray(practiceWorkflow.currentSentence.hints) 
+      ? practiceWorkflow.currentSentence.hints 
+      : JSON.parse(practiceWorkflow.currentSentence.hints as string || '[]')
+  } : null
+
   const handleSubmit = async () => {
-    if (!userTranslation.trim()) return
+    if (!userTranslation.trim() || !currentSentence) return
 
     try {
-      // Mock evaluation result
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // ✅ REAL API EVALUATION - Using backend evaluation
+      const startTime = Date.now()
+      const response = await fetch('http://localhost:5001/api/sentences/evaluate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          sentenceId: currentSentence.id.toString(),
+          userTranslation: userTranslation,
+          timeSpent: Date.now() - startTime,
+          hintsUsed: showHint ? 1 : 0
+        })
+      })
+
+      const result = await response.json()
       
-      const mockEvaluation = {
-        score: 8.5,
-        feedback: 'Great translation! Minor grammar improvements possible.',
-        isCorrect: true,
-        corrections: []
+      if (!result.success) {
+        throw new Error(result.error || 'Evaluation failed')
       }
 
-      setEvaluation(mockEvaluation)
+      setEvaluation({
+        score: result.data.score,
+        feedback: result.data.feedback,
+        isCorrect: result.data.isCorrect,
+        grade: result.data.grade,
+        pointsEarned: result.data.pointsEarned
+      })
       setIsEvaluated(true)
     } catch (error) {
+      console.error('Evaluation error:', error)
       setShowError(true)
     }
   }
 
   const handleSkip = () => {
-    console.log('Skipping sentence...')
+    // ✅ FIXED: Actually skip to next sentence
+    practiceWorkflow.goToNextSentence()
     setUserTranslation('')
     setIsEvaluated(false)
     setEvaluation(null)
@@ -304,7 +328,8 @@ export default function PracticePage() {
   }
 
   const handleNext = () => {
-    console.log('Next sentence...')
+    // ✅ FIXED: Actually go to next sentence
+    practiceWorkflow.goToNextSentence()
     setUserTranslation('')
     setIsEvaluated(false)
     setEvaluation(null)
@@ -320,7 +345,12 @@ export default function PracticePage() {
   }
 
   const handleNavigatePrevious = () => {
-    console.log('Previous sentence...')
+    // ✅ FIXED: Actually go to previous sentence
+    practiceWorkflow.goToPreviousSentence()
+    setUserTranslation('')
+    setIsEvaluated(false)
+    setEvaluation(null)
+    setShowHint(false)
   }
 
   const handleNavigateNext = () => {
@@ -374,25 +404,54 @@ export default function PracticePage() {
               <div className="bg-muted border border-border rounded-lg p-6 md:p-8 space-y-8">
                 
                 {/* Interactive Sentence Display - Increased bottom padding */}
-                <InteractiveSentence 
-                  sentence={currentSentence.english}
-                  className="pb-2"
-                />
+                {practiceWorkflow.isLoading ? (
+                  <div className="text-center text-muted-foreground py-8">
+                    Loading sentences...
+                  </div>
+                ) : practiceWorkflow.error ? (
+                  <div className="text-center text-red-600 py-8">
+                    Error loading sentences. Please refresh the page.
+                  </div>
+                ) : currentSentence ? (
+                  <InteractiveSentence 
+                    sentence={currentSentence.english}
+                    className="pb-2"
+                  />
+                ) : (
+                  <div className="text-center text-muted-foreground py-8">
+                    No sentences available.
+                  </div>
+                )}
 
-                {/* Evaluation Results - Muted styling to match design guidelines */}
+                {/* Evaluation Results - Enhanced with grade and points */}
                 {isEvaluated && evaluation && (
                   <div className="p-4 bg-muted border border-border rounded-lg">
-                    <h3 className="font-semibold text-foreground mb-2">Evaluation Result</h3>
-                    <p className="text-foreground mb-2">Score: {evaluation.score}/10</p>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-foreground">Evaluation Result</h3>
+                      <div className="flex items-center gap-3">
+                        <span className={`font-bold text-lg ${
+                          evaluation.score >= 80 ? 'text-green-600' : 
+                          evaluation.score >= 60 ? 'text-orange-600' : 'text-red-600'
+                        }`}>
+                          {evaluation.grade}
+                        </span>
+                        <span className="text-sm text-muted-foreground">
+                          +{evaluation.pointsEarned} pts
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-foreground mb-3">
+                      Score: <span className="font-semibold">{evaluation.score}/100</span>
+                    </p>
                     <p className="text-muted-foreground text-sm">{evaluation.feedback}</p>
                   </div>
                 )}
 
                 {/* Hint Display - Muted styling to match design guidelines */}
-                {showHint && (
+                {showHint && currentSentence && (
                   <div className="p-4 bg-muted border border-border rounded-lg">
                     <p className="text-sm text-muted-foreground">
-                      💡 <strong>Hint:</strong> {currentSentence.hints[0]}
+                      💡 <strong>Hint:</strong> {currentSentence.hints[0] || 'No hint available'}
                     </p>
                   </div>
                 )}
@@ -421,6 +480,8 @@ export default function PracticePage() {
                   showHint={showHint}
                   currentSentence={practiceStats.currentSentence}
                   totalSentences={practiceStats.totalSentences}
+                  canGoPrevious={practiceStats.canGoPrevious}  // ✅ NEW: Proper navigation
+                  canGoNext={practiceStats.canGoNext}          // ✅ NEW: Proper navigation
                 />
               </div>
             </div>

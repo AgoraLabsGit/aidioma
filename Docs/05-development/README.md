@@ -40,6 +40,11 @@ AIdioma's development approach centers on **12 reusable modules** that compose i
 - **[Integration Patterns](../02-modules/integration-patterns.md)** - How modules work together
 - **[Component Library](../06-design/component-library.md)** - Reusable UI components
 
+### **Specialized Development Logs**
+| Area | Documentation | Description |
+|------|---------------|-------------|
+| **[AI Systems](../02-modules/language-ai/README.md)** | Complete AI documentation hub | **Single source of truth for all AI implementation** |
+
 ---
 
 ## 🚀 **Quick Start Development Workflow**

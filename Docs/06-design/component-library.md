@@ -1,404 +1,179 @@
-# Component Library
+# Component Library v2.0
 ## Reusable Component Architecture for AIdioma
 
-*Organized component library powering AIdioma's 6 pages with module-first design and 64% reusability.*
+*Comprehensive component library based on Practice Page v2.0 refinements, featuring standardized patterns with 64% reusability across 6 pages and 12 modules.*
 
 ---
 
 ## 🏗️ **Component Architecture**
 
 ### **Design Philosophy**
-- **Module-First**: Components serve multiple pages/modules
-- **Consistent APIs**: Standardized props across all components  
-- **Dark Theme**: Strike-inspired minimal aesthetic
-- **Accessibility**: WCAG 2.1 AA compliant
-- **Performance**: Optimized for fast rendering
+- **Module-First**: Components serve multiple pages/modules with standardized APIs
+- **Fixed Header Layout**: Left-aligned logo with proper spacing patterns
+- **Button System**: Two-row layout with green primary actions
+- **Progress Cards**: Individual cards with clean progress bars
+- **Accessibility**: WCAG AA compliance with 44px minimum touch targets
+- **Performance**: <100ms UI interactions, optimized rendering
 
 ### **Component Categories**
 
-| Category | File | Purpose |
-|----------|------|---------|
-| **[Core UI](./components/core-ui.md)** | Basic building blocks | Button, Input, Card, Modal |
-| **[Learning Components](./components/learning-components.md)** | Language learning specific | TranslationInput, ActionButtons, ScoreDisplay |
-| **[Analytics Components](./components/analytics-components.md)** | Progress & statistics | StatsBox, SessionStats, PerformanceChart |
+| Category | File | Purpose | Usage |
+|----------|------|---------|-------|
+| **[Core UI](./components/core-ui.md)** | Basic building blocks | Button, Input, Card, Logo | All pages |
+| **[Learning Components](./components/learning-components.md)** | Language learning specific | ActionButtons, InteractiveSentence, TranslationInput | Practice, Reading, Conversation |
+| **[Analytics Components](./components/analytics-components.md)** | Progress & statistics | ProgressCard, HealthBar, ProgressWheels | All pages with metrics |
 
 ---
 
-## 🎨 **Design System Standards**
+## 🎨 **Design System Standards v2.0**
 
 ### **Color System**
 ```css
-/* HSL Color Variables */
---background: 220 13% 8%;     /* Main content area */
---foreground: 220 8% 95%;     /* Primary text */
---card: 220 8% 15%;           /* Card backgrounds */
---muted: 220 8% 9%;           /* Sidebar/header */
---border: 220 13% 25%;        /* Subtle borders */
---primary: 220 8% 40%;        /* Primary actions */
---accent: 220 8% 75%;         /* Hover states */
+/* Primary Actions */
+--green-600: #16a34a;      /* Main action buttons */
+--green-700: #15803d;      /* Hover states */
+
+/* Backgrounds */
+--muted: hsl(var(--muted));           /* Secondary elements, cards */
+--background: hsl(var(--background)); /* Main content areas */
+--input: hsl(var(--input));           /* Form elements */
+
+/* Interactive States */
+--correct: #16a34a;    /* text-green-600 */
+--close: #ea580c;      /* text-orange-600 */
+--wrong: #dc2626;      /* text-red-600 */
+
+/* Text Colors */
+--foreground: hsl(var(--foreground));           /* Primary text */
+--muted-foreground: hsl(var(--muted-foreground)); /* Secondary text */
+```
+
+### **Spacing Standards**
+```css
+/* Layout Offsets */
+--header-offset: 4rem;      /* pt-16 - Main content offset */
+--filter-spacing: 2rem;     /* pt-8 - Filter section */
+--sidebar-spacing: 3rem;    /* pt-12 - Sidebar navigation */
+
+/* Component Spacing */
+--section-spacing: 1rem;    /* mb-4 - Between sections */
+--button-primary-gap: 1.25rem;  /* gap-5 - Primary buttons */
+--button-secondary-gap: 0.75rem; /* gap-3 - Secondary buttons */
 ```
 
 ### **Component Standards**
-- **Button Sizing**: `px-6 py-3` for consistency
-- **Icon Size**: `w-6 h-6` for enhanced visibility
-- **Spacing**: `gap-3` between interactive elements
-- **Text Colors**: `text-gray-400` default, `text-white` for primary actions
+- **Button Layout**: Two-row ActionButtons pattern mandatory
+- **Main Action**: Green circular button (`bg-green-600`)
+- **Navigation**: Large transparent arrows (`w-11 h-11`)
+- **Secondary**: Muted background matching inputs (`bg-muted`)
+- **Icon Library**: `lucide-react` exclusively
+- **Touch Targets**: 44px minimum for accessibility
 
 ---
 
-## 🔘 **Core UI Components**
+## 🎯 **Core Component Patterns**
 
-### **Button Component**
-```typescript
-interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
-  size?: 'sm' | 'md' | 'lg'
-  disabled?: boolean
-  loading?: boolean
-  className?: string
-  children: React.ReactNode
-  onClick?: () => void
-}
-
-export function Button({ 
-  variant = 'primary', 
-  size = 'md', 
-  disabled = false, 
-  loading = false,
-  className = '',
-  children,
-  onClick 
-}: ButtonProps) {
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900'
-  
-  const variants = {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500',
-    secondary: 'bg-gray-600 hover:bg-gray-700 text-white focus:ring-gray-500',
-    ghost: 'text-gray-300 hover:text-white hover:bg-gray-800 focus:ring-gray-500',
-    danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500'
-  }
-  
-  const sizes = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg'
-  }
-  
-  return (
-    <button
-      className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${disabled || loading ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
-      disabled={disabled || loading}
-      onClick={onClick}
-    >
-      {loading && (
-        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-current" fill="none" viewBox="0 0 24 24">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-        </svg>
-      )}
-      {children}
-    </button>
-  )
-}
-```
-
-### **ActionButtons Component (Standard Pattern)**
+### **ActionButtons Component (Mandatory)**
 ```typescript
 interface ActionButtonsProps {
-  onCheck: () => void
+  isEvaluated: boolean
+  userTranslation: string
+  onSubmit: () => void
+  onSkip: () => void
   onNext: () => void
   onHint: () => void
-  onReset: () => void
   onBookmark: () => void
-  onSkip: () => void
   onNavigatePrevious: () => void
   onNavigateNext: () => void
-  isEvaluated: boolean
   showHint: boolean
-  disabled: boolean
-  currentParagraph: number
-  totalParagraphs: number
+  currentSentence: number
+  totalSentences: number
+  className?: string
 }
 
 export function ActionButtons({ 
-  onCheck, onNext, onHint, onReset, onBookmark, onSkip, 
-  onNavigatePrevious, onNavigateNext, isEvaluated, showHint, 
-  disabled, currentParagraph, totalParagraphs 
+  isEvaluated: _isEvaluated,
+  userTranslation, 
+  onSubmit, 
+  onSkip, 
+  onNext: _onNext, 
+  onHint, 
+  onBookmark, 
+  onNavigatePrevious, 
+  onNavigateNext, 
+  showHint: _showHint, 
+  currentSentence, 
+  totalSentences,
+  className = ''
 }: ActionButtonsProps) {
+  const canSubmit = userTranslation.trim().length > 0
+
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-center gap-3">
-        {/* 1. Previous Button */}
-        <button
+    <div className={`space-y-4 w-full max-w-lg mx-auto ${className}`}>
+      {/* PRIMARY ROW - Navigation + Main Action */}
+      <div className="flex items-center justify-center gap-5 w-full">
+        {/* Previous Button - Large Arrow */}
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={onNavigatePrevious}
-          disabled={currentParagraph === 0}
-          className="flex items-center gap-2 px-6 py-3 bg-muted text-gray-400 hover:text-gray-300 hover:bg-accent rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={currentSentence <= 1}
+          className="flex items-center justify-center p-3 h-14 w-14"
         >
-          <ChevronUp className="w-4 h-4" />
-          Previous
-        </button>
+          <ChevronUp className="w-11 h-11" />
+        </Button>
 
-        {/* 2. Check Button */}
-        {!isEvaluated ? (
-          <button
-            onClick={onCheck}
-            disabled={disabled}
-            className="flex items-center gap-2 px-6 py-3 bg-muted text-gray-400 hover:text-gray-300 hover:bg-accent rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Check className="w-4 h-4" />
-            Check
-          </button>
-        ) : (
-          <button
-            onClick={onReset}
-            className="flex items-center gap-2 px-6 py-3 bg-muted text-gray-400 hover:text-gray-300 hover:bg-accent rounded-lg font-medium transition-colors"
-          >
-            <RotateCcw className="w-4 h-4" />
-            Try Again
-          </button>
-        )}
+        {/* Main Action - Green Circle */}
+        <Button
+          onClick={onSubmit}
+          disabled={!canSubmit}
+          className="flex items-center justify-center min-h-[44px] min-w-[44px] rounded-full bg-green-600 hover:bg-green-700 text-white"
+        >
+          <Check className="w-6 h-6" />
+        </Button>
 
-        {/* 3. Next Button - ONLY button with white text */}
-        <button
+        {/* Next Button - Large Arrow */}
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={onNavigateNext}
-          disabled={currentParagraph === totalParagraphs - 1}
-          className="flex items-center gap-2 px-6 py-3 bg-muted text-white hover:text-white hover:bg-accent rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={currentSentence >= totalSentences}
+          className="flex items-center justify-center p-3 h-14 w-14"
         >
-          Next
-          <ChevronDown className="w-4 h-4" />
-        </button>
+          <ChevronDown className="w-11 h-11" />
+        </Button>
+      </div>
 
-        {/* 4. Hint Button */}
-        <button
+      {/* SECONDARY ROW - Helper Actions */}
+      <div className="flex items-center justify-center gap-3">
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={onHint}
-          className="flex items-center gap-2 px-6 py-3 bg-muted text-gray-400 hover:text-gray-300 hover:bg-accent rounded-lg font-medium transition-colors"
+          className="flex items-center gap-1 px-3 py-2 text-sm h-9 bg-muted hover:bg-muted/80"
         >
           <Lightbulb className="w-4 h-4" />
-          {showHint ? 'Hide' : 'Hint'}
-        </button>
+          Hint
+        </Button>
 
-        {/* 5. Skip Button */}
-        {!isEvaluated ? (
-          <button
-            onClick={onSkip}
-            className="flex items-center gap-2 px-6 py-3 bg-muted text-gray-400 hover:text-gray-300 hover:bg-accent rounded-lg font-medium transition-colors"
-          >
-            <ArrowRight className="w-4 h-4" />
-            Skip
-          </button>
-        ) : (
-          <button
-            onClick={onNext}
-            className="flex items-center gap-2 px-6 py-3 bg-muted text-gray-400 hover:text-gray-300 hover:bg-accent rounded-lg font-medium transition-colors"
-          >
-            <ArrowRight className="w-4 h-4" />
-            Next Sentence
-          </button>
-        )}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onSkip}
+          className="flex items-center gap-1 px-3 py-2 text-sm h-9 bg-muted hover:bg-muted/80"
+        >
+          <RotateCcw className="w-4 h-4" />
+          Skip
+        </Button>
 
-        {/* 6. Bookmark Button */}
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={onBookmark}
-          className="flex items-center gap-2 px-6 py-3 bg-muted text-gray-400 hover:text-gray-300 hover:bg-accent rounded-lg font-medium transition-colors"
+          className="flex items-center gap-1 px-3 py-2 text-sm h-9 bg-muted hover:bg-muted/80"
         >
           <BookmarkPlus className="w-4 h-4" />
-          Bookmark
-        </button>
-      </div>
-    </div>
-  )
-}
-
-// Button Layout Standards:
-// Order (left to right): Previous, Check, Next, Hint, Skip, Bookmark
-// Sizing: All buttons use px-6 py-3 for uniform sizing
-// Colors: text-gray-400 for all buttons EXCEPT Next button (text-white)
-// Spacing: gap-3 between buttons
-// Hover: hover:text-gray-300 and hover:text-white respectively
-```
-
-### **TranslationInput Component (Standard Pattern)**
-```typescript
-interface TranslationInputProps {
-  value: string
-  onChange: (value: string) => void
-  disabled?: boolean
-  placeholder?: string
-}
-
-export function TranslationInput({ 
-  value, onChange, disabled = false, 
-  placeholder = "Type your English translation here..." 
-}: TranslationInputProps) {
-  return (
-    <div className="mb-6">
-      <textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        disabled={disabled}
-        placeholder={placeholder}
-        className="w-full h-20 px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background transition-all duration-200 font-mono"
-      />
-    </div>
-  )
-}
-```
-
-### **Input Component**
-```typescript
-interface InputProps {
-  label?: string
-  placeholder?: string
-  value: string
-  onChange: (value: string) => void
-  error?: string
-  disabled?: boolean
-  type?: 'text' | 'email' | 'password'
-  className?: string
-}
-
-export function Input({ 
-  label, 
-  placeholder, 
-  value, 
-  onChange, 
-  error, 
-  disabled = false,
-  type = 'text',
-  className = ''
-}: InputProps) {
-  return (
-    <div className={`space-y-1 ${className}`}>
-      {label && (
-        <label className="block text-sm font-medium text-gray-300">
-          {label}
-        </label>
-      )}
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        disabled={disabled}
-        className={`
-          w-full px-3 py-2 bg-gray-800 border rounded-lg text-white placeholder-gray-400
-          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-          disabled:opacity-50 disabled:cursor-not-allowed
-          ${error ? 'border-red-500' : 'border-gray-600 hover:border-gray-500'}
-        `}
-      />
-      {error && (
-        <p className="text-sm text-red-400">{error}</p>
-      )}
-    </div>
-  )
-}
-```
-
-### **Card Component**
-```typescript
-interface CardProps {
-  children: React.ReactNode
-  className?: string
-  padding?: 'sm' | 'md' | 'lg'
-  hover?: boolean
-}
-
-export function Card({ children, className = '', padding = 'md', hover = false }: CardProps) {
-  const paddingClasses = {
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8'
-  }
-  
-  return (
-    <div className={`
-      bg-gray-900 border border-gray-800 rounded-lg
-      ${paddingClasses[padding]}
-      ${hover ? 'hover:border-gray-700 transition-colors' : ''}
-      ${className}
-    `}>
-      {children}
-    </div>
-  )
-}
-```
-
----
-
-## 📱 **Learning-Specific Components**
-
-### **Translation Input Component**
-```typescript
-interface TranslationInputProps {
-  value: string
-  onChange: (value: string) => void
-  onSubmit: () => void
-  placeholder?: string
-  disabled?: boolean
-  showHintButton?: boolean
-  onHintRequest?: () => void
-  maxLength?: number
-}
-
-export function TranslationInput({
-  value,
-  onChange,
-  onSubmit,
-  placeholder = "Type your Spanish translation here...",
-  disabled = false,
-  showHintButton = false,
-  onHintRequest,
-  maxLength = 200
-}: TranslationInputProps) {
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      onSubmit()
-    }
-  }
-  
-  return (
-    <div className="space-y-3">
-      <div className="relative">
-        <textarea
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder={placeholder}
-          disabled={disabled}
-          maxLength={maxLength}
-          className="
-            w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg
-            text-white placeholder-gray-400 resize-none
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-            disabled:opacity-50 disabled:cursor-not-allowed
-          "
-          rows={3}
-        />
-        <div className="absolute bottom-2 right-2 text-xs text-gray-500">
-          {value.length}/{maxLength}
-        </div>
-      </div>
-      
-      <div className="flex justify-between items-center">
-        {showHintButton && (
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={onHintRequest}
-            disabled={disabled}
-          >
-            💡 Hint
-          </Button>
-        )}
-        
-        <Button 
-          onClick={onSubmit} 
-          disabled={disabled || !value.trim()}
-          className="ml-auto"
-        >
-          Check Translation
+          Save
         </Button>
       </div>
     </div>
@@ -406,945 +181,294 @@ export function TranslationInput({
 }
 ```
 
-### **Stats Box Component (Practice Pages)**
-```typescript
-interface StatsBoxProps {
-  icon: React.ComponentType<{ className?: string }>
-  iconColor: string
-  value: string | number
-  label: string
-  className?: string
-}
-
-export function StatsBox({ icon: Icon, iconColor, value, label, className = '' }: StatsBoxProps) {
-  return (
-    <div className={`flex items-center gap-2 p-2 md:p-3 bg-muted rounded-lg ${className}`}>
-      <Icon className={`w-6 h-6 ${iconColor}`} />
-      <div>
-        <div className="text-base md:text-lg font-semibold text-foreground">
-          {value}
-        </div>
-        <div className="text-xs text-muted-foreground">{label}</div>
-      </div>
-    </div>
-  )
-}
-```
-
-**Usage Example**:
-```tsx
-// Practice page stats implementation
-<div className="flex justify-center">
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl">
-    <StatsBox
-      icon={BookOpen}
-      iconColor="text-blue-500"
-      value={`${currentSentence}/${totalSentences}`}
-      label="Sentences"
-    />
-    <StatsBox
-      icon={CheckCircle}
-      iconColor="text-green-500"
-      value={correctCount}
-      label="Correct"
-    />
-    {/* More stats boxes... */}
-  </div>
-</div>
-```
-
-**Icon Standards**:
-- **Size**: `w-6 h-6` (24px) - 50% larger than standard icons for enhanced visibility
-- **Colors**: Semantic colors (blue, green, purple, orange, yellow) for different metrics
-- **Spacing**: `gap-3` (12px) between icon and text content - 50% increase for better visual breathing room
-
-### **Score Display Component**
-```typescript
-interface ScoreDisplayProps {
-  score: number
-  maxScore?: number
-  showDetails?: boolean
-  size?: 'sm' | 'md' | 'lg'
-}
-
-export function ScoreDisplay({ score, maxScore = 10, showDetails = false, size = 'md' }: ScoreDisplayProps) {
-  const percentage = (score / maxScore) * 100
-  
-  const getScoreColor = (score: number) => {
-    if (score >= 8) return 'text-green-400'
-    if (score >= 6) return 'text-yellow-400'
-    if (score >= 4) return 'text-orange-400'
-    return 'text-red-400'
-  }
-  
-  const getScoreEmoji = (score: number) => {
-    if (score >= 9) return '🎉'
-    if (score >= 8) return '✨'
-    if (score >= 6) return '👍'
-    if (score >= 4) return '📚'
-    return '💪'
-  }
-  
-  const sizeClasses = {
-    sm: 'text-lg',
-    md: 'text-2xl',
-    lg: 'text-4xl'
-  }
-  
-  return (
-    <div className="flex items-center space-x-2">
-      <span className="text-2xl">{getScoreEmoji(score)}</span>
-      <span className={`font-bold ${getScoreColor(score)} ${sizeClasses[size]}`}>
-        {score.toFixed(1)}/{maxScore}
-      </span>
-      {showDetails && (
-        <div className="ml-4 text-sm text-gray-400">
-          ({percentage.toFixed(0)}%)
-        </div>
-      )}
-    </div>
-  )
-}
-```
-
-### **Progress Bar Component**
-```typescript
-interface ProgressBarProps {
-  current: number
-  total: number
-  label?: string
-  showNumbers?: boolean
-  className?: string
-}
-
-export function ProgressBar({ current, total, label, showNumbers = true, className = '' }: ProgressBarProps) {
-  const percentage = Math.min((current / total) * 100, 100)
-  
-  return (
-    <div className={`space-y-1 ${className}`}>
-      {(label || showNumbers) && (
-        <div className="flex justify-between text-sm text-gray-400">
-          {label && <span>{label}</span>}
-          {showNumbers && <span>{current}/{total}</span>}
-        </div>
-      )}
-      <div className="w-full bg-gray-700 rounded-full h-2">
-        <div 
-          className="bg-blue-600 h-2 rounded-full transition-all duration-300 ease-out"
-          style={{ width: `${percentage}%` }}
-        />
-      </div>
-    </div>
-  )
-}
-```
+**Key Requirements:**
+- **Mandatory two-row layout** for all pages
+- **gap-5 spacing** for primary buttons (20px)
+- **gap-3 spacing** for secondary buttons (12px)
+- **Green circular** main action button
+- **Large transparent** navigation arrows
+- **Muted background** for secondary actions
 
 ---
 
-## 🔔 **Feedback Components**
-
-### **Toast Notification**
+### **Logo Component**
 ```typescript
-interface ToastProps {
-  message: string
-  type?: 'success' | 'error' | 'warning' | 'info'
-  duration?: number
-  onClose: () => void
+interface LogoProps {
+  size?: 'sm' | 'md' | 'lg'
+  showText?: boolean
+  className?: string
 }
 
-export function Toast({ message, type = 'info', duration = 5000, onClose }: ToastProps) {
-  useEffect(() => {
-    const timer = setTimeout(onClose, duration)
-    return () => clearTimeout(timer)
-  }, [duration, onClose])
-  
-  const typeStyles = {
-    success: 'bg-green-800 border-green-600 text-green-100',
-    error: 'bg-red-800 border-red-600 text-red-100',
-    warning: 'bg-yellow-800 border-yellow-600 text-yellow-100',
-    info: 'bg-blue-800 border-blue-600 text-blue-100'
+export function Logo({ size = 'md', showText = true, className = '' }: LogoProps) {
+  const sizeClasses = {
+    sm: {
+      icon: 'w-6 h-6',
+      container: 'w-8 h-8',
+      text: 'text-lg'
+    },
+    md: {
+      icon: 'w-6 h-6',
+      container: 'w-10 h-10',
+      text: 'text-2xl'
+    },
+    lg: {
+      icon: 'w-8 h-8',
+      container: 'w-12 h-12',
+      text: 'text-3xl'
+    }
   }
-  
-  const icons = {
-    success: '✅',
-    error: '❌',
-    warning: '⚠️',
-    info: 'ℹ️'
-  }
-  
+
+  const sizes = sizeClasses[size]
+
   return (
-    <div className={`
-      fixed top-4 right-4 z-50 max-w-sm w-full
-      border rounded-lg p-4 shadow-lg
-      animate-slide-in-right
-      ${typeStyles[type]}
-    `}>
-      <div className="flex items-center">
-        <span className="text-lg mr-3">{icons[type]}</span>
-        <p className="flex-1 text-sm font-medium">{message}</p>
-        <button 
-          onClick={onClose}
-          className="ml-3 text-current hover:opacity-75"
-        >
-          ×
-        </button>
+    <div className={`flex items-center gap-3 ${className}`}>
+      <div className={`${sizes.container} bg-primary rounded-lg flex items-center justify-center`}>
+        <BookOpen className={`${sizes.icon} text-primary-foreground`} />
+      </div>
+      {showText && (
+        <div>
+          <h1 className={`${sizes.text} font-normal text-foreground`}>AIdioma</h1>
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+**Usage:**
+- **Header desktop:** `<Logo size="md" showText={true} />`
+- **Header mobile:** `<Logo size="sm" showText={true} />`
+- **Large display:** `<Logo size="lg" showText={false} />`
+
+---
+
+### **ProgressCard Component**
+```typescript
+interface ProgressCardProps {
+  title: string
+  value: number // Percentage 0-100
+  color?: 'green' | 'orange' | 'red' | 'primary'
+  className?: string
+}
+
+export function ProgressCard({ title, value, color = 'primary', className = '' }: ProgressCardProps) {
+  const colorClasses = {
+    green: 'bg-green-600',
+    orange: 'bg-orange-500', 
+    red: 'bg-red-600',
+    primary: 'bg-primary'
+  }
+
+  return (
+    <div className={`mb-4 max-w-4xl mx-auto w-full ${className}`}>
+      <div className="p-4 bg-muted rounded-lg">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs text-foreground">{title}</span>
+        </div>
+        <div className="w-full bg-background rounded-full h-2">
+          <div
+            className={`h-2 rounded-full transition-all duration-300 ${colorClasses[color]}`}
+            style={{ width: `${Math.min(100, Math.max(10, value))}%` }}
+          />
+        </div>
       </div>
     </div>
   )
 }
 ```
 
-### **Loading Spinner**
+**Key Features:**
+- **Individual cards** for each progress type
+- **Clean progress bars** without right-side text
+- **Color-coded** progress indicators
+- **Consistent spacing** with mb-4
+
+---
+
+### **InteractiveSentence Component**
 ```typescript
-interface LoadingSpinnerProps {
-  size?: 'sm' | 'md' | 'lg'
-  color?: string
+interface InteractiveSentenceProps {
+  sentence: string
+  onWordClick?: (word: string) => void
+  wordEvaluations?: Map<string, WordEvaluation>
   className?: string
 }
 
-export function LoadingSpinner({ size = 'md', color = 'text-blue-500', className = '' }: LoadingSpinnerProps) {
-  const sizeClasses = {
-    sm: 'h-4 w-4',
-    md: 'h-8 w-8',
-    lg: 'h-12 w-12'
+interface WordEvaluation {
+  word: string
+  status: 'correct' | 'close' | 'wrong' | 'unknown'
+  confidence: number
+}
+
+export function InteractiveSentence({ 
+  sentence, 
+  onWordClick, 
+  wordEvaluations = new Map(),
+  className = '' 
+}: InteractiveSentenceProps) {
+  const getWordColor = (status?: string) => {
+    switch (status) {
+      case 'correct': return 'text-green-600 bg-green-50 border-green-200'
+      case 'close': return 'text-orange-600 bg-orange-50 border-orange-200'
+      case 'wrong': return 'text-red-600 bg-red-50 border-red-200'
+      default: return 'text-foreground hover:bg-muted/50'
+    }
   }
-  
-  return (
-    <div className={`flex justify-center ${className}`}>
-      <svg 
-        className={`animate-spin ${sizeClasses[size]} ${color}`}
-        fill="none" 
-        viewBox="0 0 24 24"
+
+  const getStatusIcon = (status?: string) => {
+    switch (status) {
+      case 'correct': return <CheckCircle className="w-3 h-3 ml-1" />
+      case 'close': return <AlertCircle className="w-3 h-3 ml-1" />
+      case 'wrong': return <X className="w-3 h-3 ml-1" />
+      default: return null
+    }
+  }
+
+  const renderWord = (word: string, index: number) => {
+    const cleanWord = word.replace(/[.,!?;:]$/, '')
+    const punctuation = word.slice(cleanWord.length)
+    const evaluation = wordEvaluations.get(cleanWord)
+    
+    return (
+      <span
+        key={index}
+        className={`
+          inline-flex items-center px-1 py-0.5 rounded cursor-pointer 
+          transition-all duration-200 hover:scale-105 border border-transparent
+          ${getWordColor(evaluation?.status)}
+        `}
+        onClick={() => onWordClick?.(cleanWord)}
       >
-        <circle 
-          className="opacity-25" 
-          cx="12" 
-          cy="12" 
-          r="10" 
-          stroke="currentColor" 
-          strokeWidth="4"
-        />
-        <path 
-          className="opacity-75" 
-          fill="currentColor" 
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        />
-      </svg>
+        {cleanWord}
+        {evaluation && getStatusIcon(evaluation.status)}
+        {punctuation}
+      </span>
+    )
+  }
+
+  return (
+    <div className={`relative ${className}`}>
+      <div className="text-lg font-medium text-foreground mb-4 leading-relaxed">
+        {sentence.split(' ').map(renderWord)}
+      </div>
     </div>
   )
 }
 ```
+
+**Key Features:**
+- **Clickable words** with visual feedback
+- **Color-coded evaluation** states
+- **Hover effects** with scale transformation
+- **Status icons** for immediate feedback
 
 ---
 
 ## 📋 **Layout Components**
 
-### **Page Layout**
+### **Fixed Header Pattern**
 ```typescript
-interface PageLayoutProps {
-  title: string
-  subtitle?: string
-  children: React.ReactNode
-  actions?: React.ReactNode
-  sidebar?: React.ReactNode
-}
-
-export function PageLayout({ title, subtitle, children, actions, sidebar }: PageLayoutProps) {
-  return (
-    <div className="min-h-screen bg-gray-950">
-      {/* Header */}
-      <header className="bg-gray-900 border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold text-white">{title}</h1>
-              {subtitle && (
-                <p className="mt-1 text-lg text-gray-400">{subtitle}</p>
-              )}
-            </div>
-            {actions && (
-              <div className="flex space-x-4">
-                {actions}
-              </div>
-            )}
-          </div>
-        </div>
-      </header>
-      
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar */}
-          {sidebar && (
-            <aside className="lg:w-1/4">
-              {sidebar}
-            </aside>
-          )}
-          
-          {/* Main Content */}
-          <main className={sidebar ? 'lg:w-3/4' : 'w-full'}>
-            {children}
-          </main>
-        </div>
-      </div>
-    </div>
-  )
-}
-```
-
-### **Modal Component**
-```typescript
-interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
-  title: string
-  children: React.ReactNode
-  footer?: React.ReactNode
-}
-
-export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) {
-  if (!isOpen) return null
-  
-  return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        {/* Backdrop */}
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-75 transition-opacity"
-          onClick={onClose}
-        />
-        
-        {/* Modal */}
-        <div className="
-          inline-block transform overflow-hidden rounded-lg
-          bg-gray-900 border border-gray-700 text-left align-bottom shadow-xl
-          transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle
-        ">
-          {/* Header */}
-          <div className="bg-gray-800 px-4 py-3 sm:px-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium text-white">{title}</h3>
-              <button
-                onClick={onClose}
-                className="text-gray-400 hover:text-white"
-              >
-                <span className="sr-only">Close</span>
-                ×
-              </button>
-            </div>
-          </div>
-          
-          {/* Content */}
-          <div className="px-4 py-5 sm:p-6">
-            {children}
-          </div>
-          
-          {/* Footer */}
-          {footer && (
-            <div className="bg-gray-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-              {footer}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
-```
-
----
-
-## 🎯 **Component Usage Guidelines**
-
-### **Import Patterns**
-```typescript
-// Centralized component exports
-export { Button } from './Button'
-export { Input } from './Input'
-export { Card } from './Card'
-export { TranslationInput } from './TranslationInput'
-export { ScoreDisplay } from './ScoreDisplay'
-export { ProgressBar } from './ProgressBar'
-export { Toast } from './Toast'
-export { LoadingSpinner } from './LoadingSpinner'
-export { PageLayout } from './PageLayout'
-export { Modal } from './Modal'
-
-// Usage in pages
-import { Button, Input, Card, TranslationInput } from '../components/ui'
-```
-
-### **Responsive Design Patterns**
-```typescript
-// Mobile-first responsive component
-export function ResponsiveCard({ children }: { children: React.ReactNode }) {
-  return (
-    <Card className="
-      w-full 
-      sm:max-w-md sm:mx-auto
-      md:max-w-lg 
-      lg:max-w-xl
-      xl:max-w-2xl
-    ">
-      {children}
-    </Card>
-  )
-}
-```
-
-### **Accessibility Integration**
-```typescript
-// Accessible button with proper ARIA attributes
-export function AccessibleButton({ children, ...props }: ButtonProps) {
-  return (
-    <Button 
-      {...props}
-      role="button"
-      aria-pressed={props.variant === 'primary'}
-      aria-label={typeof children === 'string' ? children : undefined}
-    >
-      {children}
-    </Button>
-  )
-}
-```
-
----
-
-## 🏠 **Layout Components**
-
-### **PageLayout Template**
-**Purpose**: Foundational structure for all pages ensuring consistent header, sidebar, and content organization.
-
-```tsx
-interface PageLayoutProps {
-  pageTitle: string
-  pageIcon: React.ComponentType<{ className?: string }>
-  children: React.ReactNode
-  headerActions?: React.ReactNode
-}
-
-export function PageLayout({ pageTitle, pageIcon: PageIcon, children, headerActions }: PageLayoutProps) {
+export function HeaderLayout({ pageTitle, children }: { pageTitle: string, children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Unified Header - MANDATORY */}
-      <header className="flex border-b border-border bg-muted">
-        {/* Desktop Logo Section */}
-        <div className="w-64 px-6 py-4 border-r border-border hidden md:flex items-center justify-center">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <PageIcon className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <h1 className="text-2xl font-normal text-foreground">AIdioma</h1>
-          </div>
+      {/* FIXED HEADER - Logo LEFT-aligned */}
+      <header className="fixed top-0 left-0 right-0 z-50 flex border-b border-border bg-muted">
+        <div className="w-64 px-6 py-4 border-r border-border hidden md:flex items-center justify-start">
+          <Logo size="md" showText={true} />
         </div>
-        
-        {/* Page Title Section */}
         <div className="flex-1 px-6 py-4 flex items-center justify-start pl-4 md:pl-12">
           <h1 className="text-xl md:text-2xl font-semibold text-foreground tracking-tight">
             {pageTitle}
           </h1>
         </div>
-        
-        {/* Optional Header Actions */}
-        {headerActions && (
-          <div className="px-6 py-4 flex items-center">
-            {headerActions}
-          </div>
-        )}
-      </header>
-
-      {/* Sidebar */}
-      <Sidebar />
-
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col md:ml-64">
-        <div className="flex-1 flex flex-col p-4 md:p-6 pt-6 md:pt-8 bg-background">
-          {children}
+        <div className="px-4 md:px-6 py-4 flex items-center">
+          <ProgressWheels />
         </div>
-      </main>
+      </header>
+      
+      {children}
     </div>
   )
 }
 ```
 
-**Reusability**: Used by all 6 pages (Practice, Reading, Conversation, Memorize, Progress, Settings)
-
-### **Sidebar Component**
-**Purpose**: Navigation sidebar with consistent styling and active state management.
-
-```tsx
-interface SidebarProps {
-  currentPath?: string
-}
-
-export function Sidebar({ currentPath }: SidebarProps) {
-  const navigation = [
-    { href: '/practice', icon: Play, label: 'Practice' },
-    { href: '/reading', icon: Book, label: 'Reading' },
-    { href: '/conversation', icon: MessageCircle, label: 'Conversation' },
-    { href: '/memorize', icon: Brain, label: 'Memorize' },
-    { href: '/progress', icon: TrendingUp, label: 'Progress' },
-    { href: '/settings', icon: Settings, label: 'Settings' }
-  ]
-
+### **Main Content Pattern**
+```typescript
+export function MainContentLayout({ children }: { children: React.ReactNode }) {
   return (
-    <aside className="w-64 bg-muted border-r border-border fixed left-0 top-16 bottom-0 z-40 hidden md:block">
-      <nav className="p-6 space-y-2">
-        {navigation.map((item) => (
-          <SidebarItem
-            key={item.href}
-            href={item.href}
-            icon={item.icon}
-            label={item.label}
-            isActive={currentPath === item.href}
-          />
-        ))}
-      </nav>
-    </aside>
+    <main className="flex-1 flex flex-col md:ml-64">
+      <div className="flex-1 flex flex-col p-4 md:p-6 bg-background">
+        {children}
+      </div>
+    </main>
   )
 }
 ```
-
-**Reusability**: Used by all pages, automatically highlights current page
 
 ---
 
-## 🎯 **Practice Components**
-
-### **ActionButtons Component**
-**Purpose**: Consistent action button layouts for learning activities with proper state management.
-
-```tsx
-interface ActionButtonsProps {
-  // State props
-  isEvaluated: boolean
-  userInput: string
-  currentItem: number
-  totalItems: number
-  
-  // Action props
-  onSubmit?: () => void
-  onNext?: () => void
-  onPrevious?: () => void
-  onSkip?: () => void
-  onHint?: () => void
-  onBookmark?: () => void
-  
-  // Configuration
-  showPrevious?: boolean
-  showHint?: boolean
-  showBookmark?: boolean
-}
-
-export function ActionButtons({
-  isEvaluated,
-  userInput,
-  currentItem,
-  totalItems,
-  onSubmit,
-  onNext,
-  onPrevious,
-  onSkip,
-  onHint,
-  onBookmark,
-  showPrevious = true,
-  showHint = true,
-  showBookmark = true
-}: ActionButtonsProps) {
-  const isFirstItem = currentItem <= 1
-  const isLastItem = currentItem >= totalItems
-  const hasUserInput = userInput.trim().length > 0
-
-  if (isEvaluated) {
-    // Post-evaluation state: Previous → Skip → Next (primary)
-    return (
-      <div className="flex items-center justify-center gap-3 mt-6">
-        {showPrevious && (
-          <Button
-            variant="ghost"
-            onClick={onPrevious}
-            disabled={isFirstItem}
-            className="text-gray-400 hover:text-gray-300"
-          >
-            Previous
-          </Button>
-        )}
-        
-        <Button
-          variant="ghost"
-          onClick={onSkip}
-          className="text-gray-400 hover:text-gray-300"
-        >
-          Skip
-        </Button>
-        
-        <Button
-          variant="default"
-          onClick={onNext}
-          disabled={isLastItem}
-          className="text-white px-8" // Primary action styling
-        >
-          Next
-        </Button>
-      </div>
-    )
-  }
-
-  // Pre-evaluation state: Previous → Check → Hint → Skip → Bookmark
-  return (
-    <div className="flex items-center justify-center gap-3 mt-6">
-      {showPrevious && (
-        <Button
-          variant="ghost"
-          onClick={onPrevious}
-          disabled={isFirstItem}
-          className="text-gray-400 hover:text-gray-300"
-        >
-          Previous
-        </Button>
-      )}
-      
-      <Button
-        variant="default"
-        onClick={onSubmit}
-        disabled={!hasUserInput}
-        className="px-8"
-      >
-        Check
-      </Button>
-      
-      {showHint && (
-        <Button
-          variant="ghost"
-          onClick={onHint}
-          className="text-gray-400 hover:text-gray-300"
-        >
-          Hint
-        </Button>
-      )}
-      
-      <Button
-        variant="ghost"
-        onClick={onSkip}
-        className="text-gray-400 hover:text-gray-300"
-      >
-        Skip
-      </Button>
-      
-      {showBookmark && (
-        <Button
-          variant="ghost"
-          onClick={onBookmark}
-          className="text-gray-400 hover:text-gray-300"
-        >
-          <Bookmark className="w-4 h-4" />
-        </Button>
-      )}
-    </div>
-  )
-}
-```
-
-**Reusability**: Used by Practice, Reading, and Conversation pages with different configurations
-
-### **PracticeFilters Component**
-**Purpose**: Collapsible filter interface for content selection across different practice modes.
-
-```tsx
-interface PracticeFiltersProps {
-  isOpen: boolean
-  onToggle: () => void
-  
-  // Filter values
-  difficulty?: string
-  tense?: string
-  topic?: string
-  
-  // Filter handlers
-  onDifficultyChange?: (value: string) => void
-  onTenseChange?: (value: string) => void
-  onTopicChange?: (value: string) => void
-  
-  // Configuration
-  showDifficulty?: boolean
-  showTense?: boolean
-  showTopic?: boolean
-}
-
-export function PracticeFilters({
-  isOpen,
-  onToggle,
-  difficulty,
-  tense,
-  topic,
-  onDifficultyChange,
-  onTenseChange,
-  onTopicChange,
-  showDifficulty = true,
-  showTense = true,
-  showTopic = true
-}: PracticeFiltersProps) {
-  const difficultyOptions = [
-    { value: 'beginner', label: 'Beginner' },
-    { value: 'intermediate', label: 'Intermediate' },
-    { value: 'advanced', label: 'Advanced' }
-  ]
-
-  return (
-    <div className="w-full max-w-4xl mx-auto">
-      <button
-        onClick={onToggle}
-        className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-lg text-muted-foreground hover:text-foreground transition-colors w-full"
-      >
-        <Filter className="w-4 h-4" />
-        <span className="text-sm">Practice Filters</span>
-        <ChevronDown className={`w-4 h-4 ml-auto transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
-
-      {isOpen && (
-        <div className="mt-2 p-4 bg-card border border-border rounded-lg">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {showDifficulty && (
-              <div>
-                <label className="text-sm text-foreground mb-2 block">Difficulty</label>
-                <select 
-                  value={difficulty || ''}
-                  onChange={(e) => onDifficultyChange?.(e.target.value)}
-                  className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground"
-                >
-                  <option value="">All Levels</option>
-                  {difficultyOptions.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-```
-
-**Reusability**: Used by Practice, Reading, and Memorize pages with different filter configurations
+## 🎨 **Form Components**
 
 ### **TranslationInput Component**
-**Purpose**: Specialized input for translation practice with proper focus management and validation.
-
-```tsx
+```typescript
 interface TranslationInputProps {
   value: string
   onChange: (value: string) => void
-  onSubmit?: () => void
   placeholder?: string
   disabled?: boolean
-  showCharCount?: boolean
-  maxLength?: number
-  autoFocus?: boolean
+  className?: string
 }
 
 export function TranslationInput({
   value,
   onChange,
-  onSubmit,
-  placeholder = "Enter your translation...",
+  placeholder = "Type your Spanish translation here...",
   disabled = false,
-  showCharCount = false,
-  maxLength = 500,
-  autoFocus = true
+  className = ''
 }: TranslationInputProps) {
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey && onSubmit) {
-      e.preventDefault()
-      onSubmit()
-    }
-  }
-
   return (
-    <div className="space-y-2">
+    <div className={`space-y-3 pb-2 ${className}`}>
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        onKeyDown={handleKeyDown}
         placeholder={placeholder}
         disabled={disabled}
-        autoFocus={autoFocus}
-        maxLength={maxLength}
-        className="w-full min-h-[100px] px-4 py-3 bg-input border border-border rounded-lg 
-                   text-foreground placeholder:text-muted-foreground resize-none
-                   focus:border-accent focus:ring-1 focus:ring-accent
-                   disabled:opacity-50 disabled:cursor-not-allowed"
-        style={{ fontFamily: 'JetBrains Mono, monospace' }}
+        className="w-full h-20 px-4 py-3 bg-input border border-border rounded-lg text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background transition-all duration-200"
       />
-      
-      {showCharCount && (
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>Press Enter to submit</span>
-          <span>{value.length} / {maxLength}</span>
-        </div>
-      )}
     </div>
   )
 }
 ```
 
-**Reusability**: Used by Practice and Reading pages for translation input
+**Key Requirements:**
+- **Muted background** matching secondary buttons
+- **Proper focus states** with ring
+- **No resize** capability
+- **Consistent padding** and border radius
 
 ---
 
-## 📊 **Analytics Components**
+## ✅ **Implementation Guidelines**
 
-### **SessionStats Component**
-**Purpose**: Display progress information and success metrics across learning activities.
+### **Component Usage Rules**
+1. **ActionButtons:** MUST use two-row layout on all pages
+2. **Logo:** MUST be left-aligned in headers
+3. **ProgressCard:** Use individual cards, not combined bars
+4. **Colors:** Use design system tokens exclusively
+5. **Icons:** lucide-react library only
+6. **Spacing:** Follow pt-8/pt-12/mb-4 patterns
 
-```tsx
-interface SessionStatsProps {
-  currentItem: number
-  totalItems: number
-  correctCount: number
-  incorrectCount: number
-  showProgress?: boolean
-  showCounts?: boolean
-  layout?: 'horizontal' | 'vertical'
-}
+### **Performance Standards**
+- **Reusability:** 64% component reuse across pages
+- **Bundle Size:** <10KB additions preferred
+- **Accessibility:** 44px minimum touch targets
+- **TypeScript:** Zero `any` types allowed
 
-export function SessionStats({
-  currentItem,
-  totalItems,
-  correctCount,
-  incorrectCount,
-  showProgress = true,
-  showCounts = true,
-  layout = 'horizontal'
-}: SessionStatsProps) {
-  const progressPercentage = (currentItem / totalItems) * 100
+### **Quality Checklist**
+- [ ] Uses design system colors and spacing
+- [ ] Follows ActionButtons pattern
+- [ ] Implements proper accessibility
+- [ ] Includes responsive breakpoints
+- [ ] Passes TypeScript strict checks
 
-  return (
-    <div className={`mb-6 ${layout === 'horizontal' 
-      ? "flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
-      : "flex flex-col items-center gap-4"
-    }`}>
-      {showProgress && (
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">
-            Item <span className="text-blue-400 font-medium">{currentItem}</span> of{' '}
-            <span className="text-blue-400 font-medium">{totalItems}</span>
-          </span>
-          <div className="w-16 h-2 bg-muted rounded-full">
-            <div 
-              className="h-2 bg-blue-500 rounded-full transition-all duration-300"
-              style={{ width: `${progressPercentage}%` }}
-            />
-          </div>
-        </div>
-      )}
-      
-      {showCounts && (
-        <div className="text-sm text-muted-foreground">
-          <span className="text-green-400 font-medium">{correctCount} correct</span>
-          {' • '}
-          <span className="text-red-400 font-medium">{incorrectCount} incorrect</span>
-        </div>
-      )}
-    </div>
-  )
-}
-```
-
-**Reusability**: Used by Practice, Reading, Conversation, and Memorize pages
-
-### **StatsBox Component**  
-**Purpose**: Standardized metric display boxes for consistent data visualization.
-
-```tsx
-interface StatsBoxProps {
-  icon: React.ComponentType<{ className?: string }>
-  iconColor: string
-  value: string | number
-  label: string
-  className?: string
-}
-
-export function StatsBox({ icon: Icon, iconColor, value, label, className = '' }: StatsBoxProps) {
-  return (
-    <div className={`flex items-center gap-3 p-2 md:p-3 bg-muted rounded-lg ${className}`}>
-      <Icon className={`w-6 h-6 ${iconColor}`} />
-      <div>
-        <div className="text-base md:text-lg font-semibold text-foreground">
-          {value}
-        </div>
-        <div className="text-xs text-muted-foreground">{label}</div>
-      </div>
-    </div>
-  )
-}
-
-// Standard icon color palette for consistency
-export const StatsIconColors = {
-  primary: 'text-blue-500',
-  success: 'text-green-500', 
-  engagement: 'text-purple-500',
-  performance: 'text-orange-500',
-  achievement: 'text-yellow-500'
-} as const
-```
-
-**Reusability**: Used across all pages for displaying metrics and progress data
-
----
-
-## 🎨 **Component Composition Patterns**
-
-### **Standard Page Structure**
-```tsx
-export function StandardPageStructure() {
-  return (
-    <PageLayout pageTitle="Practice" pageIcon={Play}>
-      {/* 1. Stats Bar - Always first */}
-      <div className="mb-6">
-        <SessionStats {...statsProps} />
-      </div>
-
-      {/* 2. Filters - Always second */}
-      <div className="mb-6">
-        <PracticeFilters {...filterProps} />
-      </div>
-
-      {/* 3. Main Content - Always third */}
-      <div className="max-w-4xl mx-auto w-full">
-        <div className="bg-card border border-border rounded-lg p-6">
-          {/* Page-specific content */}
-          <ActionButtons {...buttonProps} />
-        </div>
-      </div>
-    </PageLayout>
-  )
-}
-```
-
-### **Stats Grid Pattern**
-```tsx
-export function StatsGrid({ stats }: { stats: StatsData[] }) {
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto">
-      {stats.map((stat, index) => (
-        <StatsBox
-          key={index}
-          icon={stat.icon}
-          iconColor={stat.color}
-          value={stat.value}
-          label={stat.label}
-        />
-      ))}
-    </div>
-  )
-}
-```
-
----
-
-This comprehensive component library ensures consistent, reusable, and maintainable UI components across all AIdioma pages while supporting the modular architecture and Strike-inspired design system.
+This component library provides the foundation for consistent, accessible, and performant UI development across all AIdioma pages.

@@ -108,6 +108,37 @@
 
 ---
 
+## 🎯 **Phase 5: Dynamic Translation UI** (Weeks 9-11) **NEW**
+
+### **Goal**: Enhance Practice and Reading pages with real-time interactive feedback
+
+### **Week 9 Deliverables**
+- [ ] Translation Health Bar with real-time 0-100% quality visualization
+- [ ] Enhanced database schema with health_score and word_analysis columns
+- [ ] TranslationHealthCalculator service with <100ms response time
+- [ ] Integration with existing Practice page components
+
+### **Week 10 Deliverables**
+- [ ] Dynamic Word Color Coding with live correctness feedback
+- [ ] Auto-Hint System triggered by repeated word errors (≥2 mistakes)
+- [ ] User Word Errors tracking table and AutoHintService
+- [ ] AutoHintNotification component with proper accessibility
+
+### **Week 11 Deliverables**
+- [ ] Space-bar optimized API calls (300ms debouncing)
+- [ ] Enhanced Manual Help with comprehensive WordHelpModal
+- [ ] SmartAPIManager for cost-optimized evaluation timing
+- [ ] Performance testing and Reading page integration planning
+
+### **Success Metrics**
+- Health bar calculation <100ms response time
+- Word analysis <200ms for 20-word sentences  
+- Auto-hints triggered within 2 seconds of error threshold
+- API calls increase <5% despite new real-time features
+- Maintain 85%+ cache hit rate for cost optimization
+
+---
+
 ## 📊 **Weekly Progress Tracking**
 
 ### **Completion Tracking Template**

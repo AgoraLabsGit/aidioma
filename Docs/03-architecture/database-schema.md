@@ -146,6 +146,10 @@ evaluationCache {
   createdAt: timestamp      // Cache creation
   lastUsed: timestamp       // Most recent access
   expiresAt: timestamp      // Cache expiration
+  
+  // NEW: Dynamic UI Features (v2.0)
+  healthScore: integer      // 0-100 translation quality score
+  wordAnalysis: jsonb       // Individual word correctness data
 }
 ```
 
@@ -153,7 +157,28 @@ evaluationCache {
 **Indexes**: `cacheKey` (unique), `expiresAt`  
 **Performance**: 85-90% cache hit rate target
 
-### **7. Learning Analytics Table**
+### **7. User Word Errors Table** **NEW**
+```typescript
+userWordErrors {
+  id: integer (PK)          // Unique error record
+  userId: text (FK)         // Reference to users.id
+  sentenceId: text (FK)     // Reference to sentences.id
+  wordPosition: integer     // Position of word in sentence
+  incorrectWord: text       // User's incorrect input
+  expectedWord: text        // Correct word/phrase
+  errorType: text           // Classification of error type
+  errorCount: integer       // Number of times this error occurred
+  firstOccurrence: timestamp // First time error was made
+  lastOccurrence: timestamp  // Most recent occurrence
+  hintTriggered: boolean    // Whether auto-hint was shown
+}
+```
+
+**Purpose**: Error tracking for intelligent auto-hint system  
+**Indexes**: `userId`, `sentenceId`, `wordPosition`  
+**AI Integration**: Enables smart hint triggering based on repeated errors
+
+### **8. Learning Analytics Table**
 ```typescript
 learningAnalytics {
   id: text (PK)             // Unique analytics record

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import type { 
   Sentence, 
@@ -15,7 +16,7 @@ interface SubmitPracticeData {
   hintsUsed: number
 }
 
-// Mock API functions
+// Real API functions - connected to backend
 const api = {
   getSentencesForPractice: async (params: {
     userId: string
@@ -23,33 +24,29 @@ const api = {
     difficulty?: string
     limit?: number
   }): Promise<APIResponse<Sentence[]>> => {
-    await new Promise(resolve => setTimeout(resolve, 600))
-    return {
-      success: true,
-      data: [
-        {
-          id: '1',
-          spanish: 'Hola, ¿cómo estás?',
-          english: 'Hello, how are you?',
-          difficulty: 'beginner',
-          category: 'greetings',
-          hints: JSON.stringify(['Think about greetings', 'Hola means hello', '¿Cómo estás? asks how you are']),
-          grammarPoints: JSON.stringify(['question formation', 'greetings']),
-          createdAt: new Date(Date.now()),
-          isActive: true
-        },
-        {
-          id: '2',
-          spanish: 'Me gustaría un café, por favor.',
-          english: 'I would like a coffee, please.',
-          difficulty: 'beginner',
-          category: 'food_drink',
-          hints: JSON.stringify(['Think about polite requests', 'Me gustaría means I would like', 'Por favor means please']),
-          grammarPoints: JSON.stringify(['conditional tense', 'polite requests']),
-          createdAt: new Date(Date.now()),
-          isActive: true
-        }
-      ]
+    try {
+      const queryParams = new URLSearchParams({
+        difficulty: params.difficulty || 'all',
+        limit: (params.limit || 10).toString()
+      })
+      
+      const response = await fetch(`http://localhost:5001/api/sentences?${queryParams}`)
+      const result = await response.json()
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to fetch sentences')
+      }
+      
+      return {
+        success: true,
+        data: result.data.sentences
+      }
+    } catch (error) {
+      console.error('Error fetching sentences:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      }
     }
   },
 
@@ -73,36 +70,68 @@ const api = {
   },
 
   submitPractice: async (userId: string, data: SubmitPracticeData): Promise<APIResponse<PracticeSession>> => {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    return {
-      success: true,
-      data: {
-        id: 'new-session-id',
-        userId,
-        startedAt: new Date(),
-        completedAt: new Date(),
-        totalSentences: 1,
-        completedSentences: 1,
-        averageScore: data.isCorrect ? 85 : 45,
-        sessionType: 'standard'
+    try {
+      const response = await fetch('http://localhost:5001/api/sentences/evaluate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          sentenceId: data.sentenceId,
+          userTranslation: data.userInput,
+          timeSpent: data.timeSpent,
+          hintsUsed: data.hintsUsed
+        })
+      })
+      
+      const result = await response.json()
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to evaluate translation')
+      }
+      
+      // Convert evaluation result to practice session format
+      return {
+        success: true,
+        data: {
+          id: `session-${Date.now()}`,
+          userId,
+          startedAt: new Date(),
+          completedAt: new Date(),
+          totalSentences: 1,
+          completedSentences: 1,
+          averageScore: result.data.score,
+          sessionType: 'standard',
+          evaluationResult: result.data // Include full evaluation data
+        } as PracticeSession & { evaluationResult: any }
+      }
+    } catch (error) {
+      console.error('Error submitting practice:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
       }
     }
   },
 
   getSentenceById: async (id: string): Promise<APIResponse<Sentence>> => {
-    await new Promise(resolve => setTimeout(resolve, 300))
-    return {
-      success: true,
-      data: {
-        id,
-        spanish: 'Hola, ¿cómo estás?',
-        english: 'Hello, how are you?',
-        difficulty: 'beginner',
-        category: 'greetings',
-        hints: JSON.stringify(['Think about greetings', 'Hola means hello']),
-        grammarPoints: JSON.stringify(['question formation']),
-        createdAt: new Date(),
-        isActive: true
+    try {
+      const response = await fetch(`http://localhost:5001/api/sentences/${id}`)
+      const result = await response.json()
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to fetch sentence')
+      }
+      
+      return {
+        success: true,
+        data: result.data
+      }
+    } catch (error) {
+      console.error('Error fetching sentence:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
       }
     }
   }
@@ -192,12 +221,29 @@ export function usePracticeWorkflow(userId: string, targetLanguage: string) {
   const userProgress = useUserProgress(userId)
   const submitPractice = useSubmitPractice()
 
-  const currentSentenceIndex = sentences.data?.findIndex(sentence => {
-    const progress = userProgress.data?.find(p => p.sentenceId === sentence.id)
-    return !progress || !progress.mastered
-  }) ?? 0
+  // ✅ FIXED: Use state to track current sentence index for navigation
+  const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0)
 
   const currentSentence = sentences.data?.[currentSentenceIndex]
+
+  // ✅ FIXED: Navigation functions
+  const goToNextSentence = () => {
+    if (sentences.data && currentSentenceIndex < sentences.data.length - 1) {
+      setCurrentSentenceIndex(prev => prev + 1)
+    }
+  }
+
+  const goToPreviousSentence = () => {
+    if (currentSentenceIndex > 0) {
+      setCurrentSentenceIndex(prev => prev - 1)
+    }
+  }
+
+  const goToSentence = (index: number) => {
+    if (sentences.data && index >= 0 && index < sentences.data.length) {
+      setCurrentSentenceIndex(index)
+    }
+  }
 
   const handleSubmitAnswer = async (userInput: string, isCorrect: boolean, timeSpent: number, hintsUsed: number = 0) => {
     if (!currentSentence) return
@@ -213,6 +259,7 @@ export function usePracticeWorkflow(userId: string, targetLanguage: string) {
           hintsUsed
         }
       })
+      
     } catch (error) {
       throw error
     }
@@ -226,6 +273,12 @@ export function usePracticeWorkflow(userId: string, targetLanguage: string) {
     isLoading: sentences.isLoading || userProgress.isLoading,
     error: sentences.error || userProgress.error,
     handleSubmitAnswer,
-    isSubmitting: submitPractice.isPending
+    isSubmitting: submitPractice.isPending,
+    // ✅ NEW: Navigation functions
+    goToNextSentence,
+    goToPreviousSentence,
+    goToSentence,
+    canGoNext: sentences.data ? currentSentenceIndex < sentences.data.length - 1 : false,
+    canGoPrevious: currentSentenceIndex > 0
   }
 }

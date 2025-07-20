@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import { config } from 'dotenv'
+import sentencesRoutes from './routes/sentences'
 
 // Load environment variables
 config()
@@ -50,12 +51,8 @@ app.use('/api/auth', (_req, res) => {
   ))
 })
 
-app.use('/api/sentences', (_req, res) => {
-  res.json(createSuccessResponse(
-    { message: 'Sentences routes coming soon...' },
-    'Sentence management endpoints will be available soon'
-  ))
-})
+// Use routes
+app.use('/api/sentences', sentencesRoutes)
 
 app.use('/api/practice', (_req, res) => {
   res.json(createSuccessResponse(

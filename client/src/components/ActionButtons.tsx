@@ -15,6 +15,8 @@ interface ActionButtonsProps {
   showHint: boolean
   currentSentence: number
   totalSentences: number
+  canGoPrevious?: boolean  // ✅ NEW: Proper navigation state
+  canGoNext?: boolean      // ✅ NEW: Proper navigation state
   className?: string
 }
 
@@ -31,20 +33,22 @@ export function ActionButtons({
   showHint: _showHint, 
   currentSentence, 
   totalSentences,
+  canGoPrevious = false,  // ✅ NEW: Default to false
+  canGoNext = false,      // ✅ NEW: Default to false
   className = ''
 }: ActionButtonsProps) {
   const canSubmit = userTranslation.trim().length > 0
 
   return (
     <div className={`space-y-4 w-full max-w-lg mx-auto ${className}`}>
-      {/* Main Action Row - Icon-only buttons */}
-      <div className="flex items-center justify-center gap-4 w-full">
+      {/* Main Action Row - Icon-only buttons with increased spacing */}
+      <div className="flex items-center justify-center gap-5 w-full">
         {/* Previous Button - Up Arrow Icon - Reduced by 30% */}
         <Button
           variant="ghost"
           size="sm"
           onClick={onNavigatePrevious}
-          disabled={currentSentence <= 1}
+          disabled={!canGoPrevious}  // ✅ FIXED: Use proper navigation state
           className="flex items-center justify-center p-3 h-14 w-14"
         >
           <ChevronUp className="w-11 h-11" />
@@ -64,20 +68,20 @@ export function ActionButtons({
           variant="ghost"
           size="sm"
           onClick={onNavigateNext}
-          disabled={currentSentence >= totalSentences}
+          disabled={!canGoNext}  // ✅ FIXED: Use proper navigation state
           className="flex items-center justify-center p-3 h-14 w-14"
         >
           <ChevronDown className="w-11 h-11" />
         </Button>
       </div>
 
-      {/* Secondary Action Buttons - Increased size by 20% */}
-      <div className="flex items-center justify-center gap-2">
+      {/* Secondary Action Buttons - Same grey background as text input */}
+      <div className="flex items-center justify-center gap-3">
         <Button
           variant="ghost"
           size="sm"
           onClick={onHint}
-          className="flex items-center gap-1 px-3 py-2 text-sm h-9"
+          className="flex items-center gap-1 px-3 py-2 text-sm h-9 bg-muted hover:bg-muted/80"
         >
           <Lightbulb className="w-4 h-4" />
           Hint
@@ -87,7 +91,7 @@ export function ActionButtons({
           variant="ghost"
           size="sm"
           onClick={onSkip}
-          className="flex items-center gap-1 px-3 py-2 text-sm h-9"
+          className="flex items-center gap-1 px-3 py-2 text-sm h-9 bg-muted hover:bg-muted/80"
         >
           <RotateCcw className="w-4 h-4" />
           Skip
@@ -97,7 +101,7 @@ export function ActionButtons({
           variant="ghost"
           size="sm"
           onClick={onBookmark}
-          className="flex items-center gap-1 px-3 py-2 text-sm h-9"
+          className="flex items-center gap-1 px-3 py-2 text-sm h-9 bg-muted hover:bg-muted/80"
         >
           <BookmarkPlus className="w-4 h-4" />
           Save

@@ -44,6 +44,11 @@ interface EvaluationResult {
   errors: TranslationError[]
   suggestions: string[]
   wasHelpful: boolean
+  
+  // NEW: Dynamic UI Features (v2.0)
+  healthScore?: HealthScore      // Real-time 0-100% quality visualization
+  wordAnalysis?: WordAnalysis[]  // Individual word correctness analysis
+  cacheSource?: CacheSource      // Performance tracking
 }
 
 interface DetailedScores {

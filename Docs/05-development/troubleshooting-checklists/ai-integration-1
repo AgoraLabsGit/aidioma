@@ -1,0 +1,32 @@
+📋 ORDER OF OPERATIONS (Priority 1-6):
+
+PHASE 1: Core Navigation (PRIORITY 1)
+(x) Fix sentence navigation so Next/Previous buttons work
+    Expected Behavior:
+        ✅ Page loads with "Hola, ¿cómo estás?" (not "I drink coffee...")
+        ✅ Next button advances to "Me llamo María."
+        ✅ Previous button goes back to "Hola, ¿cómo estás?"
+        ✅ Button states: Previous disabled on first sentence, Next disabled on last
+        ✅ Translation input clears when navigating
+        ✅ Counter shows: "1 of 10", "2 of 10", etc.
+
+PHASE 2: Evaluation Integration (PRIORITY 2)
+() Connect evaluation results to progress tracking
+        ✅ Type translation: "Hola, como estas" (missing accents)
+        ✅ Click green check button
+        ✅ Expected: Real AI feedback about missing accent marks
+        ✅ Auto-advance: Should go to next sentence after 1.5 seconds
+PHASE 3: Loading States (PRIORITY 3)
+() Handle loading/error states properly
+        ✅ Navigate through multiple sentences
+        ✅ Submit various translations
+        ✅ Check hint system
+        ✅ Verify skip functionality
+PHASE 4: UI Polish (PRIORITY 4)
+() Fix visual feedback and transitions
+
+PHASE 5: Advanced Features (PRIORITY 5)
+() Word color coding, hints, health bar
+
+PHASE 6: Performance (PRIORITY 6)
+() Caching, optimization, metrics
