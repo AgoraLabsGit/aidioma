@@ -8,26 +8,25 @@
 ## 📋 **Quick Navigation**
 
 ### **🎯 Start Here**
-- **[Project Charter](./project-charter.md)** - Vision, mission, and core principles
-- **[MVP Features](./mvp-features.md)** - Complete feature specifications
-- **[Implementation Roadmap](./implementation-roadmap.md)** - 8-week development plan
+- **[Project Overview](../OVERVIEW.md)** - Complete project vision and features
+- **[Implementation Roadmap](../02-modules/language-ai/implementation-roadmap)** - Current development plan
 
 ---
 
 ## 📖 **Document Overview**
 
-### **[Project Charter](./project-charter.md)**
-**What it is:** The foundational document defining AIdioma's vision, architecture philosophy, and strategic goals.
+### **[Project Overview](../OVERVIEW.md)**
+**What it is:** The complete project specification including vision, features, and architecture overview.
 
 **Use it for:**
-- Understanding the project's mission and values
-- Learning about the modular architecture philosophy
-- Reviewing success metrics and constraints
-- Stakeholder alignment and project scope
+- Understanding AIdioma's mission and core features
+- Learning about the 6-page MVP scope
+- Reviewing technical architecture and success metrics
+- Quick reference for all project information
 
 **Key sections:**
-- Core value proposition and technical principles
-- MVP scope and page specifications
+- Core value proposition and AI-powered learning systems
+- 6 core pages and technical architecture overview
 - Development timeline and strategic goals
 
 ### **[MVP Features](./mvp-features.md)**

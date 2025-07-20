@@ -1,0 +1,540 @@
+# Component Library v3.0
+## Cost-Optimized Multi-User Component Architecture
+
+*Enhanced component library supporting multi-user architecture with 95-98% AI cost optimization and user-specific learning patterns.*
+
+---
+
+## 🏗️ **Enhanced Component Architecture**
+
+### **Design Philosophy v3.0**
+- **Multi-User First**: Components support user context and personalized experiences
+- **Cost-Optimization Aware**: UI patterns for cached vs AI-loading states
+- **Performance Tiered**: <200ms cached, <500ms similarity, <2000ms AI responses
+- **User Intelligence**: Components adapt to user learning patterns and progress
+- **Scalable Caching**: Visual feedback for 95-98% cache efficiency
+- **Accessibility**: WCAG AA compliance with optimized loading states
+
+### **Component Categories**
+
+| Category | Purpose | User Context | Cost Optimization |
+|----------|---------|--------------|-------------------|
+| **[Core UI](./components/core-ui.md)** | Basic building blocks | User preferences, themes | Cached state indicators |
+| **[Learning Components](./components/learning-components.md)** | AI-powered learning | User progress, error patterns | Cache hit feedback |
+| **[Analytics Components](./components/analytics-components.md)** | User-specific metrics | Personal progress tracking | Cost efficiency metrics |
+| **[Cost-Aware Components](./components/cost-optimization.md)** | AI cost visualization | User cost awareness | Real-time savings display |
+
+---
+
+## 🎨 **Enhanced Design System Standards**
+
+### **User Context Color System**
+```css
+/* User Progress States */
+--user-beginner: #3b82f6;      /* Blue - learning */
+--user-intermediate: #f59e0b;   /* Amber - progressing */
+--user-advanced: #10b981;      /* Green - mastering */
+--user-expert: #8b5cf6;        /* Purple - teaching */
+
+/* Cost Optimization States */
+--cache-hit: #16a34a;          /* Green - cached response */
+--similarity-match: #ea580c;    /* Orange - similarity cache */
+--ai-call: #dc2626;           /* Red - expensive AI call */
+--cost-savings: #059669;       /* Emerald - savings indicator */
+
+/* User-Specific Feedback */
+--user-correct: #16a34a;       /* Personalized success */
+--user-improving: #f59e0b;     /* Progress indicator */
+--user-struggling: #dc2626;    /* Needs attention */
+--user-mastered: #8b5cf6;      /* Concept mastered */
+```
+
+### **Performance Tier Indicators**
+```css
+/* Response Time Visual Feedback */
+--instant-response: 0-200ms;    /* Bright green indicator */
+--fast-response: 200-500ms;     /* Green indicator */
+--normal-response: 500-2000ms;  /* Amber indicator */
+--slow-response: 2000ms+;       /* Red indicator */
+
+/* Cost Efficiency Indicators */
+--cost-optimal: 95-98%;         /* Dark green */
+--cost-good: 85-95%;           /* Green */
+--cost-acceptable: 75-85%;      /* Amber */
+--cost-expensive: <75%;         /* Red */
+```
+
+---
+
+## 🧠 **User-Context Components**
+
+### **Enhanced Action Buttons with User Intelligence**
+```typescript
+interface ActionButtonsProps {
+  // Standard props
+  actions: ActionConfig[]
+  onAction: (actionId: string) => void
+  
+  // User context integration
+  userContext: {
+    userId: string
+    currentLevel: 'beginner' | 'intermediate' | 'advanced' | 'expert'
+    errorPatterns: string[]
+    masteryWords: string[]
+    hintDependency: number // 0-1 scale
+  }
+  
+  // Cost optimization context
+  costContext: {
+    responseType: 'cached' | 'similarity' | 'ai'
+    responseTime: number
+    costSavings: number
+    cacheHitRate: number
+  }
+  
+  className?: string
+}
+
+export function ActionButtons({ 
+  actions, 
+  onAction, 
+  userContext, 
+  costContext, 
+  className = '' 
+}: ActionButtonsProps) {
+  return (
+    <div className={`flex justify-center gap-4 mb-8 ${className}`}>
+      {/* Previous Button */}
+      <button
+        onClick={() => onAction('previous')}
+        className="px-6 py-3 bg-muted text-muted-foreground rounded-lg font-medium 
+                   hover:text-gray-300 hover:bg-accent transition-colors"
+        disabled={actions.find(a => a.id === 'previous')?.disabled}
+      >
+        <ChevronLeft className="w-4 h-4 mr-2" />
+        Previous
+      </button>
+
+      {/* Check/Try Again Button with User Context */}
+      <button
+        onClick={() => onAction('check')}
+        className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+          userContext.currentLevel === 'beginner' 
+            ? 'bg-blue-600 hover:bg-blue-700' 
+            : 'bg-green-600 hover:bg-green-700'
+        } text-white`}
+      >
+        {userContext.hintDependency > 0.5 ? 'Try Again' : 'Check'}
+      </button>
+
+      {/* Next Button with Cost Feedback */}
+      <button
+        onClick={() => onAction('next')}
+        className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg 
+                   font-medium transition-colors relative"
+      >
+        Next
+        {/* Cost efficiency indicator */}
+        <span className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${
+          costContext.responseType === 'cached' ? 'bg-green-400' :
+          costContext.responseType === 'similarity' ? 'bg-orange-400' :
+          'bg-red-400'
+        }`} />
+      </button>
+
+      {/* Hint Button with User Dependency Tracking */}
+      <button
+        onClick={() => onAction('hint')}
+        className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+          userContext.hintDependency > 0.7 
+            ? 'bg-red-600 hover:bg-red-700 text-white' // High dependency warning
+            : 'bg-muted text-muted-foreground hover:text-gray-300 hover:bg-accent'
+        }`}
+      >
+        <Lightbulb className="w-4 h-4 mr-2" />
+        Hint {userContext.hintDependency > 0.5 && '⚠️'}
+      </button>
+    </div>
+  )
+}
+```
+
+### **User Progress Card with Cost Awareness**
+```typescript
+interface UserProgressCardProps {
+  userProgress: {
+    userId: string
+    masteryPercentage: number
+    streak: number
+    level: string
+    recentImprovements: string[]
+    weakAreas: string[]
+  }
+  costMetrics: {
+    sessionsToday: number
+    costSavedToday: number
+    cacheHitRate: number
+    avgResponseTime: number
+  }
+  className?: string
+}
+
+export function UserProgressCard({ userProgress, costMetrics, className = '' }: UserProgressCardProps) {
+  return (
+    <div className={`bg-muted rounded-lg p-6 ${className}`}>
+      {/* User-specific header */}
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-lg font-semibold text-foreground">Your Progress</h3>
+          <p className="text-sm text-muted-foreground">Level: {userProgress.level}</p>
+        </div>
+        <div className="text-right">
+          <p className="text-2xl font-bold text-green-600">{userProgress.masteryPercentage}%</p>
+          <p className="text-xs text-muted-foreground">Mastery</p>
+        </div>
+      </div>
+
+      {/* Progress visualization */}
+      <div className="mb-4">
+        <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
+          <div 
+            className="bg-green-600 h-2 rounded-full transition-all duration-300"
+            style={{ width: `${userProgress.masteryPercentage}%` }}
+          />
+        </div>
+        <div className="flex justify-between text-sm text-muted-foreground">
+          <span>🔥 {userProgress.streak} day streak</span>
+          <span>⚡ {costMetrics.cacheHitRate}% cache hit</span>
+        </div>
+      </div>
+
+      {/* Recent improvements with cost context */}
+      {userProgress.recentImprovements.length > 0 && (
+        <div className="mb-4">
+          <h4 className="text-sm font-medium text-foreground mb-2">Recent Improvements</h4>
+          <div className="space-y-1">
+            {userProgress.recentImprovements.slice(0, 3).map((improvement, index) => (
+              <div key={index} className="flex items-center text-sm">
+                <CheckCircle className="w-4 h-4 text-green-600 mr-2" />
+                <span className="text-muted-foreground">{improvement}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Cost savings awareness */}
+      <div className="border-t border-gray-700 pt-4">
+        <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center">
+            <DollarSign className="w-4 h-4 text-green-600 mr-1" />
+            <span className="text-muted-foreground">Saved today:</span>
+          </div>
+          <span className="text-green-600 font-medium">${costMetrics.costSavedToday.toFixed(2)}</span>
+        </div>
+        <div className="flex items-center justify-between text-sm mt-1">
+          <span className="text-muted-foreground">Sessions: {costMetrics.sessionsToday}</span>
+          <span className="text-muted-foreground">Avg: {costMetrics.avgResponseTime}ms</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+### **Cost-Optimized Loading States**
+```typescript
+interface LoadingStateProps {
+  type: 'cached' | 'similarity' | 'ai'
+  estimatedTime?: number
+  userContext?: {
+    level: string
+    previousResponseTime: number
+  }
+}
+
+export function LoadingState({ type, estimatedTime, userContext }: LoadingStateProps) {
+  const getLoadingConfig = () => {
+    switch (type) {
+      case 'cached':
+        return {
+          color: 'text-green-500',
+          message: 'Instant response',
+          duration: '<200ms',
+          icon: '⚡'
+        }
+      case 'similarity':
+        return {
+          color: 'text-orange-500', 
+          message: 'Smart pattern match',
+          duration: '<500ms',
+          icon: '🧠'
+        }
+      case 'ai':
+        return {
+          color: 'text-blue-500',
+          message: 'AI thinking...',
+          duration: '<2000ms',
+          icon: '🤖'
+        }
+    }
+  }
+
+  const config = getLoadingConfig()
+
+  return (
+    <div className="flex flex-col items-center justify-center py-8">
+      <div className={`animate-spin h-8 w-8 ${config.color} mb-4`}>
+        <span className="text-2xl">{config.icon}</span>
+      </div>
+      <p className={`text-base font-medium ${config.color}`}>
+        {config.message}
+      </p>
+      <p className="text-sm text-muted-foreground mt-1">
+        Expected: {config.duration}
+      </p>
+      {userContext && (
+        <p className="text-xs text-muted-foreground mt-2">
+          Your level: {userContext.level} • Last response: {userContext.previousResponseTime}ms
+        </p>
+      )}
+    </div>
+  )
+}
+```
+
+---
+
+## 📊 **Cost Optimization Components**
+
+### **Real-Time Cost Dashboard**
+```typescript
+interface CostDashboardProps {
+  dailyMetrics: {
+    evaluations: number
+    cacheHits: number
+    aiCalls: number
+    totalCost: number
+    savedAmount: number
+  }
+  userImpact: {
+    personalSavings: number
+    efficiencyRank: number // percentile among users
+    responseTimes: number[]
+  }
+}
+
+export function CostDashboard({ dailyMetrics, userImpact }: CostDashboardProps) {
+  const cacheHitRate = (dailyMetrics.cacheHits / dailyMetrics.evaluations) * 100
+  const savingsRate = (dailyMetrics.savedAmount / (dailyMetrics.savedAmount + dailyMetrics.totalCost)) * 100
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      {/* Cache Efficiency */}
+      <div className="bg-muted rounded-lg p-4">
+        <div className="flex items-center justify-between mb-2">
+          <h4 className="text-sm font-medium text-foreground">Cache Efficiency</h4>
+          <Zap className={`w-4 h-4 ${cacheHitRate > 95 ? 'text-green-500' : 'text-orange-500'}`} />
+        </div>
+        <p className="text-2xl font-bold text-foreground">{cacheHitRate.toFixed(1)}%</p>
+        <p className="text-xs text-muted-foreground">
+          {dailyMetrics.cacheHits} of {dailyMetrics.evaluations} cached
+        </p>
+      </div>
+
+      {/* Cost Savings */}
+      <div className="bg-muted rounded-lg p-4">
+        <div className="flex items-center justify-between mb-2">
+          <h4 className="text-sm font-medium text-foreground">Daily Savings</h4>
+          <DollarSign className="w-4 h-4 text-green-500" />
+        </div>
+        <p className="text-2xl font-bold text-green-600">${dailyMetrics.savedAmount.toFixed(2)}</p>
+        <p className="text-xs text-muted-foreground">
+          {savingsRate.toFixed(1)}% cost reduction
+        </p>
+      </div>
+
+      {/* User Efficiency Rank */}
+      <div className="bg-muted rounded-lg p-4">
+        <div className="flex items-center justify-between mb-2">
+          <h4 className="text-sm font-medium text-foreground">Efficiency Rank</h4>
+          <Trophy className={`w-4 h-4 ${userImpact.efficiencyRank > 80 ? 'text-yellow-500' : 'text-gray-500'}`} />
+        </div>
+        <p className="text-2xl font-bold text-foreground">{userImpact.efficiencyRank}%</p>
+        <p className="text-xs text-muted-foreground">
+          Better than {userImpact.efficiencyRank}% of users
+        </p>
+      </div>
+    </div>
+  )
+}
+```
+
+### **Smart Response Feedback**
+```typescript
+interface ResponseFeedbackProps {
+  responseData: {
+    type: 'cached' | 'similarity' | 'ai'
+    time: number
+    cost: number
+    accuracy: number
+    userSpecific: boolean
+  }
+  showDetails?: boolean
+}
+
+export function ResponseFeedback({ responseData, showDetails = false }: ResponseFeedbackProps) {
+  const getFeedbackConfig = () => {
+    switch (responseData.type) {
+      case 'cached':
+        return {
+          icon: '⚡',
+          color: 'text-green-600',
+          bgColor: 'bg-green-50',
+          borderColor: 'border-green-200',
+          title: 'Instant Response',
+          description: 'Retrieved from cache'
+        }
+      case 'similarity':
+        return {
+          icon: '🧠',
+          color: 'text-orange-600', 
+          bgColor: 'bg-orange-50',
+          borderColor: 'border-orange-200',
+          title: 'Smart Match',
+          description: 'Intelligent pattern recognition'
+        }
+      case 'ai':
+        return {
+          icon: '🤖',
+          color: 'text-blue-600',
+          bgColor: 'bg-blue-50', 
+          borderColor: 'border-blue-200',
+          title: 'AI Generated',
+          description: 'Fresh AI analysis'
+        }
+    }
+  }
+
+  const config = getFeedbackConfig()
+
+  return (
+    <div className={`border rounded-lg p-3 ${config.bgColor} ${config.borderColor}`}>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <span className="text-lg mr-2">{config.icon}</span>
+          <div>
+            <p className={`font-medium ${config.color}`}>{config.title}</p>
+            <p className="text-xs text-gray-600">{config.description}</p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className={`text-sm font-medium ${config.color}`}>{responseData.time}ms</p>
+          {showDetails && (
+            <p className="text-xs text-gray-600">
+              ${responseData.cost.toFixed(4)} • {responseData.accuracy}% accurate
+            </p>
+          )}
+        </div>
+      </div>
+      
+      {responseData.userSpecific && (
+        <div className="mt-2 flex items-center">
+          <User className="w-3 h-3 text-purple-600 mr-1" />
+          <span className="text-xs text-purple-600">Personalized for you</span>
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+---
+
+## 🎯 **Usage Patterns**
+
+### **Multi-User Session Management**
+```typescript
+// Example: Practice page with user context and cost optimization
+function PracticePage() {
+  const { user, userProgress, userContext } = useUserSession()
+  const { costMetrics, responseTracking } = useCostOptimization()
+  
+  return (
+    <div className="min-h-screen bg-background">
+      {/* User-aware header */}
+      <Header userLevel={user.level} costSavings={costMetrics.dailySavings} />
+      
+      {/* Main practice interface */}
+      <main className="max-w-4xl mx-auto px-4 pt-20">
+        {/* User progress with cost awareness */}
+        <UserProgressCard 
+          userProgress={userProgress}
+          costMetrics={costMetrics}
+          className="mb-6"
+        />
+        
+        {/* Cost-optimized practice interface */}
+        <PracticeInterface
+          userContext={userContext}
+          onEvaluation={(input) => evaluateWithCostOptimization(input, user.id)}
+          responseTracker={responseTracking}
+        />
+        
+        {/* User-intelligent action buttons */}
+        <ActionButtons
+          actions={practiceActions}
+          userContext={userContext}
+          costContext={responseTracking.current}
+          onAction={handleAction}
+        />
+      </main>
+    </div>
+  )
+}
+```
+
+### **Cost-Aware Component Integration**
+```typescript
+// Example: AI evaluation with visual feedback
+async function handleEvaluation(userInput: string) {
+  const startTime = Date.now()
+  
+  // Show appropriate loading state
+  setLoadingState({
+    type: 'cached', // Will update based on actual response
+    estimatedTime: userContext.avgResponseTime
+  })
+  
+  try {
+    const result = await evaluateTranslation(userInput, {
+      userId: user.id,
+      userLevel: user.level,
+      errorPatterns: userContext.errorPatterns
+    })
+    
+    const responseTime = Date.now() - startTime
+    
+    // Show response feedback
+    setResponseFeedback({
+      type: result.responseType, // 'cached' | 'similarity' | 'ai'
+      time: responseTime,
+      cost: result.cost,
+      accuracy: result.confidence,
+      userSpecific: result.personalizedForUser
+    })
+    
+    // Update user context and cost tracking
+    updateUserContext(result.learningInsights)
+    updateCostMetrics(result.costData)
+    
+  } catch (error) {
+    // Handle errors with user-friendly feedback
+    handleEvaluationError(error, userContext)
+  }
+}
+```
+
+---
+
+This enhanced design system supports the unified roadmap's multi-user architecture and cost optimization goals while maintaining excellent user experience and accessibility standards.

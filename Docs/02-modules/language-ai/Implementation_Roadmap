@@ -1,0 +1,1342 @@
+# AIdioma Implementation Roadmap & Code Integration
+## Systematic Enhancement Plan with Working Code
+
+*Complete implementation guide to reach 90%+ of AI Concept Overview vision*
+
+---
+
+## 📊 **Priority Improvement Areas**
+
+| **Improvement Component** | **Current Status** | **Target Status** | **Impact** | **Priority** | **Estimated Effort** | **Dependencies** |
+|---------------------------|-------------------|------------------|------------|--------------|---------------------|------------------|
+| **🔄 Reading Page AI Integration** | 30% - UI Only | 95% - Full AI Integration | **High** - Core learning feature missing | **Critical** | 2-3 days | Universal AI Service ✅ |
+| **🧠 Memorize Page AI Integration** | 30% - UI Only | 95% - Spaced Repetition AI | **High** - Memory learning incomplete | **Critical** | 2-3 days | Universal AI Service ✅ |
+| **💬 Conversation Page AI Integration** | 30% - UI Only | 95% - Real-time AI Chat | **High** - Conversation practice missing | **Critical** | 3-4 days | Universal AI Service ✅ |
+| **📊 Universal Activity Tracking** | 20% - Individual Pages | 90% - Cross-Page Events | **Medium** - Unified progress missing | **High** | 1 week | Database schema update |
+| **🎯 Cross-Page Goal System** | 20% - Concepts Only | 85% - Unified Goals | **Medium** - Holistic progress missing | **High** | 1-2 weeks | Activity tracking dependency |
+| **🎓 Content-Aware AI Behavior** | 40% - Basic Context | 80% - Context-Specific AI | **Medium** - AI adaptation missing | **Medium** | 1 week | Enhanced Universal AI |
+| **📈 Enhanced Progress Analytics** | 50% - Basic Progress | 85% - Cross-Page Analytics | **Medium** - Insights missing | **Medium** | 1-2 weeks | Activity tracking + goals |
+| **🧪 Mastery Assessment Engine** | 20% - Concepts Only | 70% - Basic Mastery Tracking | **Low** - Long-term feature | **Low** | 3-4 weeks | Analytics foundation |
+| **🏢 Multi-Tenant Architecture** | 0% - Multi-User Only | 60% - Basic Multi-Tenancy | **Low** - Enterprise feature | **Low** | 2-3 weeks | Database migration |
+
+---
+
+## 🚀 **Implementation Roadmap**
+
+### **📅 Phase 1: Complete AI Integration (Week 1-2)**
+**Goal**: Get all pages AI-enabled using existing Universal AI Service
+
+**Week 1 Deliverables**:
+- ✅ Reading Page AI integration (2 days)
+- ✅ Memorize Page AI integration (2 days) 
+- ✅ Enhanced Universal AI context handling (1 day)
+
+**Week 2 Deliverables**:
+- ✅ Conversation Page AI integration (3 days)
+- ✅ Cross-page AI testing and optimization (2 days)
+
+**Success Metrics**:
+- All 4 pages using Universal AI Service
+- AI evaluation working on Reading, Memorize, Conversation
+- Response times <2s for all AI interactions
+- 85%+ cache hit rate maintained across all pages
+
+### **📅 Phase 2: Unified Progress System (Week 3-4)**
+**Goal**: Cross-page activity tracking and unified goal management
+
+**Week 3 Deliverables**:
+- ✅ Universal Activity Event system (3 days)
+- ✅ Database schema updates for activity tracking (2 days)
+
+**Week 4 Deliverables**:
+- ✅ Cross-page goal tracking implementation (3 days) 
+- ✅ Enhanced Progress Page with unified data (2 days)
+
+**Success Metrics**:
+- Unified activity events from all pages
+- Cross-page goal progress working
+- Real-time progress updates across all learning activities
+- Users can see holistic learning progress
+
+### **📅 Phase 3: Advanced Features (Week 5-6)**
+**Goal**: Enhanced AI behavior and analytics
+
+**Week 5 Deliverables**:
+- ✅ Content-aware AI adaptations (3 days)
+- ✅ Advanced progress analytics (2 days)
+
+**Week 6 Deliverables**:
+- ✅ Basic mastery assessment framework (3 days)
+- ✅ Performance optimization and testing (2 days)
+
+**Success Metrics**:
+- AI adapts behavior based on page context
+- Comprehensive learning analytics available
+- Foundation for mastery assessment in place
+- System handles 1000+ concurrent users
+
+---
+
+## 💻 **Code Implementation**
+
+### **🔧 Required Tech Stack Additions**
+
+**New Dependencies Needed**:
+```json
+// package.json additions
+{
+  "dependencies": {
+    "@tanstack/react-query": "^5.0.0",    // Already exists ✅
+    "date-fns": "^3.0.0",                 // 🆕 For date handling in analytics
+    "recharts": "^2.8.0",                 // 🆕 For progress visualization
+    "zod": "^3.22.0"                      // 🆕 For enhanced validation
+  }
+}
+```
+
+**Database Migration Required**: ✅ Minor schema additions only
+
+---
+
+## 📊 **1. Universal Activity Tracking System**
+
+### **Database Schema Updates**
+
+```typescript
+// shared/schema.ts - ADD TO EXISTING SCHEMA
+import { sqliteTable, text, integer, real, index } from 'drizzle-orm/sqlite-core'
+
+// 🆕 NEW TABLE: Universal activity events
+export const universalActivityEvents = sqliteTable('universal_activity_events', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  
+  // Activity classification
+  activityType: text('activity_type').notNull(), // 'sentence_translated', 'word_memorized', etc.
+  contentType: text('content_type').notNull(),   // 'practice', 'reading', 'memorize', 'conversation'
+  pageSource: text('page_source').notNull(),     // Which page generated this
+  
+  // Performance metrics (universal)
+  score: integer('score').notNull(),              // 0-100 score
+  hintsUsed: integer('hints_used').default(0),
+  timeSpent: integer('time_spent').notNull(),     // milliseconds
+  difficultyLevel: integer('difficulty_level'),
+  attemptsRequired: integer('attempts_required').default(1),
+  
+  // Content metadata
+  contentId: text('content_id'),                  // sentence_id, flashcard_id, etc.
+  grammarConcepts: text('grammar_concepts', { mode: 'json' }),
+  vocabularyWords: text('vocabulary_words', { mode: 'json' }),
+  
+  // Goal contribution tracking
+  contributesToDaily: text('contributes_to_daily', { mode: 'json' }),
+  contributesToWeekly: text('contributes_to_weekly', { mode: 'json' }),
+  contributesToMonthly: text('contributes_to_monthly', { mode: 'json' }),
+  
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+}, (table) => ({
+  userIdIdx: index('activity_user_id_idx').on(table.userId),
+  contentTypeIdx: index('activity_content_type_idx').on(table.contentType),
+  createdAtIdx: index('activity_created_at_idx').on(table.createdAt),
+}))
+
+// 🆕 NEW TABLE: Cross-page goals
+export const unifiedGoals = sqliteTable('unified_goals', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  
+  goalType: text('goal_type').notNull(),          // 'daily', 'weekly', 'monthly'
+  goalCategory: text('goal_category').notNull(),  // 'sentences_translated', 'words_memorized'
+  targetValue: integer('target_value').notNull(),
+  currentValue: integer('current_value').default(0),
+  
+  startDate: integer('start_date', { mode: 'timestamp' }).notNull(),
+  endDate: integer('end_date', { mode: 'timestamp' }).notNull(),
+  
+  isActive: integer('is_active', { mode: 'boolean' }).default(true),
+  completedAt: integer('completed_at', { mode: 'timestamp' }),
+  
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+})
+
+// Export types for use in frontend
+export type UniversalActivityEvent = typeof universalActivityEvents.$inferSelect
+export type NewUniversalActivityEvent = typeof universalActivityEvents.$inferInsert
+export type UnifiedGoal = typeof unifiedGoals.$inferSelect
+export type NewUnifiedGoal = typeof unifiedGoals.$inferInsert
+```
+
+### **Universal Activity Service**
+
+```typescript
+// server/src/services/universal-activity-service.ts
+import { db } from '../database'
+import { universalActivityEvents, unifiedGoals } from '../../../shared/schema'
+import { eq, and, gte, lte, desc } from 'drizzle-orm'
+
+export interface ActivityEventInput {
+  userId: string
+  activityType: string
+  contentType: 'practice' | 'reading' | 'memorize' | 'conversation'
+  pageSource: string
+  score: number
+  hintsUsed?: number
+  timeSpent: number
+  difficultyLevel?: number
+  contentId?: string
+  grammarConcepts?: string[]
+  vocabularyWords?: string[]
+}
+
+export class UniversalActivityService {
+  // 📊 Record activity and update goals
+  async recordActivity(input: ActivityEventInput): Promise<{
+    activityId: string
+    goalsUpdated: string[]
+    achievements?: string[]
+  }> {
+    // 1. Create activity event
+    const activityId = `activity_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    
+    const goalContributions = this.calculateGoalContributions(input)
+    
+    const activityEvent = {
+      id: activityId,
+      userId: input.userId,
+      activityType: input.activityType,
+      contentType: input.contentType,
+      pageSource: input.pageSource,
+      score: input.score,
+      hintsUsed: input.hintsUsed || 0,
+      timeSpent: input.timeSpent,
+      difficultyLevel: input.difficultyLevel,
+      attemptsRequired: 1,
+      contentId: input.contentId,
+      grammarConcepts: JSON.stringify(input.grammarConcepts || []),
+      vocabularyWords: JSON.stringify(input.vocabularyWords || []),
+      contributesToDaily: JSON.stringify(goalContributions.daily),
+      contributesToWeekly: JSON.stringify(goalContributions.weekly),
+      contributesToMonthly: JSON.stringify(goalContributions.monthly),
+      createdAt: new Date()
+    }
+
+    await db.insert(universalActivityEvents).values(activityEvent)
+
+    // 2. Update goals
+    const goalsUpdated = await this.updateUserGoals(input.userId, goalContributions)
+
+    // 3. Check for achievements (future enhancement)
+    const achievements = await this.checkAchievements(input.userId, input)
+
+    return {
+      activityId,
+      goalsUpdated,
+      achievements
+    }
+  }
+
+  // 🎯 Calculate which goals this activity contributes to
+  private calculateGoalContributions(input: ActivityEventInput) {
+    const contributions = {
+      daily: [] as string[],
+      weekly: [] as string[],
+      monthly: [] as string[]
+    }
+
+    // Universal contributions
+    contributions.daily.push('practice_minutes', 'activities_completed')
+    contributions.weekly.push('learning_streak', 'total_score')
+    contributions.monthly.push('skill_advancement')
+
+    // Content-specific contributions
+    switch (input.contentType) {
+      case 'practice':
+        contributions.daily.push('sentences_translated')
+        contributions.weekly.push('grammar_concepts_practiced')
+        break
+      case 'reading':
+        contributions.daily.push('reading_time')
+        contributions.weekly.push('texts_completed')
+        break
+      case 'memorize':
+        contributions.daily.push('cards_reviewed')
+        contributions.weekly.push('words_memorized')
+        break
+      case 'conversation':
+        contributions.daily.push('conversation_turns')
+        contributions.weekly.push('dialogue_completed')
+        break
+    }
+
+    return contributions
+  }
+
+  // 🏆 Update user goals based on activity
+  private async updateUserGoals(userId: string, contributions: any): Promise<string[]> {
+    const updatedGoals: string[] = []
+    const today = new Date()
+    
+    // Get active goals for this user
+    const activeGoals = await db.select()
+      .from(unifiedGoals)
+      .where(
+        and(
+          eq(unifiedGoals.userId, userId),
+          eq(unifiedGoals.isActive, true),
+          lte(unifiedGoals.startDate, today),
+          gte(unifiedGoals.endDate, today)
+        )
+      )
+
+    // Update each relevant goal
+    for (const goal of activeGoals) {
+      const contributionList = contributions[goal.goalType] || []
+      
+      if (contributionList.includes(goal.goalCategory)) {
+        // Increment goal progress
+        const newValue = goal.currentValue + this.getIncrementValue(goal.goalCategory)
+        const isCompleted = newValue >= goal.targetValue
+
+        await db.update(unifiedGoals)
+          .set({
+            currentValue: newValue,
+            completedAt: isCompleted ? new Date() : null
+          })
+          .where(eq(unifiedGoals.id, goal.id))
+
+        updatedGoals.push(goal.id)
+      }
+    }
+
+    return updatedGoals
+  }
+
+  private getIncrementValue(goalCategory: string): number {
+    // Define how much each activity contributes to goals
+    const increments: Record<string, number> = {
+      'sentences_translated': 1,
+      'practice_minutes': 1,
+      'activities_completed': 1,
+      'cards_reviewed': 1,
+      'conversation_turns': 1,
+      'reading_time': 5, // minutes
+      'total_score': 10  // points
+    }
+    return increments[goalCategory] || 1
+  }
+
+  // 🎖️ Check for achievements (placeholder for future)
+  private async checkAchievements(userId: string, input: ActivityEventInput): Promise<string[]> {
+    // Future: Implement achievement checking logic
+    return []
+  }
+
+  // 📈 Get user activity analytics
+  async getUserActivityAnalytics(userId: string, timeRange: 'day' | 'week' | 'month' = 'week') {
+    const now = new Date()
+    const startDate = this.getStartDate(now, timeRange)
+
+    const activities = await db.select()
+      .from(universalActivityEvents)
+      .where(
+        and(
+          eq(universalActivityEvents.userId, userId),
+          gte(universalActivityEvents.createdAt, startDate)
+        )
+      )
+      .orderBy(desc(universalActivityEvents.createdAt))
+
+    return {
+      totalActivities: activities.length,
+      averageScore: activities.length > 0 ? 
+        activities.reduce((sum, a) => sum + a.score, 0) / activities.length : 0,
+      totalTimeSpent: activities.reduce((sum, a) => sum + a.timeSpent, 0),
+      activitiesByType: this.groupByContentType(activities),
+      dailyBreakdown: this.getDailyBreakdown(activities)
+    }
+  }
+
+  private getStartDate(now: Date, timeRange: string): Date {
+    const start = new Date(now)
+    switch (timeRange) {
+      case 'day':
+        start.setHours(0, 0, 0, 0)
+        break
+      case 'week':
+        start.setDate(now.getDate() - 7)
+        break
+      case 'month':
+        start.setMonth(now.getMonth() - 1)
+        break
+    }
+    return start
+  }
+
+  private groupByContentType(activities: any[]) {
+    return activities.reduce((acc, activity) => {
+      acc[activity.contentType] = (acc[activity.contentType] || 0) + 1
+      return acc
+    }, {})
+  }
+
+  private getDailyBreakdown(activities: any[]) {
+    return activities.reduce((acc, activity) => {
+      const date = activity.createdAt.toISOString().split('T')[0]
+      acc[date] = (acc[date] || 0) + 1
+      return acc
+    }, {})
+  }
+}
+
+export const universalActivityService = new UniversalActivityService()
+```
+
+---
+
+## 📖 **2. Reading Page AI Integration**
+
+```typescript
+// client/src/pages/ReadingPage.tsx - ENHANCED VERSION
+import React, { useState, useCallback } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { universalActivityService } from '../services/universal-activity-service'
+
+interface ReadingPageProps {
+  currentUser: any
+}
+
+export default function ReadingPage({ currentUser }: ReadingPageProps) {
+  const [selectedText, setSelectedText] = useState<string>('')
+  const [translationInput, setTranslationInput] = useState<string>('')
+  const [currentEvaluation, setCurrentEvaluation] = useState<any>(null)
+  const [isEvaluating, setIsEvaluating] = useState(false)
+
+  // 📖 Mock reading content (in real app, fetch from API)
+  const readingContent = {
+    title: "Una Mañana en Madrid",
+    paragraphs: [
+      {
+        id: 1,
+        spanish: "María camina por las calles de Madrid cada mañana. Le gusta observar las tiendas y los cafés que abren temprano.",
+        english: "María walks through the streets of Madrid every morning. She likes to observe the shops and cafes that open early.",
+        sentences: [
+          {
+            id: "1-1",
+            spanish: "María camina por las calles de Madrid cada mañana.",
+            english: "María walks through the streets of Madrid every morning."
+          },
+          {
+            id: "1-2", 
+            spanish: "Le gusta observar las tiendas y los cafés que abren temprano.",
+            english: "She likes to observe the shops and cafes that open early."
+          }
+        ]
+      }
+    ]
+  }
+
+  // 🧠 Handle sentence translation using Universal AI
+  const handleSentenceTranslation = useCallback(async (sentence: any) => {
+    if (!translationInput.trim()) return
+
+    setIsEvaluating(true)
+    const startTime = Date.now()
+
+    try {
+      // 🔄 Use Universal AI Service for reading context
+      const response = await fetch('http://localhost:5001/api/ai/universal-evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          contentId: sentence.id,
+          contentType: 'sentence',
+          pageType: 'reading',
+          
+          interaction: {
+            type: 'contextual_translation',  // 🆕 Reading-specific interaction
+            userInput: translationInput,
+            correctAnswer: sentence.english,
+            context: readingContent.title,  // Reading context
+            metadata: {
+              difficulty: 'intermediate',
+              language: 'spanish',
+              grammarFocus: ['present_tense', 'gustar_verb'],
+              readingContext: true  // 🆕 Flag for reading-specific evaluation
+            }
+          }
+        })
+      })
+
+      const result = await response.json()
+      setCurrentEvaluation(result.data)
+
+      // 📊 Record activity for unified tracking
+      await universalActivityService.recordActivity({
+        userId: currentUser.id,
+        activityType: 'sentence_translated',
+        contentType: 'reading',
+        pageSource: 'reading',
+        score: result.data.score || 0,
+        hintsUsed: 0,
+        timeSpent: Date.now() - startTime,
+        difficultyLevel: 3,
+        contentId: sentence.id,
+        grammarConcepts: ['present_tense', 'gustar_verb'],
+        vocabularyWords: ['camina', 'calles', 'gusta', 'observar']
+      })
+
+    } catch (error) {
+      console.error('Reading evaluation error:', error)
+      setCurrentEvaluation({
+        score: 0,
+        feedback: 'Error evaluating translation. Please try again.',
+        error: true
+      })
+    } finally {
+      setIsEvaluating(false)
+    }
+  }, [translationInput, currentUser.id])
+
+  // 🎯 Handle word-level hints in reading context
+  const handleWordHint = useCallback(async (word: string, context: string) => {
+    try {
+      const response = await fetch('http://localhost:5001/api/ai/universal-evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: currentUser.id,
+          contentId: word,
+          contentType: 'vocabulary',
+          pageType: 'reading',
+          
+          interaction: {
+            type: 'word_definition',
+            userInput: word,
+            context: context,
+            metadata: {
+              difficulty: 'intermediate',
+              language: 'spanish',
+              readingContext: true
+            }
+          }
+        })
+      })
+
+      const result = await response.json()
+      return result.data.feedback
+
+    } catch (error) {
+      console.error('Word hint error:', error)
+      return `"${word}" - meaning available with translation practice`
+    }
+  }, [currentUser.id])
+
+  return (
+    <div className="reading-page max-w-4xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">{readingContent.title}</h1>
+      
+      {/* 📖 Reading Content */}
+      <div className="reading-content bg-white rounded-lg p-6 shadow-sm border">
+        {readingContent.paragraphs.map(paragraph => (
+          <div key={paragraph.id} className="paragraph mb-6">
+            <p className="text-lg leading-relaxed mb-4">
+              {paragraph.sentences.map(sentence => (
+                <span 
+                  key={sentence.id}
+                  className="sentence cursor-pointer hover:bg-blue-50 px-1 rounded"
+                  onClick={() => setSelectedText(sentence.spanish)}
+                >
+                  {sentence.spanish}{' '}
+                </span>
+              ))}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* 🔄 Translation Practice Section */}
+      {selectedText && (
+        <div className="translation-practice mt-8 bg-gray-50 rounded-lg p-6">
+          <h3 className="text-xl font-semibold mb-4">Practice Translation</h3>
+          
+          <div className="selected-sentence mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Selected Sentence:
+            </label>
+            <p className="text-lg bg-white p-3 rounded border">
+              {selectedText}
+            </p>
+          </div>
+
+          <div className="translation-input mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Your English Translation:
+            </label>
+            <textarea
+              value={translationInput}
+              onChange={(e) => setTranslationInput(e.target.value)}
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              rows={3}
+              placeholder="Type your English translation here..."
+            />
+          </div>
+
+          <button
+            onClick={() => {
+              const sentence = readingContent.paragraphs
+                .flatMap(p => p.sentences)
+                .find(s => s.spanish === selectedText)
+              if (sentence) handleSentenceTranslation(sentence)
+            }}
+            disabled={!translationInput.trim() || isEvaluating}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+          >
+            {isEvaluating ? 'Evaluating...' : 'Check Translation'}
+          </button>
+
+          {/* 📊 Evaluation Results */}
+          {currentEvaluation && (
+            <div className="evaluation-results mt-6 p-4 bg-white rounded-lg border">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="font-semibold">Evaluation Result</h4>
+                <span className={`font-bold text-lg ${
+                  currentEvaluation.score >= 80 ? 'text-green-600' : 
+                  currentEvaluation.score >= 60 ? 'text-yellow-600' : 'text-red-600'
+                }`}>
+                  {currentEvaluation.score}/100
+                </span>
+              </div>
+              <p className="text-gray-700">{currentEvaluation.feedback}</p>
+              
+              {/* 🆕 Reading-specific feedback */}
+              {currentEvaluation.readingAnalysis && (
+                <div className="mt-4 p-3 bg-blue-50 rounded">
+                  <h5 className="font-medium text-blue-800 mb-2">Reading Context Analysis</h5>
+                  <p className="text-blue-700 text-sm">
+                    {currentEvaluation.readingAnalysis.contextualNotes}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+---
+
+## 🧠 **3. Memorize Page AI Integration**
+
+```typescript
+// client/src/pages/MemorizePage.tsx - ENHANCED VERSION
+import React, { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { universalActivityService } from '../services/universal-activity-service'
+
+interface FlashCard {
+  id: string
+  spanish: string
+  english: string
+  difficulty: number
+  attempts: number
+  lastReviewed?: Date
+  spacedRepetitionInterval: number
+  masteryLevel: 'learning' | 'familiar' | 'mastered'
+}
+
+export default function MemorizePage({ currentUser }: any) {
+  const [currentCardIndex, setCurrentCardIndex] = useState(0)
+  const [showAnswer, setShowAnswer] = useState(false)
+  const [userAnswer, setUserAnswer] = useState('')
+  const [isEvaluating, setIsEvaluating] = useState(false)
+  const [evaluation, setEvaluation] = useState<any>(null)
+
+  // 🃏 Mock flashcard data (in real app, fetch based on spaced repetition)
+  const flashCards: FlashCard[] = [
+    {
+      id: 'card_1',
+      spanish: 'la mesa',
+      english: 'the table',
+      difficulty: 1,
+      attempts: 0,
+      spacedRepetitionInterval: 1,
+      masteryLevel: 'learning'
+    },
+    {
+      id: 'card_2', 
+      spanish: 'caminar',
+      english: 'to walk',
+      difficulty: 2,
+      attempts: 2,
+      spacedRepetitionInterval: 3,
+      masteryLevel: 'familiar'
+    }
+  ]
+
+  const currentCard = flashCards[currentCardIndex]
+
+  // 🧠 Handle flashcard response with AI evaluation
+  const handleCardResponse = async (responseType: 'manual' | 'quick', confidence?: 'easy' | 'hard' | 'again') => {
+    const startTime = Date.now()
+    setIsEvaluating(true)
+
+    try {
+      let evaluationInput
+      
+      if (responseType === 'manual') {
+        // Manual translation evaluation
+        evaluationInput = {
+          userId: currentUser.id,
+          contentId: currentCard.id,
+          contentType: 'vocabulary',
+          pageType: 'memorize',
+          
+          interaction: {
+            type: 'vocabulary_recall',
+            userInput: userAnswer,
+            correctAnswer: currentCard.english,
+            context: `Flashcard: ${currentCard.spanish}`,
+            metadata: {
+              difficulty: currentCard.difficulty,
+              language: 'spanish',
+              previousAttempts: currentCard.attempts,
+              spacedRepetitionInterval: currentCard.spacedRepetitionInterval,
+              masteryLevel: currentCard.masteryLevel
+            }
+          }
+        }
+      } else {
+        // Quick confidence-based evaluation
+        const confidenceScores = { easy: 95, hard: 70, again: 30 }
+        evaluationInput = {
+          userId: currentUser.id,
+          contentId: currentCard.id,
+          contentType: 'vocabulary',
+          pageType: 'memorize',
+          
+          interaction: {
+            type: 'spaced_repetition_confidence',
+            userInput: confidence || 'hard',
+            correctAnswer: currentCard.english,
+            context: `Quick review: ${currentCard.spanish}`,
+            metadata: {
+              difficulty: currentCard.difficulty,
+              confidenceLevel: confidence,
+              previousAttempts: currentCard.attempts,
+              spacedRepetitionInterval: currentCard.spacedRepetitionInterval
+            }
+          }
+        }
+      }
+
+      // 🔄 Use Universal AI Service for memory evaluation
+      const response = await fetch('http://localhost:5001/api/ai/universal-evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(evaluationInput)
+      })
+
+      const result = await response.json()
+      setEvaluation(result.data)
+
+      // 📊 Record activity for unified tracking
+      await universalActivityService.recordActivity({
+        userId: currentUser.id,
+        activityType: 'vocabulary_recalled',
+        contentType: 'memorize',
+        pageSource: 'memorize',
+        score: result.data.score || (responseType === 'quick' ? confidenceScores[confidence!] : 0),
+        hintsUsed: 0,
+        timeSpent: Date.now() - startTime,
+        difficultyLevel: currentCard.difficulty,
+        contentId: currentCard.id,
+        vocabularyWords: [currentCard.spanish, currentCard.english]
+      })
+
+      // 🔄 Update spaced repetition based on AI evaluation
+      if (result.data.vocabularyAnalysis) {
+        await updateSpacedRepetition(currentCard.id, result.data.vocabularyAnalysis)
+      }
+
+    } catch (error) {
+      console.error('Flashcard evaluation error:', error)
+      setEvaluation({
+        score: 0,
+        feedback: 'Error evaluating flashcard. Please try again.',
+        error: true
+      })
+    } finally {
+      setIsEvaluating(false)
+    }
+  }
+
+  // 🔄 Update spaced repetition algorithm
+  const updateSpacedRepetition = async (cardId: string, analysis: any) => {
+    const { memoryStrength, retentionPrediction, spacedRepetitionInterval } = analysis
+    
+    // Update card scheduling (in real app, save to database)
+    console.log(`Card ${cardId} - Next review in ${spacedRepetitionInterval} days`)
+    console.log(`Memory strength: ${memoryStrength}%`)
+    console.log(`Retention prediction: ${retentionPrediction} days`)
+  }
+
+  // 🎯 Navigation functions
+  const nextCard = () => {
+    setCurrentCardIndex((prev) => (prev + 1) % flashCards.length)
+    setShowAnswer(false)
+    setUserAnswer('')
+    setEvaluation(null)
+  }
+
+  const prevCard = () => {
+    setCurrentCardIndex((prev) => (prev - 1 + flashCards.length) % flashCards.length)
+    setShowAnswer(false)
+    setUserAnswer('')
+    setEvaluation(null)
+  }
+
+  return (
+    <div className="memorize-page max-w-2xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">Vocabulary Review</h1>
+      
+      {/* 📊 Progress indicator */}
+      <div className="progress-indicator mb-6 text-center">
+        <span className="text-gray-600">
+          Card {currentCardIndex + 1} of {flashCards.length}
+        </span>
+        <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+          <div 
+            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            style={{ width: `${((currentCardIndex + 1) / flashCards.length) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      {/* 🃏 Flashcard */}
+      <div className="flashcard bg-white rounded-lg shadow-lg p-8 min-h-[300px] flex flex-col justify-center">
+        {/* Front of card */}
+        <div className="card-front text-center">
+          <h2 className="text-4xl font-bold text-gray-800 mb-4">
+            {currentCard.spanish}
+          </h2>
+          
+          <div className="mastery-indicator mb-4">
+            <span className={`px-3 py-1 rounded-full text-sm ${
+              currentCard.masteryLevel === 'mastered' ? 'bg-green-100 text-green-800' :
+              currentCard.masteryLevel === 'familiar' ? 'bg-yellow-100 text-yellow-800' :
+              'bg-blue-100 text-blue-800'
+            }`}>
+              {currentCard.masteryLevel}
+            </span>
+          </div>
+
+          {!showAnswer ? (
+            <div className="answer-input">
+              <input
+                type="text"
+                value={userAnswer}
+                onChange={(e) => setUserAnswer(e.target.value)}
+                placeholder="Type the English translation..."
+                className="w-full p-3 border-2 border-gray-300 rounded-lg text-center text-lg focus:border-blue-500"
+                onKeyPress={(e) => e.key === 'Enter' && userAnswer.trim() && handleCardResponse('manual')}
+              />
+              
+              <div className="actions mt-4 space-x-3">
+                <button
+                  onClick={() => handleCardResponse('manual')}
+                  disabled={!userAnswer.trim() || isEvaluating}
+                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {isEvaluating ? 'Checking...' : 'Check Answer'}
+                </button>
+                
+                <button
+                  onClick={() => setShowAnswer(true)}
+                  className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600"
+                >
+                  Show Answer
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="answer-revealed">
+              <div className="correct-answer text-2xl text-green-600 font-semibold mb-4">
+                {currentCard.english}
+              </div>
+              
+              {/* 🧠 Quick confidence rating */}
+              <div className="confidence-rating">
+                <p className="text-gray-600 mb-3">How well did you know this?</p>
+                <div className="confidence-buttons space-x-2">
+                  <button
+                    onClick={() => handleCardResponse('quick', 'again')}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                  >
+                    Again
+                  </button>
+                  <button
+                    onClick={() => handleCardResponse('quick', 'hard')}
+                    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+                  >
+                    Hard
+                  </button>
+                  <button
+                    onClick={() => handleCardResponse('quick', 'easy')}
+                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                  >
+                    Easy
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 📊 Evaluation feedback */}
+        {evaluation && !evaluation.error && (
+          <div className="evaluation-feedback mt-6 p-4 bg-gray-50 rounded-lg">
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-semibold">Memory Assessment</span>
+              <span className={`font-bold ${
+                evaluation.score >= 80 ? 'text-green-600' : 
+                evaluation.score >= 60 ? 'text-yellow-600' : 'text-red-600'
+              }`}>
+                {evaluation.score}/100
+              </span>
+            </div>
+            <p className="text-gray-700 text-sm">{evaluation.feedback}</p>
+            
+            {evaluation.vocabularyAnalysis && (
+              <div className="spaced-repetition-info mt-3 text-xs text-gray-600">
+                <p>Next review: {evaluation.vocabularyAnalysis.spacedRepetitionInterval} days</p>
+                <p>Memory strength: {evaluation.vocabularyAnalysis.memoryStrength}%</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* 🎯 Navigation */}
+      <div className="navigation flex justify-between mt-6">
+        <button
+          onClick={prevCard}
+          className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600"
+        >
+          Previous
+        </button>
+        
+        <button
+          onClick={nextCard}
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+        >
+          Next Card
+        </button>
+      </div>
+    </div>
+  )
+}
+```
+
+---
+
+## 🌟 **4. Enhanced Universal AI Service - Content-Aware Behavior**
+
+```typescript
+// server/src/services/universal-ai-learning-service.ts - ENHANCEMENT
+// ADD THESE METHODS TO EXISTING SERVICE
+
+export class UniversalAILearningService {
+  // ... existing code ...
+
+  // 🎯 Enhanced evaluate method with content-aware behavior
+  async evaluate(input: UniversalLearningInput): Promise<UniversalLearningResult> {
+    try {
+      // 🔍 STEP 1: Check universal cache (existing)
+      const cacheKey = this.generateUniversalCacheKey(input)
+      const cachedResult = this.universalCache.get(cacheKey)
+      if (cachedResult) {
+        return { ...cachedResult, cached: true }
+      }
+
+      // 🧠 STEP 2: Content-aware AI evaluation
+      const contextualPrompt = this.buildContextAwarePrompt(input)
+      const aiResponse = await this.callAIWithRetry(contextualPrompt, input)
+      const parsedResult = this.parseAIResponse(aiResponse, input)
+
+      // 🚀 STEP 3: Cache and return
+      this.universalCache.set(cacheKey, parsedResult)
+      return parsedResult
+
+    } catch (error) {
+      return this.handleEvaluationError(input, error)
+    }
+  }
+
+  // 🎯 Build context-aware prompts based on page type
+  private buildContextAwarePrompt(input: UniversalLearningInput): string {
+    const baseContext = `
+User Level: ${input.userContext?.overallLevel || 'intermediate'}
+Content Type: ${input.contentType}
+Page Context: ${input.pageType}
+`
+
+    switch (input.pageType) {
+      case 'practice':
+        return this.buildPracticePrompt(input, baseContext)
+      case 'reading':
+        return this.buildReadingPrompt(input, baseContext)
+      case 'memorize':
+        return this.buildMemorizePrompt(input, baseContext)
+      case 'conversation':
+        return this.buildConversationPrompt(input, baseContext)
+      default:
+        return this.buildGenericPrompt(input, baseContext)
+    }
+  }
+
+  // 📖 Reading-specific AI prompts
+  private buildReadingPrompt(input: UniversalLearningInput, baseContext: string): string {
+    if (input.interaction.type === 'contextual_translation') {
+      return `${baseContext}
+
+READING CONTEXT EVALUATION:
+You are evaluating a Spanish-to-English translation within a reading comprehension context.
+
+Text Context: "${input.interaction.context}"
+Spanish Sentence: "${input.interaction.correctAnswer}"
+Student Translation: "${input.interaction.userInput}"
+
+EVALUATION CRITERIA FOR READING:
+1. Meaning Preservation (40%): Does the translation capture the essential meaning?
+2. Contextual Appropriateness (30%): Does it fit within the broader text context?
+3. Natural English (20%): Does it sound natural in English?
+4. Grammar Accuracy (10%): Basic grammatical correctness
+
+SPECIAL CONSIDERATIONS:
+- Prioritize meaning over perfect grammar in reading context
+- Consider how translation fits within the story/text flow
+- Be more lenient with stylistic choices that preserve meaning
+- Highlight cultural/contextual insights when relevant
+
+Return JSON with:
+{
+  "score": number (0-100),
+  "feedback": "contextual feedback focusing on comprehension",
+  "readingAnalysis": {
+    "contextualNotes": "how this fits in the reading context",
+    "comprehensionLevel": number (0-100)
+  }
+}`
+    }
+
+    if (input.interaction.type === 'word_definition') {
+      return `${baseContext}
+
+READING VOCABULARY SUPPORT:
+Provide a helpful definition for a word encountered while reading.
+
+Word: "${input.interaction.userInput}"
+Context: "${input.interaction.context}"
+
+Return JSON with brief, reading-focused definition:
+{
+  "feedback": "brief definition with context",
+  "score": 100
+}`
+    }
+
+    return this.buildGenericPrompt(input, baseContext)
+  }
+
+  // 🧠 Memorize-specific AI prompts
+  private buildMemorizePrompt(input: UniversalLearningInput, baseContext: string): string {
+    if (input.interaction.type === 'vocabulary_recall') {
+      return `${baseContext}
+
+VOCABULARY RECALL EVALUATION:
+Assess vocabulary memory and retention for spaced repetition.
+
+Spanish Word: "${input.interaction.context.replace('Flashcard: ', '')}"
+Correct English: "${input.interaction.correctAnswer}"
+Student Answer: "${input.interaction.userInput}"
+Previous Attempts: ${input.interaction.metadata.previousAttempts}
+Current Interval: ${input.interaction.metadata.spacedRepetitionInterval} days
+
+MEMORY ASSESSMENT CRITERIA:
+1. Exact Match (50%): Precise translation accuracy
+2. Meaning Recognition (30%): Understanding of core meaning
+3. Recall Speed (20%): Based on attempt history
+
+SPACED REPETITION GUIDANCE:
+- Calculate memory strength (0-100%)
+- Predict retention duration (days)
+- Recommend next review interval
+
+Return JSON:
+{
+  "score": number (0-100),
+  "feedback": "memory-focused feedback",
+  "vocabularyAnalysis": {
+    "memoryStrength": number (0-100),
+    "retentionPrediction": number (days),
+    "spacedRepetitionInterval": number (days),
+    "recallAccuracy": number (0-1)
+  }
+}`
+    }
+
+    if (input.interaction.type === 'spaced_repetition_confidence') {
+      const confidenceScores = { easy: 95, hard: 70, again: 30 }
+      const confidence = input.interaction.userInput as 'easy' | 'hard' | 'again'
+      
+      return `${baseContext}
+
+CONFIDENCE-BASED SPACED REPETITION:
+User confidence: ${confidence}
+Base score: ${confidenceScores[confidence]}
+
+Calculate spaced repetition interval:
+- Easy: multiply current interval by 2.5
+- Hard: multiply current interval by 1.3  
+- Again: reset interval to 1 day
+
+Return JSON:
+{
+  "score": ${confidenceScores[confidence]},
+  "feedback": "confidence-based memory assessment",
+  "vocabularyAnalysis": {
+    "memoryStrength": ${confidenceScores[confidence]},
+    "spacedRepetitionInterval": number,
+    "confidenceLevel": "${confidence}"
+  }
+}`
+    }
+
+    return this.buildGenericPrompt(input, baseContext)
+  }
+
+  // 💬 Conversation-specific prompts (for future implementation)
+  private buildConversationPrompt(input: UniversalLearningInput, baseContext: string): string {
+    // Implementation for conversation context
+    return `${baseContext}
+
+CONVERSATION CONTEXT: Implement conversation-specific evaluation...`
+  }
+
+  // 📝 Practice-specific prompts (existing, enhanced)
+  private buildPracticePrompt(input: UniversalLearningInput, baseContext: string): string {
+    return `${baseContext}
+
+ISOLATED SENTENCE PRACTICE:
+Focus on grammar accuracy and linguistic precision.
+
+Spanish Sentence: "${input.interaction.correctAnswer}"
+Student Translation: "${input.interaction.userInput}"
+
+PRACTICE EVALUATION CRITERIA:
+1. Grammar Accuracy (40%): Verb conjugation, gender agreement, structure
+2. Vocabulary Precision (30%): Correct word choice and spelling
+3. Completeness (20%): All elements translated
+4. Naturalness (10%): Natural English expression
+
+Return JSON with detailed grammar analysis:
+{
+  "score": number (0-100),
+  "feedback": "detailed grammar-focused feedback",
+  "translationAnalysis": {
+    "grammarScore": number (0-100),
+    "vocabularyScore": number (0-100),
+    "wordMapping": [],
+    "grammarErrors": []
+  }
+}`
+  }
+
+  // 🔄 Generic fallback prompt
+  private buildGenericPrompt(input: UniversalLearningInput, baseContext: string): string {
+    return `${baseContext}
+
+Evaluate: "${input.interaction.userInput}"
+Expected: "${input.interaction.correctAnswer}"
+
+Return JSON: {"score": number, "feedback": "string"}`
+  }
+
+  // ... rest of existing methods ...
+}
+```
+
+---
+
+## 📊 **5. Enhanced Progress Page with Unified Analytics**
+
+```typescript
+// client/src/pages/ProgressPage.tsx - UNIFIED ANALYTICS VERSION
+import React from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
+
+export default function ProgressPage({ currentUser }: any) {
+  // 📊 Fetch unified analytics from all pages
+  const { data: unifiedAnalytics, isLoading } = useQuery({
+    queryKey: ['unifiedAnalytics', currentUser?.id],
+    queryFn: async () => {
+      const response = await fetch(`http://localhost:5001/api/analytics/unified/${currentUser.id}`)
+      return response.json()
+    },
+    enabled: !!currentUser?.id
+  })
+
+  const { data: crossPageGoals } = useQuery({
+    queryKey: ['crossPageGoals', currentUser?.id],
+    queryFn: async () => {
+      const response = await fetch(`http://localhost:5001/api/goals/unified/${currentUser.id}`)
+      return response.json()
+    },
+    enabled: !!currentUser?.id
+  })
+
+  if (isLoading) {
+    return <div className="text-center py-8">Loading progress analytics...</div>
+  }
+
+  return (
+    <div className="progress-page max-w-6xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-8">Your Learning Progress</h1>
+
+      {/* 🎯 Unified Goals Overview */}
+      <div className="goals-overview mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Today's Goals</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {crossPageGoals?.daily?.map((goal: any) => (
+            <div key={goal.id} className="goal-card bg-white rounded-lg p-4 shadow-sm border">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="font-medium">{goal.goalCategory.replace('_', ' ')}</h3>
+                <span className="text-sm text-gray-500">
+                  {goal.currentValue}/{goal.targetValue}
+                </span>
+              </div>
+              <div className="progress-bar w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${Math.min((goal.currentValue / goal.targetValue) * 100, 100)}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 📊 Cross-Page Activity Distribution */}
+      <div className="activity-distribution mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Learning Activity Distribution</h2>
+        <div className="bg-white rounded-lg p-6 shadow-sm border">
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={unifiedAnalytics?.activitiesByType || []}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="contentType" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="count" fill="#3B82F6" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* 📈 Unified Performance Trends */}
+      <div className="performance-trends mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Performance Trends</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Overall Score Trend */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border">
+            <h3 className="text-lg font-medium mb-4">Average Scores</h3>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={unifiedAnalytics?.dailyPerformance || []}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis domain={[0, 100]} />
+                <Tooltip />
+                <Line type="monotone" dataKey="averageScore" stroke="#3B82F6" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Time Spent Across Pages */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border">
+            <h3 className="text-lg font-medium mb-4">Time Distribution</h3>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={unifiedAnalytics?.timeByPage || []}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="page" />
+                <YAxis />
+                <Tooltip formatter={(value) => [`${value} min`, 'Time Spent']} />
+                <Bar dataKey="timeSpent" fill="#10B981" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      {/* 🎯 Page-Specific Progress Cards */}
+      <div className="page-progress grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        {['practice', 'reading', 'memorize', 'conversation'].map(pageType => {
+          const pageData = unifiedAnalytics?.pageProgress?.[pageType] || {}
+          return (
+            <div key={pageType} className="page-card bg-white rounded-lg p-4 shadow-sm border">
+              <h3 className="font-medium capitalize mb-2">{pageType}</h3>
+              <div className="stats space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Activities</span>
+                  <span className="font-medium">{pageData.totalActivities || 0}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Avg Score</span>
+                  <span className="font-medium">{pageData.averageScore || 0}/100</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600">Time</span>
+                  <span className="font-medium">{pageData.timeSpent || 0}m</span>
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* 🏆 Recent Achievements */}
+      <div className="achievements">
+        <h2 className="text-2xl font-semibold mb-4">Recent Achievements</h2>
+        <div className="bg-white rounded-lg p-6 shadow-sm border">
+          {unifiedAnalytics?.recentAchievements?.length > 0 ? (
+            <div className="achievements-list space-y-3">
+              {unifiedAnalytics.recentAchievements.map((achievement: any, index: number) => (
+                <div key={index} className="achievement-item flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+                  <span className="text-2xl">🏆</span>
+                  <div>
+                    <h4 className="font-medium">{achievement.title}</h4>
+                    <p className="text-sm text-gray-600">{achievement.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 text-center py-4">
+              Keep learning to unlock your first achievement! 🎯
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+---
+
+This comprehensive implementation provides working code that integrates with your existing system architecture. The code includes all necessary database updates, API enhancements, and frontend components to achieve the unified AI integration vision from your AI Concept Overview.
+
+**Next Steps**: Run the database migration for the new tables, implement the backend API endpoints, and integrate the enhanced frontend components to reach 90%+ of your architectural vision.

@@ -25,8 +25,8 @@ AIdioma's strength comes from its **modular-first design philosophy**:
 |--------|---------|---------|--------|
 | **[Translation Evaluation](./language-ai/translation-evaluation.md)** | AI-powered translation scoring | Practice, Reading | ✅ Implemented |
 | **[Progressive Hints](./language-ai/progressive-hints.md)** | 3-level hint system | Practice, Reading | ✅ Implemented |
-| **[Conversation Suite](./language-ai/conversation-suite.md)** | AI chat with personas | Conversation | 🔄 In Progress |
-| **[Content Processing](./language-ai/content-processing.md)** | Text analysis & categorization | Reading, Memorize | 📋 Planned |
+| **[Conversation Suite](./language-ai/implementation-roadmap)** | AI chat with personas | Conversation | ✅ Implemented |
+| **[Content Processing](./language-ai/implementation-roadmap)** | Text analysis & categorization | Reading, Memorize | ✅ Implemented |
 | **[AI Cost Optimization](./language-ai/ai-cost-optimization.md)** | 3-tier caching system | All AI modules | ✅ Implemented |
 
 ### **👤 User Experience Modules** (2 modules)

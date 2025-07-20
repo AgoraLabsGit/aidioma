@@ -10,8 +10,7 @@ An AI-powered Spanish learning application focused on real-world sentence transl
 All project documentation is located in the `/Docs` folder:
 
 - **[Project Overview](/Docs/OVERVIEW.md)** - Complete project specification and quick reference
-- **[Project Charter](/Docs/01-project-overview/project-charter.md)** - Vision, goals, and scope
-- **[MVP Features](/Docs/01-project-overview/mvp-features.md)** - Core functionality breakdown
+- **[Implementation Roadmap](/Docs/02-modules/language-ai/implementation-roadmap)** - Current implementation plan
 - **[Architecture](/Docs/03-architecture/)** - System design and technical architecture
 
 ## Getting Started
