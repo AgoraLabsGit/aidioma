@@ -1,8 +1,4 @@
 import OpenAI from 'openai'
-import { config } from 'dotenv'
-
-// Ensure environment variables are loaded for this service
-config()
 
 // 🌍 UNIVERSAL AI SERVICE - Content-Aware Enhancement (Steps 1.1-1.5 + Content-Aware)
 // Enhanced with comprehensive error handling, retry logic, and cross-page template support
@@ -34,7 +30,7 @@ class AIServiceError extends Error {
     message: string,
     public code: string,
     public retryable: boolean = false,
-    public details?: Record<string, unknown>
+    public details?: any
   ) {
     super(message)
     this.name = 'AIServiceError'
@@ -57,8 +53,8 @@ class RateLimitError extends AIServiceError {
 export class UniversalAILearningService {
   private openai: OpenAI | null
   // 🎯 ENHANCED CACHING SYSTEM (Step 1.5)
-  private cache = new Map<string, { data: WordEvaluationResult, timestamp: number, hitCount: number }>()
-  private similarityCache = new Map<string, { data: WordEvaluationResult, timestamp: number, originalKey: string }>()
+  private cache = new Map<string, { data: any, timestamp: number, hitCount: number }>()
+  private similarityCache = new Map<string, { data: any, timestamp: number, originalKey: string }>()
   
   // 🔧 ERROR HANDLING CONFIG
   private readonly MAX_RETRIES = 3
@@ -614,7 +610,7 @@ Respond with JSON: {"score": 0-100, "status": "correct|close|wrong", "feedback":
   private generateUltimateFallback(
     input: WordEvaluationInput,
     startTime: number,
-    error: unknown
+    error: any
   ): WordEvaluationResult {
     console.error('🚨 Using ultimate fallback for word:', input.word, error)
     

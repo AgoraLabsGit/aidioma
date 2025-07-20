@@ -1,10 +1,11 @@
+import { config } from 'dotenv'
+
+// Load environment variables FIRST before any other imports
+config()
+
 import express from 'express'
 import cors from 'cors'
-import { config } from 'dotenv'
 import sentencesRoutes from './routes/sentences'
-
-// Load environment variables
-config()
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -33,6 +34,31 @@ app.use(cors({
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+// API Documentation endpoint - Root route
+app.get('/', (_req, res) => {
+  res.json(createSuccessResponse({
+    name: 'AIdioma Learning API',
+    version: '1.0.0',
+    description: 'Spanish-to-English language learning platform with AI-powered evaluation',
+    endpoints: {
+      health: '/health',
+      sentences: '/api/sentences',
+      wordEvaluation: '/api/sentences/evaluate-word',
+      auth: '/api/auth (coming soon)',
+      practice: '/api/practice (coming soon)',
+      evaluation: '/api/evaluation (coming soon)',
+      analytics: '/api/analytics (coming soon)'
+    },
+    features: [
+      'Content-aware AI evaluation',
+      'Cross-page template support',
+      'Advanced caching with similarity detection',
+      'Comprehensive error handling with retries',
+      'Page-specific evaluation focus (practice/reading/memorize/conversation)'
+    ]
+  }, 'Welcome to AIdioma API'))
+})
 
 // Health check endpoint
 app.get('/health', (_req, res) => {

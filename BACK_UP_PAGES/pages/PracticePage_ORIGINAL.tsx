@@ -41,147 +41,44 @@ interface HintData {
 
 // Interactive Sentence Display Component
 interface InteractiveSentenceProps {
-  sentenceData: any  // Full sentence object with id, english, spanish, hints
+  sentence: string
   className?: string
 }
 
-function InteractiveSentence({ sentenceData, className = '' }: InteractiveSentenceProps) {
+function InteractiveSentence({ sentence, className = '' }: InteractiveSentenceProps) {
   const [wordEvaluations, setWordEvaluations] = useState<Map<string, WordEvaluation>>(new Map())
   const [activeHint, setActiveHint] = useState<HintData | null>(null)
 
-  // ✅ REAL WORD EVALUATION - Connected to Universal AI Service
-  const evaluateWord = useCallback(async (word: string, sentence: any): Promise<WordEvaluation> => {
-    if (!sentence) {
-      throw new Error('No current sentence available for evaluation')
-    }
+  // Mock evaluation function (replace with real logic)
+  const evaluateWord = useCallback(async (word: string): Promise<WordEvaluation> => {
+    await new Promise(resolve => setTimeout(resolve, 200))
     
-    try {
-      const response = await fetch('http://localhost:5001/api/sentences/evaluate-word', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          word: word.trim(),
-          context: sentence.spanish,
-          sentenceId: sentence.id.toString(),
-          userInput: word,
-          pageType: 'practice'
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error(`API responded with status: ${response.status}`)
-      }
-
-      const result = await response.json()
-      
-      if (!result.success) {
-        throw new Error(result.error || 'Word evaluation failed')
-      }
-
-      return {
-        word: result.data.word,
-        status: result.data.status,
-        confidence: result.data.confidence,
-        attempts: result.data.attempts,
-        needsHint: result.data.needsHint,
-        hintShown: result.data.hintShown
-      }
-    } catch (error) {
-      console.error('Word evaluation failed, using fallback:', error)
-      
-      // Graceful fallback (better than original Math.random)
-      const wordLower = word.toLowerCase().trim()
-      const isCommonSpanish = ['el', 'la', 'es', 'en', 'de', 'un', 'una', 'que', 'con', 'por'].includes(wordLower)
-      const hasSpanishChars = /[ñáéíóúü]/.test(wordLower)
-      
-      let confidence = 0.3 // Base confidence for fallback
-      if (isCommonSpanish) confidence += 0.4
-      if (hasSpanishChars) confidence += 0.2
-      
-      const status = confidence > 0.7 ? 'correct' : confidence > 0.4 ? 'close' : 'wrong'
-      
-      return {
-        word,
-        status,
-        confidence,
-        attempts: 1,
-        needsHint: confidence < 0.5,
-        hintShown: false
-      }
+    const accuracy = Math.random()
+    if (accuracy > 0.7) {
+      return { word, status: 'correct', confidence: accuracy, attempts: 1, needsHint: false, hintShown: false }
+    } else if (accuracy > 0.4) {
+      return { word, status: 'close', confidence: accuracy, attempts: 1, needsHint: false, hintShown: false }
+    } else {
+      return { word, status: 'wrong', confidence: accuracy, attempts: 1, needsHint: false, hintShown: false }
     }
   }, [])
 
-  // ✅ REAL PROGRESSIVE HINTS - Connected to backend API
-  const generateHint = useCallback(async (word: string, sentence: any, level: 'basic' | 'intermediate' | 'complete' = 'basic'): Promise<HintData> => {
-    if (!sentence) {
-      return {
-        word,
-        level,
-        content: `Try thinking about "${word}" in context.`,
-        penalty: 1.0
-      }
-    }
-
-    try {
-      const response = await fetch('http://localhost:5001/api/sentences/progressive-hint', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          word: word.trim(),
-          level,
-          context: sentence.spanish,
-          sentenceId: sentence.id.toString()
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error(`Hint API responded with status: ${response.status}`)
-      }
-
-      const result = await response.json()
-      
-      if (!result.success) {
-        throw new Error(result.error || 'Hint generation failed')
-      }
-
-      return {
-        word: result.data.word,
-        level: result.data.level,
-        content: result.data.content,
-        penalty: result.data.penalty
-      }
-    } catch (error) {
-      console.error('Hint generation failed, using fallback:', error)
-      
-      // Graceful fallback hints
-      const fallbackHints = {
-        basic: `Try thinking about "${word}" in the context of this sentence.`,
-        intermediate: `"${word}" is an important word for understanding the meaning here.`,
-        complete: `Look for "${word}" in the Spanish translation or similar word patterns.`
-      }
-      
-      return {
-        word,
-        level,
-        content: fallbackHints[level] || fallbackHints.basic,
-        penalty: level === 'basic' ? 1.0 : level === 'intermediate' ? 2.0 : 3.0
-      }
+  const generateHint = useCallback(async (word: string): Promise<HintData> => {
+    return {
+      word,
+      level: 'basic',
+      content: `"${word}" translates to "${word === 'drink' ? 'bebo/tomo' : 'palabra'}" in Spanish`,
+      penalty: 1.0
     }
   }, [])
 
-  const handleWordClick = useCallback(async (word: string, sentence: any) => {
-    if (!sentence) return
-    
+  const handleWordClick = useCallback(async (word: string) => {
     // Evaluate word on click
-    const evaluation = await evaluateWord(word, sentence)
+    const evaluation = await evaluateWord(word)
     setWordEvaluations(prev => new Map(prev.set(word, evaluation)))
     
     // Generate hint
-    const hint = await generateHint(word, sentence)
+    const hint = await generateHint(word)
     setActiveHint(hint)
   }, [evaluateWord, generateHint])
 
@@ -211,7 +108,7 @@ function InteractiveSentence({ sentenceData, className = '' }: InteractiveSenten
     return (
       <span key={index} className="inline">
         <span
-          onClick={() => handleWordClick(cleanWord, sentenceData)}
+          onClick={() => handleWordClick(cleanWord)}
           className={`
             inline-flex items-center px-2 py-1 rounded-md cursor-pointer
             transition-all duration-200 border text-2xl md:text-3xl font-normal leading-relaxed
@@ -229,7 +126,7 @@ function InteractiveSentence({ sentenceData, className = '' }: InteractiveSenten
     )
   }, [wordEvaluations, handleWordClick])
 
-  const words = sentenceData ? sentenceData.english.split(/\s+/) : []
+  const words = sentence.split(/\s+/)
 
   return (
     <div className={`space-y-6 ${className}`}>
@@ -517,7 +414,7 @@ export default function PracticePage() {
                   </div>
                 ) : currentSentence ? (
                   <InteractiveSentence 
-                    sentenceData={currentSentence}
+                    sentence={currentSentence.english}
                     className="pb-2"
                   />
                 ) : (
