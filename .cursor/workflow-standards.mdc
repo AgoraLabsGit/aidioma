@@ -1,0 +1,196 @@
+---
+alwaysApply: true
+---
+
+# Development Workflow Standards (MANDATORY)
+
+## Pre-Development Checklist (CRITICAL)
+You MUST run these checks before ANY development:
+
+```bash
+# REQUIRED: Pre-development validation
+npx tsc --noEmit --skipLibCheck  # TypeScript check (0 errors required)
+npm test                         # Test suite (>90% coverage required)
+npm run lint                     # ESLint (0 errors, minimal warnings)
+npm run build                    # Build verification
+```
+
+## Development Session Flow (MANDATORY)
+```bash
+# REQUIRED: Session start protocol
+git pull origin main
+npm install
+npx tsc --noEmit --skipLibCheck
+npm run dev
+
+# REQUIRED: During development
+npm run test:watch  # Continuous testing
+npm run type-check  # Real-time TypeScript validation
+```
+
+## Final Review Protocol (MANDATORY)
+**CRITICAL**: Complete this 7-step checklist before EVERY commit.
+
+### 1. Code Quality Verification (MANDATORY)
+```bash
+npm run lint                    # ESLint + Prettier (zero warnings)
+npm run type-check             # TypeScript compilation (zero errors)
+npm run test                   # Unit/integration tests (>90% coverage)
+npm run test:e2e              # E2E tests for affected features
+```
+
+### 2. Performance Impact Assessment (MANDATORY)
+```bash
+npm run build                  # Production build
+npm run analyze               # Bundle size analysis
+```
+**Verify**:
+- No >50KB bundle additions without justification
+- AI evaluation endpoints still <2000ms
+- UI interactions still <100ms
+
+### 3. Architecture Compliance Checklist (MANDATORY)
+- [ ] **Reusability**: Can this code be used across multiple pages?
+- [ ] **TypeScript**: Zero `any` usage, all interfaces properly defined?
+- [ ] **AI Integration**: All AI calls implement caching and timeout?
+- [ ] **Module Interface**: Follows standardized module APIs?
+- [ ] **Error Handling**: Graceful degradation for service failures?
+
+### 4. Design System Compliance (MANDATORY)
+- [ ] **Color Tokens**: Only design system colors used (no custom hex)?
+- [ ] **Components**: shadcn/ui components used where possible?
+- [ ] **Responsive**: Mobile-first with proper breakpoints?
+- [ ] **Accessibility**: ARIA labels, keyboard navigation, WCAG AA?
+- [ ] **Animation**: Framer Motion used consistently?
+
+### 5. Documentation Updates (Choose Applicable)
+- [ ] `Docs/02-modules/[affected-module]/*.md`
+- [ ] `Docs/04-pages/[affected-page].md`
+- [ ] `Docs/05-development/API-Documentation.md`
+- [ ] `Docs/06-design/component-library.md`
+- [ ] Create Library Decision Record (if new dependency)
+
+### 6. Integration Verification (MANDATORY)
+- [ ] **Module Integration**: All affected modules work together?
+- [ ] **Cross-Page Consistency**: Changes maintain UX consistency?
+- [ ] **Performance**: No regression in critical metrics?
+- [ ] **AI Cost**: No increase in unnecessary AI API calls?
+- [ ] **Cache Efficiency**: >80% hit rate maintained?
+
+### 7. Quality Gates (CRITICAL)
+#### Automated Checks (MANDATORY)
+- ✅ TypeScript compilation: 0 errors
+- ✅ ESLint: 0 errors, justified warnings only
+- ✅ Test coverage: >90% for modules, >80% overall
+- ✅ Bundle analysis: Track and justify size changes
+- ✅ Performance regression tests passed
+
+#### Manual Reviews (MANDATORY)
+- ✅ Design system compliance verified
+- ✅ Accessibility standards (WCAG 2.1 AA) maintained
+- ✅ Cross-browser compatibility tested
+- ✅ Mobile responsiveness validated
+- ✅ User experience consistency maintained
+
+## Red Lines (ZERO TOLERANCE)
+These are **FORBIDDEN** with NO exceptions:
+1. **No `any` types** - All TypeScript must be properly typed
+2. **No AI calls without caching** - Every AI interaction requires caching strategy
+3. **No >50KB bundle additions** without performance justification
+4. **No custom solutions** when existing stack provides functionality
+5. **No security vulnerabilities** - Zero tolerance for known CVEs
+6. **No accessibility regressions** - WCAG AA compliance required
+
+## Commit Standards (REQUIRED)
+**Reference**: See `commit-standards.mdc` for complete commit message format and examples.
+
+## Code Review Requirements (MANDATORY)
+### Reviewer Checklist:
+- [ ] TypeScript compilation clean with zero errors
+- [ ] All tests passing with required coverage
+- [ ] Design system compliance verified
+- [ ] Performance considerations addressed and measured
+- [ ] Documentation updated for any changes
+- [ ] Security implications reviewed
+- [ ] Accessibility standards maintained
+
+### Author Checklist:
+- [ ] Module interface patterns followed consistently
+- [ ] AI integration includes caching and fallbacks
+- [ ] Component reusability targets met
+- [ ] Performance within established limits
+- [ ] No `any` types used
+- [ ] Proper error handling implemented
+
+## Library Addition Protocol (MANDATORY)
+Before adding ANY new dependency:
+
+```typescript
+// REQUIRED: Library evaluation process
+interface LibraryEvaluation {
+  name: string
+  version: string
+  bundleSize: number
+  security: SecurityScore
+  maintenance: MaintenanceScore
+  alternatives: string[]
+  justification: string
+}
+
+// REQUIRED: Scoring criteria
+// Technical (40%): Bundle size, performance, compatibility
+// Ecosystem (30%): Maintenance, community, documentation  
+// Security (20%): Vulnerabilities, audit history
+// Fit (10%): Project alignment, redundancy check
+
+// Decision matrix:
+// >4.0 = Adopt immediately
+// 3.0-4.0 = Create POC first
+// <3.0 = Build custom solution
+```
+
+## Performance Monitoring (MANDATORY)
+```typescript
+// REQUIRED: Continuous performance tracking
+interface PerformanceReport {
+  bundleSize: number
+  pageLoadTime: number
+  apiResponseTimes: Record<string, number>
+  cacheHitRates: Record<string, number>
+  errorRates: Record<string, number>
+  userExperienceMetrics: UXMetrics
+}
+
+// Generate performance report before each release
+npm run analyze-bundle
+npm run lighthouse-ci
+npm run performance-test
+```
+
+## Documentation Update Protocol (MANDATORY)
+For ANY code change, you MUST update:
+- [ ] Component documentation in design system
+- [ ] API documentation for new endpoints
+- [ ] Module specifications for interface changes
+- [ ] README files for setup/usage changes
+- [ ] Architecture diagrams for structural changes
+
+## Emergency Hotfix Protocol (CRITICAL)
+```bash
+# REQUIRED: Hotfix workflow
+git checkout -b hotfix/issue-description
+# Make minimal fix
+npm run test
+npx tsc --noEmit --skipLibCheck
+npm run build
+git commit -m "hotfix: brief description with issue number"
+# Fast-track review and deploy
+```
+
+## FORBIDDEN Workflow Practices
+- Committing without passing quality gates
+- Adding dependencies without evaluation
+- Deploying without performance validation
+- Merging without code review
+- Skipping documentation updates
+- Using `--no-verify` on git commits

@@ -1,0 +1,121 @@
+---
+alwaysApply: true
+---
+
+# AI Integration Standards (MANDATORY)
+
+## AI Service Pattern (REQUIRED)
+You MUST implement this exact pattern for ALL AI calls:
+
+```typescript
+// MANDATORY: 3-tier caching + timeout + fallback pattern
+async function aiServiceCall<T>(
+  cacheKey: string,
+  aiCall: () => Promise<T>,
+  fallback: () => T
+): Promise<T & { cached: boolean }> {
+  // Tier 1: Exact cache match
+  const cached = await cache.get(cacheKey)
+  if (cached) return { ...cached, cached: true }
+  
+  try {
+    // Tier 2: AI call with timeout
+    const result = await Promise.race([
+      aiCall(),
+      new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('AI timeout')), 2000)
+      )
+    ])
+    
+    await cache.set(cacheKey, result)
+    return { ...result, cached: false }
+  } catch (error) {
+    logger.error('AI service failed', { error, cacheKey })
+    return { ...fallback(), cached: false }
+  }
+}
+```
+
+## Caching Strategy (MANDATORY)
+```typescript
+// REQUIRED: Multi-level cache implementation
+class AICache {
+  // Tier 1: Exact match cache (instant)
+  exactCache = new Map<string, CacheEntry>()
+  
+  // Tier 2: Similarity cache (fuzzy matching)
+  similarityCache = new Map<string, CacheEntry[]>()
+  
+  // Tier 3: Fallback responses (guaranteed availability)
+  fallbackCache = new Map<string, CacheEntry>()
+}
+
+// REQUIRED: Cache key generation
+function generateCacheKey(input: EvaluationInput): string {
+  return `eval:${input.sentenceId}:${hash(input.userTranslation.toLowerCase().trim())}`
+}
+```
+
+## Performance Requirements (CRITICAL)
+- **Cache Hit Rate**: >80% (cost optimization target)
+- **Response Time**: <2000ms (including fallback)
+- **Timeout Handling**: 2000ms maximum wait time
+- **Fallback Quality**: Contextually appropriate responses
+
+## Error Handling Pattern (MANDATORY)
+```typescript
+// REQUIRED: Comprehensive error handling
+async function evaluateTranslation(input: EvaluationInput): Promise<EvaluationResult> {
+  try {
+    return await aiServiceCall(
+      generateCacheKey(input),
+      () => callAIService(input),
+      () => generateFallbackEvaluation(input)
+    )
+  } catch (error) {
+    // Log for monitoring
+    logger.error('Translation evaluation failed', {
+      error: error.message,
+      input: input.sentenceId,
+      timestamp: Date.now()
+    })
+    
+    // Return user-friendly fallback
+    return {
+      isCorrect: false,
+      feedback: "Unable to evaluate right now. Please try again.",
+      score: 0,
+      fallback: true
+    }
+  }
+}
+```
+
+## Cost Optimization (MANDATORY)
+```typescript
+// REQUIRED: Token usage optimization
+interface TokenUsageTracker {
+  totalTokens: number
+  cacheHits: number
+  cacheMisses: number
+  costSavings: number
+}
+
+// Track and optimize costs
+function trackTokenUsage(response: AIResponse, cached: boolean) {
+  if (cached) {
+    metrics.increment('ai.cache.hits')
+    metrics.increment('ai.cost.saved', response.estimatedCost)
+  } else {
+    metrics.increment('ai.cache.misses')
+    metrics.increment('ai.cost.actual', response.estimatedCost)
+  }
+}
+```
+
+## FORBIDDEN AI Practices
+- Direct AI calls without caching strategy
+- Missing timeout handling
+- No fallback responses
+- Untracked cost implications
+- Blocking UI for AI responses >2000ms

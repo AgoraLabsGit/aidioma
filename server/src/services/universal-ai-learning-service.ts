@@ -239,28 +239,62 @@ export class UniversalAILearningService {
     const promptStyle = this.getPromptStyleForPage(input.pageContext)
     const evaluationFocus = this.getEvaluationFocusForPage(input.pageContext)
     
-    const prompt = `Evaluate if the word "${input.word}" is appropriate Spanish for the context: "${input.context}".
-    
-Evaluation style: ${promptStyle}
-Focus areas: ${evaluationFocus.join(', ')}
-Difficulty: ${input.difficulty}
-Page context: ${input.pageContext || 'general'}
+    // 🇪🇸 ENHANCED: Spanish Learning-Focused Prompt
+    const prompt = `You are an expert Spanish language teacher evaluating a student's word choice in context.
 
-Consider:
-- Is it proper Spanish?
-- Does it fit the context?
-- Is it appropriate for ${input.difficulty} level?
-- Page-specific criteria: ${evaluationFocus.join(', ')}
+SPANISH LEARNING EVALUATION:
+Student's word: "${input.word}"
+Spanish sentence context: "${input.context}"
+Difficulty level: ${input.difficulty}
+Learning focus: ${input.pageContext || 'general Spanish practice'}
 
-Respond with JSON: {"score": 0-100, "status": "correct|close|wrong", "feedback": "contextual explanation"}`
+SPANISH PEDAGOGY EVALUATION CRITERIA:
+1. **Spanish Grammar Accuracy** (40%):
+   - Correct gender agreement (el/la, un/una)
+   - Proper verb conjugation (ser vs estar, present/past tense)
+   - Accurate word order and sentence structure
+   - Spanish-specific grammar rules
+
+2. **Vocabulary Precision** (30%):
+   - Authentic Spanish vocabulary (not English cognates where inappropriate)
+   - Cultural context appropriateness
+   - Regional variation awareness
+   - Difficulty-appropriate word choice
+
+3. **Learning Progression** (30%):
+   - Appropriate for ${input.difficulty} Spanish learner
+   - Builds on foundational Spanish concepts
+   - Encourages proper Spanish thinking patterns
+   - Supports language acquisition goals
+
+SPANISH LEARNING FEEDBACK STYLE:
+- Focus on Spanish language learning pedagogy
+- Explain WHY the word fits or doesn't fit Spanish patterns
+- Reference Spanish grammar rules when relevant
+- Encourage Spanish language thinking, not English translation
+- Provide constructive guidance for Spanish skill development
+
+CONTEXT-SPECIFIC EVALUATION:
+${this.getSpanishLearningContextGuidance(input.pageContext, evaluationFocus)}
+
+Respond with JSON: {
+  "score": 0-100,
+  "status": "correct|close|wrong", 
+  "feedback": "Spanish learning-focused explanation with pedagogical guidance",
+  "spanishConcepts": ["grammar concepts demonstrated or needed"],
+  "learningGuidance": "specific advice for Spanish language development"
+}`
 
     const completion = await this.openai!.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
-        { role: 'system', content: 'You are a Spanish language evaluation expert. Respond only with valid JSON.' },
+        { 
+          role: 'system', 
+          content: 'You are a Spanish language teacher focusing on pedagogical evaluation. Always provide learning-focused feedback that helps students understand Spanish language patterns and grammar. Respond only with valid JSON.' 
+        },
         { role: 'user', content: prompt }
       ],
-      max_tokens: 200,
+      max_tokens: 300,
       temperature: 0.1
     })
 
@@ -290,6 +324,26 @@ Respond with JSON: {"score": 0-100, "status": "correct|close|wrong", "feedback":
       cached: false,
       evaluationTime: Date.now() - startTime,
       pageContext: input.pageContext
+    }
+  }
+
+  // 🇪🇸 NEW: Spanish Learning Context Guidance
+  private getSpanishLearningContextGuidance(pageContext?: string, evaluationFocus?: string[]): string {
+    switch (pageContext) {
+      case 'practice':
+        return `PRACTICE PAGE FOCUS: Emphasize grammar accuracy and proper Spanish sentence structure. Help students understand WHY certain Spanish words are correct and how they fit Spanish grammar patterns. Focus on building foundational Spanish language skills.`
+        
+      case 'reading':
+        return `READING PAGE FOCUS: Evaluate comprehension within Spanish text context. Emphasize how words contribute to understanding Spanish meaning and cultural context. Help students think in Spanish rather than translating word-by-word.`
+        
+      case 'memorize':
+        return `MEMORIZE PAGE FOCUS: Evaluate vocabulary recall and Spanish word knowledge. Emphasize memory techniques specific to Spanish patterns (gender, cognates, false friends). Support long-term Spanish vocabulary retention.`
+        
+      case 'conversation':
+        return `CONVERSATION PAGE FOCUS: Evaluate natural Spanish communication. Emphasize fluency, natural Spanish expressions, and cultural appropriateness. Help students communicate like native Spanish speakers.`
+        
+      default:
+        return `GENERAL SPANISH FOCUS: Evaluate authentic Spanish usage. Emphasize proper Spanish grammar, vocabulary, and cultural context appropriate for language learning.`
     }
   }
 
@@ -442,51 +496,98 @@ Respond with JSON: {"score": 0-100, "status": "correct|close|wrong", "feedback":
     const evaluationFocus = this.getEvaluationFocusForPage(pageContext)
     const pageSpecificPrefix = this.getPageSpecificFeedbackPrefix(pageContext)
     
+    // 🇪🇸 ENHANCED: Spanish Learning-Focused Feedback
     if (status === 'correct') {
-      return `${pageSpecificPrefix}"${word}" looks excellent in this context! ${isLikelySpanish ? 'Good Spanish usage.' : ''}`
+      const spanishGrammarNote = this.getSpanishGrammarInsight(word, true)
+      return `${pageSpecificPrefix}¡Excelente! "${word}" is correct Spanish usage here. ${spanishGrammarNote || 'Good Spanish language choice!'}`
     }
     
     if (status === 'close') {
       if (!isLikelySpanish) {
-        return `${pageSpecificPrefix}"${word}" might work, but consider using more authentic Spanish vocabulary.`
+        return `${pageSpecificPrefix}"${word}" is close but try using more authentic Spanish. Think about Spanish grammar patterns like gender agreement (el/la) or verb forms (ser/estar).`
       }
       if (!hasContext) {
-        return `${pageSpecificPrefix}"${word}" is Spanish, but double-check if it fits this specific context.`
+        return `${pageSpecificPrefix}"${word}" is Spanish, but check if it fits this sentence's meaning. Consider the Spanish sentence structure and word order.`
       }
-      return `${pageSpecificPrefix}"${word}" is close! Consider refining for better precision.`
+      return `${pageSpecificPrefix}"${word}" is close! Consider Spanish grammar rules - does it match the gender, number, or verb form needed here?`
     }
     
     // status === 'wrong'
     if (!isLikelySpanish && !hasContext) {
-      return `${pageSpecificPrefix}"${word}" doesn't appear to be Spanish. Try thinking of Spanish equivalents.`
+      return `${pageSpecificPrefix}"${word}" doesn't appear to be Spanish. Try thinking of Spanish equivalents - consider articles (el/la), verb forms, or Spanish vocabulary patterns.`
     }
     if (!hasContext) {
-      return `${pageSpecificPrefix}"${word}" seems misplaced in this context. Consider the sentence meaning.`
+      return `${pageSpecificPrefix}"${word}" doesn't fit this Spanish context. Look at the sentence structure and meaning - what Spanish word would make sense here?`
     }
-    return `${pageSpecificPrefix}"${word}" needs work. Focus on Spanish vocabulary that fits the context.`
+    return `${pageSpecificPrefix}"${word}" needs work. Focus on Spanish grammar patterns - check gender agreement, verb conjugation, or Spanish word order.`
+  }
+  
+  // 🇪🇸 NEW: Spanish Grammar Insight Generation
+  private getSpanishGrammarInsight(word: string, isCorrect: boolean): string | null {
+    const wordLower = word.toLowerCase()
+    
+    // Spanish articles
+    if (/^(el|la|los|las|un|una|unos|unas)$/.test(wordLower)) {
+      return isCorrect 
+        ? 'Great use of Spanish articles - gender and number agreement is important!'
+        : 'Check Spanish article gender (el/la) and number (singular/plural) agreement.'
+    }
+    
+    // Spanish verbs (ser vs estar)
+    if (/^(es|está|son|están|ser|estar)$/.test(wordLower)) {
+      return isCorrect
+        ? 'Excellent verb choice! Ser vs estar is a key Spanish concept.'
+        : 'Remember: "ser" for permanent states, "estar" for temporary conditions and locations.'
+    }
+    
+    // Spanish pronouns
+    if (/^(yo|tú|él|ella|nosotros|nosotras|vosotros|vosotras|ellos|ellas)$/.test(wordLower)) {
+      return isCorrect
+        ? 'Good Spanish pronoun usage!'
+        : 'Check Spanish pronoun agreement with the verb form.'
+    }
+    
+    // Spanish accented characters
+    if (/[áéíóúñü]/.test(word)) {
+      return isCorrect
+        ? 'Perfect! Using Spanish accents correctly is important for meaning.'
+        : 'Spanish accents (áéíóú) and ñ are crucial for correct spelling and meaning.'
+    }
+    
+    return null
   }
   
   private getPageSpecificFeedbackPrefix(pageContext?: string): string {
     switch (pageContext) {
-      case 'practice': return '[Practice] '
-      case 'reading': return '[Reading] '
-      case 'memorize': return '[Memory] '
-      case 'conversation': return '[Chat] '
-      default: return ''
+      case 'practice': return '[Práctica] '
+      case 'reading': return '[Lectura] '
+      case 'memorize': return '[Memoria] '
+      case 'conversation': return '[Conversación] '
+      default: return '[Español] '
     }
   }
 
   // 🔍 ENHANCED SPANISH ASSESSMENT
   private assessSpanishLikelihood(word: string): boolean {
-    // Common Spanish patterns and characteristics
+    // 🇪🇸 ENHANCED: More comprehensive Spanish patterns
     const spanishPatterns = [
-      /ñ/,                    // Spanish-specific character
-      /[áéíóúü]/,            // Spanish accents
-      /^(el|la|los|las)$/,   // Articles
-      /^(un|una|unos|unas)$/,// Indefinite articles
-      /ción$/,               // Common Spanish ending
-      /dad$/,                // Common Spanish ending
-      /^(que|por|para|con|en|de|a|y|o|pero|si|no|sí|muy|más|todo|hacer|poder|decir|tener|venir|ver|saber|querer|dar|hablar|estar|ser)$/
+      /ñ/,                              // Spanish-specific character
+      /[áéíóúü]/,                      // Spanish accents
+      /^(el|la|los|las)$/,             // Definite articles
+      /^(un|una|unos|unas)$/,          // Indefinite articles
+      /^(yo|tú|él|ella|nosotros|nosotras|vosotros|vosotras|ellos|ellas)$/, // Pronouns
+      /^(es|está|son|están|ser|estar|soy|eres|somos|sois)$/, // Common verbs
+      /^(que|por|para|con|en|de|a|y|o|pero|si|no|sí)$/, // Common prepositions/conjunctions
+      /^(muy|más|menos|todo|toda|todos|todas|mucho|mucha|muchos|muchas)$/, // Common adjectives/adverbs
+      /^(hacer|tener|decir|poder|querer|venir|ver|saber|dar|hablar|vivir|trabajar|estudiar|comer|beber)$/, // Common verbs
+      /ción$/,                         // Common Spanish ending
+      /dad$/,                          // Common Spanish ending
+      /ar$/,                           // Infinitive verbs
+      /er$/,                           // Infinitive verbs  
+      /ir$/,                           // Infinitive verbs
+      /mente$/,                        // Adverb ending
+      /^¿/,                           // Spanish question mark
+      /¡/                             // Spanish exclamation mark
     ]
     
     return spanishPatterns.some(pattern => pattern.test(word.toLowerCase()))

@@ -1,0 +1,171 @@
+---
+alwaysApply: true
+---
+
+# Module Standards (MANDATORY)
+
+## Standard Module Interface (REQUIRED)
+You MUST implement this interface pattern for ALL modules:
+
+```typescript
+// MANDATORY: Universal module interface
+interface StandardModule<TConfig, TInput, TResult, TState> {
+  initialize(config: TConfig): Promise<void>
+  cleanup(): Promise<void>
+  [primaryMethod](input: TInput): Promise<TResult>
+  getState(): TState
+  getMetrics(): ModuleMetrics
+}
+
+// REQUIRED: Module metrics interface
+interface ModuleMetrics {
+  operationCount: number
+  averageResponseTime: number
+  errorRate: number
+  cacheHitRate?: number
+}
+```
+
+## Reusability Requirements (CRITICAL)
+You MUST achieve these reusability targets:
+- **PageLayout**: 100% reusability (ALL 6 pages)
+- **ActionButtons**: 75% reusability (Practice/Reading/Conversation)
+- **SessionStats**: 85% reusability (all metric pages)
+- **Overall Target**: 64% component reusability across platform
+
+```typescript
+// REQUIRED: Multi-page reusable component
+interface ActionButtonsProps {
+  actions: ActionConfig[]
+  disabled?: boolean
+  size?: 'sm' | 'md' | 'lg'
+  variant?: 'primary' | 'secondary' | 'ghost'
+  onAction: (actionId: string) => void
+  className?: string
+}
+
+// EXAMPLE: Cross-page usage
+// Practice page: Submit/Hint/Skip actions
+// Reading page: Continue/Bookmark/Translate actions
+// Conversation page: Send/Save/Continue actions
+```
+
+## Module Integration Pattern (MANDATORY)
+```typescript
+// REQUIRED: Service integration example
+class TranslationEvaluationModule implements StandardModule<
+  EvaluationConfig,
+  EvaluationInput,
+  EvaluationResult,
+  EvaluationState
+> {
+  private config!: EvaluationConfig
+  private state: EvaluationState = { initialized: false }
+  private metrics: ModuleMetrics = {
+    operationCount: 0,
+    averageResponseTime: 0,
+    errorRate: 0,
+    cacheHitRate: 0
+  }
+
+  async initialize(config: EvaluationConfig): Promise<void> {
+    this.config = config
+    this.state.initialized = true
+  }
+
+  async cleanup(): Promise<void> {
+    this.state.initialized = false
+  }
+
+  async evaluate(input: EvaluationInput): Promise<EvaluationResult> {
+    this.metrics.operationCount++
+    const startTime = Date.now()
+    
+    try {
+      const result = await this.performEvaluation(input)
+      this.updateMetrics(startTime, true)
+      return result
+    } catch (error) {
+      this.updateMetrics(startTime, false)
+      throw error
+    }
+  }
+
+  getState(): EvaluationState {
+    return { ...this.state }
+  }
+
+  getMetrics(): ModuleMetrics {
+    return { ...this.metrics }
+  }
+}
+```
+
+## Cross-Page Integration (MANDATORY)
+```typescript
+// REQUIRED: Shared module usage pattern
+interface SharedComponentProps {
+  // Configuration for different page contexts
+  context: 'practice' | 'reading' | 'conversation' | 'memorize' | 'progress' | 'settings'
+  // Page-specific data
+  data: unknown
+  // Common callbacks
+  onAction: (action: string, payload?: unknown) => void
+  onError: (error: Error) => void
+}
+
+// REQUIRED: Context-aware rendering
+function UniversalComponent({ context, data, onAction }: SharedComponentProps) {
+  const config = getContextConfig(context)
+  const actions = getContextActions(context)
+  
+  return (
+    <div className={config.containerClass}>
+      <ActionButtons 
+        actions={actions}
+        onAction={onAction}
+        variant={config.buttonVariant}
+      />
+    </div>
+  )
+}
+```
+
+## Error Handling & Fallbacks (MANDATORY)
+```typescript
+// REQUIRED: Module error handling
+class ModuleErrorHandler {
+  static handle(moduleName: string, error: Error, fallback?: () => unknown) {
+    logger.error(`Module ${moduleName} failed`, {
+      error: error.message,
+      stack: error.stack,
+      timestamp: Date.now()
+    })
+    
+    metrics.increment(`modules.${moduleName}.errors`)
+    
+    if (fallback) {
+      try {
+        return fallback()
+      } catch (fallbackError) {
+        logger.error(`Fallback failed for ${moduleName}`, fallbackError)
+      }
+    }
+    
+    throw new ModuleError(`${moduleName} operation failed`, { cause: error })
+  }
+}
+```
+
+## Performance Requirements (MANDATORY)
+- **Module Initialization**: <500ms
+- **Operation Response**: <100ms (non-AI), <2000ms (AI)
+- **Memory Usage**: Monitor for leaks
+- **Cleanup**: Complete resource cleanup on unmount
+
+## FORBIDDEN Module Practices
+- Page-specific modules without 75%+ reusability
+- Missing standard interface implementation
+- No error handling or fallback strategies
+- Blocking operations without loading states
+- Memory leaks from improper cleanup

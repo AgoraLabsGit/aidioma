@@ -113,9 +113,10 @@ Visit `http://localhost:3000` - you should see the AIdioma interface.
 3. **[Implementation Roadmap](../02-planning/implementation-roadmap.md)** - Development phases
 
 ### **Development Standards**
-1. **[Framework Compliance](../04-protocols/framework-compliance.md)** - Code quality requirements
-2. **[TypeScript Standards](../04-protocols/development-standards.md)** - Type safety rules
-3. **[Module Development](./module-development.md)** - How to build new modules
+1. **[Cursor Rules](../.cursor/README.mdc)** - Actively enforced code quality standards
+2. **[Framework Compliance](../.cursor/workflow-standards.mdc)** - Workflow and quality gates
+3. **[TypeScript Standards](../.cursor/typescript-standards.mdc)** - Type safety rules
+4. **[Module Development](./module-development.md)** - How to build new modules
 
 ### **Key Concepts**
 - **Single Source of Truth**: All types defined in `shared/schema.ts`

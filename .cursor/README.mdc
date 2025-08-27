@@ -1,0 +1,199 @@
+---
+alwaysApply: true
+---
+
+# AIdioma Cursor Rules Overview
+
+This directory contains focused, actionable cursor rules that enforce AIdioma's development standards. Each file addresses specific aspects of development for optimal code quality and consistency.
+
+## 🏗️ Core Architecture Rules
+
+### `component-standards.mdc`
+- **shadcn/ui + Lucide React** component library standards
+- **64% reusability** targets across 6 pages
+- Button specifications and accessibility requirements
+
+### `module-standards.mdc`
+- **Standard module interface** patterns
+- Cross-page integration requirements
+- Error handling and fallback strategies
+
+### `typescript-standards.mdc`
+- **Zero `any` policy** (critical requirement)
+- Interface definitions for all props and API responses
+- Type safety patterns and validation
+
+## 🎨 Design & UI Rules
+
+### `design-tokens.mdc`
+- **Design token system** (HSL color variables only)
+- Typography scale requirements
+- FORBIDDEN custom colors/styles
+
+### `layout-patterns.mdc`
+- **Mobile-first responsive** design patterns
+- Container and grid layouts
+- Spacing and sizing standards
+
+### `accessibility-rules.mdc`
+- **WCAG AA compliance** requirements
+- ARIA labels and keyboard navigation
+- 44px minimum touch targets
+
+### `animation-standards.mdc`
+- **Framer Motion** animation patterns
+- Performance-optimized transitions
+- Consistent motion design
+
+## ⚡ Performance & Quality Rules
+
+### `performance-standards.mdc`
+- **Response time requirements** (<100ms UI, <2000ms AI)
+- Bundle size limits and optimization
+- Caching strategies and monitoring
+
+### `ai-integration-standards.mdc`
+- **3-tier caching pattern** (exact → similarity → fallback)
+- **>80% cache hit rate** for cost optimization
+- Timeout handling and error recovery
+
+### `security-standards.mdc`
+- **Zod validation** for all inputs
+- Authentication and authorization patterns
+- Rate limiting and data protection
+
+## 🧪 Development Process Rules
+
+### `testing-standards.mdc`
+- **>90% coverage** requirements for modules
+- Component, integration, and E2E testing patterns
+- Test data factories and error scenarios
+
+### `workflow-standards.mdc`
+- **Quality gates** and pre-commit checks
+- Code review requirements and commit standards
+- Library addition evaluation protocol
+
+### `code-quality-standards.mdc`
+- **File organization** and import/export patterns
+- Error handling and state management
+- Documentation and naming conventions
+
+## 📋 Quick Reference
+
+### 🚨 Critical Red Lines (ZERO TOLERANCE)
+- ❌ **No `any` types** - All TypeScript strictly typed
+- ❌ **No AI calls without caching** - Every AI call needs cache + timeout
+- ❌ **No >50KB bundle additions** without justification
+- ❌ **No custom solutions** when existing stack works
+- ❌ **No security vulnerabilities** - Zero tolerance
+- ❌ **No accessibility regressions** - WCAG AA compliance required
+
+### ⚡ Performance Limits (MANDATORY)
+- **AI Evaluation**: <2000ms (hard timeout)
+- **UI Interactions**: <100ms
+- **Bundle Additions**: <10KB preferred, >50KB needs justification
+- **Cache Hit Rate**: >80% required
+- **Test Coverage**: >90% for modules
+
+### 📚 Approved Stack (Enhance, Don't Replace)
+```typescript
+✅ USE THESE:
+- React 18 + TypeScript
+- TanStack Query + useState
+- shadcn/ui + Tailwind
+- wouter (routing)
+- react-hook-form + zod
+- Drizzle ORM
+- openai + anthropic-ai
+
+❌ AVOID THESE:
+- redux, react-router, styled-components
+- formik, axios, lodash, moment
+```
+
+### 🔧 Library Research Protocol (MANDATORY)
+Before adding ANY dependency:
+1. **Check existing**: `grep -r "package-name" package.json`
+2. **Score 1-5**: Technical (40%) + Ecosystem (30%) + Security (20%) + Fit (10%)
+3. **Decision**: >4.0 = Adopt, 3.0-4.0 = POC, <3.0 = Build Custom
+4. **Document**: Create Library Decision Record
+5. **Justify**: 2-hour integration vs 2-week custom development
+
+### 🏗️ Module Standards
+```typescript
+// ✅ CORRECT: Reusable module pattern
+interface ModuleInterface {
+  initialize(config: Config): Promise<void>
+  cleanup(): Promise<void>
+  [coreMethod](input: Input): Promise<Result>
+  getState(): State
+  getMetrics(): Metrics
+}
+
+// ❌ WRONG: Page-specific implementation
+function practicePageOnlyFunction() { ... }
+```
+
+### 🎨 Design System
+```typescript
+// ✅ USE: Design tokens only
+className="bg-background text-foreground border-border"
+
+// ❌ FORBIDDEN: Custom colors
+style={{ backgroundColor: '#123456' }}
+```
+
+### 📋 Pre-Commit Checklist
+```bash
+# MUST PASS:
+npm run lint          # Zero warnings
+npm run type-check    # Zero errors  
+npm run test          # >90% coverage
+npm run build         # Bundle analysis
+
+# VERIFY:
+□ Module reusability across pages?
+□ TypeScript strict (no any)?
+□ AI caching implemented?
+□ Design system compliance?
+□ Documentation updated?
+□ Performance within limits?
+```
+
+### 🎯 AI Integration Pattern
+```typescript
+// ✅ REQUIRED PATTERN:
+async function aiServiceCall(input: Input): Promise<Result> {
+  // 1. Check cache
+  const cached = await cache.get(key)
+  if (cached) return { ...cached, cached: true }
+  
+  try {
+    // 2. AI call with timeout (2000ms)
+    const result = await Promise.race([
+      aiService.call(input),
+      timeoutPromise(2000)
+    ])
+    
+    // 3. Cache result
+    await cache.set(key, result)
+    return { ...result, cached: false }
+    
+  } catch (error) {
+    // 4. Fallback + log
+    logger.error('AI failed', { error, input })
+    return generateFallback(input)
+  }
+}
+```
+
+## 🎯 Usage Guidelines
+
+1. **Development Start**: Review relevant rule files before coding
+2. **Component Creation**: Check `component-standards.mdc` and `design-tokens.mdc`
+3. **AI Integration**: Follow `ai-integration-standards.mdc` patterns exactly
+4. **Performance**: Validate against `performance-standards.mdc` limits
+5. **Quality**: Run checks from `workflow-standards.mdc` before commit
+
+These rules ensure consistency with AIdioma's module-first architecture achieving 64% component reusability while maintaining exceptional performance, security, and user experience standards.

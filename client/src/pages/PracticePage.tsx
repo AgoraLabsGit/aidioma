@@ -32,8 +32,10 @@ interface WordEvaluation {
 interface HintData {
   word: string
   level: 'basic' | 'intermediate' | 'complete'
+  levelNumber: number
   content: string
   penalty: number
+  canAdvance: boolean
 }
 
 // Interactive Sentence Display Component
@@ -45,6 +47,7 @@ interface InteractiveSentenceProps {
 function InteractiveSentence({ sentenceData, className = '' }: InteractiveSentenceProps) {
   const [wordEvaluations, setWordEvaluations] = useState<Map<string, WordEvaluation>>(new Map())
   const [activeHint, setActiveHint] = useState<HintData | null>(null)
+  const [selectedWord, setSelectedWord] = useState<string>('')
 
   // ✅ REAL WORD EVALUATION - Connected to Universal AI Service
   const evaluateWord = useCallback(async (word: string, sentence: any): Promise<WordEvaluation> => {
@@ -110,18 +113,25 @@ function InteractiveSentence({ sentenceData, className = '' }: InteractiveSenten
     }
   }, [])
 
-  // ✅ REAL PROGRESSIVE HINTS - Connected to backend API
-  const generateHint = useCallback(async (word: string, sentence: any, level: 'basic' | 'intermediate' | 'complete' = 'basic'): Promise<HintData> => {
+  // ✅ FIXED: Real progressive hints with proper API integration
+  const generateHint = useCallback(async (
+    word: string, 
+    sentence: any, 
+    level: 'basic' | 'intermediate' | 'complete' = 'basic'
+  ): Promise<HintData> => {
     if (!sentence) {
       return {
         word,
         level,
+        levelNumber: level === 'basic' ? 1 : level === 'intermediate' ? 2 : 3,
         content: `Try thinking about "${word}" in context.`,
-        penalty: 1.0
+        penalty: 1.0,
+        canAdvance: level !== 'complete'
       }
     }
 
     try {
+      // ✅ REAL API CALL - With Spanish-specific context
       const response = await fetch('/api/sentences/progressive-hint', {
         method: 'POST',
         headers: {
@@ -131,7 +141,10 @@ function InteractiveSentence({ sentenceData, className = '' }: InteractiveSenten
           word: word.trim(),
           level,
           context: sentence.spanish,
-          sentenceId: sentence.id.toString()
+          sentenceId: sentence.id.toString(),
+          // ✅ ADDED: Request Spanish-specific contextual hints
+          targetLanguage: 'spanish',
+          requestType: 'contextual_translation'
         })
       })
 
@@ -148,24 +161,43 @@ function InteractiveSentence({ sentenceData, className = '' }: InteractiveSenten
       return {
         word: result.data.word,
         level: result.data.level,
+        levelNumber: level === 'basic' ? 1 : level === 'intermediate' ? 2 : 3,
         content: result.data.content,
-        penalty: result.data.penalty
+        penalty: result.data.penalty,
+        canAdvance: level !== 'complete'
       }
     } catch (error) {
-      console.error('Hint generation failed, using fallback:', error)
+      console.error('Hint generation failed, using enhanced fallback:', error)
       
-      // Graceful fallback hints
+      // ✅ ENHANCED: Contextual Spanish fallback hints instead of generic
+      const spanishWord = sentence.spanish.toLowerCase()
+      const englishWord = word.toLowerCase()
+      
       const fallbackHints = {
-        basic: `Try thinking about "${word}" in the context of this sentence.`,
-        intermediate: `"${word}" is an important word for understanding the meaning here.`,
-        complete: `Look for "${word}" in the Spanish translation or similar word patterns.`
+        basic: `"${word}" relates to: ${spanishWord.includes(englishWord) ? 
+          'Look for a similar word in the Spanish text' : 
+          'Think about the core meaning in this sentence context'}`,
+        intermediate: `"${word}" in Spanish context: The sentence structure suggests this word is ${
+          /^(the|a|an)$/i.test(word) ? 'an article (el/la/un/una)' :
+          /^(is|are|was|were)$/i.test(word) ? 'a verb form (es/está/son/están)' :
+          /ing$/.test(word) ? 'an action or gerund' :
+          'a key content word - look at the Spanish equivalent'
+        }`,
+        complete: `"${word}" Spanish translation help: ${
+          spanishWord.includes('el ') || spanishWord.includes('la ') ? 'Look for articles (el/la)' :
+          spanishWord.includes('es ') ? 'Look for "es" (is)' :
+          spanishWord.includes('está') ? 'Look for "está" (is/located)' :
+          'Check the Spanish text for the corresponding word pattern'
+        }`
       }
       
       return {
         word,
         level,
+        levelNumber: level === 'basic' ? 1 : level === 'intermediate' ? 2 : 3,
         content: fallbackHints[level] || fallbackHints.basic,
-        penalty: level === 'basic' ? 1.0 : level === 'intermediate' ? 2.0 : 3.0
+        penalty: level === 'basic' ? 1.0 : level === 'intermediate' ? 2.0 : 3.0,
+        canAdvance: level !== 'complete'
       }
     }
   }, [])
@@ -173,12 +205,18 @@ function InteractiveSentence({ sentenceData, className = '' }: InteractiveSenten
   const handleWordClick = useCallback(async (word: string, sentence: any) => {
     if (!sentence) return
     
+    // Set selected word for potential hint requests
+    const cleanWord = word.replace(/[.,!?;:]$/, '')
+    setSelectedWord(cleanWord)
+    
     // Only evaluate word on click - no automatic hints
-    const evaluation = await evaluateWord(word, sentence)
-    setWordEvaluations(prev => new Map(prev.set(word, evaluation)))
+    const evaluation = await evaluateWord(cleanWord, sentence)
+    setWordEvaluations(prev => new Map(prev.set(cleanWord, evaluation)))
     
     // Hints are only shown when explicitly requested via the Hint button
   }, [evaluateWord])
+
+
 
   const renderWord = useCallback((word: string, index: number) => {
     const cleanWord = word.replace(/[.,!?;:]$/, '')
@@ -456,6 +494,7 @@ export default function PracticePage() {
     setShowHint(false)
   }
 
+  // ✅ ENHANCED: Progressive hint system - simplified for now, enhanced implementation pending scope fixes
   const handleHint = () => {
     setShowHint(!showHint)
   }

@@ -1,0 +1,72 @@
+# AIdioma Project Context
+
+AIdioma is a **Spanish-to-English language learning platform** with:
+- **12 Reusable Modules** across Language/AI, User Experience, and UI Interface
+- **6 Core Pages** with 64% average component reusability
+- **Performance-Critical AI Integration** requiring <2000ms response times
+- **TypeScript-First Development** with zero `any` usage allowed
+
+## Core Technology Stack
+
+```typescript
+// ✅ APPROVED - Enhance these existing tools
+const stack = {
+  frontend: "React 18 + TypeScript + TanStack Query + shadcn/ui + Tailwind",
+  backend: "Node.js + Express + Drizzle ORM + PostgreSQL", 
+  ai: "OpenAI + Anthropic with mandatory caching",
+  testing: "Vitest + Playwright"
+}
+
+// ❌ FORBIDDEN - Avoid these duplicates
+const avoid = ["redux", "react-router", "styled-components", "axios", "lodash"]
+```
+
+## Critical Performance Requirements
+
+- **AI Evaluation**: <2000ms response time, >80% cache hit rate
+- **UI Interactions**: <100ms response time
+- **Bundle Size**: <10KB additions preferred, >50KB requires justification
+- **Test Coverage**: >90% for all modules
+
+## Module-First Architecture
+
+All components must be reusable across multiple pages using standardized interfaces:
+
+```typescript
+interface StandardModule<TConfig, TInput, TResult, TState> {
+  initialize(config: TConfig): Promise<void>
+  cleanup(): Promise<void>
+  [primaryMethod](input: TInput): Promise<TResult>
+  getState(): TState
+  getMetrics(): ModuleMetrics
+}
+```
+
+## Platform Constraints
+
+### Page Architecture
+- **Practice Page**: Translation exercises with AI evaluation
+- **Reading Page**: Comprehension with context analysis
+- **Conversation Page**: Interactive dialogue practice
+- **Memorize Page**: Spaced repetition system
+- **Progress Page**: Analytics and performance tracking
+- **Settings Page**: User preferences and configuration
+
+### Component Reusability Target
+- **64% average reusability** across all 6 pages
+- Components must work in multiple contexts
+- Page-specific components are **FORBIDDEN** unless absolutely necessary
+
+### AI Integration Constraints
+- Mandatory caching for all AI calls
+- 2000ms hard timeout on all AI operations
+- Graceful degradation when AI services fail
+- Cost optimization through intelligent caching strategies
+
+## Development Priorities
+
+1. **Type Safety**: Zero `any` usage, comprehensive TypeScript coverage
+2. **Performance**: Sub-2000ms AI responses, sub-100ms UI interactions
+3. **Cost Efficiency**: >80% cache hit rates for AI operations
+4. **Module Reusability**: Design for cross-page component usage
+5. **Quality**: >90% test coverage for all modules

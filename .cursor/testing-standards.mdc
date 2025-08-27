@@ -1,0 +1,216 @@
+---
+alwaysApply: true
+---
+
+# Testing Standards (MANDATORY)
+
+## Coverage Requirements (CRITICAL)
+You MUST achieve these test coverage targets:
+- **Unit Tests**: >90% for business logic modules
+- **Component Tests**: 100% for all interactive components
+- **Integration Tests**: All critical user flows
+- **E2E Tests**: Main application workflows
+
+## Component Testing Pattern (MANDATORY)
+```typescript
+// REQUIRED: Component testing with React Testing Library
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { PracticeSession } from './PracticeSession'
+
+describe('PracticeSession', () => {
+  const mockProps = {
+    sentence: 'Hola mundo',
+    onSubmit: jest.fn(),
+    disabled: false
+  }
+
+  test('renders sentence and input field', () => {
+    render(<PracticeSession {...mockProps} />)
+    
+    expect(screen.getByText('Hola mundo')).toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: /translation/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument()
+  })
+
+  test('calls onSubmit with user input', async () => {
+    const user = userEvent.setup()
+    render(<PracticeSession {...mockProps} />)
+    
+    const input = screen.getByRole('textbox', { name: /translation/i })
+    const submit = screen.getByRole('button', { name: /submit/i })
+    
+    await user.type(input, 'Hello world')
+    await user.click(submit)
+    
+    expect(mockProps.onSubmit).toHaveBeenCalledWith('Hello world')
+  })
+})
+```
+
+## Module Testing Pattern (MANDATORY)
+```typescript
+// REQUIRED: Module unit testing
+import { TranslationEvaluationModule } from './TranslationEvaluationModule'
+
+describe('TranslationEvaluationModule', () => {
+  let module: TranslationEvaluationModule
+  
+  beforeEach(async () => {
+    module = new TranslationEvaluationModule()
+    await module.initialize({
+      apiKey: 'test-key',
+      cacheEnabled: true
+    })
+  })
+  
+  afterEach(async () => {
+    await module.cleanup()
+  })
+
+  test('evaluates correct translation', async () => {
+    const input = {
+      sentenceId: 1,
+      userTranslation: 'Hello world',
+      correctAnswers: ['Hello world', 'Hi world'],
+      context: { difficulty: 'beginner' }
+    }
+    
+    const result = await module.evaluate(input)
+    
+    expect(result.isCorrect).toBe(true)
+    expect(result.score).toBeGreaterThan(0.8)
+    expect(result.feedback).toContain('correct')
+  })
+
+  test('handles API failures gracefully', async () => {
+    // Mock API failure
+    jest.spyOn(global, 'fetch').mockRejectedValue(new Error('API Error'))
+    
+    const input = {
+      sentenceId: 1,
+      userTranslation: 'Test translation',
+      correctAnswers: ['Correct answer'],
+      context: { difficulty: 'beginner' }
+    }
+    
+    const result = await module.evaluate(input)
+    
+    expect(result.fallback).toBe(true)
+    expect(result.feedback).toContain('try again')
+  })
+})
+```
+
+## Integration Testing (MANDATORY)
+```typescript
+// REQUIRED: API integration testing
+import request from 'supertest'
+import { app } from '../app'
+
+describe('Translation API', () => {
+  test('POST /api/evaluate validates input', async () => {
+    const invalidInput = {
+      userTranslation: '', // Invalid: empty string
+      sentenceId: 'not-a-number' // Invalid: not a number
+    }
+    
+    const response = await request(app)
+      .post('/api/evaluate')
+      .send(invalidInput)
+      .expect(400)
+    
+    expect(response.body.error).toBe('Invalid input')
+    expect(response.body.details).toBeDefined()
+  })
+
+  test('POST /api/evaluate returns evaluation result', async () => {
+    const validInput = {
+      userTranslation: 'Hello world',
+      sentenceId: 1,
+      sessionId: 'uuid-string'
+    }
+    
+    const response = await request(app)
+      .post('/api/evaluate')
+      .send(validInput)
+      .expect(200)
+    
+    expect(response.body).toMatchObject({
+      isCorrect: expect.any(Boolean),
+      feedback: expect.any(String),
+      score: expect.any(Number)
+    })
+  })
+})
+```
+
+## E2E Testing Pattern (MANDATORY)
+```typescript
+// REQUIRED: Playwright E2E testing
+import { test, expect } from '@playwright/test'
+
+test.describe('Practice Session Flow', () => {
+  test('complete practice session successfully', async ({ page }) => {
+    await page.goto('/practice')
+    
+    // Wait for sentence to load
+    await expect(page.locator('[data-testid="spanish-sentence"]')).toBeVisible()
+    
+    // Enter translation
+    await page.fill('[data-testid="translation-input"]', 'Hello world')
+    
+    // Submit translation
+    await page.click('[data-testid="submit-button"]')
+    
+    // Wait for evaluation result
+    await expect(page.locator('[data-testid="evaluation-result"]')).toBeVisible()
+    
+    // Verify feedback appears
+    await expect(page.locator('[data-testid="feedback-text"]')).toContainText(/correct|incorrect/)
+  })
+
+  test('handles network errors gracefully', async ({ page }) => {
+    // Simulate network failure
+    await page.route('**/api/evaluate', route => route.abort())
+    
+    await page.goto('/practice')
+    await page.fill('[data-testid="translation-input"]', 'Test translation')
+    await page.click('[data-testid="submit-button"]')
+    
+    // Should show error message
+    await expect(page.locator('[data-testid="error-message"]')).toBeVisible()
+    await expect(page.locator('[data-testid="error-message"]')).toContainText(/try again/)
+  })
+})
+```
+
+## Test Data Management (MANDATORY)
+```typescript
+// REQUIRED: Test data factories
+export const createMockSentence = (overrides = {}) => ({
+  id: 1,
+  spanish: 'Hola mundo',
+  english: ['Hello world', 'Hi world'],
+  difficulty: 'beginner',
+  category: 'greetings',
+  ...overrides
+})
+
+export const createMockEvaluationResult = (overrides = {}) => ({
+  isCorrect: true,
+  feedback: 'Great job!',
+  score: 0.95,
+  alternatives: [],
+  cached: false,
+  ...overrides
+})
+```
+
+## FORBIDDEN Testing Practices
+- Tests without proper cleanup (memory leaks)
+- Hard-coded test data without factories
+- Missing error scenario testing
+- Tests that depend on external services
+- Insufficient coverage for critical paths
+- Missing accessibility testing

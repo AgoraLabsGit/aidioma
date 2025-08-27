@@ -1,0 +1,139 @@
+# AIdioma Development Backup Strategy
+
+## Overview
+The DEVELOPMENT_BACKUPS folder contains a critical backup system that prevents catastrophic failures and enables rapid rollback during development. This system MUST be respected and followed by all AI assistants.
+
+## Backup File Naming Convention (MANDATORY)
+
+### Working Backups
+- `ComponentName_BACKUP_WORKING.tsx` - Last known working state (in main directories)
+- `ComponentName_BACKUP_MILESTONE.tsx` - Major milestone backups
+
+### Feature Sources  
+- `ComponentName_FEATURE_SOURCE.tsx` - Source of merged features (archived in DEVELOPMENT_BACKUPS/)
+- `ComponentName_PROTOTYPE.tsx` - Experimental versions
+
+### Archive
+- `ComponentName_ARCHIVE_YYYY_MM_DD.tsx` - Historical versions
+
+## Recommended Git + Backup Hybrid Workflow (MANDATORY)
+
+### For Major Features/Refactoring (Use Git Branches)
+1. **MUST test current state** - Verify everything works
+2. **MUST create feature branch**: `git checkout -b feature/component-name`
+3. **MUST document state** - Note what works and what doesn't in commit
+4. **Then proceed with changes** - Commit frequently
+5. **Merge when stable**: `git checkout main && git merge feature/component-name`
+
+### For Quick Experiments (Use File Backups)
+1. **For rapid iteration**: Use `Component_BACKUP_WORKING.tsx` pattern
+2. **For testing ideas**: Quick copy/restore without Git overhead
+3. **Convert to branch**: When experiment succeeds, create branch and commit
+
+### After Successful Changes
+1. **MUST test thoroughly** - Verify new features work
+2. **Update backup** - Replace backup with new working version
+3. **Archive old backups** - Move to DEVELOPMENT_BACKUPS/
+4. **Update documentation**
+
+### If Changes Break Something
+1. **Restore from backup**: `cp Component_BACKUP_WORKING.tsx Component.tsx`
+2. **Identify issue** - Analyze what went wrong
+3. **Fix incrementally** - Make smaller, safer changes
+4. **Test at each step**
+
+## AI Assistant Rules (MANDATORY)
+
+### Git Branch Strategy (Preferred for Major Work)
+- **ALWAYS suggest feature branches** for significant changes (>50 lines)
+- **MUST create descriptive branch names**: `feature/practice-page-hints`, `fix/ai-caching`, `refactor/component-reusability`
+- **REQUIRED commit frequency**: Every logical change unit
+- **MANDATORY testing**: Before merging to main
+
+### File Backup Strategy (For Quick Experiments)
+- **FORBIDDEN**: Delete files from DEVELOPMENT_BACKUPS/ without permission
+- **FORBIDDEN**: Modify existing backup files
+- **REQUIRED**: Follow exact naming conventions
+
+### Decision Matrix
+**Use Git Branch When:**
+- Major feature development
+- Component refactoring (>50 lines)
+- Multi-file changes
+- Need collaboration/review
+- Changes take >30 minutes
+
+**Use File Backup When:**
+- Quick styling tweaks
+- Rapid prototyping
+- Single-file experiments
+- Changes take <30 minutes
+- Need immediate rollback capability
+
+### Branch Naming Convention (MANDATORY)
+```bash
+feature/[page-name]-[feature]     # feature/practice-progressive-hints
+fix/[component]-[issue]           # fix/translation-input-validation
+refactor/[system]-[improvement]   # refactor/ai-caching-performance
+docs/[section]-[update]           # docs/api-integration-guide
+```
+
+## Current Backup Status
+
+### PracticePageV1_FEATURE_SOURCE.tsx
+- **Status**: Archived feature source (893 lines)
+- **Purpose**: Reference for UX patterns and advanced features  
+- **Contains**: Real data integration, enhanced UX, loading states, error handling
+- **Action**: Keep as reference until main version is fully stable
+
+## Integration with Project Rules
+
+This backup strategy aligns with AIdioma's core principles:
+- **Module-first architecture** - Backups preserve modular components
+- **Performance requirements** - Backups enable safe optimization attempts
+- **TypeScript standards** - Backup workflow prevents type regressions
+- **Zero tolerance for failures** - Backup system prevents catastrophic losses
+
+## Example Workflows
+
+### Git Branch Workflow (Preferred)
+```bash
+# Major feature: Progressive hints for Practice page
+git checkout -b feature/practice-progressive-hints
+git add -A && git commit -m "feat(practice): start progressive hints implementation"
+
+# Work on feature with frequent commits
+git add components/HintSystem.tsx && git commit -m "feat(practice): add hint component structure"
+git add pages/PracticePage.tsx && git commit -m "feat(practice): integrate hints into practice flow"
+
+# Test thoroughly, then merge
+npm run test && npm run type-check
+git checkout main && git merge feature/practice-progressive-hints
+git branch -d feature/practice-progressive-hints
+```
+
+### File Backup Workflow (Quick Changes)
+```bash
+# Quick styling experiment
+cp PracticePage.tsx PracticePage_BACKUP_WORKING.tsx
+# Make changes, test
+# If good: commit directly, remove backup
+# If bad: cp PracticePage_BACKUP_WORKING.tsx PracticePage.tsx
+```
+
+### Migration from Neon Integration
+```bash
+# Following your Neon integration checklist line 15:
+git checkout -b migration/neon-database
+git add -A && git commit -m "feat(db): start Neon PostgreSQL migration"
+# Complete migration in branch, then merge to main
+```
+
+## Success Metrics
+
+- **Zero catastrophic failures** - No loss of working functionality
+- **<5 minute rollback time** - Quick recovery from issues
+- **100% backup compliance** - All major changes have backups
+- **Clear development history** - Traceable progression of features
+
+**Remember**: It's better to have too many backups than to lose working functionality!

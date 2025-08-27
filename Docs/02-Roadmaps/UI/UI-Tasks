@@ -1,0 +1,65 @@
+# Practice Page - Implementation Tasks & Issues
+*Updated based on comprehensive Anthropic audit findings*
+
+## **🚨 CRITICAL FIXES REQUIRED (Aligned with Updated Roadmap)**
+
+### **Progressive Hints System (20% → 95% target)**
+- [ ] **Implement Real 3-Level System**: Currently only has basic fallback templates, needs full implementation
+  - [ ] Level 1 (Basic): Contextual Spanish learning hints
+  - [ ] Level 2 (Intermediate): More specific grammar/vocabulary guidance  
+  - [ ] Level 3 (Complete): Detailed translation assistance
+- [ ] **Add Hint Advancement UI**: Visual level indicators and progression controls
+- [ ] **Fix Hint Request Behavior**: Remove automatic hint popups, make request-based only
+
+### **Spanish Context AI (30% → 95% target)**
+- [ ] **Replace Generic Responses**: Current "daily conversation" fallbacks with Spanish learning context
+- [ ] **Implement Spanish-Specific Prompts**: Article/verb/noun detection and contextual analysis
+- [ ] **Add Grammar Pattern Recognition**: Spanish sentence structure awareness
+
+### **Session Management**
+- [ ] **Session Persistence**: Progress state updates even if user didn't answer or left input blank
+  - **Question**: Is this intended behavior or should progress only advance on correct answers?
+
+### **Component Compliance Issues**
+- [ ] **ActionButtons**: Wrong icon types (Up/Down vs Left/Right), wrong sizing per SSOT
+- [ ] **TranslationInput**: Missing evaluation feedback, character counter, proper states
+- [ ] **SessionStats**: Completely missing, using custom progress bars instead
+- [ ] **Touch Targets**: Some buttons below 44px minimum (WCAG AA violation)
+- [ ] **Design Tokens**: Custom colors instead of design system tokens
+
+### **AI Integration Completion (60% → 95% target)**
+- [ ] **Remove Math.random() Fallbacks**: Still present in some word evaluation components
+- [ ] **Replace Hardcoded Hint Strings**: Current progressive hints use static fallback text
+- [ ] **Optimize Universal AI Service**: Achieve consistent <2s response times (currently 3+ seconds)
+- [ ] **Enhanced Error Recovery**: Improve fallback behavior when AI services are unavailable
+
+## **📱 Testing Priorities**
+
+### **Immediate Testing Needed**
+1. **Mobile Responsiveness** - Test across device sizes
+2. **Error Scenarios** - Disconnect network, stop server  
+3. **Progressive Hints** - Verify 3-level hint system works
+4. **Performance** - Measure and optimize AI response times
+5. **SSOT Compliance** - Verify components match specifications
+
+### **Development Questions** 
+- [ ] **Session Progress Logic**: Should progress advance without correct answers?
+- [ ] **Word Hints**: Should be contextual Spanish translations, not generic advice?
+- [ ] **Performance Standards**: Target confirmed as <2s for all AI responses (3+ seconds not acceptable)
+
+## **📊 AUDIT ALIGNMENT SUMMARY**
+*These tasks now align with the corrected Master-Roadmap.md based on July 2025 code audit findings:*
+- **Reality Gap Identified**: Documentation claimed features "COMPLETED" that were 20-30% functional
+- **Progressive Hints**: Major implementation gap discovered (documented 95%, actually 20%)
+- **Spanish Context**: Generic AI responses instead of Spanish learning focus (documented 95%, actually 30%)
+- **Performance**: Inconsistent response times discovered (3+ seconds vs 2s target)
+
+## **🎯 Success Criteria**
+- [ ] All word clicks provide contextual Spanish hints
+- [ ] Progressive hints work with 3 distinct levels  
+- [ ] Consistent <3s AI response times
+- [ ] Mobile responsive across all screen sizes
+- [ ] Graceful error handling with retry functionality
+- [ ] Clear session progress logic (with/without correct answers)
+- [ ] **SSOT Compliance**: All components match design system specifications
+- [ ] **No Mock Data**: All AI interactions use real Universal AI Service

@@ -1,0 +1,129 @@
+# Dev Log Management Rule
+
+## Context
+This rule manages automatic updates to the development log (`logs/dev_log.md`) after completing 3-5 development tasks, ensuring comprehensive tracking of development progress in the AIdioma project.
+
+## Trigger Conditions
+Update the dev log when ANY of these conditions are met:
+- 3-5 tasks have been completed in a single development session
+- A major feature implementation is finished
+- A significant bug fix or refactoring is completed
+- Module development milestones are reached
+- Pre-commit requirements have been satisfied for multiple changes
+
+## Dev Log Update Protocol
+
+### Task Completion Tracking
+Monitor and count these as "completed tasks":
+1. **Code Implementation**: New components, features, or modules
+2. **Bug Fixes**: Resolved issues with proper testing
+3. **Refactoring**: Code improvements maintaining functionality
+4. **Testing**: New test implementations or coverage improvements
+5. **Documentation**: Updated docs, comments, or specifications
+6. **Performance**: Optimizations meeting project requirements
+7. **Integration**: AI service integrations with caching/timeout
+8. **UI/UX**: Design system implementations or improvements
+
+### Update Format Requirements
+When updating `logs/dev_log.md`, follow this structure:
+
+#### For PREDEVELOPMENT PLAN section:
+```markdown
+### [Date] Session Plan
+**Target**: [Brief session goal]
+**Planned Tasks**:
+- [ ] Task 1: [Description]
+- [ ] Task 2: [Description]
+- [ ] Task 3: [Description]
+**Estimated Duration**: [Time estimate]
+**Key Focuses**: [Performance, TypeScript, AI Integration, etc.]
+```
+
+#### For PREDEVELOPMENT DELIVERABLES section:
+```markdown
+### [Date] Session Deliverables
+**Completed Tasks** (Count: X/Y):
+- [x] Task 1: [Description] - [Performance impact/Bundle size/Test coverage]
+- [x] Task 2: [Description] - [Impact metrics]
+- [x] Task 3: [Description] - [Impact metrics]
+
+**Module Reusability**: [Assessment across 6 pages]
+**Performance Impact**: 
+- AI Response Time: [<2000ms requirement]
+- UI Response Time: [<100ms requirement]
+- Bundle Size Change: [<10KB preferred]
+- Cache Hit Rate: [>80% target]
+
+**TypeScript Compliance**: [Zero any usage confirmed]
+**Test Coverage**: [>90% requirement]
+**Standards Compliance**: [AI caching, error handling, accessibility]
+```
+
+#### For POST DEVELOPMENT section:
+```markdown
+### [Date] Session Summary
+**Duration**: [Actual time spent]
+**Tasks Completed**: [X/Y planned tasks]
+**Quality Metrics**:
+- Lint: ✓ Zero warnings
+- Type Check: ✓ Zero errors  
+- Tests: ✓ >90% coverage
+- Build: ✓ Bundle analysis complete
+
+**Module Impact**: [Which of 12 reusable modules affected]
+**Cross-Page Compatibility**: [Practice/Reading/Conversation/Memorize/Progress/Settings]
+**Next Session Priorities**: [List for next development session]
+```
+
+## Automation Rules
+
+### When to Update
+- **After 3 completed tasks**: Add to PREDEVELOPMENT DELIVERABLES
+- **After 5 completed tasks**: Update both DELIVERABLES and POST DEVELOPMENT
+- **Session start**: Update PREDEVELOPMENT PLAN
+- **Session end**: Finalize POST DEVELOPMENT
+
+### Required Measurements
+Every dev log update MUST include:
+1. **Performance metrics**: Response times, bundle impact
+2. **Module reusability assessment**: Cross-page compatibility
+3. **TypeScript compliance**: Zero any usage confirmation
+4. **Test coverage**: Percentage and affected areas
+5. **Standards adherence**: AI caching, error handling, accessibility
+
+### Integration with Project Standards
+- Align with commit message format requirements
+- Reference the 12 reusable modules architecture
+- Track progress toward 64% component reusability goal
+- Monitor compliance with red lines (zero tolerance items)
+- Document library research decisions when applicable
+
+## Commands for Manual Updates
+```bash
+# Quick task count check
+git log --oneline --since="1 hour ago" | wc -l
+
+# Check current test coverage
+npm run test -- --coverage
+
+# Verify performance requirements
+npm run build && npm run analyze
+
+# Type safety verification
+npm run type-check
+```
+
+## File Structure Maintenance
+- Keep dev_log.md in `/logs/` directory
+- Maintain chronological order of entries
+- Archive monthly logs to preserve session history
+- Link to specific commits for major milestones
+
+## Error Prevention
+- Never overwrite existing log entries
+- Always append new information
+- Preserve formatting and structure
+- Include timestamps for all entries
+- Validate metrics before logging
+
+This rule ensures comprehensive development tracking while maintaining alignment with AIdioma's module-first architecture and performance requirements.

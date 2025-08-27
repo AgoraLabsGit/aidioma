@@ -1,0 +1,79 @@
+---
+alwaysApply: true
+---
+
+# TypeScript Standards (MANDATORY)
+
+## Zero Any Policy (CRITICAL)
+You MUST NEVER use `any` types. All code must be properly typed.
+
+```typescript
+// REQUIRED: Proper interface definitions
+interface EvaluationInput {
+  sentenceId: number
+  userTranslation: string
+  correctAnswers: string[]
+  context: EvaluationContext
+}
+
+interface ComponentProps {
+  title: string
+  isLoading?: boolean
+  onSubmit: (data: FormData) => Promise<void>
+}
+
+// FORBIDDEN: any usage
+function evaluate(input: any): any { ... }
+const props: any = {}
+```
+
+## Interface Requirements (MANDATORY)
+You MUST define interfaces for:
+- All component props
+- API request/response types
+- Hook return values
+- Service method parameters
+
+```typescript
+// REQUIRED: Component prop interfaces
+interface PracticeSessionProps {
+  sentence: string
+  onSubmit: (translation: string) => Promise<void>
+  disabled?: boolean
+}
+
+export function PracticeSession({ sentence, onSubmit, disabled = false }: PracticeSessionProps) {
+  // Implementation
+}
+
+// REQUIRED: API response interfaces
+interface EvaluationResponse {
+  isCorrect: boolean
+  feedback: string
+  score: number
+  alternatives?: string[]
+}
+```
+
+## Type Safety Patterns (MANDATORY)
+```typescript
+// REQUIRED: Optional chaining for safety
+const result = data?.user?.preferences?.language || 'en'
+
+// REQUIRED: Type guards for validation
+function isValidTranslation(input: unknown): input is string {
+  return typeof input === 'string' && input.length > 0
+}
+
+// REQUIRED: Conditional rendering
+{isLoading && <LoadingSpinner />}
+{error && <ErrorMessage error={error} />}
+{data && <DataDisplay data={data} />}
+```
+
+## FORBIDDEN TypeScript Practices
+- Using `any` types (zero tolerance)
+- Type assertions without validation
+- Missing return type annotations for public functions
+- Untyped function parameters
+- Missing interface definitions for props

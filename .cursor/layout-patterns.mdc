@@ -1,0 +1,46 @@
+---
+alwaysApply: true
+---
+
+# Layout Patterns (MANDATORY)
+
+## Responsive Design (REQUIRED)
+You MUST follow mobile-first patterns:
+
+```typescript
+<div className="
+  w-full max-w-sm mx-auto       // Mobile: constrained
+  sm:max-w-md                   // Small: wider
+  lg:max-w-4xl lg:mx-0         // Large: full width
+  grid grid-cols-1 gap-4       // Mobile: single column
+  lg:grid-cols-3 lg:gap-6      // Large: three columns
+">
+  <SessionStats className="lg:col-span-3" />
+  <PracticeFilters />
+  <TranslationInput className="lg:col-span-2" />
+</div>
+```
+
+## Standard Page Composition (MANDATORY)
+You MUST follow this standard page layout pattern:
+
+```typescript
+// REQUIRED: Standard page layout pattern
+<PageLayout pageTitle="Practice" pageIcon={Play}>
+  {/* 1. Session Stats - Always first */}
+  <SessionStats {...statsProps} />
+  
+  {/* 2. Filters - Always second */}
+  <PracticeFilters {...filterProps} />
+  
+  {/* 3. Main Content - Always third */}
+  <div className="max-w-4xl mx-auto w-full">
+    <PageSpecificContent />
+    <ActionButtons {...buttonProps} />
+  </div>
+</PageLayout>
+```
+
+## FORBIDDEN Layout Practices
+- Non-responsive design patterns
+- Custom layout patterns without component reusability

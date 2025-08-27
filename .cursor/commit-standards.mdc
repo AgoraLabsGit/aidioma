@@ -1,0 +1,127 @@
+---
+alwaysApply: true
+---
+
+# Commit Standards & Message Format (MANDATORY)
+
+## Required Commit Message Format
+
+**MANDATORY**: All commits MUST follow this exact format:
+
+```bash
+git commit -m "feat(module): descriptive message
+
+- Specific change 1
+- Specific change 2
+- Performance impact: [measurement]
+- Module reusability: [assessment]
+- Bundle size impact: [measurement]
+- Test coverage: [percentage]"
+```
+
+## Commit Type Prefixes
+
+**Use these standardized prefixes**:
+
+- `feat(module):` - New feature or functionality
+- `fix(module):` - Bug fixes and corrections
+- `perf(module):` - Performance improvements
+- `refactor(module):` - Code restructuring without functionality changes
+- `test(module):` - Adding or updating tests
+- `docs(module):` - Documentation updates
+- `style(module):` - Code formatting and style changes
+- `chore(module):` - Maintenance tasks and dependencies
+
+## Module Scope Examples
+
+**Use specific module names**:
+- `feat(ai-service):` - AI evaluation service changes
+- `fix(translation-input):` - Translation input component fixes
+- `perf(practice-page):` - Practice page performance improvements
+- `refactor(user-service):` - User service restructuring
+- `test(evaluation):` - Evaluation module test updates
+
+## Required Impact Measurements
+
+**MANDATORY**: Include these measurements in every commit:
+
+### Performance Impact
+- **AI Response Time**: `[1850ms average]` or `[no change]`
+- **Bundle Size**: `[+15KB]`, `[-5KB]`, or `[no change]`
+- **UI Latency**: `[85ms average]` or `[no change]`
+- **Cache Hit Rate**: `[82%]` or `[maintained]`
+
+### Module Reusability Assessment
+- **Cross-Page Usage**: `[usable on 4/6 pages]`
+- **Component Reusability**: `[65% reusability maintained]`
+- **API Compatibility**: `[backward compatible]` or `[breaking change]`
+
+### Test Coverage
+- **Unit Tests**: `[92% coverage]`
+- **Integration Tests**: `[new scenarios covered]`
+- **E2E Tests**: `[critical paths verified]`
+
+## Complete Commit Examples
+
+### Feature Addition
+```bash
+git commit -m "feat(evaluation): add advanced grammar scoring
+
+- Implement context-aware grammar evaluation
+- Add fallback scoring for edge cases
+- Performance impact: 1750ms average AI response
+- Module reusability: usable across practice/reading pages
+- Bundle size impact: +12KB (grammar processing logic)
+- Test coverage: 94% (added 15 new test cases)"
+```
+
+### Bug Fix
+```bash
+git commit -m "fix(translation-input): resolve input validation edge case
+
+- Fix empty translation submission handling
+- Add proper error messaging for invalid inputs
+- Performance impact: no change
+- Module reusability: maintains cross-page compatibility
+- Bundle size impact: +2KB (validation logic)
+- Test coverage: 91% (added edge case tests)"
+```
+
+### Performance Improvement
+```bash
+git commit -m "perf(ai-service): implement response caching strategy
+
+- Add Redis-based caching for evaluation requests
+- Implement cache key optimization
+- Performance impact: 1200ms average (40% improvement)
+- Module reusability: enhances all AI-dependent modules
+- Bundle size impact: +8KB (caching utilities)
+- Test coverage: 93% (cache hit/miss scenarios)"
+```
+
+## Pre-Commit Verification
+
+**REQUIRED**: Verify these before committing:
+
+```bash
+npm run lint                    # Zero warnings
+npm run type-check             # Zero TypeScript errors
+npm run test                   # >90% coverage maintained
+npm run build                  # Successful production build
+```
+
+## Commit Quality Standards
+
+**MANDATORY Requirements**:
+- Descriptive, actionable commit messages
+- Specific change descriptions (not "various fixes")
+- Accurate impact measurements
+- Module scope clearly identified
+- Test coverage verification included
+
+**FORBIDDEN**:
+- Vague commit messages ("updates", "fixes", "improvements")
+- Missing impact measurements
+- Commits without testing
+- Commits that break the build
+- Commits with linting errors

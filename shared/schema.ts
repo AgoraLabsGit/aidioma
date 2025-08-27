@@ -1,97 +1,97 @@
-import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core'
+import { pgTable, text, integer, decimal, timestamp, boolean, varchar } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import { relations } from 'drizzle-orm'
 
 // Users table
-export const users = sqliteTable('users', {
+export const users = pgTable('users', {
   id: text('id').primaryKey(),
   email: text('email').unique().notNull(),
   name: text('name').notNull(),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
   level: text('level', { enum: ['beginner', 'intermediate', 'advanced'] }).default('beginner'),
   streak: integer('streak').default(0),
   totalScore: integer('total_score').default(0),
-  preferences: text('preferences', { mode: 'json' }).default('{}'),
+  preferences: text('preferences').default('{}'),
 })
 
 // Spanish sentences for practice
-export const sentences = sqliteTable('sentences', {
+export const sentences = pgTable('sentences', {
   id: text('id').primaryKey(),
   spanish: text('spanish').notNull(),
   english: text('english').notNull(),
   difficulty: text('difficulty', { enum: ['beginner', 'intermediate', 'advanced'] }).notNull(),
   category: text('category'), // e.g., 'daily_life', 'business', 'travel'
-  hints: text('hints', { mode: 'json' }).notNull(), // Array of hint strings
-  grammarPoints: text('grammar_points', { mode: 'json' }), // Array of grammar concepts
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-  isActive: integer('is_active', { mode: 'boolean' }).default(true),
+  hints: text('hints').notNull(), // JSON array of hint strings
+  grammarPoints: text('grammar_points'), // JSON array of grammar concepts
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  isActive: boolean('is_active').default(true),
 })
 
 // User progress tracking
-export const userProgress = sqliteTable('user_progress', {
+export const userProgress = pgTable('user_progress', {
   id: text('id').primaryKey(),
   userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   sentenceId: text('sentence_id').notNull().references(() => sentences.id, { onDelete: 'cascade' }),
   attempts: integer('attempts').default(0),
   bestScore: integer('best_score').default(0),
-  lastAttemptAt: integer('last_attempt_at', { mode: 'timestamp' }),
-  mastered: integer('mastered', { mode: 'boolean' }).default(false),
-  averageScore: real('average_score').default(0),
+  lastAttemptAt: timestamp('last_attempt_at'),
+  mastered: boolean('mastered').default(false),
+  averageScore: decimal('average_score', { precision: 5, scale: 2 }).default('0'),
 })
 
 // Individual practice sessions
-export const practiceSessions = sqliteTable('practice_sessions', {
+export const practiceSessions = pgTable('practice_sessions', {
   id: text('id').primaryKey(),
   userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  startedAt: integer('started_at', { mode: 'timestamp' }).notNull(),
-  completedAt: integer('completed_at', { mode: 'timestamp' }),
+  startedAt: timestamp('started_at').notNull(),
+  completedAt: timestamp('completed_at'),
   totalSentences: integer('total_sentences').default(0),
   completedSentences: integer('completed_sentences').default(0),
-  averageScore: real('average_score').default(0),
+  averageScore: decimal('average_score', { precision: 5, scale: 2 }).default('0'),
   sessionType: text('session_type').default('standard'), // 'standard', 'review', 'challenge'
 })
 
 // Individual sentence evaluations
-export const evaluations = sqliteTable('evaluations', {
+export const evaluations = pgTable('evaluations', {
   id: text('id').primaryKey(),
   userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   sentenceId: text('sentence_id').notNull().references(() => sentences.id, { onDelete: 'cascade' }),
   sessionId: text('session_id').references(() => practiceSessions.id, { onDelete: 'cascade' }),
   userTranslation: text('user_translation').notNull(),
-  aiEvaluation: text('ai_evaluation', { mode: 'json' }).notNull(), // Full AI response
+  aiEvaluation: text('ai_evaluation').notNull(), // Full AI response as JSON
   score: integer('score').notNull(), // 0-100
   feedback: text('feedback').notNull(),
   hintsUsed: integer('hints_used').default(0),
   timeSpent: integer('time_spent'), // in seconds
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 })
 
 // AI evaluation caching for cost optimization
-export const evaluationCache = sqliteTable('evaluation_cache', {
+export const evaluationCache = pgTable('evaluation_cache', {
   id: text('id').primaryKey(),
   sentenceId: text('sentence_id').notNull().references(() => sentences.id, { onDelete: 'cascade' }),
   userTranslation: text('user_translation').notNull(),
   translationHash: text('translation_hash').notNull(), // Hash of normalized translation
-  aiResponse: text('ai_response', { mode: 'json' }).notNull(),
+  aiResponse: text('ai_response').notNull(), // JSON response
   score: integer('score').notNull(),
   feedback: text('feedback').notNull(),
   cacheLevel: text('cache_level', { enum: ['exact', 'similar', 'semantic'] }).notNull(),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
   hitCount: integer('hit_count').default(1),
 })
 
 // Learning analytics
-export const learningAnalytics = sqliteTable('learning_analytics', {
+export const learningAnalytics = pgTable('learning_analytics', {
   id: text('id').primaryKey(),
   userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   date: text('date').notNull(), // YYYY-MM-DD format
   practiceTime: integer('practice_time').default(0), // in minutes
   sentencesCompleted: integer('sentences_completed').default(0),
-  averageScore: real('average_score').default(0),
+  averageScore: decimal('average_score', { precision: 5, scale: 2 }).default('0'),
   hintsUsed: integer('hints_used').default(0),
   streakDay: integer('streak_day').default(0),
-  difficultiesEncountered: text('difficulties_encountered', { mode: 'json' }), // Array of difficulty areas
+  difficultiesEncountered: text('difficulties_encountered'), // JSON array of difficulty areas
 })
 
 // Define relationships

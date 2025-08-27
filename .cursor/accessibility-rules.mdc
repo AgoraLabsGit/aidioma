@@ -1,0 +1,40 @@
+---
+alwaysApply: true
+---
+
+# Accessibility Rules (MANDATORY)
+
+You MUST implement WCAG AA compliance:
+
+```typescript
+// REQUIRED: Complete accessibility pattern
+<Button
+  aria-label="Submit translation for evaluation"
+  aria-describedby="translation-help"
+  className="min-h-[44px]" // Touch target size
+  onKeyDown={handleKeyboardNavigation}
+>
+  Check Answer
+</Button>
+
+<div 
+  id="translation-help"
+  className="text-sm text-muted-foreground"
+  role="status"
+  aria-live="polite"
+>
+  Enter your English translation of the Spanish sentence above
+</div>
+```
+
+## WCAG AA Requirements:
+- ARIA labels on all interactive elements
+- Keyboard navigation support
+- WCAG AA color contrast compliance
+- Minimum 44px touch targets
+- Proper focus indicators
+
+## FORBIDDEN Accessibility Practices
+- Missing accessibility attributes
+- Interactive elements without ARIA labels
+- Touch targets smaller than 44px

@@ -6,6 +6,7 @@ config()
 import express from 'express'
 import cors from 'cors'
 import sentencesRoutes from './routes/sentences'
+import { checkDatabaseConnection } from './db/connection'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -61,11 +62,17 @@ app.get('/', (_req, res) => {
 })
 
 // Health check endpoint
-app.get('/health', (_req, res) => {
+app.get('/health', async (_req, res) => {
+  const dbCheck = await checkDatabaseConnection()
+  
   res.json(createSuccessResponse({ 
-    status: 'ok', 
+    status: dbCheck.connected ? 'ok' : 'degraded', 
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    database: {
+      connected: dbCheck.connected,
+      error: dbCheck.error
+    }
   }))
 })
 

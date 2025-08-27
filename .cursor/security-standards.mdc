@@ -1,0 +1,147 @@
+---
+alwaysApply: true
+---
+
+# Security Standards (MANDATORY)
+
+## Input Validation (CRITICAL)
+You MUST validate ALL user inputs with Zod schemas:
+
+```typescript
+// REQUIRED: Zod validation schemas
+import { z } from 'zod'
+
+const TranslationInputSchema = z.object({
+  userTranslation: z.string()
+    .min(1, 'Translation cannot be empty')
+    .max(500, 'Translation too long')
+    .refine(val => val.trim().length > 0, 'Translation cannot be whitespace'),
+  sentenceId: z.number().int().positive(),
+  sessionId: z.string().uuid()
+})
+
+// REQUIRED: Server-side validation
+app.post('/api/evaluate', async (req, res) => {
+  try {
+    const validatedInput = TranslationInputSchema.parse(req.body)
+    // Process validated input
+  } catch (error) {
+    return res.status(400).json({ error: 'Invalid input', details: error.issues })
+  }
+})
+```
+
+## Authentication & Authorization (MANDATORY)
+```typescript
+// REQUIRED: Secure session management
+interface UserSession {
+  id: string
+  userId: string
+  expiresAt: Date
+  permissions: string[]
+}
+
+// REQUIRED: JWT validation middleware
+function authenticateToken(req: Request, res: Response, next: NextFunction) {
+  const token = req.headers.authorization?.split(' ')[1]
+  
+  if (!token) {
+    return res.status(401).json({ error: 'Access token required' })
+  }
+  
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as UserSession
+    req.user = decoded
+    next()
+  } catch (error) {
+    return res.status(403).json({ error: 'Invalid token' })
+  }
+}
+```
+
+## Data Protection (MANDATORY)
+```typescript
+// REQUIRED: Sanitization for user content
+import DOMPurify from 'dompurify'
+
+function sanitizeUserContent(content: string): string {
+  return DOMPurify.sanitize(content, {
+    ALLOWED_TAGS: [], // No HTML allowed
+    ALLOWED_ATTR: []
+  })
+}
+
+// REQUIRED: Parameterized queries (SQL injection prevention)
+async function getUserProgress(userId: string) {
+  const query = `
+    SELECT progress_data 
+    FROM user_progress 
+    WHERE user_id = $1 AND deleted_at IS NULL
+  `
+  return await db.query(query, [userId])
+}
+```
+
+## Environment Security (MANDATORY)
+```typescript
+// REQUIRED: Environment variable validation
+const envSchema = z.object({
+  DATABASE_URL: z.string().url(),
+  JWT_SECRET: z.string().min(32),
+  OPENAI_API_KEY: z.string().startsWith('sk-'),
+  NODE_ENV: z.enum(['development', 'production', 'test'])
+})
+
+const env = envSchema.parse(process.env)
+
+// FORBIDDEN: Hardcoded secrets
+// const API_KEY = 'sk-abc123...' // ❌ NEVER do this
+```
+
+## Rate Limiting (MANDATORY)
+```typescript
+// REQUIRED: Rate limiting implementation
+import rateLimit from 'express-rate-limit'
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests, please try again later',
+  standardHeaders: true,
+  legacyHeaders: false
+})
+
+const aiLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10, // Limit AI calls to 10 per minute per IP
+  message: 'AI rate limit exceeded'
+})
+```
+
+## Security Headers (MANDATORY)
+```typescript
+// REQUIRED: Security middleware
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"]
+    }
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+}))
+```
+
+## FORBIDDEN Security Practices
+- Hardcoded secrets or API keys
+- Unvalidated user input
+- Missing authentication on protected routes
+- SQL injection vulnerabilities
+- XSS vulnerabilities from unsanitized content
+- Missing rate limiting on API endpoints

@@ -1,0 +1,36 @@
+---
+alwaysApply: true
+---
+
+# Design Token System (REQUIRED)
+
+You MUST use ONLY these design tokens:
+
+```css
+--background: 220 13% 8%;      /* Dark theme base */
+--foreground: 220 8% 95%;      /* Primary text */
+--card: 220 8% 15%;           /* Card backgrounds */
+--border: 220 13% 25%;        /* Borders and dividers */
+--primary: 220 8% 40%;        /* Primary actions */
+--muted: 220 8% 9%;          /* Muted backgrounds */
+```
+
+```typescript
+// REQUIRED: Design tokens only
+<div className="bg-background text-foreground border-border">
+
+// FORBIDDEN: Custom colors
+<div style={{ backgroundColor: '#123456' }}>
+<div className="bg-[#123456]">
+```
+
+## Typography Scale (MANDATORY)
+
+You MUST use ONLY these classes:
+- `text-xs` (12px) - Helper text, captions
+- `text-sm` (14px) - Body text, labels
+- `text-base` (16px) - Default body
+- `text-lg` (18px) - Subheadings
+- `text-xl` (20px) - Page headings
+- `text-2xl` (24px) - Section titles
+- `text-3xl` (30px) - Main headings

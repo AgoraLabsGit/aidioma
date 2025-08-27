@@ -1,0 +1,73 @@
+---
+alwaysApply: true
+---
+
+# Performance Standards & Requirements (MANDATORY)
+
+## Mandatory Performance Limits
+
+**CRITICAL**: These limits MUST be maintained for all changes:
+
+### Response Time Requirements
+- **AI Evaluation**: <2000ms response time (measured end-to-end)
+- **UI Interactions**: <100ms response time (button clicks, form inputs)
+- **Page Load**: Initial page load <3000ms
+- **Route Navigation**: <500ms between pages
+
+### Bundle Size Requirements
+- **Preferred**: <10KB additions per feature
+- **Maximum**: 50KB additions require explicit justification
+- **Analysis**: Run `npm run analyze` before commit
+- **Documentation**: Include bundle impact in commit message
+
+### AI Performance Standards
+- **Cache Hit Rate**: >80% for all AI service calls
+- **Timeout Handling**: All AI calls must have 2000ms timeout
+- **Fallback Strategy**: Graceful degradation when AI services fail
+- **Cost Optimization**: Minimize unnecessary API calls
+
+### Build Performance
+```bash
+# Verify these before commit:
+npm run build                  # Must complete successfully
+npm run analyze               # Check bundle size impact
+```
+
+### Performance Monitoring
+
+**Required Measurements**:
+- Bundle size impact: [+X KB]
+- AI response time: [X ms average]
+- Cache hit rate: [X%]
+- UI interaction latency: [X ms]
+
+### Performance Red Lines
+
+**FORBIDDEN** - Zero tolerance:
+- >50KB bundle additions without justification
+- AI calls without caching strategy
+- UI interactions >100ms
+- Memory leaks in components
+- Blocking operations on main thread
+
+### Performance Testing
+
+**Required for commits affecting**:
+- AI service integrations
+- Bundle size (>10KB changes)
+- Critical user interactions
+- Data processing logic
+
+```bash
+# Performance verification commands:
+npm run test:performance      # Performance regression tests
+npm run build:analyze        # Bundle analysis with size comparison
+npm run lighthouse           # Core Web Vitals assessment
+```
+
+### Optimization Priorities
+
+1. **AI Cost Reduction**: Cache-first strategy for all AI calls
+2. **Bundle Optimization**: Tree-shaking and code splitting
+3. **Runtime Performance**: Memoization and virtualization
+4. **Network Efficiency**: Request batching and compression

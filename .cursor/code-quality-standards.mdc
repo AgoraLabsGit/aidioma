@@ -1,0 +1,382 @@
+---
+alwaysApply: true
+---
+
+# Code Quality & Architecture Standards (MANDATORY)
+
+## TypeScript Standards (MANDATORY)
+
+**ZERO TOLERANCE**: No `any` types allowed anywhere in the codebase.
+
+### Required Type Safety
+```typescript
+// REQUIRED: Strict typing with proper interfaces
+interface EvaluationInput {
+  sentenceId: number
+  userTranslation: string
+  correctAnswers: string[]
+  context: EvaluationContext
+}
+
+// FORBIDDEN: any usage
+function evaluate(input: any): any { ... }
+```
+
+### Interface Requirements
+- All data structures MUST have proper TypeScript interfaces
+- Function parameters MUST be typed
+- Return types MUST be explicit
+- Generic types MUST be properly constrained
+
+## AI Integration Standards (MANDATORY)
+
+**ALL AI calls MUST implement this pattern**:
+
+```typescript
+async function aiServiceCall<T>(
+  cacheKey: string,
+  aiCall: () => Promise<T>,
+  fallback: () => T
+): Promise<T & { cached: boolean }> {
+  const cached = await cache.get(cacheKey)
+  if (cached) return { ...cached, cached: true }
+  
+  try {
+    const result = await Promise.race([
+      aiCall(),
+      new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('AI timeout')), 2000)
+      )
+    ])
+    await cache.set(cacheKey, result)
+    return { ...result, cached: false }
+  } catch (error) {
+    logger.error('AI service failed', { error, cacheKey })
+    return fallback()
+  }
+}
+```
+
+**FORBIDDEN**: Direct AI calls without caching and timeout.
+
+## Module Architecture Standards (MANDATORY)
+
+### Required Module Interface
+```typescript
+interface StandardModule<TConfig, TInput, TResult, TState> {
+  initialize(config: TConfig): Promise<void>
+  cleanup(): Promise<void>
+  [primaryMethod](input: TInput): Promise<TResult>
+  getState(): TState
+  getMetrics(): ModuleMetrics
+}
+```
+
+**MANDATORY**: All modules MUST implement this interface pattern.
+
+## Component Reusability Standards (REQUIRED)
+
+**64% reusability target**: Components MUST work across multiple pages.
+
+```typescript
+// REQUIRED: Multi-page reusable component
+interface ActionButtonsProps {
+  actions: ActionConfig[]
+  disabled?: boolean
+  size?: 'sm' | 'md' | 'lg'
+  variant?: 'primary' | 'secondary' | 'ghost'
+  onAction: (actionId: string) => void
+  className?: string
+}
+
+// FORBIDDEN: Page-specific component
+function PracticeSubmitButton() { ... }
+```
+
+## File Organization (REQUIRED)
+You MUST follow this exact structure:
+
+```
+client/src/
+├── components/ui/          # Reusable UI components (shadcn/ui)
+├── components/             # Business logic components
+├── pages/                  # Page components
+├── lib/                    # Utilities and helpers
+├── hooks/                  # Custom React hooks
+├── types/                  # TypeScript type definitions
+└── services/               # API and external service integration
+```
+
+## Import/Export Patterns (MANDATORY)
+```typescript
+// REQUIRED: Named exports only (NO default exports)
+export function Button() { }
+export interface ButtonProps { }
+export const BUTTON_VARIANTS = ['primary', 'secondary'] as const
+
+// REQUIRED: Consistent import patterns
+import { Button, Input, Card } from '@/components/ui'
+import { usePractice } from '@/hooks'
+import type { EvaluationResult } from '@/types'
+
+// FORBIDDEN: Default exports
+export default function Component() { } // ❌ Never use
+```
+
+## Error Handling Patterns (MANDATORY)
+```typescript
+// REQUIRED: Comprehensive error handling
+class AppError extends Error {
+  constructor(
+    message: string, 
+    public code: string,
+    public statusCode: number = 500
+  ) {
+    super(message)
+    this.name = 'AppError'
+  }
+}
+
+// REQUIRED: Standardized error handler
+class ErrorHandler {
+  static handle(error: Error, context: ErrorContext) {
+    logger.error('Operation failed', { error: error.message, context })
+    metrics.increment('errors.total', { module: context.module })
+    
+    const userMessage = error instanceof ValidationError 
+      ? error.message 
+      : 'Something went wrong. Please try again.'
+      
+    return {
+      success: false,
+      error: userMessage,
+      fallbackData: this.getFallbackData(context)
+    }
+  }
+}
+
+// REQUIRED: Component error boundaries
+function ComponentWithErrorHandling() {
+  const [error, setError] = useState<Error | null>(null)
+  
+  if (error) {
+    return (
+      <div className="p-4 bg-destructive/10 border border-destructive rounded-md">
+        <p className="text-destructive">Something went wrong: {error.message}</p>
+        <Button onClick={() => setError(null)} variant="outline" size="sm">
+          Try Again
+        </Button>
+      </div>
+    )
+  }
+  
+  return <ActualComponent onError={setError} />
+}
+
+// REQUIRED: Async error handling
+async function handleAsyncOperation() {
+  try {
+    const result = await riskyOperation()
+    return { success: true, data: result }
+  } catch (error) {
+    logger.error('Operation failed', { error: error.message })
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error'
+    }
+  }
+}
+```
+
+## State Management Patterns (MANDATORY)
+```typescript
+// REQUIRED: Decision tree for state management
+// 1. Local component state (useState)
+// 2. Component tree state (Context)
+// 3. Server state (TanStack Query)
+// 4. Global client state (Zustand if absolutely necessary)
+
+// REQUIRED: Local state pattern
+interface ComponentState {
+  isLoading: boolean
+  error: string | null
+  data: UserData | null
+}
+
+function Component() {
+  const [state, setState] = useState<ComponentState>({
+    isLoading: false,
+    error: null,
+    data: null
+  })
+  
+  // Immutable updates only
+  const updateState = (updates: Partial<ComponentState>) => {
+    setState(prev => ({ ...prev, ...updates }))
+  }
+}
+
+// REQUIRED: Server state with TanStack Query
+const { data, isLoading, error } = useQuery({
+  queryKey: ['user', userId],
+  queryFn: () => fetchUser(userId),
+  staleTime: 5 * 60 * 1000, // 5 minutes
+  retry: 3,
+  retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
+})
+```
+
+## Code Documentation (MANDATORY)
+```typescript
+// REQUIRED: JSDoc for complex functions
+/**
+ * Evaluates a user's translation against correct answers
+ * @param input - Translation input with user response and context
+ * @returns Promise resolving to evaluation result with feedback
+ * @throws {ValidationError} When input validation fails
+ * @example
+ * ```typescript
+ * const result = await evaluateTranslation({
+ *   userTranslation: "Hello world",
+ *   sentenceId: 1,
+ *   correctAnswers: ["Hello world", "Hi world"]
+ * })
+ * ```
+ */
+async function evaluateTranslation(
+  input: EvaluationInput
+): Promise<EvaluationResult> {
+  // Implementation
+}
+
+// REQUIRED: Interface documentation
+/**
+ * Configuration for practice session behavior
+ */
+interface PracticeConfig {
+  /** Maximum time allowed per question in milliseconds */
+  timeLimit: number
+  /** Number of hints available to user */
+  hintsAllowed: number
+  /** Difficulty level affecting question selection */
+  difficulty: 'beginner' | 'intermediate' | 'advanced'
+}
+```
+
+## Performance Optimization Patterns (MANDATORY)
+```typescript
+// REQUIRED: Memo patterns for performance
+const ExpensiveComponent = memo(function ExpensiveComponent({ 
+  data, 
+  onUpdate 
+}: Props) {
+  const computedValue = useMemo(() => {
+    return expensiveCalculation(data)
+  }, [data])
+  
+  const handleUpdate = useCallback((newValue: string) => {
+    onUpdate(newValue)
+  }, [onUpdate])
+  
+  return <div>{computedValue}</div>
+}, (prevProps, nextProps) => {
+  // Custom comparison for optimization
+  return prevProps.data.id === nextProps.data.id
+})
+
+// REQUIRED: Debouncing for user input
+const useDebouncedSearch = (searchTerm: string, delay: number) => {
+  const [debouncedTerm, setDebouncedTerm] = useState(searchTerm)
+  
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedTerm(searchTerm)
+    }, delay)
+    
+    return () => clearTimeout(handler)
+  }, [searchTerm, delay])
+  
+  return debouncedTerm
+}
+```
+
+## Naming Conventions (MANDATORY)
+```typescript
+// REQUIRED: Consistent naming patterns
+// Components: PascalCase
+function UserProfileCard() { }
+
+// Hooks: camelCase starting with 'use'
+function useUserPreferences() { }
+
+// Constants: SCREAMING_SNAKE_CASE
+const API_ENDPOINTS = {
+  EVALUATE: '/api/evaluate',
+  SENTENCES: '/api/sentences'
+} as const
+
+// Types/Interfaces: PascalCase
+interface UserProfile { }
+type EvaluationStatus = 'pending' | 'complete' | 'failed'
+
+// Variables/Functions: camelCase
+const userProfile = await fetchUserProfile()
+function calculateScore(answers: Answer[]): number { }
+```
+
+## Code Formatting (MANDATORY)
+```typescript
+// REQUIRED: Consistent formatting rules
+// - 2 spaces for indentation
+// - Single quotes for strings
+// - Trailing commas in objects/arrays
+// - Semicolons required
+
+const config = {
+  apiUrl: 'https://api.example.com',
+  timeout: 5000,
+  retries: 3,
+}
+
+const users = [
+  'user1',
+  'user2', 
+  'user3',
+]
+```
+
+## Pre-Commit Verification (MANDATORY)
+**Reference**: See `workflow-standards.mdc` for complete development workflow.
+
+### Quality Gates (CRITICAL)
+```bash
+npm run lint                    # MUST pass with zero warnings
+npm run type-check             # MUST pass with zero errors
+npm run test                   # MUST achieve >90% coverage
+npm run build                  # MUST complete successfully
+```
+
+## Testing Requirements (MANDATORY)
+- **Unit Tests**: >90% coverage for all modules
+- **Integration Tests**: All module interactions tested
+- **E2E Tests**: Critical user flows covered
+- **Performance Tests**: AI and UI response times verified
+
+## Architecture Red Lines (ZERO TOLERANCE)
+1. **No `any` types** - All TypeScript MUST be properly typed
+2. **No AI calls without caching** - Every AI interaction REQUIRES caching strategy
+3. **No custom solutions** when existing stack provides functionality
+4. **No security vulnerabilities** - Zero tolerance for known CVEs
+5. **No page-specific components** when reusable alternative exists
+
+## FORBIDDEN Code Quality Practices
+- Default exports (use named exports only)
+- Mutation of state objects
+- Missing error handling in async operations
+- Hardcoded strings for user-facing text
+- Functions without proper TypeScript types
+- Missing documentation for complex business logic
+- Inconsistent naming conventions
+- Unused imports or variables
+- AI calls without caching and timeout
+- Custom solutions when existing stack provides functionality

@@ -1,0 +1,25 @@
+---
+alwaysApply: true
+---
+
+# Animation Standards (REQUIRED)
+
+You MUST use Framer Motion for animations:
+
+```typescript
+import { motion } from 'framer-motion'
+
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  exit={{ opacity: 0, y: -20 }}
+  transition={{ duration: 0.2 }}
+>
+  {content}
+</motion.div>
+```
+
+## FORBIDDEN Animation Practices
+- CSS animations for complex interactions
+- Custom animation libraries
+- Animations without proper duration controls

@@ -1,0 +1,61 @@
+---
+alwaysApply: true
+---
+
+# Component Standards (MANDATORY)
+
+## UI Library Standards (MANDATORY)
+You MUST use ONLY these approved libraries:
+- **Components**: shadcn/ui components exclusively - NO custom UI components without justification
+- **Icons**: Lucide React icons strictly - NO other icon libraries or custom SVGs
+- **Styling**: Tailwind CSS with design tokens only - NO custom CSS or inline styles
+
+```typescript
+// REQUIRED: shadcn/ui + Lucide React pattern
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { CheckCircle, XCircle } from 'lucide-react'
+
+<Card className="bg-card border-border">
+  <CardHeader>
+    <CheckCircle className="w-5 h-5 text-green-500" />
+    <Badge variant="secondary">Intermediate</Badge>
+  </CardHeader>
+  <CardContent>
+    <Button variant="default" size="md">Submit</Button>
+  </CardContent>
+</Card>
+
+// FORBIDDEN: Custom components or non-Lucide icons
+import { CustomButton } from './custom-button'
+import { MdCheck } from 'react-icons/md'
+```
+
+## Reusability Requirements
+You MUST create components that work across multiple pages:
+- **PageLayout**: MUST work on ALL 6 pages (100% reusability)
+- **ActionButtons**: MUST work on Practice/Reading/Conversation (75% reusability)
+  - Practice: Submit/Hint/Skip buttons
+  - Reading: Continue/Bookmark/Translate buttons  
+  - Conversation: Send/Save/Continue buttons
+- **SessionStats**: MUST work on all metric pages (85% reusability)
+
+## Button Specifications
+```typescript
+// REQUIRED: Standard button pattern
+<Button 
+  variant="default" 
+  size="md" 
+  className="min-h-[44px] px-6 py-3"
+  aria-label="Descriptive action"
+>
+  <CheckCircle className="w-4 h-4 mr-2" />
+  Submit Translation
+</Button>
+```
+
+## FORBIDDEN Component Practices
+- Custom UI components when shadcn/ui equivalent exists
+- Non-Lucide React icons (react-icons, heroicons, etc.)
+- Page-specific components without 75%+ reusability
