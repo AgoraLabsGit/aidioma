@@ -179,7 +179,7 @@ disabled={!canGoNext}      // ✅ FIXED: Use proper navigation state
 **Solution**:
 1. Created `.env` file in `/server/` directory:
 ```env
-OPENAI_API_KEY=sk-proj-jV...
+OPENAI_API_KEY=your_openai_api_key_here
 NODE_ENV=development
 PORT=5001
 OPENAI_MODEL=gpt-4o-mini
