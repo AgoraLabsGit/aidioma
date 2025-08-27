@@ -1,6 +1,6 @@
 import React from 'react'
 import { useUser } from '../hooks/useUser'
-import { UserButton } from '@stackframe/stack'
+import { UserButton } from '@clerk/clerk-react'
 
 export default function WelcomePage() {
   const userAuth = useUser()
@@ -43,13 +43,13 @@ export default function WelcomePage() {
             </p>
             <div className="space-y-2">
               <a 
-                href="/handler/sign-up" 
+                href="/sign-up" 
                 className="block w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
               >
                 Sign Up - Get Started 🎯
               </a>
               <a 
-                href="/handler/sign-in" 
+                href="/sign-in" 
                 className="block w-full px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors"
               >
                 Sign In 🔑
@@ -60,7 +60,7 @@ export default function WelcomePage() {
         
         <div className="text-xs text-muted-foreground mt-8">
           <p>✅ Database: Connected to Neon PostgreSQL</p>
-          <p>✅ Authentication: Stack Auth Integrated</p>
+          <p>✅ Authentication: Clerk Integrated</p>
           <p>✅ Servers: Backend (3001) + Frontend (5000)</p>
         </div>
       </div>

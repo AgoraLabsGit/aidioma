@@ -1,4 +1,4 @@
-import { useUser as useStackUser, UserButton } from '@stackframe/stack'
+import { useUser as useClerkUser, UserButton } from '@clerk/clerk-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { User, NewUser, APIResponse } from '../types'
 
@@ -10,9 +10,9 @@ interface UpdateUserData {
   currentLevel?: string
 }
 
-// Real API functions - integrated with Stack Auth
+// Real API functions - integrated with Clerk Auth
 const api = {
-  updateUserProfile: async (stackUserId: string, data: UpdateUserData): Promise<APIResponse<User>> => {
+  updateUserProfile: async (clerkUserId: string, data: UpdateUserData): Promise<APIResponse<User>> => {
     try {
       const response = await fetch('/api/users/update-profile', {
         method: 'PUT',
@@ -20,7 +20,7 @@ const api = {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          stackUserId,
+          clerkUserId,
           ...data
         })
       })
@@ -43,58 +43,56 @@ const api = {
   }
 }
 
-// ✅ Real Stack Auth integration - replaces mock useUser hook
+// ✅ Real Clerk Auth integration - replaces mock useUser hook
 export function useUser() {
-  const stackUser = useStackUser()
+  const { user: clerkUser, isLoaded } = useClerkUser()
   
-  // Return Stack Auth user with additional app-specific data structure
-  if (!stackUser) {
+  // Return null if not loaded or no user
+  if (!isLoaded || !clerkUser) {
     return null
   }
 
-  // Transform Stack Auth user to our app's User interface
+  // Transform Clerk user to our app's User interface
   const appUser: User = {
-    id: stackUser.id,
-    email: stackUser.primaryEmail || 'user@example.com',
-    name: stackUser.displayName || 'User',
+    id: clerkUser.id,
+    email: clerkUser.primaryEmailAddress?.emailAddress || 'user@example.com',
+    name: clerkUser.fullName || clerkUser.firstName || 'User',
     level: 'beginner', // TODO: Get from user profile/progress API
     streak: 0, // TODO: Get from user progress API
     totalScore: 0, // TODO: Get from user progress API
     preferences: '{}', // TODO: Get from user profile API
-    createdAt: new Date(), // Stack Auth doesn't expose createdAt, use current date
-    updatedAt: new Date()
+    createdAt: clerkUser.createdAt || new Date(),
+    updatedAt: clerkUser.updatedAt || new Date()
   }
 
   return {
     data: appUser,
-    isLoading: false,
+    isLoading: !isLoaded,
     error: null,
-    // Include Stack Auth user methods
-    stackUser,
-    signOut: () => stackUser.signOut(),
-    update: (data: any) => stackUser.update(data),
+    // Include Clerk user methods
+    clerkUser,
     isSignedIn: true
   }
 }
 
-// ✅ Enhanced: Real user profile updates with Stack Auth integration
+// ✅ Enhanced: Real user profile updates with Clerk Auth integration
 export function useUpdateUser() {
   const queryClient = useQueryClient()
-  const stackUser = useStackUser()
+  const { user: clerkUser } = useClerkUser()
   
   return useMutation({
     mutationFn: async (data: UpdateUserData) => {
-      if (!stackUser) {
+      if (!clerkUser) {
         throw new Error('User not authenticated')
       }
 
-      // Update Stack Auth user profile
+      // Update Clerk user profile
       if (data.username) {
-        await stackUser.update({ displayName: data.username })
+        await clerkUser.update({ firstName: data.username })
       }
 
       // Update app-specific profile data
-      const response = await api.updateUserProfile(stackUser.id, data)
+      const response = await api.updateUserProfile(clerkUser.id, data)
       
       if (!response.success) {
         throw new Error(response.error)
@@ -116,16 +114,16 @@ export function useUpdateUser() {
 
 // ✅ Utility hook for protected routes
 export function useRequireAuth() {
-  const stackUser = useStackUser()
+  const { user: clerkUser, isLoaded } = useClerkUser()
   
-  if (!stackUser) {
+  if (!isLoaded || !clerkUser) {
     // Redirect to sign-in if not authenticated
-    window.location.href = '/handler/sign-in'
+    window.location.href = '/sign-in'
     return null
   }
   
-  return stackUser
+  return clerkUser
 }
 
-// ✅ Export Stack Auth components for easy import
+// ✅ Export Clerk Auth components for easy import
 export { UserButton }

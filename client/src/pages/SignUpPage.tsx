@@ -1,11 +1,11 @@
 import React from 'react'
-import { SignUp } from '@stackframe/stack'
+import { SignUp } from '@clerk/clerk-react'
 import { Logo } from '../components/Logo'
 import { Card } from '../components/ui/Card'
 
 /**
  * Custom Sign-Up Page following AIdioma design standards
- * Uses Stack Auth components but wraps them in our design system
+ * Uses Clerk Auth components but wraps them in our design system
  */
 export default function SignUpPage() {
   return (
@@ -23,16 +23,16 @@ export default function SignUpPage() {
           </p>
         </div>
 
-        {/* Stack Auth Sign-Up Component */}
+        {/* Clerk Auth Sign-Up Component */}
         <Card className="p-6">
-          <SignUp />
+          <SignUp routing="hash" />
         </Card>
 
         {/* Footer */}
         <div className="text-center text-xs text-muted-foreground">
           <p>Already have an account?{' '}
             <a 
-              href="/handler/sign-in" 
+              href="/sign-in" 
               className="text-primary hover:text-primary/80 underline transition-colors"
             >
               Sign in here

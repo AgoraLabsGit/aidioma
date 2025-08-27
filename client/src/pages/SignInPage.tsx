@@ -1,11 +1,11 @@
 import React from 'react'
-import { SignIn } from '@stackframe/stack'
+import { SignIn } from '@clerk/clerk-react'
 import { Logo } from '../components/Logo'
 import { Card } from '../components/ui/Card'
 
 /**
  * Custom Sign-In Page following AIdioma design standards
- * Uses Stack Auth components but wraps them in our design system
+ * Uses Clerk Auth components but wraps them in our design system
  */
 export default function SignInPage() {
   return (
@@ -23,16 +23,16 @@ export default function SignInPage() {
           </p>
         </div>
 
-        {/* Stack Auth Sign-In Component */}
+        {/* Clerk Auth Sign-In Component */}
         <Card className="p-6">
-          <SignIn />
+          <SignIn routing="hash" />
         </Card>
 
         {/* Footer */}
         <div className="text-center text-xs text-muted-foreground">
           <p>New to AIdioma?{' '}
             <a 
-              href="/handler/sign-up" 
+              href="/sign-up" 
               className="text-primary hover:text-primary/80 underline transition-colors"
             >
               Create an account
@@ -43,7 +43,7 @@ export default function SignInPage() {
         {/* System Status */}
         <div className="text-center text-xs text-muted-foreground space-y-1">
           <p>✅ Database: Neon PostgreSQL Connected</p>
-          <p>✅ Authentication: Stack Auth Ready</p>
+          <p>✅ Authentication: Clerk Ready</p>
         </div>
       </div>
     </div>

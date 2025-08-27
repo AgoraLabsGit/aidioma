@@ -3,11 +3,11 @@ import { Router, Route } from 'wouter'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Suspense } from 'react'
 import ErrorBoundary from './components/ErrorBoundary'
-// Import test component to isolate Stack Auth issues
-import TestStackAuth from './pages/TestStackAuth'
-// Temporarily disable auth pages to test for Stack Auth runtime errors
-// import SignInPage from './pages/SignInPage'
-// import SignUpPage from './pages/SignUpPage'
+// Import test component to verify Clerk auth
+import TestAuth from './pages/TestAuth'
+// Re-enable auth pages with Clerk
+import SignInPage from './pages/SignInPage'
+import SignUpPage from './pages/SignUpPage'
 // Temporarily comment out problematic pages with hook violations
 // import PracticePage from './pages/PracticePage'
 // import ReadingPage from './pages/ReadingPage'
@@ -88,14 +88,14 @@ function SafeWelcomePage() {
             href="/test-auth" 
             className="text-xs text-muted-foreground hover:text-foreground underline transition-colors"
           >
-            🔧 Test Stack Auth (Debug)
+            🔧 Test Clerk Auth (Debug)
           </a>
         </div>
 
         {/* System Status */}
         <div className="text-xs text-muted-foreground mt-8 space-y-1">
           <p>✅ Database: Connected to Neon PostgreSQL</p>
-          <p>⚠️ Authentication: Stack Auth (Testing)</p>
+          <p>✅ Authentication: Clerk Ready</p>
           <p>✅ Servers: Backend (3001) + Frontend (5001)</p>
         </div>
       </div>
@@ -135,8 +135,7 @@ function SafePlaceholderPage({ title, description }: { title: string; descriptio
   )
 }
 
-// Note: Auth pages temporarily disabled to resolve Stack Auth circular dependency issues
-// Will be re-enabled once Stack Auth is properly configured
+// Auth pages now enabled with Clerk authentication
 
 // Create a client
 const queryClient = new QueryClient({
@@ -163,11 +162,11 @@ function App() {
         }>
           <Router>
             <Route path="/" component={SafeWelcomePage} />
-            {/* Stack Auth Test Route */}
-            <Route path="/test-auth" component={TestStackAuth} />
-            {/* Authentication Routes (temporarily disabled due to Stack Auth runtime errors) */}
-            <Route path="/sign-in" component={() => <SafePlaceholderPage title="Sign In" description="Authentication temporarily disabled due to Stack Auth runtime errors" />} />
-            <Route path="/sign-up" component={() => <SafePlaceholderPage title="Sign Up" description="Authentication temporarily disabled due to Stack Auth runtime errors" />} />
+            {/* Clerk Auth Test Route */}
+            <Route path="/test-auth" component={TestAuth} />
+            {/* Authentication Routes */}
+            <Route path="/sign-in" component={SignInPage} />
+            <Route path="/sign-up" component={SignUpPage} />
             {/* Learning Pages (temporarily disabled due to hook violations) */}
             <Route path="/practice" component={() => <SafePlaceholderPage title="Practice Page" description="Practice Spanish translation with AI feedback" />} />
             <Route path="/reading" component={() => <SafePlaceholderPage title="Reading Page" description="Read Spanish texts with comprehension exercises" />} />

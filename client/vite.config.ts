@@ -25,7 +25,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'stack-auth': ['@stackframe/stack'],
+          'clerk-auth': ['@clerk/clerk-react'],
           'react-vendor': ['react', 'react-dom'],
           'query-vendor': ['@tanstack/react-query'],
           'router-vendor': ['wouter']
