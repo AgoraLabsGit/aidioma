@@ -15,9 +15,10 @@ The Progressive Hints System provides intelligent, multi-level hints that help u
 
 ### **Integration Points**
 - **Practice Page**: Word-level hints during sentence translation
-- **Text Page**: Clickable word hints during reading
-- **Analytics System**: Hint usage data for progress tracking
-- **Gamification System**: Point penalty calculations
+- **Reading Page**: Clickable word hints during reading comprehension
+- **Memorize Page**: Context hints for vocabulary flashcards
+- **Universal AI Service**: Integrated hint generation across all pages
+- **Simplified Database**: Hint usage tracked in learning_activities table
 
 ---
 
@@ -29,13 +30,13 @@ interface HintSystemManager {
   // Core hint delivery
   provideHint(wordKey: string, level: HintLevel, context: HintContext): Promise<HintResponse>
   
-  // Usage tracking
-  trackHintUsage(userId: string, sentenceId: number, wordKey: string, level: HintLevel): Promise<void>
+  // Universal tracking (works with simplified database)
+  trackHintUsage(userId: string, contentId: string, wordKey: string, level: HintLevel): Promise<void>
   
-  // Analytics
+  // Analytics from learning_activities table
   getHintAnalytics(userId: string, timeframe?: string): Promise<HintAnalytics>
   
-  // Independence scoring
+  // Independence scoring across all pages
   calculateIndependenceScore(userId: string): Promise<number>
 }
 ```
@@ -45,7 +46,8 @@ interface HintSystemManager {
 type HintLevel = 'basic' | 'intermediate' | 'complete'
 
 interface HintContext {
-  sentenceId: number
+  contentId: string           // Universal content ID from learning_content table
+  contentType: 'sentence' | 'text' | 'flashcard' | 'scenario'
   userLevel: number
   attemptCount: number
   timeSpent: number

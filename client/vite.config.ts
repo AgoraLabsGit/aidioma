@@ -20,5 +20,17 @@ export default defineConfig({
         changeOrigin: true
       }
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'stack-auth': ['@stackframe/stack'],
+          'react-vendor': ['react', 'react-dom'],
+          'query-vendor': ['@tanstack/react-query'],
+          'router-vendor': ['wouter']
+        }
+      }
+    }
   }
 })

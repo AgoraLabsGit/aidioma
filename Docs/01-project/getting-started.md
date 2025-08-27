@@ -18,10 +18,10 @@ git clone [repository-url]
 cd AIdioma.V1
 
 # Install dependencies
-npm install
+pnpm install
 
 # Start development
-npm run dev
+pnpm dev
 
 # Type check (run before debugging)
 npx tsc --noEmit --skipLibCheck
@@ -98,7 +98,7 @@ npx tsc --noEmit --skipLibCheck
 npm test
 
 # Start development server
-npm run dev
+pnpm dev
 ```
 
 Visit `http://localhost:3000` - you should see the AIdioma interface.
@@ -137,7 +137,7 @@ npx tsc --noEmit --skipLibCheck
 git pull origin main
 
 # Install any new dependencies
-npm install
+pnpm install
 ```
 
 ### **Creating New Features**

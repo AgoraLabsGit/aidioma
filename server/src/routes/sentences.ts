@@ -19,7 +19,11 @@ router.get('/', async (req, res) => {
     const conditions = [eq(sentences.isActive, true)]
     
     if (difficulty && difficulty !== 'all') {
-      conditions.push(eq(sentences.difficulty, difficulty as string))
+      // Type guard for difficulty enum values
+      const validDifficulties = ['beginner', 'intermediate', 'advanced'] as const
+      if (validDifficulties.includes(difficulty as any)) {
+        conditions.push(eq(sentences.difficulty, difficulty as typeof validDifficulties[number]))
+      }
     }
     
     if (category && category !== 'all') {

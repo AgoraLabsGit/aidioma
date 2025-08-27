@@ -7,7 +7,10 @@ interface DemoComponentProps {
 }
 
 export function DemoComponent({ userId }: DemoComponentProps) {
-  const { data: user, isLoading: userLoading, error: userError } = useUser(userId)
+  const userResult = useUser()
+  const user = userResult?.data
+  const userLoading = false // Stack Auth manages loading internally
+  const userError = null
   const { data: sentences, isLoading: sentencesLoading, error: sentencesError } = useSentencesForPractice({
     userId,
     targetLanguage: 'spanish'
@@ -27,7 +30,7 @@ export function DemoComponent({ userId }: DemoComponentProps) {
       <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
         <h3 className="font-semibold text-destructive mb-2">Error Loading Data</h3>
         <p className="text-sm text-muted-foreground">
-          {userError?.message || sentencesError?.message || 'An unexpected error occurred'}
+          {sentencesError?.message || 'An unexpected error occurred'}
         </p>
       </div>
     )

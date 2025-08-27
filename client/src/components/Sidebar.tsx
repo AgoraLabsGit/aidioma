@@ -9,6 +9,7 @@ import {
   Award,
   Settings
 } from 'lucide-react';
+import { UserButton } from '../hooks/useUser';
 import type { CurrentUser } from '../types';
 
 interface SidebarProps {
@@ -56,7 +57,7 @@ export default function Sidebar({ currentUser }: SidebarProps) {
         </ul>
       </nav>
 
-      {/* User Profile */}
+      {/* User Profile with Stack Auth */}
       <div className="p-4 border-t border-border">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-gray-200 text-sm font-semibold">
@@ -67,9 +68,10 @@ export default function Sidebar({ currentUser }: SidebarProps) {
             <div className="text-xs text-muted-foreground">Level {currentUser.level} • {currentUser.totalPoints} pts</div>
           </div>
         </div>
-        <button className="text-xs text-muted-foreground hover:text-foreground transition-colors block w-full text-center">
-          Sign Out
-        </button>
+        {/* ✅ REAL STACK AUTH USER BUTTON - Handles sign out, profile, settings */}
+        <div className="flex justify-center">
+          <UserButton />
+        </div>
       </div>
     </aside>
   );

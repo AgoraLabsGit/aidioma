@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useLocation } from 'wouter'
+import { useUser } from '../hooks/useUser'
 import type { CurrentUser } from '../types'
 import SharedSidebar from '../components/Sidebar'
 import { 
@@ -644,15 +645,23 @@ function ReadingContent({
 export default function ReadingPage() {
   const [location, setLocation] = useLocation()
   
-  // Page-specific state
-  const [currentUser] = useState<CurrentUser>({
-    id: 'reading-user-1',
-    name: 'Reading Learner',
-    email: 'user@example.com',
-    level: 'advanced',
-    totalPoints: 1560,
-    streakDays: 21
-  })
+  // ✅ REAL STACK AUTH INTEGRATION
+  const userAuth = useUser()
+  
+  // Redirect to sign-in if not authenticated
+  if (!userAuth) {
+    window.location.href = '/handler/sign-in'
+    return null
+  }
+
+  const currentUser: CurrentUser = {
+    id: userAuth.data.id,
+    name: userAuth.data.name,
+    email: userAuth.data.email,
+    level: userAuth.data.level || 'beginner',
+    totalPoints: userAuth.data.totalScore || 0,
+    streakDays: userAuth.data.streak || 0
+  }
 
   // Sample article content
   const articleContent = [

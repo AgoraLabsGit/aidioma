@@ -1,7 +1,6 @@
 ---
-alwaysApply: true
+alwaysApply: false
 ---
-
 # Development Workflow Standards (MANDATORY)
 
 ## Pre-Development Checklist (CRITICAL)

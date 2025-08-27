@@ -63,7 +63,7 @@ const api = {
           bestScore: 67,
           lastAttemptAt: new Date(),
           mastered: false,
-          averageScore: 0.67
+          averageScore: '0.67'
         }
       ]
     }

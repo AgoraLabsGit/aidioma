@@ -4,6 +4,7 @@ import { ChevronDown, Filter, Lightbulb, CheckCircle, AlertCircle, X } from 'luc
 import { ActionButtons, ProgressWheels } from '../components/ui'
 import { Logo } from '../components/Logo'
 import { usePracticeWorkflow } from '../hooks/usePractice'
+import { useUser } from '../hooks/useUser'
 import type { CurrentUser } from '../types'
 
 interface SentenceData {
@@ -360,16 +361,25 @@ function PracticeFilters({ isOpen, onToggle }: PracticeFiltersProps) {
 
 
 export default function PracticePage() {
-  const [currentUser] = useState<CurrentUser>({ 
-    id: 'demo-user', 
-    name: 'Demo User', 
-    email: 'demo@example.com',
-    level: 'beginner',
-    totalPoints: 150,
-    streakDays: 3
-  })
+  // ✅ REAL STACK AUTH INTEGRATION - Replace mock user with real authentication
+  const userAuth = useUser()
+  
+  // Redirect to sign-in if not authenticated
+  if (!userAuth) {
+    window.location.href = '/handler/sign-in'
+    return null
+  }
 
-  // ✅ REAL API INTEGRATION - Using actual backend
+  const currentUser: CurrentUser = {
+    id: userAuth.data.id,
+    name: userAuth.data.name,
+    email: userAuth.data.email,
+    level: userAuth.data.level || 'beginner',
+    totalPoints: userAuth.data.totalScore || 0,
+    streakDays: userAuth.data.streak || 0
+  }
+
+  // ✅ REAL API INTEGRATION - Using actual backend with real user ID
   const practiceWorkflow = usePracticeWorkflow(currentUser.id, 'spanish')
   
   const [userTranslation, setUserTranslation] = useState('')

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useLocation } from 'wouter'
+import { useUser } from '../hooks/useUser'
 import type { CurrentUser } from '../types'
 import { 
   Book, 
@@ -523,14 +524,23 @@ export default function ConversationsPage() {
   const [location, setLocation] = useLocation()
   
   // Page-specific state
-  const [currentUser] = useState<CurrentUser>({
-    id: 'conv-user-1',
-    name: 'Conversation Learner',
-    email: 'user@example.com',
-    level: 'beginner',
-    totalPoints: 200,
-    streakDays: 4
-  })
+  // ✅ REAL STACK AUTH INTEGRATION
+  const userAuth = useUser()
+  
+  // Redirect to sign-in if not authenticated
+  if (!userAuth) {
+    window.location.href = '/handler/sign-in'
+    return null
+  }
+
+  const currentUser: CurrentUser = {
+    id: userAuth.data.id,
+    name: userAuth.data.name,
+    email: userAuth.data.email,
+    level: userAuth.data.level || 'beginner',
+    totalPoints: userAuth.data.totalScore || 0,
+    streakDays: userAuth.data.streak || 0
+  }
 
   // Conversation settings state
   const [settings, setSettings] = useState({

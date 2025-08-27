@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SharedSidebar from '../components/Sidebar';
+import { useUser } from '../hooks/useUser';
 import type { CurrentUser } from '../types';
 import { 
   Award, 
@@ -196,14 +197,22 @@ function AchievementItem({ achievement }: { achievement: Achievement }) {
 
 // Main Progress Page Component
 export default function ProgressPage() {
-  // Mock current user data
+  // ✅ REAL STACK AUTH INTEGRATION
+  const userAuth = useUser()
+  
+  // Redirect to sign-in if not authenticated
+  if (!userAuth) {
+    window.location.href = '/handler/sign-in'
+    return null
+  }
+
   const currentUser: CurrentUser = {
-    id: 'progress-user-1',
-    name: 'Progress Learner',
-    email: 'learner@example.com',
-    level: 'intermediate',
-    totalPoints: 2347,
-    streakDays: 7
+    id: userAuth.data.id,
+    name: userAuth.data.name,
+    email: userAuth.data.email,
+    level: userAuth.data.level || 'beginner',
+    totalPoints: userAuth.data.totalScore || 0,
+    streakDays: userAuth.data.streak || 0
   };
 
   // Mock data - would come from your state management system
