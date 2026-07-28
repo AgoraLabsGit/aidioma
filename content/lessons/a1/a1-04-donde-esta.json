@@ -1,0 +1,749 @@
+{
+  "schemaVersion": 1,
+  "id": "a1-04-donde-esta",
+  "ordinal": 4,
+  "level": "A1",
+  "title": "¿Dónde está?",
+  "objective": "You can say where things and people are located and describe what a place contains.",
+  "grammarFocus": ["verb.estar", "verb.hay", "expression.place"],
+  "prerequisites": ["a1-03-que-haces"],
+  "explanation": {
+    "id": "a1-04.e.01",
+    "kind": "explanation",
+    "markdown": "Use **estar** to locate a specific person or thing: *La cocina está aquí* (\"The kitchen is here\") and *Las sillas están allí* (\"The chairs are there\"). Use **hay** to say what exists in a place: *Hay una mesa en la cocina* (\"There is a table in the kitchen\"). **Hay** stays the same with one thing or several things. Contrast the two: use *hay* to introduce something, then use *estar* when you locate that specific thing.",
+    "grammarTags": ["verb.estar", "verb.hay"]
+  },
+  "vocab": [
+    {
+      "id": "a1-04.v.estar",
+      "kind": "vocab",
+      "es": "estar",
+      "en": "to be (located)",
+      "acceptedEs": [],
+      "acceptedEn": ["to be located"],
+      "pos": "verb",
+      "exampleEs": "La casa está aquí.",
+      "exampleEn": "The house is here."
+    },
+    {
+      "id": "a1-04.v.hay",
+      "kind": "vocab",
+      "es": "hay",
+      "en": "there is / there are",
+      "acceptedEs": [],
+      "acceptedEn": [],
+      "pos": "verb",
+      "exampleEs": "Hay una mesa.",
+      "exampleEn": "There is a table."
+    },
+    {
+      "id": "a1-04.v.casa",
+      "kind": "vocab",
+      "es": "casa",
+      "en": "house / home",
+      "acceptedEs": ["hogar"],
+      "acceptedEn": [],
+      "pos": "noun",
+      "gender": "f",
+      "exampleEs": "La casa está aquí.",
+      "exampleEn": "The house is here."
+    },
+    {
+      "id": "a1-04.v.apartamento",
+      "kind": "vocab",
+      "es": "apartamento",
+      "en": "apartment",
+      "acceptedEs": ["departamento"],
+      "acceptedEn": [],
+      "pos": "noun",
+      "gender": "m",
+      "exampleEs": "El apartamento está allí.",
+      "exampleEn": "The apartment is over there."
+    },
+    {
+      "id": "a1-04.v.mesa",
+      "kind": "vocab",
+      "es": "mesa",
+      "en": "table",
+      "acceptedEs": [],
+      "acceptedEn": [],
+      "pos": "noun",
+      "gender": "f",
+      "exampleEs": "Hay una mesa en la cocina.",
+      "exampleEn": "There is a table in the kitchen."
+    },
+    {
+      "id": "a1-04.v.silla",
+      "kind": "vocab",
+      "es": "silla",
+      "en": "chair",
+      "acceptedEs": [],
+      "acceptedEn": [],
+      "pos": "noun",
+      "gender": "f",
+      "exampleEs": "La silla está aquí.",
+      "exampleEn": "The chair is here."
+    },
+    {
+      "id": "a1-04.v.cocina",
+      "kind": "vocab",
+      "es": "cocina",
+      "en": "kitchen",
+      "acceptedEs": [],
+      "acceptedEn": [],
+      "pos": "noun",
+      "gender": "f",
+      "exampleEs": "La mesa está en la cocina.",
+      "exampleEn": "The table is in the kitchen."
+    },
+    {
+      "id": "a1-04.v.bano",
+      "kind": "vocab",
+      "es": "baño",
+      "en": "bathroom",
+      "acceptedEs": [],
+      "acceptedEn": ["restroom"],
+      "pos": "noun",
+      "gender": "m",
+      "exampleEs": "El baño está allí.",
+      "exampleEn": "The bathroom is over there."
+    },
+    {
+      "id": "a1-04.v.cuarto",
+      "kind": "vocab",
+      "es": "cuarto",
+      "en": "room / bedroom",
+      "acceptedEs": ["habitación"],
+      "acceptedEn": [],
+      "pos": "noun",
+      "gender": "m",
+      "exampleEs": "Hay una ventana en el cuarto.",
+      "exampleEn": "There is a window in the room."
+    },
+    {
+      "id": "a1-04.v.ventana",
+      "kind": "vocab",
+      "es": "ventana",
+      "en": "window",
+      "acceptedEs": [],
+      "acceptedEn": [],
+      "pos": "noun",
+      "gender": "f",
+      "exampleEs": "La ventana está sobre la mesa.",
+      "exampleEn": "The window is above the table."
+    },
+    {
+      "id": "a1-04.v.puerta",
+      "kind": "vocab",
+      "es": "puerta",
+      "en": "door",
+      "acceptedEs": [],
+      "acceptedEn": [],
+      "pos": "noun",
+      "gender": "f",
+      "exampleEs": "La puerta está allí.",
+      "exampleEn": "The door is over there."
+    },
+    {
+      "id": "a1-04.v.aqui",
+      "kind": "vocab",
+      "es": "aquí",
+      "en": "here",
+      "acceptedEs": ["acá"],
+      "acceptedEn": [],
+      "pos": "adv",
+      "exampleEs": "La silla está aquí.",
+      "exampleEn": "The chair is here."
+    },
+    {
+      "id": "a1-04.v.alli",
+      "kind": "vocab",
+      "es": "allí",
+      "en": "there / over there",
+      "acceptedEs": ["allá"],
+      "acceptedEn": [],
+      "pos": "adv",
+      "exampleEs": "El baño está allí.",
+      "exampleEn": "The bathroom is over there."
+    },
+    {
+      "id": "a1-04.v.sobre",
+      "kind": "vocab",
+      "es": "sobre",
+      "en": "on / above",
+      "acceptedEs": ["encima de"],
+      "acceptedEn": ["on top of"],
+      "pos": "other",
+      "exampleEs": "La ventana está sobre la mesa.",
+      "exampleEn": "The window is above the table."
+    },
+    {
+      "id": "a1-04.v.debajo-de",
+      "kind": "vocab",
+      "es": "debajo de",
+      "en": "under / below",
+      "acceptedEs": ["bajo"],
+      "acceptedEn": ["underneath"],
+      "pos": "phrase",
+      "exampleEs": "La silla está debajo de la mesa.",
+      "exampleEn": "The chair is under the table."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "a1-04.s.01",
+      "kind": "sentence",
+      "es": "La casa está aquí.",
+      "en": "The house is here.",
+      "acceptedEs": ["Aquí está la casa.", "La casa está acá.", "Acá está la casa."],
+      "acceptedEn": ["The home is here."],
+      "grammarTags": ["verb.estar", "expression.place"],
+      "vocabRefs": ["a1-04.v.casa", "a1-04.v.estar", "a1-04.v.aqui"],
+      "difficulty": 1,
+      "hints": [
+        "Locate one specific place rather than describing what it is.",
+        "Use the third-person singular form of *estar*, then the nearby-place word.",
+        "*La casa está ___* — finish with the word for a nearby place."
+      ],
+      "flashcard": { "eligible": true }
+    },
+    {
+      "id": "a1-04.s.02",
+      "kind": "sentence",
+      "es": "En la cocina hay una mesa y una silla.",
+      "en": "There's a table and a chair in the kitchen.",
+      "acceptedEs": [
+        "Hay una mesa y una silla en la cocina.",
+        "En la cocina hay una silla y una mesa.",
+        "Hay una silla y una mesa en la cocina."
+      ],
+      "acceptedEn": ["There is a table and a chair in the kitchen.", "The kitchen has a table and a chair."],
+      "grammarTags": ["verb.hay", "expression.place"],
+      "vocabRefs": ["a1-04.v.cocina", "a1-04.v.hay", "a1-04.v.mesa", "a1-04.v.silla"],
+      "difficulty": 2,
+      "hints": [
+        "Introduce two things that exist in one room.",
+        "Start with the room phrase, then use the unchanged existence word before the two objects.",
+        "*En la cocina hay una mesa y una ___* — add the other piece of furniture."
+      ]
+    },
+    {
+      "id": "a1-04.s.03",
+      "kind": "sentence",
+      "es": "El baño está allí.",
+      "en": "The bathroom is over there.",
+      "acceptedEs": ["Allí está el baño.", "El baño está allá.", "Allá está el baño."],
+      "acceptedEn": ["The bathroom is there.", "The restroom is over there."],
+      "grammarTags": ["verb.estar", "expression.place"],
+      "vocabRefs": ["a1-04.v.bano", "a1-04.v.estar", "a1-04.v.alli"],
+      "difficulty": 1,
+      "hints": [
+        "Point to the location of one specific room.",
+        "Use masculine singular article + the room, then third-person *estar* and the farther-place word.",
+        "*El baño está ___* — finish with the place word that contrasts with *aquí*."
+      ],
+      "flashcard": { "eligible": true }
+    },
+    {
+      "id": "a1-04.s.04",
+      "kind": "sentence",
+      "es": "En el cuarto hay una puerta y una ventana.",
+      "en": "There's a door and a window in the room.",
+      "acceptedEs": [
+        "Hay una puerta y una ventana en el cuarto.",
+        "En el cuarto hay una ventana y una puerta.",
+        "Hay una ventana y una puerta en el cuarto."
+      ],
+      "acceptedEn": ["There is a door and a window in the room.", "The room has a door and a window."],
+      "grammarTags": ["verb.hay", "expression.place"],
+      "vocabRefs": ["a1-04.v.cuarto", "a1-04.v.hay", "a1-04.v.puerta", "a1-04.v.ventana"],
+      "difficulty": 2,
+      "hints": [
+        "Say what two things exist in the room.",
+        "Place the room first, then use the single existence form before both feminine nouns.",
+        "*En el cuarto hay una puerta y una ___* — add the opening that lets in light."
+      ]
+    },
+    {
+      "id": "a1-04.s.05",
+      "kind": "sentence",
+      "es": "En el apartamento, la cocina está aquí y el baño está allí.",
+      "en": "In the apartment, the kitchen is here and the bathroom is there.",
+      "acceptedEs": [
+        "En el apartamento, el baño está allí y la cocina está aquí.",
+        "La cocina está aquí en el apartamento y el baño está allí.",
+        "En el apartamento, la cocina está acá y el baño está allá."
+      ],
+      "acceptedEn": ["In the apartment, the kitchen is here and the bathroom is over there."],
+      "grammarTags": ["verb.estar", "expression.place"],
+      "vocabRefs": [
+        "a1-04.v.apartamento",
+        "a1-04.v.cocina",
+        "a1-04.v.estar",
+        "a1-04.v.aqui",
+        "a1-04.v.bano",
+        "a1-04.v.alli"
+      ],
+      "difficulty": 4,
+      "hints": [
+        "Locate two specific rooms in contrasting places.",
+        "Use *está* for each singular room, joining the two locations with 'and.'",
+        "*En el apartamento, la cocina está aquí y el baño está ___* — complete the contrast."
+      ]
+    },
+    {
+      "id": "a1-04.s.06",
+      "kind": "sentence",
+      "es": "La mesa está debajo de la ventana y la silla está aquí.",
+      "en": "The table is under the window, and the chair is here.",
+      "acceptedEs": [
+        "Debajo de la ventana está la mesa y aquí está la silla.",
+        "La silla está aquí y la mesa está debajo de la ventana.",
+        "Aquí está la silla y debajo de la ventana está la mesa.",
+        "La mesa está bajo la ventana y la silla está acá."
+      ],
+      "acceptedEn": ["The table is below the window, and the chair is here.", "The chair is here, and the table is under the window."],
+      "grammarTags": ["verb.estar", "expression.place"],
+      "vocabRefs": [
+        "a1-04.v.mesa",
+        "a1-04.v.estar",
+        "a1-04.v.debajo-de",
+        "a1-04.v.ventana",
+        "a1-04.v.silla",
+        "a1-04.v.aqui"
+      ],
+      "difficulty": 4,
+      "hints": [
+        "Locate two specific pieces by relating one to the window and one to the speaker.",
+        "Use *estar* twice; the first place phrase means 'under,' and the second means 'here.'",
+        "*La mesa está debajo de la ventana y la silla está ___* — add the nearby-place word."
+      ]
+    },
+    {
+      "id": "a1-04.s.07",
+      "kind": "sentence",
+      "es": "Hay una cocina y un baño en el apartamento.",
+      "en": "There's a kitchen and a bathroom in the apartment.",
+      "acceptedEs": [
+        "En el apartamento hay una cocina y un baño.",
+        "Hay un baño y una cocina en el apartamento.",
+        "En el apartamento hay un baño y una cocina."
+      ],
+      "acceptedEn": ["There is a kitchen and a bathroom in the apartment.", "The apartment has a kitchen and a bathroom."],
+      "grammarTags": ["verb.hay", "expression.place"],
+      "vocabRefs": ["a1-04.v.hay", "a1-04.v.cocina", "a1-04.v.bano", "a1-04.v.apartamento"],
+      "difficulty": 2,
+      "hints": [
+        "Introduce two rooms that exist in the apartment.",
+        "Use the unchanged existence word before one feminine room and one masculine room.",
+        "*Hay una cocina y un ___ en el apartamento* — fill in the masculine room."
+      ]
+    },
+    {
+      "id": "a1-04.s.08",
+      "kind": "sentence",
+      "es": "La ventana está sobre la mesa y la puerta está allí.",
+      "en": "The window is above the table, and the door is there.",
+      "acceptedEs": [
+        "Sobre la mesa está la ventana y allí está la puerta.",
+        "La puerta está allí y la ventana está sobre la mesa.",
+        "Allí está la puerta y sobre la mesa está la ventana.",
+        "La ventana está encima de la mesa y la puerta está allá."
+      ],
+      "acceptedEn": ["The window is over the table, and the door is there.", "The door is there, and the window is above the table."],
+      "grammarTags": ["verb.estar", "expression.place"],
+      "vocabRefs": [
+        "a1-04.v.ventana",
+        "a1-04.v.estar",
+        "a1-04.v.sobre",
+        "a1-04.v.mesa",
+        "a1-04.v.puerta",
+        "a1-04.v.alli"
+      ],
+      "difficulty": 4,
+      "hints": [
+        "Locate two specific things with two different place expressions.",
+        "Use *estar* twice: one thing is above the table, and the other is farther away.",
+        "*La ventana está sobre la mesa y la puerta está ___* — finish with the distant-place word."
+      ]
+    },
+    {
+      "id": "a1-04.s.09",
+      "kind": "sentence",
+      "es": "¿El baño está allí?",
+      "en": "Is the bathroom over there?",
+      "acceptedEs": ["¿Está allí el baño?", "¿El baño está allá?", "¿Está allá el baño?"],
+      "acceptedEn": ["Is the bathroom there?", "Is the restroom over there?"],
+      "grammarTags": ["verb.estar", "expression.place", "question.formation"],
+      "vocabRefs": ["a1-04.v.bano", "a1-04.v.estar", "a1-04.v.alli"],
+      "difficulty": 2,
+      "hints": [
+        "Ask a yes-or-no question about one specific room's location.",
+        "Spanish can keep statement order and use question punctuation around the location sentence.",
+        "*¿El baño está ___?* — complete it with the farther-place word."
+      ]
+    },
+    {
+      "id": "a1-04.s.10",
+      "kind": "sentence",
+      "es": "¿Hay una mesa y una silla en la cocina?",
+      "en": "Is there a table and a chair in the kitchen?",
+      "acceptedEs": [
+        "¿En la cocina hay una mesa y una silla?",
+        "¿Hay una silla y una mesa en la cocina?",
+        "¿En la cocina hay una silla y una mesa?"
+      ],
+      "acceptedEn": ["Are there a table and a chair in the kitchen?", "Does the kitchen have a table and a chair?"],
+      "grammarTags": ["verb.hay", "expression.place", "question.formation"],
+      "vocabRefs": ["a1-04.v.hay", "a1-04.v.mesa", "a1-04.v.silla", "a1-04.v.cocina"],
+      "difficulty": 3,
+      "hints": [
+        "Ask whether two things exist in one room.",
+        "Keep the existence form unchanged, even though two objects follow it.",
+        "*¿Hay una mesa y una ___ en la cocina?* — add the other piece of furniture."
+      ]
+    },
+    {
+      "id": "a1-04.s.11",
+      "kind": "sentence",
+      "es": "El señor está en la casa.",
+      "en": "The man is in the house.",
+      "acceptedEs": ["Él está en la casa.", "Está en la casa.", "En la casa está el señor."],
+      "acceptedEn": ["The gentleman is in the house.", "The man is in the home."],
+      "grammarTags": ["verb.estar", "expression.place", "pronoun.subject"],
+      "vocabRefs": ["a1-01.v.senor", "a1-04.v.estar", "a1-04.v.casa"],
+      "difficulty": 3,
+      "hints": [
+        "Locate a specific person inside a place.",
+        "Use the masculine article and person word, then third-person *estar* plus the house phrase.",
+        "*El señor está en la ___* — finish with the feminine place."
+      ]
+    },
+    {
+      "id": "a1-04.s.12",
+      "kind": "sentence",
+      "es": "Las señoras están aquí en el apartamento.",
+      "en": "The ladies are here in the apartment.",
+      "acceptedEs": [
+        "Aquí están las señoras en el apartamento.",
+        "Ellas están aquí en el apartamento.",
+        "Están aquí en el apartamento.",
+        "Las señoras están acá en el apartamento."
+      ],
+      "acceptedEn": ["The women are here in the apartment."],
+      "grammarTags": ["verb.estar", "expression.place", "pronoun.subject", "agreement.gender-number"],
+      "vocabRefs": ["a1-01.v.senora", "a1-04.v.estar", "a1-04.v.aqui", "a1-04.v.apartamento"],
+      "difficulty": 3,
+      "hints": [
+        "Locate more than one woman in a nearby place.",
+        "Use the plural feminine article and noun, then the plural form of *estar*.",
+        "*Las señoras están aquí en el ___* — add the masculine place."
+      ]
+    },
+    {
+      "id": "a1-04.s.13",
+      "kind": "sentence",
+      "es": "No hay mesa ni silla en el baño.",
+      "en": "There is no table or chair in the bathroom.",
+      "acceptedEs": [
+        "En el baño no hay mesa ni silla.",
+        "No hay silla ni mesa en el baño.",
+        "En el baño no hay silla ni mesa."
+      ],
+      "acceptedEn": ["There's no table or chair in the bathroom.", "There isn't a table or chair in the bathroom."],
+      "grammarTags": ["verb.hay", "expression.place", "negation"],
+      "vocabRefs": ["a1-04.v.hay", "a1-04.v.mesa", "a1-04.v.silla", "a1-04.v.bano"],
+      "difficulty": 3,
+      "hints": [
+        "Say that neither of two objects exists in the room.",
+        "Put the negative before the existence word and join the two absent nouns with 'nor.'",
+        "*No hay mesa ni ___ en el baño* — add the second absent object."
+      ]
+    },
+    {
+      "id": "a1-04.s.14",
+      "kind": "sentence",
+      "es": "La puerta no está aquí; está allí.",
+      "en": "The door isn't here; it's there.",
+      "acceptedEs": [
+        "La puerta está allí, no aquí.",
+        "La puerta no está acá; está allá.",
+        "Allí está la puerta, no aquí.",
+        "La puerta está allá y no acá."
+      ],
+      "acceptedEn": ["The door is not here; it is there.", "The door isn't here; it's over there."],
+      "grammarTags": ["verb.estar", "expression.place", "negation"],
+      "vocabRefs": ["a1-04.v.puerta", "a1-04.v.estar", "a1-04.v.aqui", "a1-04.v.alli"],
+      "difficulty": 3,
+      "hints": [
+        "Deny one location, then give the contrasting location.",
+        "Use the negative before *estar* in the first clause; the second clause drops the repeated subject.",
+        "*La puerta no está aquí; está ___* — complete the contrast."
+      ]
+    },
+    {
+      "id": "a1-04.s.15",
+      "kind": "sentence",
+      "es": "En la casa hay un cuarto, una cocina y un baño.",
+      "en": "The house has a room, a kitchen, and a bathroom.",
+      "acceptedEs": [
+        "Hay un cuarto, una cocina y un baño en la casa.",
+        "En la casa hay una cocina, un baño y un cuarto.",
+        "Hay un baño, un cuarto y una cocina en la casa."
+      ],
+      "acceptedEn": ["There is a room, a kitchen, and a bathroom in the house.", "There are a room, a kitchen, and a bathroom in the house."],
+      "grammarTags": ["verb.hay", "expression.place", "article"],
+      "vocabRefs": ["a1-04.v.casa", "a1-04.v.hay", "a1-04.v.cuarto", "a1-04.v.cocina", "a1-04.v.bano"],
+      "difficulty": 4,
+      "hints": [
+        "List three rooms that the house contains.",
+        "Place the house first, then use the unchanged existence word before the three gendered nouns.",
+        "*En la casa hay un cuarto, una cocina y un ___* — add the final masculine room."
+      ]
+    },
+    {
+      "id": "a1-04.s.16",
+      "kind": "sentence",
+      "es": "La ventana está sobre la mesa, pero la silla está debajo de la mesa.",
+      "en": "The window is above the table, but the chair is under the table.",
+      "acceptedEs": [
+        "Sobre la mesa está la ventana, pero debajo de la mesa está la silla.",
+        "La silla está debajo de la mesa, pero la ventana está sobre la mesa.",
+        "Debajo de la mesa está la silla, pero sobre la mesa está la ventana.",
+        "La ventana está encima de la mesa, pero la silla está bajo la mesa."
+      ],
+      "acceptedEn": ["The window is over the table, but the chair is below the table.", "The window is above the table, but the chair is underneath it."],
+      "grammarTags": ["verb.estar", "expression.place"],
+      "vocabRefs": [
+        "a1-04.v.ventana",
+        "a1-04.v.estar",
+        "a1-04.v.sobre",
+        "a1-04.v.mesa",
+        "a1-04.v.silla",
+        "a1-04.v.debajo-de"
+      ],
+      "difficulty": 5,
+      "hints": [
+        "Contrast two locations relative to the same table.",
+        "Use *estar* in both clauses; the window takes the upper relation and the chair the lower one.",
+        "*La ventana está sobre la mesa, pero la silla está ___ de la mesa* — supply the lower-place word."
+      ]
+    },
+    {
+      "id": "a1-04.s.17",
+      "kind": "sentence",
+      "es": "¿La señora está aquí o allí?",
+      "en": "Is the lady here or there?",
+      "acceptedEs": [
+        "¿Está la señora aquí o allí?",
+        "¿Ella está aquí o allí?",
+        "¿Está aquí o allí?",
+        "¿La señora está acá o allá?"
+      ],
+      "acceptedEn": ["Is the woman here or there?", "Is the lady here or over there?"],
+      "grammarTags": ["verb.estar", "expression.place", "question.formation"],
+      "vocabRefs": ["a1-01.v.senora", "a1-04.v.estar", "a1-04.v.aqui", "a1-04.v.alli"],
+      "difficulty": 3,
+      "hints": [
+        "Ask which of two contrasting places contains the woman.",
+        "Keep the singular location verb and join the two place words with 'or.'",
+        "*¿La señora está aquí o ___?* — complete the place contrast."
+      ]
+    },
+    {
+      "id": "a1-04.s.18",
+      "kind": "sentence",
+      "es": "¿Hay una ventana sobre la mesa y una puerta allí?",
+      "en": "Is there a window above the table and a door over there?",
+      "acceptedEs": [
+        "¿Sobre la mesa hay una ventana y allí hay una puerta?",
+        "¿Hay una puerta allí y una ventana sobre la mesa?",
+        "¿Allí hay una puerta y sobre la mesa hay una ventana?",
+        "¿Hay una ventana encima de la mesa y una puerta allá?"
+      ],
+      "acceptedEn": ["Is there a window over the table and a door there?"],
+      "grammarTags": ["verb.hay", "expression.place", "question.formation"],
+      "vocabRefs": [
+        "a1-04.v.hay",
+        "a1-04.v.ventana",
+        "a1-04.v.sobre",
+        "a1-04.v.mesa",
+        "a1-04.v.puerta",
+        "a1-04.v.alli"
+      ],
+      "difficulty": 4,
+      "hints": [
+        "Ask whether two things exist in two different locations.",
+        "Use the unchanged existence word once, then attach one place phrase to each object.",
+        "*¿Hay una ventana sobre la mesa y una puerta ___?* — finish with the distant-place word."
+      ]
+    },
+    {
+      "id": "a1-04.s.19",
+      "kind": "sentence",
+      "es": "El apartamento es bonito, pero la cocina está allí y el baño está aquí.",
+      "en": "The apartment is nice, but the kitchen is there and the bathroom is here.",
+      "acceptedEs": [
+        "El apartamento es bonito, pero el baño está aquí y la cocina está allí.",
+        "Es bonito el apartamento, pero la cocina está allá y el baño está acá.",
+        "El apartamento es lindo, pero la cocina está allí y el baño está aquí.",
+        "La cocina está allí y el baño está aquí, pero el apartamento es bonito."
+      ],
+      "acceptedEn": ["The apartment is pretty, but the kitchen is over there and the bathroom is here.", "The apartment is nice, but the bathroom is here and the kitchen is there."],
+      "grammarTags": ["verb.estar", "expression.place", "verb.ser", "agreement.gender-number"],
+      "vocabRefs": [
+        "a1-04.v.apartamento",
+        "a1-02.v.bonito",
+        "a1-04.v.cocina",
+        "a1-04.v.estar",
+        "a1-04.v.alli",
+        "a1-04.v.bano",
+        "a1-04.v.aqui"
+      ],
+      "difficulty": 5,
+      "hints": [
+        "Describe the apartment, then contrast the locations of two rooms.",
+        "Use *ser* for the quality and *estar* twice for the two locations.",
+        "*El apartamento es bonito, pero la cocina está allí y el baño está ___* — finish the contrast."
+      ]
+    },
+    {
+      "id": "a1-04.s.20",
+      "kind": "sentence",
+      "es": "Aquí hay una casa, pero el apartamento está allí.",
+      "en": "There is a house here, but the apartment is over there.",
+      "acceptedEs": [
+        "Hay una casa aquí, pero el apartamento está allí.",
+        "El apartamento está allí, pero aquí hay una casa.",
+        "Acá hay una casa, pero el apartamento está allá.",
+        "El apartamento está allá, pero hay una casa acá."
+      ],
+      "acceptedEn": ["There's a house here, but the apartment is over there.", "There is a house here, but the apartment is there."],
+      "grammarTags": ["verb.hay", "verb.estar", "expression.place"],
+      "vocabRefs": ["a1-04.v.aqui", "a1-04.v.hay", "a1-04.v.casa", "a1-04.v.apartamento", "a1-04.v.estar", "a1-04.v.alli"],
+      "difficulty": 4,
+      "hints": [
+        "Introduce one nearby place, then locate a different specific place farther away.",
+        "Use the existence word in the first clause and third-person *estar* in the second.",
+        "*Aquí hay una casa, pero el apartamento está ___* — complete the contrast."
+      ]
+    }
+  ],
+  "passage": {
+    "id": "a1-04.p.01",
+    "kind": "passage",
+    "title": "Un apartamento",
+    "segments": [
+      {
+        "id": "a1-04.p.01.01",
+        "es": "El apartamento está aquí.",
+        "en": ["The apartment is here."],
+        "vocabRefs": ["a1-04.v.apartamento", "a1-04.v.estar", "a1-04.v.aqui"]
+      },
+      {
+        "id": "a1-04.p.01.02",
+        "es": "Hay una cocina y un baño en el apartamento.",
+        "en": ["There is a kitchen and a bathroom in the apartment.", "The apartment has a kitchen and a bathroom."],
+        "vocabRefs": ["a1-04.v.hay", "a1-04.v.cocina", "a1-04.v.bano", "a1-04.v.apartamento"]
+      },
+      {
+        "id": "a1-04.p.01.03",
+        "es": "La mesa y la silla están en la cocina.",
+        "en": ["The table and chair are in the kitchen.", "The table and the chair are in the kitchen."],
+        "vocabRefs": ["a1-04.v.mesa", "a1-04.v.silla", "a1-04.v.estar", "a1-04.v.cocina"]
+      },
+      {
+        "id": "a1-04.p.01.04",
+        "es": "La ventana está sobre la mesa.",
+        "en": ["The window is above the table.", "The window is over the table."],
+        "vocabRefs": ["a1-04.v.ventana", "a1-04.v.estar", "a1-04.v.sobre", "a1-04.v.mesa"]
+      },
+      {
+        "id": "a1-04.p.01.05",
+        "es": "La puerta está allí, en el cuarto.",
+        "en": ["The door is over there, in the room.", "The door is there in the room."],
+        "vocabRefs": ["a1-04.v.puerta", "a1-04.v.estar", "a1-04.v.alli", "a1-04.v.cuarto"]
+      },
+      {
+        "id": "a1-04.p.01.06",
+        "es": "No hay mesa ni silla en el baño.",
+        "en": ["There is no table or chair in the bathroom.", "There isn't a table or chair in the bathroom."],
+        "vocabRefs": ["a1-04.v.hay", "a1-04.v.mesa", "a1-04.v.silla", "a1-04.v.bano"]
+      }
+    ]
+  },
+  "conversation": {
+    "id": "a1-04.c.01",
+    "kind": "conversation",
+    "scenario": "Finding rooms and furniture in a new apartment",
+    "personaPrompt": "You are Camila showing the learner a small apartment. Speak only in short present-tense Spanish sentences using this lesson's housing vocab, estar, hay, and simple place expressions plus prior greetings. Use tú with the learner, no slang, no vosotros, and ask one short location question at a time.",
+    "openingLine": "Hola. ¿Dónde está la cocina?",
+    "openingLineGloss": "Hi. Where is the kitchen?",
+    "goalPhrases": [
+      "La cocina está aquí",
+      "Hay una mesa en la cocina",
+      "El baño está allí",
+      "La silla está debajo de la mesa"
+    ],
+    "vocabRefs": [
+      "a1-01.v.hola",
+      "a1-04.v.cocina",
+      "a1-04.v.estar",
+      "a1-04.v.aqui",
+      "a1-04.v.hay",
+      "a1-04.v.mesa",
+      "a1-04.v.bano",
+      "a1-04.v.alli",
+      "a1-04.v.silla",
+      "a1-04.v.debajo-de"
+    ]
+  },
+  "quickChecks": [
+    {
+      "id": "a1-04.q.01",
+      "kind": "multipleChoice",
+      "prompt": "La mesa ___ en la cocina.",
+      "choices": ["está", "es", "hay", "están"],
+      "correctIndex": 0,
+      "explanation": "Use está to locate one specific table.",
+      "grammarTags": ["verb.estar"],
+      "vocabRefs": ["a1-04.v.mesa", "a1-04.v.estar", "a1-04.v.cocina"],
+      "difficulty": 2
+    },
+    {
+      "id": "a1-04.q.02",
+      "kind": "multipleChoice",
+      "prompt": "___ una silla en el cuarto.",
+      "choices": ["Hay", "Está", "Es", "Están"],
+      "correctIndex": 0,
+      "explanation": "Use hay to introduce something that exists in a place.",
+      "grammarTags": ["verb.hay"],
+      "vocabRefs": ["a1-04.v.hay", "a1-04.v.silla", "a1-04.v.cuarto"],
+      "difficulty": 2
+    },
+    {
+      "id": "a1-04.q.03",
+      "kind": "multipleChoice",
+      "prompt": "La silla está ___ la mesa. (under)",
+      "choices": ["debajo de", "sobre", "en", "allí"],
+      "correctIndex": 0,
+      "explanation": "Debajo de places the chair under the table.",
+      "grammarTags": ["expression.place"],
+      "vocabRefs": ["a1-04.v.silla", "a1-04.v.estar", "a1-04.v.debajo-de", "a1-04.v.mesa"],
+      "difficulty": 2
+    },
+    {
+      "id": "a1-04.q.04",
+      "kind": "multipleChoice",
+      "prompt": "In the reading, what is in the bathroom?",
+      "passageRef": "a1-04.p.01.06",
+      "choices": ["No table or chair", "A table and a chair", "A window", "A kitchen"],
+      "correctIndex": 0,
+      "explanation": "The reading says that there is no table or chair in the bathroom.",
+      "grammarTags": [],
+      "vocabRefs": ["a1-04.v.bano", "a1-04.v.mesa", "a1-04.v.silla"],
+      "difficulty": 2
+    }
+  ],
+  "contentVersion": 1
+}

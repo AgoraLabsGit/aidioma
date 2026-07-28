@@ -19,7 +19,7 @@
  * exercise coverage. Plus a green baseline on the real corpus.
  */
 
-import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname, resolve as resolvePath } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
@@ -34,6 +34,13 @@ const TMP_ROOT = join(HERE, '.gen');
 
 type Lesson = any;
 const loadBase = (slug: string): Lesson => JSON.parse(readFileSync(join(LESSONS, `${slug}.json`), 'utf8'));
+// Keep the green control aligned with the immutable-ID snapshot as the canonical corpus grows.
+// A hard-coded lesson list turns every newly snapshotted lesson into a false SNAPSHOT_MISSING failure.
+const loadCorpus = (): Lesson[] =>
+  readdirSync(LESSONS)
+    .filter((name) => name.endsWith('.json'))
+    .sort()
+    .map((name) => JSON.parse(readFileSync(join(LESSONS, name), 'utf8')));
 const clone = (o: unknown): any => JSON.parse(JSON.stringify(o));
 
 interface RunResult {
@@ -112,7 +119,7 @@ function main() {
 
   /* ---- Baseline: real corpus is green (control) ---- */
   {
-    const res = runValidate(tmp('baseline'), [a1(), a2(), loadBase('a1-03-que-haces')]);
+    const res = runValidate(tmp('baseline'), loadCorpus());
     check('baseline: real corpus has ZERO errors', res.exitCode === 0 && !res.findings.some((f) => f.severity === 'ERROR'));
   }
 

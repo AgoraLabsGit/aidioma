@@ -91,3 +91,23 @@ Decisions and dispatch history for the Lesson Plan agent (coordinator). Newest e
   five documented a1-01 entry-lesson warnings); `npm run contract:smoke` PASS (13); `npm run
   content:fixtures` PASS (18/18); `npm run prototype:check` PASS. OI-025 is ready for coordinator
   status closure; a1-04 drafting has not started.
+
+## 2026-07-28 — C2-1 a1-04 draft
+
+- **a1-04-donde-esta drafted to L1-PASS:** original neutral-LatAm lesson with 15 vocab items,
+  20 sentences, a six-segment apartment tour, one conversation seed, four quick checks, and no
+  reference card (the compact primary-focus explanation already supplies the useful study contrast).
+  Grammar coverage: `verb.estar` 13 sentences, `verb.hay` 8, and `expression.place` 20; difficulty
+  spans 1–5. Both-direction pre-flight: every vocab item has explicit accept arrays, every sentence
+  has 3–4 Spanish alternates and at least one reviewed English alternate.
+- **Validation/snapshot:** focused a1-04 validation PASS (0 errors / 0 warnings); full four-lesson
+  corpus PASS (0 errors; only five existing a1-01 entry-lesson warnings). The approved green-run
+  snapshot flow appended 49 immutable IDs. contentVersion is 1.
+- **Review boundary:** author pre-flight only. Independent L2 QA remains PENDING and will be assigned
+  separately; no QA verdict or prototype generated artifact was authored in this step.
+- **Gate evidence:** content typecheck PASS; focused validation PASS (0/0); full validation PASS
+  (0 errors); contract smoke PASS (13); fixtures PASS (18/18). Snapshot growth exposed that the
+  fixture control had hard-coded lessons 1–3; with coordinator authorization, its baseline now
+  discovers every canonical lesson JSON so it stays aligned with the immutable snapshot. The
+  read-only prototype freshness check fails only because `apps/prototype/lesson-data.js` does not yet
+  include a1-04; that generated app artifact is intentionally left for coordinator integration.
