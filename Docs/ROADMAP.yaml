@@ -254,21 +254,21 @@ waves:
   - id: C2
     lane: Content
     title: Mass-draft the remaining 9 launch lessons (a1-04..a1-12)
-    status: parked
+    status: active
     operator_sees: "All 12 launch lessons drafted, validated, and QA-passed - playable in the prototype/app."
-    park_reason: "Operator paused (2026-07-23). Un-pause trigger = operator's explicit go, AFTER A0 closes (esp. A0-3 schema rulings P-003/04/05)."
-    depends_on: ["A0-3 (schema rulings)", "operator go"]
+    depends_on: ["A0-3 (schema rulings)", "operator go (given 2026-07-28)"]
     slices:
       - id: C2-1
         title: Draft + gate a1-04..a1-12
-        status: parked
+        status: active
         summary: >
-          One Opus agent per lesson (draft-prompt + curriculum-map row + style guide + prior
-          lessons' vocab) -> validator 0 err -> adversarial L2 QA -> fix loop -> REVIEW-LOG.
-          Target: all 12 A1 lessons through layer 2.
+          First complete OI-025: backfill P-003 accept sets in a1-01..03, make validator check 5
+          understand setId, and reconcile Both-direction guidance. Then draft one lesson at a time
+          from the prompt + curriculum row + style guide + prior vocab -> validator 0 err ->
+          adversarial L2 QA -> fix loop -> REVIEW-LOG. Target: all 12 A1 lessons through layer 2.
       - id: C2-H
         title: Hygiene slice (mandatory)
-        status: parked
+        status: pending
         summary: "reconcile REVIEW-LOG, snapshot, SCHEMA-NOTES; re-export prototype data"
 
   - id: C3

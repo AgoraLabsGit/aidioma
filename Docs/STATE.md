@@ -3,7 +3,7 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-28 (A0 Design Close closed; next calls are C2 and A1)
+**Updated:** 2026-07-28 (C2 opened; A1 approval is the remaining kickoff call)
 
 ## Position
 
@@ -13,14 +13,15 @@
 - **A1 is pending and may now be opened.** `apps/web/` is still README-only; no app code yet.
 - No remote or first commit exists, so A0 produced no commit/push.
 
-**Lane C — Content (PARKED)**
-- C1 proven. C2 waits A0 close + formal OI-023 go. OI-025 = P-003 + Both-direction prep.
-- Operator intent (2026-07-28): **GO on C2 after A0** — keep wordfreq checks; no top-N deck now.
+**Lane C — Content (ACTIVE: C2-1)**
+- C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
+- OI-025 is the mandatory first gate: P-003 accept sets + `setId` validation + Both-direction guidance.
+- After OI-025 proves, draft and independently L2-QA a1-04…a1-12. Keep wordfreq lesson checks; no top-N deck now.
 
 ## Next
-1. New-session coordinator handoff: `Docs/Handoffs/003-2026-07-28-a1-c2-parallel-kickoff.md`.
-2. Establish the local Git baseline, then formally un-pause C2 with OI-025 first.
-3. Open A1 and run it beside C2; never push without wave-close GO.
+1. Local A0 baseline exists at `5d81ba8`; no remote/push configured.
+2. Run OI-025 as C2-1's first bounded content change.
+3. Present the A1 briefing, then open A1 and run it beside C2 if approved; never push without wave-close GO.
 
 ## Standing decisions (highlights)
 - A1-first · vocab 12–15 / sentences 18–20 · Completed/Mastered · Direction default Both.

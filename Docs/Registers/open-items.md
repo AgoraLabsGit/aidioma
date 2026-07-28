@@ -10,11 +10,11 @@
 | ID | Item | Why deferred / context | Owner or trigger | Status |
 |---|---|---|---|---|
 | OI-025 | **C2 contract prep:** P-003 vocab accept-set backfill on a1-01/02/03; validator check-5 `setId` partition; reconcile curriculum/style/draft/validator guidance from EN→ES-priority to ADR-0005 **Both** | P-003 approval + later A0 direction ruling left content/tooling follow-through; found in A0-H because the content lane was parked when ADR-0005 landed | Content hygiene before C2 drafting | open |
-| OI-023 | **Content lane un-pause**: give or withhold the go for wave C2 (mass-draft a1-04…a1-12) | Trigger: A0 closes + operator explicit go. **Intent 2026-07-28: GO** (wordfreq for lesson checks; frequency decks stay PM-015 — not now) | A0 close | open |
 
 ## Closed
 | ID | Item | Settled | Where |
 |---|---|---|---|
+| OI-023 | **Content lane un-pause**: wave C2 (mass-draft a1-04…a1-12) | 2026-07-28 **GO**, with OI-025 contract prep first; keep wordfreq lesson checks; frequency decks remain PM-015 | [ROADMAP.yaml](../ROADMAP.yaml) C2; [C2-1 wave record](../Waves/C2-1-draft-launch-lessons.md) |
 | OI-022 | **Panel recs triage**: 7 locked in ADRs; W1 metric → PM-014; “10 vocab” superseded by ADR-0003 (12–15); EN→ES-only superseded by ADR-0005 (Both). No reopen. | 2026-07-28 | ADRs 0003–0010; [post-mvp.md](post-mvp.md) PM-014 |
 | OI-021 | **SessionEngine**: Continue = full Mix arc; Blend/Review = size-10; weights = weakness × staleness × tag/saved boosts; three recipes only | 2026-07-28 | [session-engine.md](../Specs/Areas/session-engine.md); Consensus §1.3 |
 | OI-020 | **DB model** confirmed: lessons/items, sessions, evaluations (+ modality/direction/sessionId), item stats, lesson progress, saved_items, users dailyGoal+timezone; no evaluationCache | 2026-07-28; legacy audit completed missing session fact | [data-model.md](../Specs/Areas/data-model.md); ADR-0013 |
