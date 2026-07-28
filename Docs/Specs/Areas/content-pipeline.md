@@ -29,12 +29,16 @@ updated: 2026-07-28
 
 Schema parse → cross-file validator → immutable-ID snapshot → adversarial L2 QA → founder L3 →
 paid native L4 for launch lessons. Current commands live in root `package.json` and ROADMAP.
+GitHub Content CI runs the deterministic contract, validator, fixture, prototype-current, and seed
+transformation tests whenever their direct inputs change; it requires no database credentials.
 
 ## App consumption
 
-At A1, `content:seed` reads the shared schema, upserts `lessons`/`lesson_items`, and stores
-`contentVersion` + hash. Only active authored items are served. The DB is a serving copy; JSON in
-`content/lessons/` is canonical.
+`npm run content:seed` validates the corpus, applies only pending checksum-protected SQL migrations,
+then reads the shared schema and upserts `lessons` by slug plus `lesson_items` by immutable ID. It
+stores `contentVersion` + deterministic content hash, never deletes missing rows, never revives a
+deprecated item, and rejects item reparenting. Future serving queries must select only active
+non-deprecated items. The DB is a serving copy; JSON in `content/lessons/` is canonical.
 
 ## Deferred pipeline work
 

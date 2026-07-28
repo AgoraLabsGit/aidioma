@@ -20,12 +20,16 @@ updated: 2026-07-28
 - **Auth:** Clerk's Next.js SDK. **Data:** Neon Postgres through the server-only Neon serverless
   driver + Drizzle ORM boundary frozen in A1-1. Connection construction is lazy so builds and
   zero-data public shell routes do not require credentials.
+- **Deployment baseline:** Vercel project `agoralabs/aidioma` tracks `AgoraLabsGit/aidioma`, uses
+  `apps/web` as its Next.js root on Node 22.x, and has the free `aidioma-db` Neon resource connected
+  for development, preview, and production. Clerk production keys remain a separate operator setup.
 - AI calls, database credentials, reviewed answer sets, thresholds, and `correctIndex` remain on the
   authenticated server. Web and future native clients consume learner-safe APIs only.
 
 ## Shared application boundary
 
-- `@aidioma/lesson-schema` remains the authored-content contract.
+- `@aidioma/lesson-schema` remains the authored-content contract and is now a direct web-workspace
+  dependency built before app typecheck, lint, tests, and production builds.
 - Add shared pure-TypeScript packages only when used: domain logic (comparison/session/proficiency)
   and API request/result schemas. Clients may share contracts and logic, not secrets or server data.
 - Keep client UI platform-appropriate; do not force web and native screens into one component tree.

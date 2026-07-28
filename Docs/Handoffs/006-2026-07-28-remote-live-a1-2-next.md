@@ -1,7 +1,7 @@
 ---
 title: Handoff — Remote live; A1-2 and a1-05 next
 type: handoff
-status: active
+status: superseded
 updated: 2026-07-28
 ---
 

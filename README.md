@@ -31,7 +31,7 @@ operating rules live in `CLAUDE.md`; the full machine is `Docs/PROCESS.md`. The 
 ## Where things live
 
 - `Docs/` — application-design and process SSOT, including specs, decisions, registers, and history.
-- `apps/web/` — reserved production app home; A1 will scaffold it after A0 closes.
+- `apps/web/` — responsive Next.js production app, linked to Vercel and Neon.
 - `apps/prototype/` — temporary static design reference, retired after the real A4 flow replaces it.
 - `packages/lesson-schema/` — shared executable lesson/app contract.
 - `content/` — authored lessons, curriculum, style, reviews, and content-lane working records.

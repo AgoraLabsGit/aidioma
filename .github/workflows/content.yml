@@ -1,0 +1,59 @@
+name: Content CI
+
+on:
+  pull_request:
+    paths:
+      - "content/**"
+      - "packages/lesson-schema/**"
+      - "tooling/content/**"
+      - "tooling/prototype/**"
+      - "tooling/tsconfig.json"
+      - "apps/prototype/lesson-data.js"
+      - "apps/web/drizzle/**"
+      - "apps/web/scripts/content-seed.ts"
+      - "apps/web/scripts/db-migrate.ts"
+      - "apps/web/src/lib/content/**"
+      - "apps/web/src/lib/db/**"
+      - "apps/web/package.json"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/content.yml"
+  push:
+    branches: [main]
+    paths:
+      - "content/**"
+      - "packages/lesson-schema/**"
+      - "tooling/content/**"
+      - "tooling/prototype/**"
+      - "tooling/tsconfig.json"
+      - "apps/prototype/lesson-data.js"
+      - "apps/web/drizzle/**"
+      - "apps/web/scripts/content-seed.ts"
+      - "apps/web/scripts/db-migrate.ts"
+      - "apps/web/src/lib/content/**"
+      - "apps/web/src/lib/db/**"
+      - "apps/web/package.json"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/content.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.2
+          cache: npm
+      - run: npm ci
+      - run: npm run content:typecheck
+      - run: npm run content:validate
+      - run: npm run contract:smoke
+      - run: npm run content:fixtures
+      - run: npm run prototype:check
+      - run: npm run app:test -- --run src/lib/content/seed.test.ts src/lib/db/migrations.test.ts
