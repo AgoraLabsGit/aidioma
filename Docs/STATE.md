@@ -3,15 +3,15 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-28 (C2 opened; A1 approval is the remaining kickoff call)
+**Updated:** 2026-07-28 (A1 and C2 opened in parallel)
 
 ## Position
 
-**Lane A — App (greenfield Next.js, not yet scaffolded)**
+**Lane A — App (ACTIVE: A1-1)**
 - **A0 Design Close CLOSED.** Operator gave design VERIFIED + close GO on 2026-07-28.
 - A0-1…A0-H proven: design, legacy review, Docs SSOT, archive, and directory cleanup complete.
-- **A1 is pending and may now be opened.** `apps/web/` is still README-only; no app code yet.
-- No remote or first commit exists, so A0 produced no commit/push.
+- Operator approved A1 on 2026-07-28. A1-1 now scaffolds the real responsive Next.js shell with Clerk, Neon, Vercel boundaries, and app gates.
+- Local A0 baseline exists; no remote or push is configured.
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
@@ -19,9 +19,9 @@
 - After OI-025 proves, draft and independently L2-QA a1-04…a1-12. Keep wordfreq lesson checks; no top-N deck now.
 
 ## Next
-1. Local A0 baseline exists at `5d81ba8`; no remote/push configured.
-2. Run OI-025 as C2-1's first bounded content change.
-3. Present the A1 briefing, then open A1 and run it beside C2 if approved; never push without wave-close GO.
+1. Run A1-1 and C2's OI-025 preparation in parallel with non-overlapping ownership.
+2. Integrate root workspace/gates centrally, audit both lane diffs, and record proof.
+3. Continue C2 drafting only after OI-025 proves; never push without wave-close GO.
 
 ## Standing decisions (highlights)
 - A1-first · vocab 12–15 / sentences 18–20 · Completed/Mastered · Direction default Both.

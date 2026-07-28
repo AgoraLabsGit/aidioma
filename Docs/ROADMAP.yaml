@@ -35,11 +35,11 @@ verify:
     validate:  "npm run content:validate"
     smoke:     "npm run contract:smoke && npm run content:fixtures && npm run prototype:check"
   app:
-    typecheck: "TBD - set in wave A1 (app not yet scaffolded)"
-    lint:      "TBD - set in wave A1"
-    test:      "TBD - set in wave A1"
-    build:     "TBD - set in wave A1"
-    smoke:     "TBD - headless end-to-end PASS/FAIL script, once one exists"
+    typecheck: "npm run app:typecheck"
+    lint:      "npm run app:lint"
+    test:      "npm run app:test"
+    build:     "npm run app:build"
+    smoke:     "npm run app:smoke"
 
 # ============================================================================================
 # LANE A - THE APP
@@ -105,7 +105,7 @@ waves:
   - id: A1
     lane: App
     title: Scaffold the app + freeze shared contracts (consensus W1)
-    status: pending
+    status: active
     operator_sees: >
       A running Next.js app shell, deployed and live (blank but real), and `content:seed` loading
       the real authored lessons into Neon.
@@ -113,7 +113,7 @@ waves:
     slices:
       - id: A1-1
         title: Fresh Next.js repo scaffold
-        status: pending
+        status: active
         summary: "Greenfield Next.js on Vercel; wire Neon + Clerk; set the app-lane verify: gates. Delivers feature 1 foundation."
       - id: A1-2
         title: Freeze shared contracts + content CI/seed
