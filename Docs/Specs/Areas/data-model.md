@@ -8,7 +8,7 @@ updated: 2026-07-28
 # Data model — greenfield tables
 
 > A0-4 / OI-020, completed by the legacy/SSOT audit. This is the application data-model SSOT.
-> Scaffold shared content tables in A1 and user/session/evaluation tables in A3.
+> Shared content tables were migrated and proven in A1-2; user/session/evaluation tables follow in A3.
 
 ## Confirmed tables
 
@@ -59,6 +59,8 @@ never persist provider secrets or hidden answer sets in client-visible session s
 
 - JSON lessons/items are canonical; database rows are idempotent serving copies keyed by immutable IDs.
 - Seed updates content/version/hash, never deletes an authored ID, and excludes `deprecated=true` items from new sessions.
+- Applied SQL files are journaled transactionally with checksums; editing or removing an applied migration fails closed.
+- Lesson ordinals are unique at transaction commit (deferred so valid swaps work), and a database trigger rejects moving an authored item ID between lessons.
 - User-owned tables cascade from user deletion. Authored item deletion is forbidden; historical evaluations remain addressable.
 - Server resolves grading inputs from active versioned items; browser requests never supply expected answers.
 

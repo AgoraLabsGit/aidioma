@@ -14,6 +14,10 @@ mode when no key is present. Production builds without both Clerk keys show a se
 of initializing Clerk. The database client is created only when server code calls `getDatabase()`,
 so `DATABASE_URL` is not required for typecheck, test, build, or shell smoke gates.
 
+From the repository root, `npm run content:seed` validates canonical JSON, applies pending
+checksum-protected migrations, and idempotently upserts lessons/items into Neon. It requires
+`DATABASE_URL` in `apps/web/.env.local`; repeating it must report zero changed rows.
+
 ## Gates
 
 - `npm run typecheck`

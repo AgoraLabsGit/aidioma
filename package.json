@@ -21,6 +21,8 @@
     "content:typecheck": "npm run contract:build --silent && tsc -p tooling/tsconfig.json --noEmit",
     "content:validate": "npm run contract:build --silent && tsx tooling/content/validate.ts content/lessons",
     "content:fixtures": "npm run contract:build --silent && tsx tooling/content/fixtures/run-fixtures.ts",
+    "db:migrate": "node --env-file-if-exists=apps/web/.env.local --import tsx apps/web/scripts/db-migrate.ts",
+    "content:seed": "npm run content:validate --silent && npm run db:migrate --silent && node --env-file-if-exists=apps/web/.env.local --import tsx apps/web/scripts/content-seed.ts",
     "prototype:export": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts",
     "prototype:check": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts --check"
   },

@@ -3,16 +3,19 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-28 (A1-1R proven; C2 a1-04 L2-passed)
+**Updated:** 2026-07-28 (A1-2 proven; C2 a1-04 L2-passed)
 
 ## Position
 
-**Lane A — App (ACTIVE: A1-2 next)**
+**Lane A — App (ACTIVE: A1-H next)**
 - **A0 Design Close CLOSED.** Operator gave design VERIFIED + close GO on 2026-07-28.
 - A0-1…A0-H proven: design, legacy review, Docs SSOT, archive, and directory cleanup complete.
 - A1-1R is proven: the four responsive screens now use the approved prototype shell, tokens, density, and navigation with truthful zero states.
 - Proof covers 16 route/theme/viewport states, axe, keyboard focus, reduced motion, 200% text, exact route state, and no horizontal overflow.
-- A1-2 shared-contract import plus idempotent Neon content seed follows the UI correction.
+- A1-2 is proven: the web app imports the shared contract; Content CI is live; checksum-journaled
+  SQL and the idempotent seed loaded 4 canonical lessons / 134 items into real Neon with zero-change reruns.
+- Vercel `agoralabs/aidioma` tracks the public GitHub repo at `apps/web` on Node 22.x; free Neon is
+  attached across environments. Production Clerk keys and an initial deployment remain operator setup.
 - OI-026 tracks unpatched upstream Next/ESLint dependency advisories before deployment.
 - Fresh public remote `AgoraLabsGit/aidioma` is live; proven `main` was pushed on 2026-07-28 for Vercel/Neon setup.
 
@@ -23,9 +26,10 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Link `AgoraLabsGit/aidioma` to Vercel and provide the Neon `DATABASE_URL` for real seed proof.
-2. Start A1-2 while C2 drafts and independently L2-QAs a1-05.
-3. Keep both lanes isolated; merge only after deterministic gates, audit/re-QA, and proof. Never push without wave-close GO.
+1. Run A1-H residue/dependency/spec reconciliation, then prepare A1 for `/close`.
+2. Continue C2 with a1-05 through validator zero errors and independent L2 PASS.
+3. Add both Clerk keys plus the four route variables before production auth/deployment verification.
+4. Keep both lanes isolated; never push without wave-close GO.
 
 ## Standing decisions (highlights)
 - A1-first · vocab 12–15 / sentences 18–20 · Completed/Mastered · Direction default Both.

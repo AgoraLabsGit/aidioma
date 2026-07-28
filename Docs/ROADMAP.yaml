@@ -124,7 +124,7 @@ waves:
           components while retaining truthful zero states and all settled A0 behavior.
       - id: A1-2
         title: Freeze shared contracts + content CI/seed
-        status: pending
+        status: proven
         summary: "Import @aidioma/lesson-schema as the shared contract (no redeclaration); content CI; idempotent `content:seed` upsert to Neon keyed by slug; Lesson 0 migration. Features 1, 13."
       - id: A1-H
         title: Hygiene slice (mandatory)

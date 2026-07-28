@@ -2,14 +2,20 @@
   "name": "@aidioma/web",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "engines": {
     "node": ">=22.22.2"
   },
   "scripts": {
+    "contract:build": "npm run build --workspace @aidioma/lesson-schema",
+    "prebuild": "npm run contract:build",
     "dev": "next dev",
     "start": "next start",
+    "pretypecheck": "npm run contract:build",
     "typecheck": "next typegen && tsc --noEmit",
+    "prelint": "npm run contract:build",
     "lint": "eslint . --max-warnings=0",
+    "pretest": "npm run contract:build",
     "test": "vitest run",
     "test:watch": "vitest",
     "build": "next build",
@@ -18,6 +24,7 @@
     "smoke:install": "playwright install chromium"
   },
   "dependencies": {
+    "@aidioma/lesson-schema": "*",
     "@clerk/nextjs": "^7.6.2",
     "@neondatabase/serverless": "^1.1.0",
     "drizzle-orm": "^0.45.2",

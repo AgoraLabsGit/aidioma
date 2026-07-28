@@ -8,6 +8,7 @@ import {
   timestamp,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
+import type { GrammarTag, ItemKind } from "@aidioma/lesson-schema";
 
 export const lessons = pgTable(
   "lessons",
@@ -18,7 +19,7 @@ export const lessons = pgTable(
     level: text("level").notNull(),
     title: text("title").notNull(),
     objective: text("objective").notNull(),
-    grammarFocus: jsonb("grammar_focus").$type<readonly string[]>().notNull(),
+    grammarFocus: jsonb("grammar_focus").$type<GrammarTag[]>().notNull(),
     contentVersion: integer("content_version").notNull(),
     contentHash: text("content_hash").notNull(),
     isActive: boolean("is_active").notNull().default(true),
@@ -38,9 +39,9 @@ export const lessonItems = pgTable(
     lessonId: text("lesson_id")
       .notNull()
       .references(() => lessons.id, { onDelete: "restrict" }),
-    kind: text("kind").notNull(),
+    kind: text("kind").$type<ItemKind>().notNull(),
     payload: jsonb("payload").$type<Record<string, unknown>>().notNull(),
-    grammarTags: jsonb("grammar_tags").$type<readonly string[]>().notNull(),
+    grammarTags: jsonb("grammar_tags").$type<GrammarTag[]>().notNull(),
     difficulty: integer("difficulty"),
     contentVersion: integer("content_version").notNull(),
     deprecated: boolean("deprecated").notNull().default(false),
