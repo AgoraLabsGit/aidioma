@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 
 import { AppShell } from "@/components/app-shell";
 import { AuthBoundary } from "@/components/auth-boundary";
+import { ThemeProvider } from "@/components/theme-provider";
 
 import "./globals.css";
 
@@ -16,18 +17,20 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   colorScheme: "light dark",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f4efe6" },
-    { media: "(prefers-color-scheme: dark)", color: "#171512" },
+    { media: "(prefers-color-scheme: light)", color: "#efece3" },
+    { media: "(prefers-color-scheme: dark)", color: "#0c0e11" },
   ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <AuthBoundary>
-          <AppShell>{children}</AppShell>
-        </AuthBoundary>
+        <ThemeProvider>
+          <AuthBoundary>
+            <AppShell>{children}</AppShell>
+          </AuthBoundary>
+        </ThemeProvider>
       </body>
     </html>
   );

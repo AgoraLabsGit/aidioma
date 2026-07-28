@@ -58,6 +58,10 @@ Goal **slider** · theme (Auto/Light/Dark) · reset data. **No** reminder/notifi
 
 ## Experience + visual contract
 
+Implementation status (A1-1R, 2026-07-28): the componentized Next.js shell now implements this
+contract for Home, Lessons, Practice, and Settings at responsive phone and desktop sizes. Screens
+show truthful first-run state; lesson activity behavior and persistence still begin in A1-2+.
+
 - **`apps/prototype/index.html` is the implementation baseline for visual styling and spatial
   layout.** Port its tokens, proportions, compact density, left-rail desktop shell, mobile tab bar,
   card/list treatments, and Practice composer into the Next.js app exactly before refining them.

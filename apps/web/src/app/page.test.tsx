@@ -1,36 +1,44 @@
 import { render, screen } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { AppShell } from "@/components/app-shell";
 
 import HomePage from "./page";
 
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/",
+}));
+
 expect.extend(toHaveNoViolations);
 
 describe("HomePage", () => {
-  it("renders truthful first-run values", () => {
+  it("renders the canonical first lesson with truthful first-run values", () => {
     render(<HomePage />);
 
+    expect(screen.getByRole("heading", { name: "Hola." })).toBeInTheDocument();
+    expect(screen.getAllByText("0")).toHaveLength(3);
+    expect(screen.getByText("0 due")).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Buenos días." }),
+      screen.getByText("Lesson 1 · Hola: greetings and introducing yourself"),
     ).toBeInTheDocument();
-    expect(screen.getByText("0 days")).toBeInTheDocument();
-    expect(screen.getAllByText("0")).toHaveLength(2);
-    expect(screen.getByText("0 of 50 points")).toBeInTheDocument();
     expect(
-      screen.getByText("No sample progress has been added for you.", {
-        exact: false,
-      }),
+      screen.getByText("No weak areas yet", { exact: true }),
     ).toBeInTheDocument();
+
+    expect(screen.queryByText("Hola, Mike")).not.toBeInTheDocument();
+    expect(screen.queryByText("47")).not.toBeInTheDocument();
+    expect(screen.queryByText("23")).not.toBeInTheDocument();
+    expect(screen.queryByText("58%", { exact: false })).not.toBeInTheDocument();
   });
 
-  it("has no detectable axe violations", async () => {
+  it("has no detectable axe violations in the application shell", async () => {
     const { container } = render(
       <AppShell>
         <HomePage />
       </AppShell>,
     );
+
     expect(await axe(container)).toHaveNoViolations();
   });
 });

@@ -23,3 +23,6 @@ so `DATABASE_URL` is not required for typecheck, test, build, or shell smoke gat
 - `npm run smoke` (requires a prior production build and installed Playwright Chromium)
 
 `npm run smoke:install` installs only the Chromium binary used by the headless smoke check.
+`npm run references` refreshes the 16 light/dark phone/desktop prototype reference screenshots;
+the smoke gate saves matching application screenshots and verifies the shared token and geometry
+contract against those references.

@@ -1,21 +1,44 @@
 import { chromium } from "@playwright/test";
 import axeCore from "axe-core";
 import { spawn } from "node:child_process";
-import { access, mkdir } from "node:fs/promises";
+import { access, mkdir, readdir, stat, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { createServer } from "node:net";
 import path from "node:path";
 import process from "node:process";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const appDirectory = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
+const repositoryRoot = path.resolve(appDirectory, "../..");
 const nextBuild = path.join(appDirectory, ".next", "BUILD_ID");
 const require = createRequire(import.meta.url);
 const nextBinary = require.resolve("next/dist/bin/next");
-const resultsDirectory = path.join(appDirectory, "artifacts");
-const screenshotPath = path.join(resultsDirectory, "a1-shell-mobile.png");
+const resultsDirectory = path.join(appDirectory, "artifacts/a1-1r");
+const appScreenshotsDirectory = path.join(resultsDirectory, "app");
+const prototypeScreenshotsDirectory = path.join(resultsDirectory, "prototype");
+const visualContractPath = path.join(resultsDirectory, "visual-contract.json");
+const prototypeUrl = pathToFileURL(
+  path.join(repositoryRoot, "apps/prototype/index.html"),
+).href;
 const port = await reserveSmokePort(process.env.AIDIOMA_SMOKE_PORT);
 const baseUrl = `http://127.0.0.1:${port}`;
+
+const routes = [
+  { id: "home", heading: "Hola.", path: "/", prototypeLabel: "Home" },
+  { id: "lessons", heading: "Lessons", path: "/lessons", prototypeLabel: "Lessons" },
+  {
+    id: "practice",
+    heading: "Your first activity will appear here.",
+    path: "/practice",
+    prototypeLabel: "Practice",
+  },
+  { id: "settings", heading: "Settings", path: "/settings", prototypeLabel: "Settings" },
+];
+
+const viewports = [
+  { id: "mobile", width: 390, height: 844 },
+  { id: "desktop", width: 1440, height: 900 },
+];
 
 async function reserveSmokePort(requestedPort) {
   const preferredPort = requestedPort === undefined ? 0 : Number(requestedPort);
@@ -38,12 +61,38 @@ async function reserveSmokePort(requestedPort) {
   });
 }
 
-async function requireBuild() {
-  try {
-    await access(nextBuild);
-  } catch {
+async function newestModificationTime(target) {
+  const targetStat = await stat(target);
+  if (!targetStat.isDirectory()) return targetStat.mtimeMs;
+
+  const entries = await readdir(target, { withFileTypes: true });
+  const times = await Promise.all(
+    entries.map((entry) => newestModificationTime(path.join(target, entry.name))),
+  );
+  return Math.max(targetStat.mtimeMs, ...times);
+}
+
+async function requireBuildAndReferences() {
+  await access(nextBuild).catch(() => {
     throw new Error("No production build found. Run `npm run build` before `npm run smoke`.");
+  });
+  const [buildStat, latestSourceTime] = await Promise.all([
+    stat(nextBuild),
+    Promise.all([
+      newestModificationTime(path.join(appDirectory, "src")),
+      newestModificationTime(path.join(appDirectory, "next.config.ts")),
+      newestModificationTime(path.join(appDirectory, "package.json")),
+      newestModificationTime(path.join(repositoryRoot, "package-lock.json")),
+    ]).then((times) => Math.max(...times)),
+  ]);
+  if (latestSourceTime > buildStat.mtimeMs) {
+    throw new Error("Production build is stale. Run `npm run build` before `npm run smoke`.");
   }
+  await access(path.join(prototypeScreenshotsDirectory, "home-mobile-dark.png")).catch(() => {
+    throw new Error(
+      "Prototype references are missing. Run `node scripts/capture-prototype-references.mjs` first.",
+    );
+  });
 }
 
 async function waitForServer(server, serverError, timeoutMs = 30_000) {
@@ -76,17 +125,143 @@ async function assertAccessible(page, label) {
   if (results.violations.length > 0) {
     throw new Error(
       `${label} has accessibility violations: ${results.violations
-        .map((item) => `${item.id} (${item.impact ?? "unknown"})`)
+        .map(
+          (item) =>
+            `${item.id} (${item.impact ?? "unknown"}) at ${item.nodes
+              .map((node) => node.target.join(" "))
+              .join(" | ")}`,
+        )
         .join(", ")}.`,
     );
   }
 }
 
 async function assertNoHorizontalOverflow(page, label) {
-  const overflows = await page.evaluate(
-    () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
-  );
-  if (overflows) throw new Error(`${label} overflows horizontally.`);
+  const result = await page.evaluate(() => {
+    const viewportWidth = document.documentElement.clientWidth;
+    const pageOverflows = document.documentElement.scrollWidth > viewportWidth + 1;
+    const offenders = [...document.querySelectorAll("body *")]
+      .filter((element) => {
+        const style = getComputedStyle(element);
+        if (style.display === "none" || style.visibility === "hidden") return false;
+        const bounds = element.getBoundingClientRect();
+        return bounds.left < -1 || bounds.right > viewportWidth + 1;
+      })
+      .slice(0, 5)
+      .map((element) => `${element.tagName.toLowerCase()}.${element.className}`);
+    return { offenders, pageOverflows };
+  });
+
+  if (result.pageOverflows || result.offenders.length > 0) {
+    throw new Error(`${label} overflows horizontally: ${result.offenders.join(", ")}.`);
+  }
+}
+
+async function captureVisualMetrics(page, kind, routeId) {
+  return page.evaluate(({ targetKind, targetRoute }) => {
+    const root = getComputedStyle(document.documentElement);
+    const canvasSelector = targetKind === "app" ? ".app-canvas" : "#app";
+    const railSelector =
+      targetKind === "app"
+        ? window.innerWidth >= 880
+          ? ".desktop-sidebar"
+          : ".mobile-tab-bar"
+        : "#tabbar";
+    const cardSelectors = {
+      app: {
+        home: ".continue-card",
+        lessons: ".current-level > summary",
+        practice: ".explainer-row",
+        settings: ".settings-card",
+      },
+      prototype: {
+        home: ".continue",
+        lessons: ".lvl.current > summary",
+        practice: ".learncard",
+        settings: "#settings .card",
+      },
+    };
+    const cardSelector = cardSelectors[targetKind][targetRoute];
+    const canvas = document.querySelector(canvasSelector)?.getBoundingClientRect();
+    const rail = document.querySelector(railSelector)?.getBoundingClientRect();
+    const card = document.querySelector(cardSelector)?.getBoundingClientRect();
+
+    const token = (appName, prototypeName) =>
+      root.getPropertyValue(targetKind === "app" ? appName : prototypeName).trim();
+
+    return {
+      geometry: {
+        canvasWidth: Math.round(canvas?.width ?? 0),
+        cardWidth: Math.round(card?.width ?? 0),
+        railWidth: Math.round(rail?.width ?? 0),
+      },
+      tokens: {
+        accent: token("--accent", "--accent"),
+        background: token("--bg", "--bg"),
+        border: token("--border", "--line"),
+        card: token("--card", "--card"),
+        panel: token("--panel", "--panel"),
+      },
+    };
+  }, { targetKind: kind, targetRoute: routeId });
+}
+
+function assertVisualContract(appMetrics, prototypeMetrics, label) {
+  const normalizeColor = (value) =>
+    /^#[0-9a-f]{3}$/i.test(value)
+      ? `#${value
+          .slice(1)
+          .split("")
+          .map((character) => `${character}${character}`)
+          .join("")}`.toLowerCase()
+      : value.toLowerCase();
+
+  for (const [name, value] of Object.entries(prototypeMetrics.tokens)) {
+    if (normalizeColor(appMetrics.tokens[name]) !== normalizeColor(value)) {
+      throw new Error(
+        `${label} token ${name} differs: app ${appMetrics.tokens[name]}, prototype ${value}.`,
+      );
+    }
+  }
+
+  for (const name of ["canvasWidth", "cardWidth", "railWidth"]) {
+    if (Math.abs(appMetrics.geometry[name] - prototypeMetrics.geometry[name]) > 1) {
+      throw new Error(
+        `${label} ${name} differs: app ${appMetrics.geometry[name]}, prototype ${prototypeMetrics.geometry[name]}.`,
+      );
+    }
+  }
+}
+
+async function assertKeyboardFocus(page) {
+  await page.keyboard.press("Tab");
+  const focusedClass = await page.locator(":focus").getAttribute("class");
+  if (focusedClass !== "skip-link") {
+    throw new Error("Skip link is not the first keyboard focus target.");
+  }
+  const focusOutline = await page.locator(":focus").evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { style: style.outlineStyle, width: style.outlineWidth };
+  });
+  if (focusOutline.style === "none" || focusOutline.width === "0px") {
+    throw new Error("Keyboard focus indicator is not visible.");
+  }
+
+  await page.keyboard.press("Enter");
+  if ((await page.locator(":focus").getAttribute("id")) !== "main-content") {
+    throw new Error("Skip link did not move focus to main content.");
+  }
+}
+
+async function assertThemeControl(page) {
+  await page.getByRole("button", { name: "Dark", exact: true }).click();
+  await page.locator('html[data-theme="dark"]').waitFor();
+  await page.getByRole("button", { name: "Auto", exact: true }).click();
+  await page.locator('html[data-theme="light"]').waitFor();
+  const storedTheme = await page.evaluate(() => localStorage.getItem("aidioma-theme"));
+  if (storedTheme !== "system") {
+    throw new Error(`Theme control stored ${storedTheme}; expected system for Auto.`);
+  }
 }
 
 async function stopServer(server) {
@@ -105,8 +280,8 @@ async function stopServer(server) {
 }
 
 async function run() {
-  await requireBuild();
-  await mkdir(resultsDirectory, { recursive: true });
+  await requireBuildAndReferences();
+  await mkdir(appScreenshotsDirectory, { recursive: true });
 
   const environment = { ...process.env, PORT: String(port) };
   delete environment.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
@@ -129,61 +304,120 @@ async function run() {
   });
 
   let browser;
+  const visualEvidence = [];
   try {
     await waitForServer(server, () => serverError.trim());
     browser = await chromium.launch({ headless: true });
-    const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
-    await page.goto(baseUrl, { waitUntil: "networkidle" });
-    await page.getByRole("heading", { name: "Buenos días." }).waitFor();
-    await page.getByText("0 days", { exact: true }).waitFor();
+    for (const viewport of viewports) {
+      for (const theme of ["light", "dark"]) {
+        const context = await browser.newContext({
+          colorScheme: theme,
+          deviceScaleFactor: 1,
+          reducedMotion: "reduce",
+          viewport,
+        });
+        await context.addInitScript((selectedTheme) => {
+          localStorage.setItem("aidioma-theme", selectedTheme);
+        }, theme);
+        const page = await context.newPage();
 
-    await assertNoHorizontalOverflow(page, "Home page at 390px");
-    await assertAccessible(page, "Light home page");
-    await page.screenshot({ path: screenshotPath });
+        for (const route of routes) {
+          await page.goto(`${baseUrl}${route.path}`, { waitUntil: "networkidle" });
+          await page.getByRole("heading", { name: route.heading, exact: true }).waitFor();
+          await page.locator(`html[data-theme="${theme}"]`).waitFor();
+          if (route.id === "settings") {
+            const selectedThemeButton = page.locator(
+              '.segmented-control button[aria-pressed="true"]',
+            ).filter({ hasText: theme === "dark" ? "Dark" : "Light" });
+            await selectedThemeButton.waitFor();
+            const selectedThemeLabel = (await selectedThemeButton.innerText()).toLowerCase();
+            if (selectedThemeLabel !== theme) {
+              throw new Error(
+                `Settings shows ${selectedThemeLabel} selected while ${theme} is active.`,
+              );
+            }
+          }
+          await assertAccessible(page, `${route.id} ${viewport.id} ${theme}`);
+          await assertNoHorizontalOverflow(page, `${route.id} ${viewport.id} ${theme}`);
 
-    await page.keyboard.press("Tab");
-    const firstFocusedClass = await page.locator(":focus").getAttribute("class");
-    if (firstFocusedClass !== "skip-link") {
-      throw new Error("Skip link is not the first keyboard focus target.");
+          const currentVisibleLink = page.locator('.nav-link:visible[aria-current="page"]');
+          if ((await currentVisibleLink.count()) !== 1) {
+            throw new Error(`${route.id} does not expose exactly one visible current-page link.`);
+          }
+
+          await page.screenshot({
+            path: path.join(
+              appScreenshotsDirectory,
+              `${route.id}-${viewport.id}-${theme}.png`,
+            ),
+          });
+        }
+
+        await page.goto(baseUrl, { waitUntil: "networkidle" });
+        await assertKeyboardFocus(page);
+
+        for (const route of routes) {
+          await page.goto(`${baseUrl}${route.path}`, { waitUntil: "networkidle" });
+          await page.evaluate(() => {
+            document.documentElement.style.fontSize = "200%";
+          });
+          await assertNoHorizontalOverflow(page, `${route.id} ${viewport.id} ${theme} at 200% text`);
+        }
+
+        if (viewport.id === "mobile" && theme === "light") {
+          await page.goto(`${baseUrl}/settings`, { waitUntil: "networkidle" });
+          await assertThemeControl(page);
+        }
+
+        const referencePage = await context.newPage();
+        await referencePage.goto(prototypeUrl, { waitUntil: "load" });
+        await referencePage.evaluate((selectedTheme) => {
+          document.documentElement.dataset.theme = selectedTheme;
+        }, theme);
+        const appPage = await context.newPage();
+
+        for (const route of routes) {
+          if (route.id !== "home") {
+            await referencePage
+              .getByRole("button", { name: route.prototypeLabel, exact: true })
+              .click();
+          }
+          await appPage.goto(`${baseUrl}${route.path}`, { waitUntil: "networkidle" });
+          const [prototypeMetrics, appMetrics] = await Promise.all([
+            captureVisualMetrics(referencePage, "prototype", route.id),
+            captureVisualMetrics(appPage, "app", route.id),
+          ]);
+          const visualLabel = `${route.id}-${viewport.id}-${theme}`;
+          assertVisualContract(appMetrics, prototypeMetrics, visualLabel);
+          visualEvidence.push({
+            app: appMetrics,
+            prototype: prototypeMetrics,
+            route: route.id,
+            viewport: `${viewport.id}-${theme}`,
+          });
+        }
+
+        await referencePage.close();
+        await appPage.close();
+        await context.close();
+      }
     }
-    const focusOutline = await page.locator(":focus").evaluate((element) => {
-      const style = getComputedStyle(element);
-      return { style: style.outlineStyle, width: style.outlineWidth };
-    });
-    if (focusOutline.style === "none" || focusOutline.width === "0px") {
-      throw new Error("Keyboard focus indicator is not visible.");
-    }
 
-    await page.getByRole("link", { name: "Lessons", exact: true }).click();
-    await page.getByRole("heading", { name: "Lessons", exact: true }).waitFor();
-    await page.getByText("No lessons loaded yet", { exact: true }).waitFor();
-    await assertAccessible(page, "Lessons page");
-
-    await page.goto(baseUrl, { waitUntil: "networkidle" });
-    await page.evaluate(() => {
-      document.documentElement.style.fontSize = "200%";
-    });
-    await assertNoHorizontalOverflow(page, "Home page with 200% text");
-
-    await page.emulateMedia({ colorScheme: "dark" });
-    await page.goto(baseUrl, { waitUntil: "networkidle" });
-    await assertAccessible(page, "Dark home page");
-
-    await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto(baseUrl, { waitUntil: "networkidle" });
-    await assertNoHorizontalOverflow(page, "Home page at 1280px");
-
-    await page.goto(`${baseUrl}/sign-in`, { waitUntil: "networkidle" });
-    await page
+    const authPage = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    await authPage.goto(`${baseUrl}/sign-in`, { waitUntil: "networkidle" });
+    await authPage
       .getByRole("heading", { name: "Authentication is ready to connect" })
       .waitFor();
-    await assertAccessible(page, "Keyless sign-in page");
+    await assertAccessible(authPage, "Keyless sign-in page");
+    await authPage.close();
 
+    await writeFile(visualContractPath, `${JSON.stringify(visualEvidence, null, 2)}\n`);
     console.log(
-      "SMOKE PASS: light/dark accessibility, keyboard focus, 200% text, and home/lessons/keyless sign-in at phone/desktop widths.",
+      "SMOKE PASS: 16 screen states; prototype token/geometry parity; route-aware navigation; theme control; axe; keyboard focus; reduced motion; 200% text; no horizontal overflow; keyless auth.",
     );
-    console.log(`Screenshot: ${screenshotPath}`);
+    console.log(`Screenshots: ${appScreenshotsDirectory}`);
+    console.log(`Visual contract: ${visualContractPath}`);
   } finally {
     await browser?.close();
     await stopServer(server);
