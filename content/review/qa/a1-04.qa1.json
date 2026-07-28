@@ -1,0 +1,103 @@
+{
+  "lessonId": "a1-04-donde-esta",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "CRITICAL",
+      "checklistPoint": 5,
+      "itemId": "a1-04.s.11",
+      "issue": "The accepted Spanish answers `Él está en la casa.` and `Está en la casa.` do not preserve the EN prompt's explicit lexical subject, `The man`: without an antecedent they mean `He is in the house` / `(Someone) is in the house`, so EN→ES grading would accept an answer that omits `the man`. Cite: Style Guide §4 requires every alternate to be fully correct and meaning-preserving and says never to accept meaning-shifting entries.",
+      "proposedFix": "Remove the two pronoun/null-subject entries; retain only noun-preserving variants with `el señor`, or redesign the prompt/canonical pair around an explicit pronoun before rebuilding the accept set."
+    },
+    {
+      "severity": "CRITICAL",
+      "checklistPoint": 5,
+      "itemId": "a1-04.s.12",
+      "issue": "The accepted Spanish answers `Ellas están aquí en el apartamento.` and `Están aquí en el apartamento.` omit the EN prompt's explicit noun phrase `The ladies`. They are only equivalent with prior discourse supplying an antecedent, but this typed-translation item supplies none. Cite: Style Guide §4 requires meaning-preserving alternates and says an alternate must be fully correct, not merely understandable.",
+      "proposedFix": "Remove the pronoun/null-subject entries and replace them only with natural variants that retain `las señoras`, or redesign the prompt/canonical pair as a pronoun sentence before rebuilding the accept set."
+    },
+    {
+      "severity": "CRITICAL",
+      "checklistPoint": 5,
+      "itemId": "a1-04.s.17",
+      "issue": "The accepted Spanish answers `¿Ella está aquí o allí?` and `¿Está aquí o allí?` erase the EN prompt's explicit `the lady`; they ask about `she`/an understood person and are not standalone translations of `Is the lady here or there?`. Cite: Style Guide §4 requires every accepted alternate to preserve meaning and explicitly forbids meaning-shifting entries.",
+      "proposedFix": "Remove both entries and use noun-preserving alternatives such as `¿Aquí o allí está la señora?`; keep `la señora` explicit in every accepted translation of this prompt."
+    },
+    {
+      "severity": "MAJOR",
+      "checklistPoint": 8,
+      "itemId": "a1-04.s.11",
+      "issue": "`pronoun.subject` is spurious: the canonical Spanish exercises the lexical subject `El señor`, not a subject pronoun, and the only pronoun/drop forms are the meaning-changing alternates identified above. Cite: QA checklist point 8 requires tags to match what the sentence actually exercises and forbids spurious tags; the Curriculum Map §7 defines `pronoun.subject` specifically for subject pronouns.",
+      "proposedFix": "Remove `pronoun.subject` unless the item is redesigned so its canonical prompt/answer genuinely tests a subject pronoun."
+    },
+    {
+      "severity": "MAJOR",
+      "checklistPoint": 8,
+      "itemId": "a1-04.s.12",
+      "issue": "`pronoun.subject` is spurious on the canonical `Las señoras están aquí en el apartamento.`: it exercises a plural lexical noun phrase and `estar` agreement, not a subject pronoun. The pronoun/drop acceptances cannot justify the tag because they lose prompt meaning. Cite: QA checklist point 8 forbids spurious tags; Curriculum Map §7 defines `pronoun.subject` as the subject-pronoun concept.",
+      "proposedFix": "Remove `pronoun.subject`; retain `agreement.gender-number`, `verb.estar`, and `expression.place`."
+    },
+    {
+      "severity": "MAJOR",
+      "checklistPoint": 5,
+      "itemId": "a1-04.v.sobre",
+      "issue": "Recognition-side coverage systematically drops the explicitly taught `on` sense of `sobre`: s.08, s.16, s.18, and passage segment p.01.04 accept `above`/`over` readings but not their common `on (the table)` renderings. The vocab card itself displays `on / above` and also omits the common EN synonym `over`. Cite: Style Guide §4 makes Both-direction accept sets grading-critical and applies the same review to vocab; §6 makes each passage segment's `en` array its accepted-English set.",
+      "proposedFix": "Add `over` to the vocab accepted-English set and add natural `on the table` English renderings to s.08, s.16, s.18, and p.01.04."
+    },
+    {
+      "severity": "MAJOR",
+      "checklistPoint": 4,
+      "itemId": "a1-04.q.04",
+      "issue": "The question asks what *is* in the bathroom, but the referenced segment states only what is absent; `No table or chair` does not identify anything that is in the bathroom. Thus the marked choice is inferably intended but does not answer the prompt as written. Cite: Style Guide §7a requires a non-cloze quick check to be one natural question; the schema contract's MultipleChoiceItem requires the indexed choice and explanation to establish why the answer is correct.",
+      "proposedFix": "Ask which statement about the bathroom is true, or ask what is not in the bathroom, and align the correct choice grammatically with that question."
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 5,
+      "itemId": "a1-04.s.09",
+      "issue": "The common neutral word order `¿Está el baño allí?` is missing. The set has subject–verb–place and verb–place–subject, but not this ordinary verb–subject–place question. Cite: Style Guide §4 explicitly calls for natural word-order variants and targets 3–6 useful Spanish alternates without padding.",
+      "proposedFix": "Add `¿Está el baño allí?` to `acceptedEs`."
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 5,
+      "itemId": "a1-04.v.cuarto",
+      "issue": "The card displays `room / bedroom`, but its Spanish accept set omits neutral, common `dormitorio` for the `bedroom` side; `habitación` alone does not exhaust that everyday sense. Cite: Style Guide §4 applies Both-direction alternate review to vocab items and requires additional neutral synonyms that display splitting cannot derive.",
+      "proposedFix": "Add `dormitorio` to `acceptedEs`."
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 5,
+      "itemId": "a1-04.s.13",
+      "issue": "`No hay mesa ni silla en el baño.` also naturally yields the generic plural `There are no tables or chairs in the bathroom`, but that common US-English answer is missing from s.13 and passage p.01.06. Cite: Style Guide §4 requires common meaning-preserving English paraphrases; §6 defines passage `en` arrays as accepted-English sets.",
+      "proposedFix": "Add `There are no tables or chairs in the bathroom.` to s.13 `acceptedEn` and p.01.06 `en`."
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 5,
+      "itemId": "a1-04.p.01.02",
+      "issue": "The passage's accepted-English set includes `There is...` and a `has` paraphrase but omits the most natural contraction, `There's a kitchen and a bathroom in the apartment.` Cite: Style Guide §4 requires common contractions on the English side; §6 makes the segment's `en` array the grading accept set; §8 welcomes and prefers natural US-English contractions.",
+      "proposedFix": "Add `There's a kitchen and a bathroom in the apartment.` to the segment's `en` array."
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 10,
+      "itemId": "a1-04-donde-esta",
+      "issue": "The lesson simultaneously reaches both content maxima—15 vocab items and 20 sentences—while the curriculum row budgets about 10 vocab and the Style Guide §10 normal target is 8–12 vocab (15 is only the hard maximum). The 2/4/6/6/2 difficulty distribution itself is well spread, but the total first-pass load is conspicuously high for A1 lesson 4 and for two new primary verb systems plus place expressions.",
+      "proposedFix": "At founder review, test whether all five above-map vocab additions and all 20 drills are necessary in one unlock; if completion time is excessive, defer a coherent subset without changing retained IDs."
+    }
+  ],
+  "missingAlternates": [
+    {
+      "sentenceId": "a1-04.s.09",
+      "alternate": "¿Está el baño allí?"
+    }
+  ],
+  "stats": {
+    "sentencesReviewed": 20,
+    "alternatesFound": 1,
+    "validatorPassed": true,
+    "curriculumAlignment": "PASS_WITH_LOAD_CONCERN",
+    "notes": "Independent adversarial L2 review at contentVersion 1 and commit 215f19a. Focused validator --json: PASS (0 errors / 0 warnings). Reviewed all 15 vocab cards on both language sides; independently translated every EN sentence three ways before reading canonical/accepted Spanish; independently paraphrased every Spanish sentence into US English; checked every canonical and accepted entry, verb form, noun phrase, tag, difficulty, and all 60 hints; reviewed the 74-word explanation, four quick checks, six independently translatable passage segments, and the conversation seed/opening/goals. CURRICULUM: grammarFocus exactly matches L4 (primary verb.estar + verb.hay; secondary expression.place), the explanation correctly drills only the two primary systems and gives a valid hay/estar contrast, all content words resolve to current/prior vocab or declared glue, question words remain grammar rather than vocab, register is neutral LatAm tú/ustedes with no vosotros or banned coger, and the difficulty spread is 2x1 / 4x2 / 6x3 / 6x4 / 2x5. The lesson adds five housing/place items beyond the map's ~10 candidates and hits both hard content maxima, recorded as a minor load concern. VERDICT FAIL: 3 CRITICAL invalid Spanish acceptances systematically erase lexical subjects; 4 MAJOR findings cover two spurious pronoun tags, systematic omission of sobre='on' in ES→EN grading, and a quick-check prompt whose marked choice does not answer the question; 5 MINOR findings cover one missing Spanish word-order alternate, two-sided vocab/English gaps, and load. No lesson content was changed."
+  }
+}

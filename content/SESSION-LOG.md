@@ -91,3 +91,45 @@ Decisions and dispatch history for the Lesson Plan agent (coordinator). Newest e
   five documented a1-01 entry-lesson warnings); `npm run contract:smoke` PASS (13); `npm run
   content:fixtures` PASS (18/18); `npm run prototype:check` PASS. OI-025 is ready for coordinator
   status closure; a1-04 drafting has not started.
+
+## 2026-07-28 — C2-1 a1-04 draft
+
+- **a1-04-donde-esta drafted to L1-PASS:** original neutral-LatAm lesson with 15 vocab items,
+  20 sentences, a six-segment apartment tour, one conversation seed, four quick checks, and no
+  reference card (the compact primary-focus explanation already supplies the useful study contrast).
+  Grammar coverage: `verb.estar` 13 sentences, `verb.hay` 8, and `expression.place` 20; difficulty
+  spans 1–5. Both-direction pre-flight: every vocab item has explicit accept arrays, every sentence
+  has 3–4 Spanish alternates and at least one reviewed English alternate.
+- **Validation/snapshot:** focused a1-04 validation PASS (0 errors / 0 warnings); full four-lesson
+  corpus PASS (0 errors; only five existing a1-01 entry-lesson warnings). The approved green-run
+  snapshot flow appended 49 immutable IDs. contentVersion is 1.
+- **Review boundary:** author pre-flight only. Independent L2 QA remains PENDING and will be assigned
+  separately; no QA verdict or prototype generated artifact was authored in this step.
+- **Gate evidence:** content typecheck PASS; focused validation PASS (0/0); full validation PASS
+  (0 errors); contract smoke PASS (13); fixtures PASS (18/18). Snapshot growth exposed that the
+  fixture control had hard-coded lessons 1–3; with coordinator authorization, its baseline now
+  discovers every canonical lesson JSON so it stays aligned with the immutable snapshot. The
+  read-only prototype freshness check fails only because `apps/prototype/lesson-data.js` does not yet
+  include a1-04; that generated app artifact is intentionally left for coordinator integration.
+
+## 2026-07-28 — C2-1 a1-04 L2 r1 corrective loop
+
+- **Meaning and tags:** removed every pronoun/null-subject alternate from s.11, s.12, and s.17 so
+  each accepted Spanish answer retains the explicit lexical subject in its English prompt; removed
+  the unsupported `pronoun.subject` tag from s.11/s.12.
+- **Recognition and assessment:** added `sobre` recognition as *over* at vocab level and *on the
+  table* in s.08/s.16/s.18 plus p.01.04; aligned q.04 to ask what is absent; added the inverted
+  bathroom question, *dormitorio*, the generic plural no-tables-or-chairs translation, and the
+  contraction for the house/kitchen/bathroom passage sentence.
+- **Load repair with identity preserved:** retired the apartment and door vocab entries plus the two
+  redundant drills s.08/s.18 via `deprecated: true`, leaving 13 active vocab items and 18 active
+  sentences. Reworked active material away from retired references. All original IDs remain in the
+  artifact, `contentVersion` is now 2 after the r2 metadata correction, and even retired items retain
+  corrected accept sets.
+- **Independent review closure:** targeted r2 verified all 12 content repairs and found one metadata
+  blocker; `contentVersion` was bumped to 2, and metadata-only r3 independently confirmed that exact
+  delta with no remaining findings. The lesson is `L2-PASS (r3)`.
+- **Gate evidence:** content typecheck PASS; focused validator PASS (0 errors / 0 warnings / 0 info);
+  full four-lesson validator PASS (0 errors, five pre-existing a1-01 warnings); contract smoke PASS
+  (13); content fixtures PASS (18/18). Prototype freshness remains the expected out-of-scope failure
+  because `apps/prototype/lesson-data.js` has not been regenerated for a1-04.
