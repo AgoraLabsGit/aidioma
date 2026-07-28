@@ -124,7 +124,8 @@ Decisions and dispatch history for the Lesson Plan agent (coordinator). Newest e
 - **Load repair with identity preserved:** retired the apartment and door vocab entries plus the two
   redundant drills s.08/s.18 via `deprecated: true`, leaving 13 active vocab items and 18 active
   sentences. Reworked active material away from retired references. All original IDs remain in the
-  artifact, `contentVersion` remains 1, and even retired items retain corrected accept sets.
+  artifact, `contentVersion` is now 2 after the r2 metadata correction, and even retired items retain
+  corrected accept sets.
 - **Review boundary:** all 12 QA findings are addressed on the author side, but the recorded status
   remains `L2-FAIL(1)` pending a separate targeted r2 adversarial review; no pass was self-awarded.
 - **Gate evidence:** content typecheck PASS; focused validator PASS (0 errors / 0 warnings / 0 info);
