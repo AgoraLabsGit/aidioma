@@ -14,7 +14,7 @@
 - Proof covers 16 route/theme/viewport states, axe, keyboard focus, reduced motion, 200% text, exact route state, and no horizontal overflow.
 - A1-2 shared-contract import plus idempotent Neon content seed follows the UI correction.
 - OI-026 tracks unpatched upstream Next/ESLint dependency advisories before deployment.
-- Local `origin` targets `AgoraLabsGit/aidioma`; the authorized 2026-07-28 push attempt returned GitHub `Repository not found`, so publishing awaits repository restore/create or access correction.
+- Fresh public remote `AgoraLabsGit/aidioma` is live; proven `main` was pushed on 2026-07-28 for Vercel/Neon setup.
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
@@ -23,7 +23,7 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Publish the proven local `main` when the authorized GitHub repository accepts the push.
+1. Link `AgoraLabsGit/aidioma` to Vercel and provide the Neon `DATABASE_URL` for real seed proof.
 2. Start A1-2 while C2 drafts and independently L2-QAs a1-05.
 3. Keep both lanes isolated; merge only after deterministic gates, audit/re-QA, and proof. Never push without wave-close GO.
 

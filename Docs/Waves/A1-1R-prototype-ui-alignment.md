@@ -44,6 +44,7 @@ updated: 2026-07-28
 ## Publish
 - Local `main` merge: `603526f` (includes feature `2a4b096` and keyless-smoke hardening `4cd3c28`).
 - Authorized normal push to `https://github.com/AgoraLabsGit/aidioma.git` was attempted without force and failed with GitHub `Repository not found`; no remote repository was created or overwritten.
+- On the operator's follow-up request for a fresh remote, created public `AgoraLabsGit/aidioma` and pushed committed `main` successfully; the repository is ready to import into Vercel.
 
 ## Human check
 1. Open `/`, then switch Home → Lessons → Practice → Settings; expect the active rail/tab item to follow the exact route.

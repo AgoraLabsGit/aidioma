@@ -1,7 +1,7 @@
 ---
 title: Handoff — Port the prototype UI system into Next.js
 type: handoff
-status: active
+status: superseded
 updated: 2026-07-28
 ---
 
