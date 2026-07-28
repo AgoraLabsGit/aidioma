@@ -1,0 +1,12 @@
+{
+  "lessonId": "a1-02-soy-asi",
+  "verdict": "PASS",
+  "findings": [],
+  "missingAlternates": [],
+  "stats": {
+    "sentencesReviewed": 5,
+    "alternatesFound": 0,
+    "validatorPassed": true,
+    "notes": "TARGETED r2 re-review (scope: explanation a1-02.e.01 + acceptedEs on s.02/s.06/s.10/s.11/s.12 only; the rest of the lesson passed r1 and was NOT re-reviewed). contentVersion now 2. All r1 findings resolved. (1) CRITICAL fix verified: the explanation no longer states any blanket 'consonant-ending ⇒ no gender change' rule. It now correctly teaches -o adjectives inflect for gender+number (alto/alta/altos/altas), -e and -n adjectives (amable, inteligente, joven) are gender-invariable and change only for number, and -or adjectives add -a for the feminine (trabajador → trabajadora) — so the lesson's own vocab adjective is now taught correctly. Nationalities framed as -o/-a with the two in-lesson examples (mexicano/mexicana, colombiano/colombiana), both correct. simpático false-friend caution retained and accurate. Every example is correctly inflected and drawn from in-lesson (or prerequisite a1-01 señor/señora) vocab. Explanation is ~116 words, well under 150, and reads as learner-appropriate A1 teaching text. (2) All acceptedEs entries on the five scoped sentences are correct, register-valid neutral LatAm (tú/ustedes, no vosotros, no banned words), and honestly translate their en prompt. lindo/linda synonyms added and correctly feminine-agreed (s.02 linda, s.11 linda, s.12 lindas). Gender-open masculine readings added where the adjective itself inflects (s.06 ellos, s.10 trabajadoras, s.12 nosotros colombianos y bonitos). y→e allomorph is used correctly everywhere it applies: 'amables e inteligentes' on s.06 (both ellas and ellos forms); every other conjunction correctly stays 'y' (e.g. 'trabajadores y amables', 'colombiana y linda'). Alternate counts all within the 3–6 band (s.02=5, s.06=5, s.10=5, s.11=6, s.12=5). (3) All 10 r1 missingAlternates entries confirmed present in the file. (4) Validator: 0 errors, 0 warnings, RESULT PASS. ADVISORY (not a finding, not blocking): the rule 'adjectives ending in -n stay the same for gender' is a mild A1 simplification — the stress-final -án/-ón/-ín class (holgazán→holgazana) does add -a — but it is anchored to correct examples and NO in-lesson vocab contradicts it (joven is genuinely invariable), so it creates no teaching hazard within the lesson; this is the same latitude r1 itself granted the 'nationalities follow -o/-a' line (español/española excepted). Recommend L2-PASS."
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "lessonId": "a1-02-soy-asi",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "MINOR",
+      "checklistPoint": 9,
+      "itemId": "a1-02.e.01",
+      "issue": "The rule \"Adjectives ending in *-e* or *-n* ... stay the same for gender\" is stated as a general law but is over-broad for *-n*: adjectives in *-án/-ón/-ín* add feminine *-a* (e.g. *llorón → llorona*, *holgazán → holgazana*), just like the *-or* case the paragraph does carve out. Correct for every in-scope word (only *joven*, genuinely invariable), so this is a forward-compatibility nit, not a live error; a pedantic reader would still flag the unqualified generalization. Style Guide §2 / QA#9 (explanation rule stated correctly).",
+      "proposedFix": "Restrict the claim to the vocab in play, e.g. \"like *amable*, *inteligente*, and *joven*\" without asserting a universal *-n* rule; or add *-án/-ón* to the *-or* exception line."
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 10,
+      "itemId": "a1-02.s.12",
+      "issue": "Difficulty 2 is low relative to lesson peers. s.12 (*Nosotras somos colombianas y bonitas*) is structurally parallel to s.06 (*Ellas son inteligentes y amables*, difficulty 3): plural subject + two adjectives + agreement enforced on both. Single-adjective plural s.05 is 2; a two-adjective plural should sit at 3 to be consistent. Style Guide §3 difficulty rubric / QA#10 (difficulty plausible relative to other sentences).",
+      "proposedFix": "3"
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 5,
+      "itemId": "a1-02.s.13",
+      "issue": "acceptedEs offers the reordered variant *Ella es mexicana, muy inteligente y también simpática* but not its subject-drop form; Spanish routinely drops the subject pronoun, so the drop variant is a valid, register-safe answer a learner would type. Style Guide §4 (pronoun drop / inclusion) / QA#5.",
+      "proposedFix": "Add \"Es mexicana, muy inteligente y también simpática\" to acceptedEs."
+    }
+  ],
+  "missingAlternates": [
+    { "sentenceId": "a1-02.s.13", "alternate": "Es mexicana, muy inteligente y también simpática" }
+  ],
+  "stats": {
+    "sentencesReviewed": 14,
+    "alternatesFound": 55,
+    "validatorPassed": true,
+    "curriculumAlignment": "PASS",
+    "curriculumNotes": "Point-0 check clean. grammarFocus [agreement.gender-number, verb.ser] matches CURRICULUM-MAP a1-02 row (Primary agreement.gender-number, Secondary verb.ser), reflecting the v2 panel revision. Vocab list (alto, joven, bonito, simpatico, inteligente, delgado, amable, trabajador, mexicano, colombiano) is an EXACT match to the map's ~10 candidates — zero deviations. The panel's split-antonym / synonym-cluster fix is honored: no *bajo* (alto's antonym), no *grande/pequeno*, no *feo/gordo/viejo*; no thing-adjectives; no contento/feliz cluster (that belongs to L5). simpatico and amable are both map-sanctioned candidates and are semantically distinct (friendly vs kind), so they do not constitute a banned synonym cluster. *lindo/linda* appears only as an accepted alternate (bonito synonym per Style Guide §1), not as taught vocab. Objective and functional goal honored; prerequisites [a1-01-hola-me-llamo] correct.",
+    "noteWorst": "Worst finding is a MINOR: an over-broad *-n* invariability generalization in the explanation (a1-02.e.01) that is correct for all in-scope vocab.",
+    "priorContextNote": "Lesson was drafted outside the content-track pipeline; current artifact already reflects r1-style fixes (rewritten agreement explanation, lindo/linda + gender-open/subject-drop alternates, passage segment ids present). Independent review confirms the earlier CRITICAL (false gender rule) and MAJOR (missing lindo alternates) are resolved."
+  }
+}

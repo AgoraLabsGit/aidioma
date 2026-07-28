@@ -1,0 +1,24 @@
+{
+  "name": "aidioma",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "contract:build": "npm run build --workspace @aidioma/lesson-schema",
+    "contract:typecheck": "npm run typecheck --workspace @aidioma/lesson-schema",
+    "contract:smoke": "npm run smoke --workspace @aidioma/lesson-schema",
+    "content:typecheck": "npm run contract:build --silent && tsc -p tooling/tsconfig.json --noEmit",
+    "content:validate": "npm run contract:build --silent && tsx tooling/content/validate.ts content/lessons",
+    "content:fixtures": "npm run contract:build --silent && tsx tooling/content/fixtures/run-fixtures.ts",
+    "prototype:export": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts",
+    "prototype:check": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts --check"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "lessonId": "a1-03-que-haces",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "MINOR",
+      "checklistPoint": 6,
+      "itemId": "a1-03.sentences",
+      "issue": "The time adverb 'hoy' is produced from EN 'today' in 9 sentence `es` strings (s.02, s.04, s.05, s.06, s.07, s.08, s.11, s.12, s.13) plus the passage, yet 'hoy' is NOT in the curriculum-map's free-glue list (degree/quantity adverbs listed are muy/más/poco/mucho/bien/mal — time adverbs are not enumerated), is not a VocabItem, and carries no vocabRef. ('mucho' is genuinely free glue, so it is fine.) This is defensible under the a1-02 free-adverb precedent but the most-repeated non-verb word in the lesson enters untaught and undocumented. Cite: Style Guide §3 vocab-leakage discipline vs. Curriculum-Map glue policy (non-exhaustive free list). Same issue the r1 gate logged as documentation-only rather than fixed.",
+      "proposedFix": "Record 'hoy' in the Curriculum-Map glue policy (add time adverbs, or explicitly list 'hoy') and note it in the a1-03 QA notes as an intentionally-free adverb; no content change to the lesson required."
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 10,
+      "itemId": "a1-03.sentences",
+      "issue": "Difficulty distribution is 0×L1, 7×L2, 4×L3, 2×L4, 1×L5 — it clusters at level 2 (half the lesson) and has NO level-1 sentence at all. Style Guide §3 asks the 12-20 sentences to 'spread across the range; don't cluster at 3' (here the cluster is at 2, with an empty low end). The lesson's shortest item, s.03 '¿Dónde trabajas?', is rated 2 (defensible: question-formation + pronoun-drop trap), so no true L1 content exists.",
+      "proposedFix": "Add or re-rate one short, alternate-free item toward L1 (e.g. a bare '¿Trabajas?' / 'Descanso.' style prompt) so the low end is represented, or accept the skew as inherent to a conjugation-drill lesson and note it as advisory."
+    }
+  ],
+  "missingAlternates": [],
+  "stats": {
+    "sentencesReviewed": 14,
+    "alternatesFound": 0,
+    "validatorPassed": true,
+    "curriculumAlignment": "PASS",
+    "notes": "GATE CONTEXT: externally drafted (app-track prototype), gated post-hoc; this is an independent adversarial L2 pass against the current file (post-r1-fix state — s.01 e-inglés alternate and s.04 difficulty=2 are already applied). Validator re-run clean (0 err / 0 warn) — the segment-id ZOD_PARSE failures the prior r1 note described have been resolved (P-002 segment ids backfilled), so validatorPassed is now true. CURRICULUM-ALIGNMENT (checklist point 0): PASS. grammarFocus [verb.regular.ar, question.formation, negation] matches the map's L3 row exactly (Primary verb.regular.ar; Secondary question.formation + negation shown-not-drilled — explanation drills only the -ar primary, consistent with the explanation-budget policy). Vocab is EXACTLY the 8 map candidates (hablar, estudiar, trabajar, escuchar, descansar, caminar, practicar, necesitar) — zero deviation. Question words enter as grammar (dónde in s.03, qué/dónde in q.03) with no v. ID, per policy. The panel's M1 fix HOLDS: every verb is exercised with only a1-01+a1-02+a1-03 vocab + glue — hablar/practicar take the free language names español/inglés, escuchar takes 'la señora' (a1-01) with correct personal-a, necesitar takes an infinitive (descansar), and estudiar/trabajar/descansar/caminar run intransitively with mucho/hoy. NO sentence requires an untaught object noun; no object-hungry verb (tomar/cocinar/comprar/mirar) leaked. LINGUISTIC LAYER CLEAN: all -ar conjugations correct incl. unaccented present traps (hablo/camino/practico/escucho/descanso/necesito/trabajo/estudio, tú trabajas/estudias, ella estudia — none mis-accented as preterite); dónde accented; e-before-inglés correct (s.01 alt); personal-a correct (s.06); register neutral LatAm tú throughout, ustedes in explanation, zero vosotros, no banned/regional words (no coger). Explanation 117 words (≤150), -ar rule stated correctly with a valid 'no extra do/am' contrast and demonstrating examples. All 14 sentences carry exactly 3 escalating hints, none stating the literal target string. grammarTags all valid enum members and matched (negation on s.07/s.09/s.11, question.formation on s.03/s.10/s.14). 4 quickChecks correct with honest explanations and plausible distractors. Passage segments independently translatable with natural en[] arrays; conversation openingLine Spanish-only with openingLineGloss present, persona constrained to lesson verbs + tú. ALTERNATES: independent 3-way translation diff run on all 14 sentences BEFORE reading acceptedEs — coverage is genuinely strong (every sentence 3-6 alternates: s.01=4, rest=3; pronoun drop/inclusion, hoy fronted/final, and coordinate reordering systematically present) and NO correct register-valid alternate is missing (missingAlternates=0). No alternate is wrong-register or wrong-agreement. VERDICT PASS: 0 CRITICAL, 0 MAJOR, 2 MINOR (documentation-only)."
+  }
+}

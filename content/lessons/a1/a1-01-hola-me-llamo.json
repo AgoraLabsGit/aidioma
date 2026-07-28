@@ -1,0 +1,476 @@
+{
+  "schemaVersion": 1,
+  "id": "a1-01-hola-me-llamo",
+  "ordinal": 1,
+  "level": "A1",
+  "title": "Hola: greetings and introducing yourself",
+  "objective": "You can greet someone and write a simple introduction giving your name and where you're from.",
+  "grammarFocus": ["verb.ser", "article", "agreement.gender-number", "pronoun.subject"],
+  "prerequisites": [],
+  "explanation": {
+    "id": "a1-01.e.01",
+    "kind": "explanation",
+    "markdown": "Spanish uses **ser** to say who you are and where you're from. It changes with the subject: *yo soy* (\"I am\"), *tú eres* (\"you are\"), *él/ella es* (\"he/she is\"). So: *Soy Ana* (\"I'm Ana\"), *Soy de México* (\"I'm from Mexico\"), *Ella es de Colombia* (\"She's from Colombia\").\n\nSpanish usually drops the subject pronoun — *Soy de México* sounds more natural than *Yo soy de México*, though both are correct.\n\nTo give your name, learn *me llamo…* (\"my name is…\") as a set phrase: *me llamo Ana*. Its inner machinery comes much later; for now just memorize *me llamo / te llamas / se llama*.\n\nOne caution: don't confuse *el* (\"the\") with *él* (\"he\") — the accent changes the meaning.",
+    "grammarTags": ["verb.ser"]
+  },
+  "vocab": [
+    {
+      "id": "a1-01.v.hola",
+      "kind": "vocab",
+      "es": "hola",
+      "en": "hello / hi",
+      "pos": "other",
+      "exampleEs": "Hola, señora.",
+      "exampleEn": "Hi, ma'am."
+    },
+    {
+      "id": "a1-01.v.adios",
+      "kind": "vocab",
+      "es": "adiós",
+      "en": "goodbye",
+      "pos": "other",
+      "exampleEs": "Adiós, señor.",
+      "exampleEn": "Goodbye, sir."
+    },
+    {
+      "id": "a1-01.v.gracias",
+      "kind": "vocab",
+      "es": "gracias",
+      "en": "thank you",
+      "pos": "other",
+      "exampleEs": "Gracias, señora.",
+      "exampleEn": "Thank you, ma'am."
+    },
+    {
+      "id": "a1-01.v.por-favor",
+      "kind": "vocab",
+      "es": "por favor",
+      "en": "please",
+      "pos": "phrase",
+      "exampleEs": "Por favor, señor.",
+      "exampleEn": "Please, sir."
+    },
+    {
+      "id": "a1-01.v.perdon",
+      "kind": "vocab",
+      "es": "perdón",
+      "en": "excuse me / sorry",
+      "pos": "other",
+      "exampleEs": "Perdón, señora.",
+      "exampleEn": "Excuse me, ma'am."
+    },
+    {
+      "id": "a1-01.v.buenos-dias",
+      "kind": "vocab",
+      "es": "buenos días",
+      "en": "good morning",
+      "pos": "phrase",
+      "exampleEs": "Buenos días, señor.",
+      "exampleEn": "Good morning, sir."
+    },
+    {
+      "id": "a1-01.v.buenas-noches",
+      "kind": "vocab",
+      "es": "buenas noches",
+      "en": "good evening / good night",
+      "pos": "phrase",
+      "exampleEs": "Buenas noches, señora.",
+      "exampleEn": "Good evening, ma'am."
+    },
+    {
+      "id": "a1-01.v.senor",
+      "kind": "vocab",
+      "es": "señor",
+      "en": "sir / man / Mr.",
+      "pos": "noun",
+      "gender": "m",
+      "exampleEs": "El señor es de México.",
+      "exampleEn": "The man is from Mexico."
+    },
+    {
+      "id": "a1-01.v.senora",
+      "kind": "vocab",
+      "es": "señora",
+      "en": "ma'am / lady / Mrs.",
+      "pos": "noun",
+      "gender": "f",
+      "exampleEs": "La señora es de Colombia.",
+      "exampleEn": "The lady is from Colombia."
+    },
+    {
+      "id": "a1-01.v.me-llamo",
+      "kind": "vocab",
+      "es": "me llamo",
+      "en": "my name is (I'm called)",
+      "pos": "phrase",
+      "chunk": true,
+      "exampleEs": "Me llamo Ana.",
+      "exampleEn": "My name is Ana."
+    },
+    {
+      "id": "a1-01.v.te-llamas",
+      "kind": "vocab",
+      "es": "te llamas",
+      "en": "your name is (you're called)",
+      "pos": "phrase",
+      "chunk": true,
+      "exampleEs": "Tú te llamas Pedro.",
+      "exampleEn": "Your name is Pedro."
+    },
+    {
+      "id": "a1-01.v.se-llama",
+      "kind": "vocab",
+      "es": "se llama",
+      "en": "his/her name is (he/she is called)",
+      "pos": "phrase",
+      "chunk": true,
+      "exampleEs": "Ella se llama Camila.",
+      "exampleEn": "Her name is Camila."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "a1-01.s.01",
+      "kind": "sentence",
+      "es": "Hola, soy Ana.",
+      "en": "Hi, I'm Ana.",
+      "acceptedEs": ["Hola, yo soy Ana.", "¡Hola! Soy Ana.", "¡Hola! Yo soy Ana."],
+      "acceptedEn": ["Hello, I'm Ana.", "Hi, I am Ana."],
+      "grammarTags": ["verb.ser"],
+      "vocabRefs": ["a1-01.v.hola"],
+      "difficulty": 1,
+      "hints": [
+        "Start with the greeting, then say who you are with the *yo* form of 'to be.'",
+        "'To be' here is *ser*; in the *yo* form it becomes *soy*. Add your name after it.",
+        "*Hola, ___ Ana* — fill in the *yo* form of *ser*."
+      ],
+      "flashcard": { "eligible": true, "front": "es" }
+    },
+    {
+      "id": "a1-01.s.02",
+      "kind": "sentence",
+      "es": "El señor es de Argentina.",
+      "en": "The man is from Argentina.",
+      "acceptedEs": [],
+      "acceptedEn": ["The gentleman is from Argentina."],
+      "grammarTags": ["verb.ser", "article", "agreement.gender-number"],
+      "vocabRefs": ["a1-01.v.senor"],
+      "difficulty": 2,
+      "hints": [
+        "Use the word for 'the' with a masculine noun, then 'to be' for origin.",
+        "Masculine 'the' is *el*; 'is' (he/it) is *es*. Origin uses *de* + the country.",
+        "*El señor ___ de Argentina* — fill in the *él* form of *ser*."
+      ],
+      "flashcard": { "eligible": true, "front": "es" }
+    },
+    {
+      "id": "a1-01.s.03",
+      "kind": "sentence",
+      "es": "Me llamo Diego y soy de Colombia.",
+      "en": "My name is Diego and I'm from Colombia.",
+      "acceptedEs": [
+        "Yo me llamo Diego y soy de Colombia.",
+        "Me llamo Diego y yo soy de Colombia.",
+        "Yo me llamo Diego y yo soy de Colombia.",
+        "Soy Diego y soy de Colombia."
+      ],
+      "acceptedEn": ["My name is Diego and I am from Colombia."],
+      "grammarTags": ["verb.ser"],
+      "vocabRefs": ["a1-01.v.me-llamo"],
+      "difficulty": 3,
+      "hints": [
+        "Give your name with the set phrase, then add where you're from with *ser*.",
+        "'My name is' is the fixed *me llamo*; 'I'm from' is *soy de*.",
+        "*Me llamo Diego y ___ de Colombia* — fill in the *yo* form of *ser*."
+      ],
+      "flashcard": { "eligible": true, "front": "es" }
+    },
+    {
+      "id": "a1-01.s.04",
+      "kind": "sentence",
+      "es": "La señora es de Colombia.",
+      "en": "The lady is from Colombia.",
+      "acceptedEs": [],
+      "acceptedEn": ["The woman is from Colombia."],
+      "grammarTags": ["verb.ser", "article", "agreement.gender-number"],
+      "vocabRefs": ["a1-01.v.senora"],
+      "difficulty": 2,
+      "hints": [
+        "Use 'the' for a feminine noun, then 'to be' for origin.",
+        "Feminine 'the' is *la*; 'is' is *es*. Origin uses *de*.",
+        "*___ señora es de Colombia* — fill in feminine 'the.'"
+      ]
+    },
+    {
+      "id": "a1-01.s.05",
+      "kind": "sentence",
+      "es": "Buenos días. Me llamo Diego y soy de Perú.",
+      "en": "Good morning. My name is Diego and I'm from Peru.",
+      "acceptedEs": [
+        "Buenos días. Yo me llamo Diego y soy de Perú.",
+        "Buenos días. Me llamo Diego y yo soy de Perú.",
+        "Buenos días. Yo me llamo Diego y yo soy de Perú.",
+        "Buen día. Me llamo Diego y soy de Perú."
+      ],
+      "acceptedEn": ["Good morning. My name is Diego and I am from Peru."],
+      "grammarTags": ["verb.ser"],
+      "vocabRefs": ["a1-01.v.buenos-dias", "a1-01.v.me-llamo"],
+      "difficulty": 3,
+      "hints": [
+        "Open with a morning greeting, give your name, then your origin.",
+        "'Good morning' is *buenos días*; use the fixed *me llamo* and *soy de* for origin.",
+        "*Buenos días. Me llamo Diego y ___ de Perú* — fill in the *yo* form of *ser*."
+      ]
+    },
+    {
+      "id": "a1-01.s.06",
+      "kind": "sentence",
+      "es": "Ella se llama Sofía y es de Perú.",
+      "en": "Her name is Sofía and she's from Peru.",
+      "acceptedEs": [
+        "Se llama Sofía y es de Perú.",
+        "Es de Perú y se llama Sofía.",
+        "Ella es de Perú y se llama Sofía."
+      ],
+      "acceptedEn": ["Her name is Sofia and she is from Peru."],
+      "grammarTags": ["verb.ser", "pronoun.subject"],
+      "vocabRefs": ["a1-01.v.se-llama"],
+      "difficulty": 3,
+      "hints": [
+        "Say her name with the third-person set phrase, then her origin.",
+        "'Her name is' is the fixed *se llama*; 'she's from' is *es de*.",
+        "*Ella ___ Sofía y es de Perú* — fill in the set phrase for 'is called.'"
+      ]
+    },
+    {
+      "id": "a1-01.s.07",
+      "kind": "sentence",
+      "es": "Buenas noches. Soy de México.",
+      "en": "Good evening. I'm from Mexico.",
+      "acceptedEs": [
+        "Buenas noches. Yo soy de México.",
+        "Buenas noches, soy de México.",
+        "Buenas noches, yo soy de México."
+      ],
+      "acceptedEn": ["Good evening. I am from Mexico.", "Good night. I'm from Mexico."],
+      "grammarTags": ["verb.ser"],
+      "vocabRefs": ["a1-01.v.buenas-noches"],
+      "difficulty": 2,
+      "hints": [
+        "Open with an evening greeting, then say where you're from.",
+        "'Good evening' is *buenas noches*; 'I'm from' is *soy de*.",
+        "*Buenas noches. ___ de México* — fill in the *yo* form of *ser*."
+      ],
+      "flashcard": { "eligible": true, "front": "es" }
+    },
+    {
+      "id": "a1-01.s.08",
+      "kind": "sentence",
+      "es": "Yo soy de México y tú eres de Chile.",
+      "en": "I'm from Mexico and you're from Chile.",
+      "acceptedEs": [
+        "Soy de México y eres de Chile.",
+        "Soy de México y tú eres de Chile.",
+        "Yo soy de México y eres de Chile."
+      ],
+      "acceptedEn": ["I am from Mexico and you are from Chile."],
+      "grammarTags": ["verb.ser", "pronoun.subject"],
+      "vocabRefs": [],
+      "difficulty": 4,
+      "hints": [
+        "Two people: give your origin, then the other person's, keeping both subjects.",
+        "'I am' is *soy*, 'you are' is *eres*; both use *de* for origin.",
+        "*Yo soy de México y tú ___ de Chile* — fill in the *tú* form of *ser*."
+      ]
+    },
+    {
+      "id": "a1-01.s.09",
+      "kind": "sentence",
+      "es": "Gracias, señor.",
+      "en": "Thank you, sir.",
+      "acceptedEs": ["Muchas gracias, señor.", "Señor, gracias.", "¡Gracias, señor!"],
+      "acceptedEn": ["Thanks, sir."],
+      "grammarTags": ["formula.courtesy"],
+      "vocabRefs": ["a1-01.v.gracias", "a1-01.v.senor"],
+      "difficulty": 1,
+      "hints": [
+        "Thank someone, then address a man politely.",
+        "'Thank you' is one word; the polite word for a man is *señor*.",
+        "*___, señor* — fill in 'thank you.'"
+      ]
+    },
+    {
+      "id": "a1-01.s.10",
+      "kind": "sentence",
+      "es": "Perdón, señora.",
+      "en": "Excuse me, ma'am.",
+      "acceptedEs": ["Señora, perdón.", "¡Perdón, señora!"],
+      "acceptedEn": ["Sorry, ma'am.", "Pardon me, ma'am."],
+      "grammarTags": ["formula.courtesy"],
+      "vocabRefs": ["a1-01.v.perdon", "a1-01.v.senora"],
+      "difficulty": 1,
+      "hints": [
+        "Apologize or excuse yourself, then address a woman politely.",
+        "The apology word starts with *p*; the polite word for a woman is *señora*.",
+        "*___, señora* — fill in the apology word."
+      ]
+    },
+    {
+      "id": "a1-01.s.11",
+      "kind": "sentence",
+      "es": "Por favor, señor.",
+      "en": "Please, sir.",
+      "acceptedEs": ["Señor, por favor.", "¡Por favor, señor!"],
+      "acceptedEn": [],
+      "grammarTags": ["formula.courtesy"],
+      "vocabRefs": ["a1-01.v.por-favor", "a1-01.v.senor"],
+      "difficulty": 1,
+      "hints": [
+        "Say 'please,' then address a man politely.",
+        "'Please' is a two-word phrase; the polite word for a man is *señor*.",
+        "*___, señor* — fill in the two-word phrase for 'please.'"
+      ]
+    },
+    {
+      "id": "a1-01.s.12",
+      "kind": "sentence",
+      "es": "Adiós, señora.",
+      "en": "Goodbye, ma'am.",
+      "acceptedEs": ["Señora, adiós.", "¡Adiós, señora!"],
+      "acceptedEn": ["Bye, ma'am."],
+      "grammarTags": ["formula.courtesy"],
+      "vocabRefs": ["a1-01.v.adios", "a1-01.v.senora"],
+      "difficulty": 1,
+      "hints": [
+        "Say goodbye, then address a woman politely.",
+        "'Goodbye' starts with *a*; the polite word for a woman is *señora*.",
+        "*___, señora* — fill in 'goodbye.'"
+      ]
+    },
+    {
+      "id": "a1-01.s.13",
+      "kind": "sentence",
+      "es": "Yo me llamo Ana y tú te llamas Pedro.",
+      "en": "My name is Ana and your name is Pedro.",
+      "acceptedEs": [
+        "Me llamo Ana y te llamas Pedro.",
+        "Me llamo Ana y tú te llamas Pedro.",
+        "Yo me llamo Ana y te llamas Pedro."
+      ],
+      "acceptedEn": ["My name is Ana and your name's Pedro."],
+      "grammarTags": ["pronoun.subject"],
+      "vocabRefs": ["a1-01.v.me-llamo", "a1-01.v.te-llamas"],
+      "difficulty": 4,
+      "hints": [
+        "Give your name, then the other person's, using the two set phrases.",
+        "'My name is' is *me llamo*; 'your name is' is *te llamas*.",
+        "*Yo me llamo Ana y tú ___ Pedro* — fill in the 'your name is' phrase."
+      ]
+    },
+    {
+      "id": "a1-01.s.14",
+      "kind": "sentence",
+      "es": "Nosotros somos de Colombia y ellos son de México.",
+      "en": "We're from Colombia and they're from Mexico.",
+      "acceptedEs": [
+        "Somos de Colombia y son de México.",
+        "Somos de Colombia y ellos son de México.",
+        "Nosotros somos de Colombia y son de México.",
+        "Nosotras somos de Colombia y ellas son de México."
+      ],
+      "acceptedEn": ["We are from Colombia and they are from Mexico."],
+      "grammarTags": ["verb.ser", "pronoun.subject"],
+      "vocabRefs": [],
+      "difficulty": 5,
+      "hints": [
+        "Two groups: 'we' and 'they,' each with their origin.",
+        "'We are' is *somos*; 'they are' is *son*; both use *de*.",
+        "*Nosotros somos de Colombia y ellos ___ de México* — fill in the *ellos* form of *ser*."
+      ]
+    }
+  ],
+  "passage": {
+    "id": "a1-01.p.01",
+    "kind": "passage",
+    "title": "Una tarjeta de presentación (An introduction card)",
+    "segments": [
+      {
+        "id": "a1-01.p.01.01",
+        "es": "Hola. Me llamo Camila.",
+        "en": ["Hi. My name is Camila.", "Hello. My name is Camila."],
+        "vocabRefs": ["a1-01.v.hola", "a1-01.v.me-llamo"]
+      },
+      {
+        "id": "a1-01.p.01.02",
+        "es": "Soy de México.",
+        "en": ["I'm from Mexico.", "I am from Mexico."],
+        "vocabRefs": []
+      },
+      {
+        "id": "a1-01.p.01.03",
+        "es": "Él se llama Diego y es de Colombia.",
+        "en": ["His name is Diego and he's from Colombia.", "He's called Diego and he is from Colombia."],
+        "vocabRefs": ["a1-01.v.se-llama"]
+      },
+      {
+        "id": "a1-01.p.01.04",
+        "es": "Gracias. Adiós.",
+        "en": ["Thank you. Goodbye.", "Thanks. Bye."],
+        "vocabRefs": ["a1-01.v.gracias", "a1-01.v.adios"]
+      }
+    ]
+  },
+  "conversation": {
+    "id": "a1-01.c.01",
+    "kind": "conversation",
+    "scenario": "Meeting someone new at a language exchange.",
+    "personaPrompt": "You are Camila, a friendly student from Mexico. Speak only in short, present-tense Spanish sentences using this lesson's greetings, ser, and me llamo / se llama. Use tú with the learner, never vosotros, and no slang. Introduce yourself first, then let the learner introduce themselves back declaratively (no questions — question words come later).",
+    "openingLine": "Hola, me llamo Camila. Soy de México.",
+    "openingLineGloss": "Hi, my name is Camila. I'm from Mexico.",
+    "goalPhrases": ["Hola, me llamo…", "Soy de Colombia.", "Buenos días.", "Gracias."],
+    "vocabRefs": [
+      "a1-01.v.hola",
+      "a1-01.v.me-llamo",
+      "a1-01.v.se-llama",
+      "a1-01.v.buenos-dias",
+      "a1-01.v.gracias"
+    ]
+  },
+  "quickChecks": [
+    {
+      "id": "a1-01.q.01",
+      "kind": "multipleChoice",
+      "prompt": "___ de México. (I'm from Mexico)",
+      "choices": ["Soy", "Eres", "Es", "Son"],
+      "correctIndex": 0,
+      "explanation": "Use soy, the yo form of ser, to say where you're from.",
+      "grammarTags": ["verb.ser"],
+      "vocabRefs": [],
+      "difficulty": 1
+    },
+    {
+      "id": "a1-01.q.02",
+      "kind": "multipleChoice",
+      "prompt": "___ señora es de Colombia.",
+      "choices": ["La", "El", "Los", "Un"],
+      "correctIndex": 0,
+      "explanation": "Señora is feminine singular, so it takes la.",
+      "grammarTags": ["article", "agreement.gender-number"],
+      "vocabRefs": ["a1-01.v.senora"],
+      "difficulty": 2
+    },
+    {
+      "id": "a1-01.q.03",
+      "kind": "multipleChoice",
+      "prompt": "In the introduction card, where is Camila from?",
+      "passageRef": "a1-01.p.01.02",
+      "choices": ["De México.", "De Colombia.", "De Perú.", "De Chile."],
+      "correctIndex": 0,
+      "explanation": "The card says «Soy de México.»",
+      "grammarTags": [],
+      "vocabRefs": [],
+      "difficulty": 1
+    }
+  ],
+  "contentVersion": 2
+}

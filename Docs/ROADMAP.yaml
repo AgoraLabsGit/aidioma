@@ -1,0 +1,304 @@
+# ROADMAP — the single plan SSOT. Status here wins over every other document.
+# status: pending | active | built | proven | closed | parked
+# Every wave: sized to ONE agent session; >=1 slice the operator can SEE working (operator_sees).
+# Wave OPEN = <=5-bullet plain-language briefing + operator approval.
+# Wave CLOSE = /close only (full gates + audit + recap + testing script + operator GO).
+version: 1
+updated: 2026-07-28
+
+mvp_finish_line: >
+  The 12 A1 lessons are live and practiceable in a deployed app. A learner signs in, taps
+  Continue, and runs a Learn -> Quiz(MC) -> Words -> Sentences -> Story session inside the one
+  chat-centric panel: they type a translation, it is graded instantly and for free (AI only when their
+  answer matches no authored alternate), they can ask the tutor a question inline, they get a
+  session recap (score, items that moved up, top error tags), and the next day their weak items
+  and unconfirmed lessons re-serve automatically. Two modalities at launch: typed translation
+  (Both directions by default) + flashcards. "Done" = that loop working on real data on a real screen.
+
+# --- TWO LANES ------------------------------------------------------------------------------
+# This project runs two parallel lanes under this one roadmap. Only ONE wave per lane is active
+# at a time; the operator touches each wave exactly three times (approve plan / VERIFIED pass /
+# GO the push). Lanes coordinate through files, never chat.
+#   Lane A (App)     - the greenfield Next.js app. Owner: App Design Coordinator.
+#   Lane C (Content) - lesson authoring. Owner: Lesson Plan agent. Content and working records
+#                      live in /content; schema rulings live in Docs/Registers/schema-proposals.md.
+# STANDING SEQUENCING (operator, 2026-07-23):
+#   1. Lane A opens with a mandatory DESIGN-CLOSE wave (A0). No app code until it closes.
+#   2. Lane C is PARKED at 3 pilot lessons. Un-pause trigger = operator's explicit go, given
+#      only AFTER A0 closes (A0 also rules on the schema proposals content needs to resume).
+
+verify:
+  # Content lane has real, running root-workspace gates. App lane gates are set when the
+  # app is scaffolded in wave A1 - a gate that does not yet exist counts as not-run = FAIL.
+  content:
+    typecheck: "npm run content:typecheck"
+    validate:  "npm run content:validate"
+    smoke:     "npm run contract:smoke && npm run content:fixtures && npm run prototype:check"
+  app:
+    typecheck: "TBD - set in wave A1 (app not yet scaffolded)"
+    lint:      "TBD - set in wave A1"
+    test:      "TBD - set in wave A1"
+    build:     "TBD - set in wave A1"
+    smoke:     "TBD - headless end-to-end PASS/FAIL script, once one exists"
+
+# ============================================================================================
+# LANE A - THE APP
+# ============================================================================================
+waves:
+  - id: A0
+    lane: App
+    title: Design Close - settle every open decision into a final spec
+    status: closed
+    operator_sees: >
+      A finished module spec plus a written decision record for every open question, so the app
+      can be built without re-litigating design. Nothing on screen yet - this wave produces the
+      decisions the build waves stand on.
+    depends_on: []
+    unblocks: "A1 (all), A2 (provider/model), Lane C un-pause (schema rulings in A0-3)"
+    slices:
+      - id: A0-1
+        title: UI / interaction decisions -> Module spec
+        status: proven
+        summary: >
+          Rule on the contested cuts (Direction section, lesson multi-select, goal
+          presets+custom / "Reminders: none" row - HANDOFF §3 cuts #2-4; cut #1 already resolved)
+          and the queued module-spec UI items (first-run zero state, unified status vocabulary,
+          word-level error diff, split live "today's accuracy" from next-day-confirmed
+          proficiency, lesson-detail pages for every lesson, "Review · N due" row on Home,
+          quieter card furniture, Home-path vs Lessons-tab duplication). Output: Specs/Features
+          module spec, decided one block at a time.
+      - id: A0-2
+        title: Launch scope + product calls -> ADRs
+        status: proven
+        summary: >
+          Consensus §2 disagreements (vocab-load guideline 10 vs 15-20; mastery spacing
+          >=2 days; direction policy EN->ES-only vs both; evaluationCache drop vs repurpose) and
+          §3 open questions (PROVIDER/MODEL choice - blocks A2; A1-only start-level story;
+          content review bar / reviewer; success metric = day-7 return-to-session; streak /
+          notification posture). Each becomes an ADR.
+      - id: A0-3
+        title: Feature decisions + rule on pending schema proposals -> ADRs
+        status: proven
+        summary: >
+          FEATURES-ROADMAP §9: 5-level mastery scale + user-set threshold vs binary D2 (§7);
+          notes model (feature 8, extends saved_items). AND, in the App Design Coordinator role,
+          rule on the parked lesson-schema proposals: P-003 (VocabItem accept sets +
+          formula.courtesy tag + setId), P-004 (dialect/region dimension, feature 14), P-005
+          (referenceCard study-card kind, feature 10). These rulings are what Lane C needs before
+          it can un-pause. Record in Specs/ADRs + Docs/Registers/schema-proposals.md.
+      - id: A0-4
+        title: Engine specs -> Area specs
+        status: proven
+        summary: >
+          Proficiency-algorithm spec (coverage x best-score, recency decay; live-accuracy vs
+          confirmed-proficiency split), DB-model confirmation against everything the prototype
+          added, SessionEngine recipe + blender spec, and formal sign-off on the 9 design-panel
+          recommendations still open (Handoff §5). Output: Specs/Areas.
+      - id: A0-H
+        title: Hygiene slice (mandatory)
+        status: proven
+        summary: >
+          Residue scan · reconcile registers/specs · review and archive legacy design/app trees ·
+          consolidate application-design SSOT in Docs · separate shared/app infrastructure from
+          authored content · confirm every finding is incorporated or explicitly re-homed.
+
+  - id: A1
+    lane: App
+    title: Scaffold the app + freeze shared contracts (consensus W1)
+    status: pending
+    operator_sees: >
+      A running Next.js app shell, deployed and live (blank but real), and `content:seed` loading
+      the real authored lessons into Neon.
+    depends_on: [A0]
+    slices:
+      - id: A1-1
+        title: Fresh Next.js repo scaffold
+        status: pending
+        summary: "Greenfield Next.js on Vercel; wire Neon + Clerk; set the app-lane verify: gates. Delivers feature 1 foundation."
+      - id: A1-2
+        title: Freeze shared contracts + content CI/seed
+        status: pending
+        summary: "Import @aidioma/lesson-schema as the shared contract (no redeclaration); content CI; idempotent `content:seed` upsert to Neon keyed by slug; Lesson 0 migration. Features 1, 13."
+      - id: A1-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "residue scan · fired deprecations · registers/specs reconcile"
+
+  - id: A2
+    lane: App
+    title: Backend consolidation - one /api/evaluate (consensus W2)
+    status: pending
+    operator_sees: "A single grading endpoint returning a real verdict on a typed answer (comparison-first, AI only on a poor match)."
+    depends_on: [A1, "A0-2 (provider/model)"]
+    slices:
+      - id: A2-1
+        title: One /api/evaluate behind a Gateway abstraction
+        status: pending
+        summary: "Consolidate to one evaluation service (~4,900 -> ~500 lines): delete claude-service + universal service; Gateway abstraction; non-fatal key/health failure; comparison-first then AI. Feature 4."
+      - id: A2-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "delete the superseded services in-slice or file DEP rows with triggers"
+
+  - id: A3
+    lane: App
+    title: Persistence loop (consensus W3)
+    status: pending
+    operator_sees: "A typed answer producing a real `evaluations` row, with item/lesson stats visibly updating."
+    depends_on: [A2]
+    slices:
+      - id: A3-1
+        title: Clerk -> users upsert; evaluations written; stats derived
+        status: pending
+        summary: "Persist every submission as one tagged `evaluations` row; derive user_item_stats + user_lesson_progress. Feature 2; foundation for 9."
+      - id: A3-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "residue scan · fired deprecations · registers/specs reconcile"
+
+  - id: A4
+    lane: App
+    title: Session engine + core UI (consensus W4)
+    status: pending
+    operator_sees: "A real session in the chat panel: Continue -> Learn/Quiz/Words/Sentences cards on real lesson data, plus Home and a lesson-detail page."
+    depends_on: [A3]
+    slices:
+      - id: A4-1
+        title: SessionEngine hook + Practice refactor
+        status: pending
+        summary: "SessionEngine drives the Mix arc; refactor Practice onto it. Features 1, 6 (ask-AI inline)."
+      - id: A4-2
+        title: Home + lesson detail + nav/layout cleanup
+        status: pending
+        summary: "One AppLayout, one token system, dead pages deleted; Home (Continue) + data-driven lesson-detail (retire the hardcoded Ser-vs-Estar page)."
+      - id: A4-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "delete dead pages/tokens in-slice or DEP rows; reconcile"
+
+  - id: A5
+    lane: App
+    title: Flashcards + blend + saved items (consensus W5)
+    status: pending
+    operator_sees: "Flashcards deck working, one-tap save persisting, and the blend toggle mixing recent + weak items into the session."
+    depends_on: [A4]
+    slices:
+      - id: A5-1
+        title: Flashcards renderer (modality 2)
+        status: pending
+        summary: "Second modality: word + sentence flashcards from the schema view-flags."
+      - id: A5-2
+        title: saved_items end-to-end + blend sampler/toggle
+        status: pending
+        summary: "Polymorphic saved_items; blend sampler weights weak/recent items; blend toggle. Feature 3."
+      - id: A5-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "residue scan · fired deprecations · registers/specs reconcile"
+
+  - id: A6
+    lane: App
+    title: Progress + session summary + SHIP (consensus W6)
+    status: pending
+    operator_sees: "Progress on real data, an end-of-session recap screen, and all 12 lessons QA-passed - the shippable MVP."
+    depends_on: [A5, "C3 (12 lessons native-reviewed)"]
+    slices:
+      - id: A6-1
+        title: Progress on real data + session summary screen
+        status: pending
+        summary: "Progress page from real stats; session-summary recap (score, moved-up items, top error tags, next step). Features 9-core, 12."
+      - id: A6-2
+        title: Launch quality gate + full audit
+        status: pending
+        summary: "Content QA of 12 lessons landed; full cache-free gate suite; high-effort review of the whole MVP; ship readiness."
+      - id: A6-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "residue scan · fired deprecations · registers/specs reconcile"
+
+  - id: A7
+    lane: App
+    title: Reading (ES->EN) fast-follow (consensus W7-8)
+    status: pending
+    operator_sees: "A reading exercise graded ES->EN, reusing the same evaluation pipeline."
+    depends_on: [A6]
+    slices:
+      - id: A7-1
+        title: Reading modality
+        status: pending
+        summary: "ES->EN reading; cheap by design (reuses the evaluation pipeline). Then decide conversations vs more lessons on real usage."
+      - id: A7-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "residue scan · fired deprecations · registers/specs reconcile"
+
+# ============================================================================================
+# LANE C - CONTENT   (working detail lives in /content; this is status + cross-links)
+# ============================================================================================
+  - id: C1
+    lane: Content
+    title: Pilot - schema, tooling, first 3 lessons
+    status: proven
+    operator_sees: "3 real A1 lessons (a1-01/02/03) playable in the prototype on real data."
+    depends_on: []
+    slices:
+      - id: C1-done
+        title: Schema v1-FROZEN + tooling + a1-01..03 through L2 QA
+        status: proven
+        summary: >
+          COMPLETE. Schema v1-FROZEN (P-001, P-002 approved); curriculum spine (12 core + 6
+          buffer + A2/B1 outline); style guide; validator (16/16 self-testing checks); draft +
+          QA prompts; a1-01/02/03 drafted -> validator 0 err -> adversarial L2 QA PASS; prototype
+          wired to real data. Detail: content/SESSION-LOG.md + content/review/REVIEW-LOG.md.
+
+  - id: C2
+    lane: Content
+    title: Mass-draft the remaining 9 launch lessons (a1-04..a1-12)
+    status: parked
+    operator_sees: "All 12 launch lessons drafted, validated, and QA-passed - playable in the prototype/app."
+    park_reason: "Operator paused (2026-07-23). Un-pause trigger = operator's explicit go, AFTER A0 closes (esp. A0-3 schema rulings P-003/04/05)."
+    depends_on: ["A0-3 (schema rulings)", "operator go"]
+    slices:
+      - id: C2-1
+        title: Draft + gate a1-04..a1-12
+        status: parked
+        summary: >
+          One Opus agent per lesson (draft-prompt + curriculum-map row + style guide + prior
+          lessons' vocab) -> validator 0 err -> adversarial L2 QA -> fix loop -> REVIEW-LOG.
+          Target: all 12 A1 lessons through layer 2.
+      - id: C2-H
+        title: Hygiene slice (mandatory)
+        status: parked
+        summary: "reconcile REVIEW-LOG, snapshot, SCHEMA-NOTES; re-export prototype data"
+
+  - id: C3
+    lane: Content
+    title: Native-speaker review (QA layer 4)
+    status: pending
+    operator_sees: "All 12 launch lessons corrected against a paid native-speaker pass - launch-grade content."
+    depends_on: [C2]
+    slices:
+      - id: C3-1
+        title: Native pass on all 12 + apply corrections
+        status: pending
+        summary: "Paid native-speaker review (brief at content/review/NATIVE-REVIEWER-BRIEF.md); apply corrections; re-gate. Gates A6 ship."
+      - id: C3-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "reconcile REVIEW-LOG + snapshot; re-export"
+
+  - id: C4
+    lane: Content
+    title: A1 buffer + A2 authoring (post-launch content wave)
+    status: pending
+    operator_sees: "Lessons beyond the launch 12 (a1-13..18 buffer, then A2) available in the app."
+    depends_on: [C3]
+    slices:
+      - id: C4-1
+        title: Buffer a1-13..18 + begin A2
+        status: pending
+        summary: "Author the 6 buffer lessons + start the A2 spine; fold in any schema features approved in A0-3 (dialects/study-cards/deeper lessons)."
+      - id: C4-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "reconcile REVIEW-LOG + snapshot; re-export"

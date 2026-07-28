@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "a1-02-malo",
+  "ordinal": 2,
+  "level": "A1",
+  "title": "Broken lesson (fixture: deliberate violations)",
+  "objective": "This fixture intentionally violates checks 2, 4, 5, 7, 8, 11, and 12 for the validator's own test.",
+  "grammarFocus": ["verb.regular.er-ir", "article"],
+  "prerequisites": ["a1-01-hola"],
+  "explanation": {
+    "id": "a1-02.e.01",
+    "kind": "explanation",
+    "markdown": "This explanation is deliberately far too long so that the word-count check has something to catch, and it should be flagged as an error by the validator. Regular verbs ending in er and ir are conjugated by removing the ending and adding a new one. For example comer becomes como when the subject is yo, and comes when the subject is tú, and come when the subject is él or ella. The verb beber follows the same pattern, so bebo and bebes and bebe are all correct forms. The verb leer is also regular here, giving leo and lees and lee. Notice that the nosotros form is the only place where the er and the ir verbs actually differ from each other in the present tense. We keep writing more and more filler here purely to blow past the one hundred and fifty word budget that the style guide sets for every explanation atom, because the whole point of this fixture is to make the validator complain loudly about an explanation that is much too long to fit inside the strict limit that the content contract imposes on authors everywhere.",
+    "grammarTags": ["verb.regular.er-ir"]
+  },
+  "vocab": [
+    { "id": "a1-02.v.perro", "kind": "vocab", "es": "perro", "en": "dog", "pos": "noun", "gender": "m", "exampleEs": "El perro está aquí.", "exampleEn": "The dog is here." },
+    { "id": "a1-02.v.gato", "kind": "vocab", "es": "gato", "en": "cat", "pos": "noun", "gender": "m", "exampleEs": "El gato está en la casa.", "exampleEn": "The cat is in the house." },
+    { "id": "a1-02.v.libro", "kind": "vocab", "es": "libro", "en": "book", "pos": "noun", "gender": "m", "exampleEs": "El libro está en la mesa.", "exampleEn": "The book is on the table." },
+    { "id": "a1-02.v.agua", "kind": "vocab", "es": "agua", "en": "water", "pos": "noun", "gender": "f", "exampleEs": "Bebo agua.", "exampleEn": "I drink water." },
+    { "id": "a1-02.v.pan", "kind": "vocab", "es": "pan", "en": "bread", "pos": "noun", "gender": "m", "exampleEs": "Como pan.", "exampleEn": "I eat bread." },
+    { "id": "a1-02.v.comer", "kind": "vocab", "es": "comer", "en": "to eat", "pos": "verb", "exampleEs": "Como pan.", "exampleEn": "I eat bread." },
+    { "id": "a1-02.v.beber", "kind": "vocab", "es": "beber", "en": "to drink", "pos": "verb", "exampleEs": "Bebo agua.", "exampleEn": "I drink water." },
+    { "id": "a1-02.v.leer", "kind": "vocab", "es": "leer", "en": "to read", "pos": "verb", "exampleEs": "Leo el libro.", "exampleEn": "I read the book." }
+  ],
+  "sentences": [
+    { "id": "a1-02.s.01", "kind": "sentence", "es": "El gato está en la casa.", "en": "The cat is in the house.", "acceptedEs": ["El gato está en la casa.", "El gato esta en la casa", "El gato está en casa"], "acceptedEn": ["The cat's in the house."], "grammarTags": ["article"], "vocabRefs": ["a1-02.v.gato", "a1-01.v.casa"], "difficulty": 2, "hints": ["Locate the cat.", "está = is located.", "The cat is inside the ___."] },
+    { "id": "a1-02.s.02", "kind": "sentence", "es": "El libro está en la mesa.", "en": "The book is on the table.", "acceptedEs": ["El libro está en la mesa.", "El libro esta en la mesa", "El libro está sobre la mesa"], "acceptedEn": ["The book's on the table."], "grammarTags": ["article"], "vocabRefs": ["a1-02.v.libro", "a1-01.v.mesa"], "difficulty": 2, "hints": ["Locate the book.", "On the table.", "The book is on the ___."] },
+    { "id": "a1-02.s.03", "kind": "sentence", "es": "Como pan.", "en": "I eat bread.", "acceptedEs": ["Como pan.", "Yo como pan", "Como el pan"], "acceptedEn": ["I'm eating bread."], "grammarTags": ["verb.regular.er-ir"], "vocabRefs": ["a1-02.v.pan", "a1-02.v.comer"], "difficulty": 1, "hints": ["Regular -er verb.", "comer -> yo form.", "I ___ bread."] },
+    { "id": "a1-02.s.04", "kind": "sentence", "es": "Bebo agua.", "en": "I drink water.", "acceptedEs": ["Bebo agua.", "Yo bebo agua", "Bebo el agua"], "acceptedEn": ["I'm drinking water."], "grammarTags": ["verb.regular.er-ir"], "vocabRefs": ["a1-02.v.agua", "a1-02.v.beber"], "difficulty": 1, "hints": ["Regular -er verb.", "beber -> yo form.", "I ___ water."] },
+    { "id": "a1-02.s.05", "kind": "sentence", "es": "Leo el libro.", "en": "I read the book.", "acceptedEs": ["Leo el libro.", "Yo leo el libro", "Leo un libro"], "acceptedEn": ["I'm reading the book."], "grammarTags": ["verb.regular.er-ir"], "vocabRefs": ["a1-02.v.libro", "a1-02.v.leer"], "difficulty": 2, "hints": ["Regular -er verb.", "leer -> yo form.", "I ___ the book."] },
+    { "id": "a1-02.s.06", "kind": "sentence", "es": "El gato bebe agua.", "en": "The cat drinks water.", "acceptedEs": ["El gato bebe agua.", "El gato bebe el agua", "El gato toma agua"], "acceptedEn": ["The cat's drinking water."], "grammarTags": ["verb.regular.er-ir"], "vocabRefs": ["a1-02.v.gato", "a1-02.v.agua", "a1-02.v.beber"], "difficulty": 2, "hints": ["Third person.", "beber -> él form.", "The cat ___ water."] },
+    { "id": "a1-02.s.07", "kind": "sentence", "es": "Como pan y agua.", "en": "I eat bread and water.", "acceptedEs": ["Como pan y agua.", "Yo como pan y agua", "Como el pan y el agua"], "acceptedEn": ["I have bread and water."], "grammarTags": ["verb.regular.er-ir"], "vocabRefs": ["a1-02.v.pan", "a1-02.v.agua", "a1-02.v.comer"], "difficulty": 3, "hints": ["Two nouns joined by y.", "comer -> yo form.", "Como pan y agua."] },
+    { "id": "a1-02.s.08", "kind": "sentence", "es": "El libro es de la señora.", "en": "The book belongs to the lady.", "acceptedEs": ["El libro es de la señora.", "Es el libro de la señora", "El libro es de la senora"], "acceptedEn": ["It's the lady's book."], "grammarTags": ["verb.ser"], "vocabRefs": ["a1-99.v.ghost", "a1-02.v.libro"], "difficulty": 3, "hints": ["Use ser for possession.", "es de = belongs to.", "The lady owns the ___."] },
+    { "id": "a1-02.s.09", "kind": "sentence", "es": "El pan está aquí.", "en": "The bread is here.", "acceptedEs": ["El pan está aquí."], "acceptedEn": ["The bread's here."], "grammarTags": ["article"], "vocabRefs": ["a1-02.v.pan"], "difficulty": 2, "hints": ["Locate the bread.", "aquí = here.", "The bread is ___."] },
+    { "id": "a1-02.s.10", "kind": "sentence", "es": "El elefante es azul.", "en": "The elephant is blue.", "acceptedEs": ["El elefante es azul.", "El elefante es de color azul", "Es azul el elefante"], "acceptedEn": ["The elephant's blue."], "grammarTags": ["verb.ser"], "vocabRefs": ["a1-02.v.gato"], "difficulty": 2, "hints": ["Describe with ser.", "A color.", "The animal is ___."] },
+    { "id": "a1-01.s.01", "kind": "sentence", "es": "Gracias, gato.", "en": "Thank you, cat.", "acceptedEs": ["Gracias, gato.", "Gracias gato", "Gracias, gatito"], "acceptedEn": ["Thanks, cat."], "grammarTags": ["article"], "vocabRefs": ["a1-02.v.gato", "a1-01.v.gracias"], "difficulty": 1, "hints": ["Thank the cat.", "Courtesy.", "Thank the ___."] },
+    { "id": "a1-02.s.12", "kind": "sentence", "es": "El gato y el perro están en la casa.", "en": "The cat and the dog are in the house.", "acceptedEs": ["El gato y el perro están en la casa.", "El perro y el gato están en la casa", "El gato y el perro estan en la casa"], "acceptedEn": ["The cat and dog are in the house."], "grammarTags": ["article"], "vocabRefs": ["a1-02.v.gato", "a1-01.v.casa"], "difficulty": 3, "hints": ["Two animals.", "están = are located.", "The cat and the dog are in the ___."] }
+  ],
+  "passage": {
+    "id": "a1-02.p.01",
+    "kind": "passage",
+    "title": "The cat and the book",
+    "segments": [
+      { "es": "El gato está en la casa.", "en": ["The cat is in the house."], "vocabRefs": ["a1-02.v.gato", "a1-01.v.casa"] },
+      { "es": "Leo el libro y bebo agua.", "en": ["I read the book and drink water."], "vocabRefs": ["a1-02.v.libro", "a1-02.v.leer", "a1-02.v.agua", "a1-02.v.beber"] }
+    ]
+  },
+  "conversation": {
+    "id": "a1-02.c.01",
+    "kind": "conversation",
+    "scenario": "Talking about food and pets at home.",
+    "personaPrompt": "The persona talks about eating and reading using only regular -er/-ir verbs and prior vocab.",
+    "openingLine": "El gato está en la casa.",
+    "goalPhrases": ["como pan", "bebo agua"],
+    "vocabRefs": ["a1-02.v.gato", "a1-02.v.pan", "a1-02.v.agua"]
+  },
+  "quickChecks": [],
+  "contentVersion": 1
+}

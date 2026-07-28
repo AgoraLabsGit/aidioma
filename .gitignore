@@ -1,0 +1,21 @@
+# Local sensitive legacy vault — may contain nested Git history and old credentials
+/Archive/Legacy-Apps/
+
+# Dependencies / build output
+node_modules/
+.venv/
+dist/
+build/
+.next/
+out/
+coverage/
+.turbo/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor cruft
+.DS_Store
+*.log

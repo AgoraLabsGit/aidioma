@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "a1-01-hola",
+  "ordinal": 1,
+  "level": "A1",
+  "title": "Greetings (fixture: valid)",
+  "objective": "You can greet people and name basic household objects.",
+  "grammarFocus": ["verb.ser", "article"],
+  "prerequisites": [],
+  "explanation": {
+    "id": "a1-01.e.01",
+    "kind": "explanation",
+    "markdown": "Use **ser** (soy, es, son) to say who someone is. Spanish nouns take an article: *el señor*, *la señora*, *la casa*. Say **hola** to greet and **adiós** to leave.",
+    "grammarTags": ["verb.ser", "article"]
+  },
+  "vocab": [
+    { "id": "a1-01.v.hola", "kind": "vocab", "es": "hola", "en": "hello", "pos": "other", "exampleEs": "Hola, señor.", "exampleEn": "Hello, sir." },
+    { "id": "a1-01.v.adios", "kind": "vocab", "es": "adiós", "en": "goodbye", "pos": "other", "exampleEs": "Adiós, señora.", "exampleEn": "Goodbye, ma'am." },
+    { "id": "a1-01.v.gracias", "kind": "vocab", "es": "gracias", "en": "thank you", "pos": "other", "exampleEs": "Gracias, señor.", "exampleEn": "Thank you, sir." },
+    { "id": "a1-01.v.senor", "kind": "vocab", "es": "señor", "en": "sir", "pos": "noun", "gender": "m", "exampleEs": "El señor está aquí.", "exampleEn": "The gentleman is here." },
+    { "id": "a1-01.v.senora", "kind": "vocab", "es": "señora", "en": "ma'am", "pos": "noun", "gender": "f", "exampleEs": "La señora está aquí.", "exampleEn": "The lady is here." },
+    { "id": "a1-01.v.casa", "kind": "vocab", "es": "casa", "en": "house", "pos": "noun", "gender": "f", "exampleEs": "La casa es de la señora.", "exampleEn": "The house belongs to the lady." },
+    { "id": "a1-01.v.mesa", "kind": "vocab", "es": "mesa", "en": "table", "pos": "noun", "gender": "f", "exampleEs": "La mesa está en la casa.", "exampleEn": "The table is in the house." },
+    { "id": "a1-01.v.silla", "kind": "vocab", "es": "silla", "en": "chair", "pos": "noun", "gender": "f", "exampleEs": "Una silla y una mesa.", "exampleEn": "A chair and a table." }
+  ],
+  "sentences": [
+    { "id": "a1-01.s.01", "kind": "sentence", "es": "Hola, señor.", "en": "Hello, sir.", "acceptedEs": ["Hola, señor.", "Hola señor", "Buenas, señor"], "acceptedEn": ["Hi, sir."], "grammarTags": ["article"], "vocabRefs": ["a1-01.v.hola", "a1-01.v.senor"], "difficulty": 1, "hints": ["A greeting.", "Starts with an H.", "Greet the gentleman."] },
+    { "id": "a1-01.s.02", "kind": "sentence", "es": "Adiós, señora.", "en": "Goodbye, ma'am.", "acceptedEs": ["Adiós, señora.", "Adios senora", "Chao, señora"], "acceptedEn": ["Bye, ma'am."], "grammarTags": ["article"], "vocabRefs": ["a1-01.v.adios", "a1-01.v.senora"], "difficulty": 2, "hints": ["A farewell.", "Opposite of hola.", "Say bye to the lady."] },
+    { "id": "a1-01.s.03", "kind": "sentence", "es": "Gracias, señora.", "en": "Thank you, ma'am.", "acceptedEs": ["Gracias, señora.", "Muchas gracias, señora", "Gracias senora"], "acceptedEn": ["Thanks, ma'am."], "grammarTags": ["article"], "vocabRefs": ["a1-01.v.gracias", "a1-01.v.senora"], "difficulty": 1, "hints": ["Express thanks.", "Rhymes with nothing useful.", "Thank the lady."] },
+    { "id": "a1-01.s.04", "kind": "sentence", "es": "La casa es de la señora.", "en": "The house belongs to the lady.", "acceptedEs": ["La casa es de la señora.", "Es la casa de la señora", "La casa es de la senora"], "acceptedEn": ["It's the lady's house."], "grammarTags": ["verb.ser"], "vocabRefs": ["a1-01.v.casa", "a1-01.v.senora"], "difficulty": 3, "hints": ["Use ser for possession.", "es de = belongs to.", "The lady owns the ___."] },
+    { "id": "a1-01.s.05", "kind": "sentence", "es": "La mesa y la silla.", "en": "The table and the chair.", "acceptedEs": ["La mesa y la silla.", "La silla y la mesa", "Una mesa y una silla"], "acceptedEn": ["A table and a chair."], "grammarTags": ["article"], "vocabRefs": ["a1-01.v.mesa", "a1-01.v.silla"], "difficulty": 2, "hints": ["Two objects joined by y.", "Furniture.", "___ and ___."] },
+    { "id": "a1-01.s.06", "kind": "sentence", "es": "Una silla en la casa.", "en": "A chair in the house.", "acceptedEs": ["Una silla en la casa.", "Hay una silla en la casa", "Una silla en casa"], "acceptedEn": ["There's a chair in the house."], "grammarTags": ["article"], "vocabRefs": ["a1-01.v.silla", "a1-01.v.casa"], "difficulty": 2, "hints": ["Place a chair.", "en = in.", "A chair inside the ___."] },
+    { "id": "a1-01.s.07", "kind": "sentence", "es": "La mesa está en la casa.", "en": "The table is in the house.", "acceptedEs": ["La mesa está en la casa.", "La mesa esta en la casa", "Está la mesa en la casa"], "acceptedEn": ["The table's in the house."], "grammarTags": ["article"], "vocabRefs": ["a1-01.v.mesa", "a1-01.v.casa"], "difficulty": 3, "hints": ["Locate the table.", "está = is located.", "The table is inside the ___."] },
+    { "id": "a1-01.s.08", "kind": "sentence", "es": "Hola y gracias.", "en": "Hello and thank you.", "acceptedEs": ["Hola y gracias.", "Hola, gracias", "Gracias y hola"], "acceptedEn": ["Hi and thanks."], "grammarTags": ["article"], "vocabRefs": ["a1-01.v.hola", "a1-01.v.gracias"], "difficulty": 1, "hints": ["Greet, then thank.", "Two courtesy words.", "___ and ___."] },
+    { "id": "a1-01.s.09", "kind": "sentence", "es": "El señor y la señora.", "en": "The gentleman and the lady.", "acceptedEs": ["El señor y la señora.", "La señora y el señor", "El senor y la senora"], "acceptedEn": ["The man and the woman."], "grammarTags": ["agreement.gender-number"], "vocabRefs": ["a1-01.v.senor", "a1-01.v.senora"], "difficulty": 2, "hints": ["Two people.", "Mind el vs la.", "The man and the ___."] },
+    { "id": "a1-01.s.10", "kind": "sentence", "es": "Adiós, gracias.", "en": "Goodbye, thank you.", "acceptedEs": ["Adiós, gracias.", "Gracias, adiós", "Adios y gracias"], "acceptedEn": ["Bye, thanks."], "grammarTags": ["article"], "vocabRefs": ["a1-01.v.adios", "a1-01.v.gracias"], "difficulty": 1, "hints": ["Leave politely.", "Farewell plus thanks.", "___, thank you."] },
+    { "id": "a1-01.s.11", "kind": "sentence", "es": "Gracias, señor.", "en": "Thank you, sir.", "acceptedEs": ["Gracias, señor.", "Muchas gracias, señor", "Gracias senor"], "acceptedEn": ["Thanks, sir."], "grammarTags": ["article"], "vocabRefs": ["a1-01.v.gracias", "a1-01.v.senor"], "difficulty": 2, "hints": ["Thank a man.", "Courtesy.", "Thank the ___."] },
+    { "id": "a1-01.s.12", "kind": "sentence", "es": "Una mesa y una silla.", "en": "A table and a chair.", "acceptedEs": ["Una mesa y una silla.", "Una silla y una mesa", "Hay una mesa y una silla"], "acceptedEn": ["There's a table and a chair."], "grammarTags": ["article"], "vocabRefs": ["a1-01.v.mesa", "a1-01.v.silla"], "difficulty": 3, "hints": ["Indefinite articles.", "una ... y una ...", "A table and a ___."] }
+  ],
+  "passage": {
+    "id": "a1-01.p.01",
+    "kind": "passage",
+    "title": "The lady's house",
+    "segments": [
+      { "es": "Hola.", "en": ["Hello."], "vocabRefs": ["a1-01.v.hola"] },
+      { "es": "La casa es de la señora.", "en": ["The house belongs to the lady."], "vocabRefs": ["a1-01.v.casa", "a1-01.v.senora"] },
+      { "es": "Hay una mesa y una silla en la casa.", "en": ["There is a table and a chair in the house."], "vocabRefs": ["a1-01.v.mesa", "a1-01.v.silla", "a1-01.v.casa"] }
+    ]
+  },
+  "conversation": {
+    "id": "a1-01.c.01",
+    "kind": "conversation",
+    "scenario": "Greeting a neighbor at the door.",
+    "personaPrompt": "The neighbor greets warmly and thanks the learner. Uses only greetings and household nouns.",
+    "openingLine": "Hola, señora.",
+    "goalPhrases": ["hola", "gracias", "adiós"],
+    "vocabRefs": ["a1-01.v.hola", "a1-01.v.senora", "a1-01.v.gracias"]
+  },
+  "quickChecks": [
+    {
+      "id": "a1-01.q.01",
+      "kind": "multipleChoice",
+      "prompt": "Which word greets someone?",
+      "choices": ["hola", "adiós", "gracias"],
+      "correctIndex": 0,
+      "explanation": "hola means hello.",
+      "grammarTags": ["article"],
+      "vocabRefs": ["a1-01.v.hola"],
+      "difficulty": 1
+    },
+    {
+      "id": "a1-01.q.02",
+      "kind": "multipleChoice",
+      "prompt": "What is in the house, per the passage?",
+      "passageRef": "a1-01.p.01.03",
+      "choices": ["una mesa y una silla", "un carro", "un perro"],
+      "correctIndex": 0,
+      "explanation": "The passage says there is a table and a chair.",
+      "grammarTags": [],
+      "vocabRefs": ["a1-01.v.mesa", "a1-01.v.silla"],
+      "difficulty": 2
+    }
+  ],
+  "contentVersion": 1
+}

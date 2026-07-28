@@ -1,0 +1,503 @@
+{
+  "schemaVersion": 1,
+  "id": "a1-02-soy-asi",
+  "ordinal": 2,
+  "level": "A1",
+  "title": "Soy así: describing people",
+  "objective": "You can write short sentences describing what a person is like, with correct gender/number agreement.",
+  "grammarFocus": ["agreement.gender-number", "verb.ser"],
+  "prerequisites": ["a1-01-hola-me-llamo"],
+  "explanation": {
+    "id": "a1-02.e.01",
+    "kind": "explanation",
+    "markdown": "In Spanish, an adjective **agrees** with the person it describes. Most adjectives ending in *-o* change for gender and number: *alto* (m), *alta* (f), *altos*, *altas*. So *Él es alto* (\"He's tall\"), *Ella es alta* (\"She's tall\"), *Ellos son altos* (\"They're tall\").\n\nSome adjectives don't change for gender at all — like *amable*, *inteligente*, and *joven*. These stay the same for a man or a woman and change only for number: *un señor amable*, *una señora amable*, *dos señores amables*.\n\nBut adjectives ending in *-or* add *-a* for a woman: *trabajador* (m) → *trabajadora* (f). Nationalities follow the *-o/-a* pattern: *mexicano / mexicana*, *colombiano / colombiana*.\n\nOne caution: *simpático* means \"nice, friendly\" — not \"sympathetic.\" It's a classic trap for English speakers.",
+    "grammarTags": ["agreement.gender-number", "verb.ser"]
+  },
+  "vocab": [
+    {
+      "id": "a1-02.v.alto",
+      "kind": "vocab",
+      "es": "alto",
+      "en": "tall",
+      "pos": "adj",
+      "exampleEs": "Él es alto.",
+      "exampleEn": "He's tall."
+    },
+    {
+      "id": "a1-02.v.joven",
+      "kind": "vocab",
+      "es": "joven",
+      "en": "young",
+      "pos": "adj",
+      "exampleEs": "Ella es joven.",
+      "exampleEn": "She's young."
+    },
+    {
+      "id": "a1-02.v.bonito",
+      "kind": "vocab",
+      "es": "bonito",
+      "en": "pretty / nice-looking",
+      "pos": "adj",
+      "exampleEs": "Ella es bonita.",
+      "exampleEn": "She's pretty."
+    },
+    {
+      "id": "a1-02.v.simpatico",
+      "kind": "vocab",
+      "es": "simpático",
+      "en": "nice / friendly",
+      "pos": "adj",
+      "exampleEs": "El señor es simpático.",
+      "exampleEn": "The man is friendly."
+    },
+    {
+      "id": "a1-02.v.inteligente",
+      "kind": "vocab",
+      "es": "inteligente",
+      "en": "intelligent / smart",
+      "pos": "adj",
+      "exampleEs": "Tú eres inteligente.",
+      "exampleEn": "You're smart."
+    },
+    {
+      "id": "a1-02.v.delgado",
+      "kind": "vocab",
+      "es": "delgado",
+      "en": "slim / thin",
+      "pos": "adj",
+      "exampleEs": "Él es delgado.",
+      "exampleEn": "He's slim."
+    },
+    {
+      "id": "a1-02.v.amable",
+      "kind": "vocab",
+      "es": "amable",
+      "en": "kind",
+      "pos": "adj",
+      "exampleEs": "La señora es amable.",
+      "exampleEn": "The lady is kind."
+    },
+    {
+      "id": "a1-02.v.trabajador",
+      "kind": "vocab",
+      "es": "trabajador",
+      "en": "hardworking",
+      "pos": "adj",
+      "exampleEs": "El señor es trabajador.",
+      "exampleEn": "The man is hardworking."
+    },
+    {
+      "id": "a1-02.v.mexicano",
+      "kind": "vocab",
+      "es": "mexicano",
+      "en": "Mexican",
+      "pos": "adj",
+      "exampleEs": "Él es mexicano.",
+      "exampleEn": "He's Mexican."
+    },
+    {
+      "id": "a1-02.v.colombiano",
+      "kind": "vocab",
+      "es": "colombiano",
+      "en": "Colombian",
+      "pos": "adj",
+      "exampleEs": "Ella es colombiana.",
+      "exampleEn": "She's Colombian."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "a1-02.s.01",
+      "kind": "sentence",
+      "es": "Yo soy alto.",
+      "en": "I'm tall.",
+      "acceptedEs": ["Soy alto.", "Soy alta.", "Yo soy alta."],
+      "acceptedEn": ["I am tall."],
+      "grammarTags": ["agreement.gender-number", "verb.ser"],
+      "vocabRefs": ["a1-02.v.alto"],
+      "difficulty": 1,
+      "hints": [
+        "Say who you are with the *yo* form of 'to be,' then the adjective for 'tall.'",
+        "'I am' is *soy*; 'tall' from a masculine speaker is *alto* (a woman would say *alta*).",
+        "*Yo soy ___* — the adjective for 'tall.'"
+      ],
+      "flashcard": { "eligible": true, "front": "es" }
+    },
+    {
+      "id": "a1-02.s.02",
+      "kind": "sentence",
+      "es": "Ella es colombiana y bonita.",
+      "en": "She's Colombian and pretty.",
+      "acceptedEs": [
+        "Es colombiana y bonita.",
+        "Ella es bonita y colombiana.",
+        "Es bonita y colombiana.",
+        "Ella es colombiana y linda.",
+        "Es colombiana y linda."
+      ],
+      "acceptedEn": ["She is Colombian and pretty."],
+      "grammarTags": ["agreement.gender-number", "verb.ser"],
+      "vocabRefs": ["a1-02.v.colombiano", "a1-02.v.bonito"],
+      "difficulty": 2,
+      "hints": [
+        "Both adjectives describe a woman, so both must take the feminine form.",
+        "'Colombian' becomes *colombiana* and 'pretty' becomes *bonita* for a feminine subject.",
+        "*Ella es colombiana y ___* — the feminine form of 'pretty.'"
+      ],
+      "flashcard": { "eligible": true, "front": "es" }
+    },
+    {
+      "id": "a1-02.s.03",
+      "kind": "sentence",
+      "es": "El señor es trabajador y amable.",
+      "en": "The man is hardworking and kind.",
+      "acceptedEs": [
+        "Es trabajador y amable.",
+        "El señor es amable y trabajador.",
+        "Es amable y trabajador."
+      ],
+      "acceptedEn": ["The gentleman is hardworking and kind."],
+      "grammarTags": ["agreement.gender-number", "verb.ser", "article"],
+      "vocabRefs": ["a1-01.v.senor", "a1-02.v.trabajador", "a1-02.v.amable"],
+      "difficulty": 3,
+      "hints": [
+        "Use masculine 'the' with the man, then 'to be' plus two qualities joined by 'and.'",
+        "Masculine 'the' is *el*; 'is' is *es*; *amable* is the same for men and women.",
+        "*El señor es ___ y amable* — the adjective for 'hardworking.'"
+      ]
+    },
+    {
+      "id": "a1-02.s.04",
+      "kind": "sentence",
+      "es": "Tú eres joven y amable.",
+      "en": "You're young and kind.",
+      "acceptedEs": [
+        "Eres joven y amable.",
+        "Tú eres amable y joven.",
+        "Eres amable y joven."
+      ],
+      "acceptedEn": ["You are young and kind."],
+      "grammarTags": ["agreement.gender-number", "verb.ser"],
+      "vocabRefs": ["a1-02.v.joven", "a1-02.v.amable"],
+      "difficulty": 2,
+      "hints": [
+        "Address the other person with the *tú* form of 'to be,' then two qualities.",
+        "'You are' is *eres*; both *joven* and *amable* stay the same for either gender.",
+        "*Tú ___ joven y amable* — the *tú* form of *ser*."
+      ]
+    },
+    {
+      "id": "a1-02.s.05",
+      "kind": "sentence",
+      "es": "Nosotros somos mexicanos.",
+      "en": "We're Mexican.",
+      "acceptedEs": [
+        "Somos mexicanos.",
+        "Nosotras somos mexicanas.",
+        "Somos mexicanas."
+      ],
+      "acceptedEn": ["We are Mexican."],
+      "grammarTags": ["agreement.gender-number", "verb.ser"],
+      "vocabRefs": ["a1-02.v.mexicano"],
+      "difficulty": 2,
+      "hints": [
+        "A group including you: use the 'we' form and make the nationality plural.",
+        "'We are' is *somos*; a mixed or male group is *mexicanos* (an all-female group is *mexicanas*).",
+        "*Nosotros somos ___* — the plural of 'Mexican.'"
+      ],
+      "flashcard": { "eligible": true, "front": "es" }
+    },
+    {
+      "id": "a1-02.s.06",
+      "kind": "sentence",
+      "es": "Ellas son inteligentes y amables.",
+      "en": "They're smart and kind.",
+      "acceptedEs": [
+        "Son inteligentes y amables.",
+        "Ellas son amables e inteligentes.",
+        "Son amables e inteligentes.",
+        "Ellos son inteligentes y amables.",
+        "Ellos son amables e inteligentes."
+      ],
+      "acceptedEn": ["They are intelligent and kind.", "They're intelligent and kind."],
+      "grammarTags": ["agreement.gender-number", "verb.ser"],
+      "vocabRefs": ["a1-02.v.inteligente", "a1-02.v.amable"],
+      "difficulty": 3,
+      "hints": [
+        "Several women: use the 'they' form and make both adjectives plural.",
+        "'They are' is *son*; *inteligente* and *amable* only change for number, adding *-s*.",
+        "*Ellas son ___ y amables* — the plural of 'intelligent.'"
+      ]
+    },
+    {
+      "id": "a1-02.s.07",
+      "kind": "sentence",
+      "es": "Él es delgado y joven.",
+      "en": "He's slim and young.",
+      "acceptedEs": [
+        "Es delgado y joven.",
+        "Él es joven y delgado.",
+        "Es joven y delgado."
+      ],
+      "acceptedEn": ["He is slim and young.", "He's thin and young."],
+      "grammarTags": ["agreement.gender-number", "verb.ser"],
+      "vocabRefs": ["a1-02.v.delgado", "a1-02.v.joven"],
+      "difficulty": 2,
+      "hints": [
+        "Describe a man with 'to be' plus two qualities joined by 'and.'",
+        "'Slim' for a man is *delgado*; *joven* is the same for both genders.",
+        "*Él es ___ y joven* — the masculine form of 'slim.'"
+      ],
+      "flashcard": { "eligible": true, "front": "es" }
+    },
+    {
+      "id": "a1-02.s.08",
+      "kind": "sentence",
+      "es": "La señora es simpática y amable.",
+      "en": "The lady is friendly and kind.",
+      "acceptedEs": [
+        "Es simpática y amable.",
+        "La señora es amable y simpática.",
+        "Es amable y simpática."
+      ],
+      "acceptedEn": ["The woman is nice and kind."],
+      "grammarTags": ["agreement.gender-number", "verb.ser", "article"],
+      "vocabRefs": ["a1-01.v.senora", "a1-02.v.simpatico", "a1-02.v.amable"],
+      "difficulty": 3,
+      "hints": [
+        "Use feminine 'the' with the lady, then two qualities; only one adjective changes shape.",
+        "Feminine 'the' is *la*; 'friendly' becomes *simpática*, while *amable* stays the same.",
+        "*La señora es ___ y amable* — the feminine form of 'friendly.'"
+      ]
+    },
+    {
+      "id": "a1-02.s.09",
+      "kind": "sentence",
+      "es": "Soy joven pero no soy alto.",
+      "en": "I'm young, but I'm not tall.",
+      "acceptedEs": [
+        "Yo soy joven pero no soy alto.",
+        "Soy joven pero no soy alta.",
+        "Yo soy joven pero no soy alta."
+      ],
+      "acceptedEn": ["I am young but I'm not tall."],
+      "grammarTags": ["agreement.gender-number", "verb.ser"],
+      "vocabRefs": ["a1-02.v.joven", "a1-02.v.alto"],
+      "difficulty": 4,
+      "hints": [
+        "Two ideas joined by 'but': one thing you are, one thing you're not.",
+        "'I am' is *soy*; put *no* before the second *soy* to negate it; *alto* is masculine (*alta* feminine).",
+        "*Soy joven pero no soy ___* — the adjective for 'tall.'"
+      ]
+    },
+    {
+      "id": "a1-02.s.10",
+      "kind": "sentence",
+      "es": "Ustedes son amables y trabajadores.",
+      "en": "You're all kind and hardworking.",
+      "acceptedEs": [
+        "Son amables y trabajadores.",
+        "Ustedes son trabajadores y amables.",
+        "Son trabajadores y amables.",
+        "Ustedes son amables y trabajadoras.",
+        "Son amables y trabajadoras."
+      ],
+      "acceptedEn": ["You are kind and hardworking."],
+      "grammarTags": ["agreement.gender-number", "verb.ser"],
+      "vocabRefs": ["a1-02.v.amable", "a1-02.v.trabajador"],
+      "difficulty": 3,
+      "hints": [
+        "Address a group as 'you all,' then two qualities, both plural.",
+        "Plural 'you' is *ustedes* with *son*; make both adjectives plural: *amables*, *trabajadores*.",
+        "*Ustedes son amables y ___* — the plural of 'hardworking.'"
+      ]
+    },
+    {
+      "id": "a1-02.s.11",
+      "kind": "sentence",
+      "es": "Ella es bonita y también es simpática.",
+      "en": "She's pretty and also friendly.",
+      "acceptedEs": [
+        "Es bonita y también es simpática.",
+        "Ella es simpática y también es bonita.",
+        "Es simpática y también es bonita.",
+        "Ella es bonita y simpática.",
+        "Ella es linda y también es simpática.",
+        "Ella es bonita y también simpática."
+      ],
+      "acceptedEn": ["She is pretty and also nice."],
+      "grammarTags": ["agreement.gender-number", "verb.ser"],
+      "vocabRefs": ["a1-02.v.bonito", "a1-02.v.simpatico"],
+      "difficulty": 4,
+      "hints": [
+        "Add a second quality with 'also'; both adjectives describe a woman.",
+        "*también* means 'also'; both *bonita* and *simpática* take the feminine *-a*.",
+        "*Ella es bonita y también es ___* — the feminine form of 'friendly.'"
+      ]
+    },
+    {
+      "id": "a1-02.s.12",
+      "kind": "sentence",
+      "es": "Nosotras somos colombianas y bonitas.",
+      "en": "We're Colombian and pretty.",
+      "acceptedEs": [
+        "Somos colombianas y bonitas.",
+        "Nosotras somos bonitas y colombianas.",
+        "Somos bonitas y colombianas.",
+        "Nosotras somos colombianas y lindas.",
+        "Nosotros somos colombianos y bonitos."
+      ],
+      "acceptedEn": ["We are Colombian and pretty."],
+      "grammarTags": ["agreement.gender-number", "verb.ser"],
+      "vocabRefs": ["a1-02.v.colombiano", "a1-02.v.bonito"],
+      "difficulty": 3,
+      "hints": [
+        "A group of women: use 'we' and make both adjectives feminine plural.",
+        "'We are' is *somos*; feminine plurals end in *-as*: *colombianas*, *bonitas*.",
+        "*Nosotras somos colombianas y ___* — the feminine plural of 'pretty.'"
+      ]
+    },
+    {
+      "id": "a1-02.s.13",
+      "kind": "sentence",
+      "es": "Ella es mexicana, es muy inteligente y también es simpática.",
+      "en": "She's Mexican, very smart, and also friendly.",
+      "acceptedEs": [
+        "Es mexicana, es muy inteligente y también es simpática.",
+        "Ella es mexicana, muy inteligente y también simpática.",
+        "Es mexicana, muy inteligente y también simpática.",
+        "Ella es simpática, mexicana y muy inteligente."
+      ],
+      "acceptedEn": ["She is Mexican, very intelligent, and also nice."],
+      "grammarTags": ["agreement.gender-number", "verb.ser"],
+      "vocabRefs": ["a1-02.v.mexicano", "a1-02.v.inteligente", "a1-02.v.simpatico"],
+      "difficulty": 5,
+      "hints": [
+        "Stack three qualities about the same woman; watch the feminine agreement on each.",
+        "*muy* means 'very'; the *-o* adjectives become *mexicana* and *simpática*, while *inteligente* stays the same.",
+        "*Ella es mexicana, es muy inteligente y también es ___* — the feminine form of 'friendly.'"
+      ]
+    },
+    {
+      "id": "a1-02.s.14",
+      "kind": "sentence",
+      "es": "Él se llama Diego y es joven y trabajador.",
+      "en": "His name is Diego, and he's young and hardworking.",
+      "acceptedEs": [
+        "Se llama Diego y es joven y trabajador.",
+        "Él se llama Diego y es trabajador y joven.",
+        "Se llama Diego y es trabajador y joven."
+      ],
+      "acceptedEn": ["His name is Diego and he is young and hardworking."],
+      "grammarTags": ["agreement.gender-number", "verb.ser"],
+      "vocabRefs": ["a1-01.v.se-llama", "a1-02.v.joven", "a1-02.v.trabajador"],
+      "difficulty": 4,
+      "hints": [
+        "Give his name with the set phrase, then describe him with two qualities.",
+        "'His name is' is the fixed *se llama*; *joven* is invariable, *trabajador* is the masculine form here.",
+        "*Él se llama Diego y es joven y ___* — the adjective for 'hardworking.'"
+      ]
+    }
+  ],
+  "passage": {
+    "id": "a1-02.p.01",
+    "kind": "passage",
+    "title": "Camila y Diego (Camila and Diego)",
+    "segments": [
+      {
+        "id": "a1-02.p.01.01",
+        "es": "Ella se llama Camila y es de México.",
+        "en": ["Her name is Camila and she's from Mexico.", "She's called Camila and she is from Mexico."],
+        "vocabRefs": ["a1-01.v.se-llama"]
+      },
+      {
+        "id": "a1-02.p.01.02",
+        "es": "Ella es mexicana y muy simpática.",
+        "en": ["She's Mexican and very friendly.", "She is Mexican and very nice."],
+        "vocabRefs": ["a1-02.v.mexicano", "a1-02.v.simpatico"]
+      },
+      {
+        "id": "a1-02.p.01.03",
+        "es": "Él se llama Diego y es de Colombia.",
+        "en": ["His name is Diego and he's from Colombia.", "He's called Diego and he is from Colombia."],
+        "vocabRefs": ["a1-01.v.se-llama"]
+      },
+      {
+        "id": "a1-02.p.01.04",
+        "es": "Él es alto, delgado y trabajador.",
+        "en": ["He's tall, slim, and hardworking.", "He is tall, thin, and hardworking."],
+        "vocabRefs": ["a1-02.v.alto", "a1-02.v.delgado", "a1-02.v.trabajador"]
+      },
+      {
+        "id": "a1-02.p.01.05",
+        "es": "Ellos son inteligentes y amables.",
+        "en": ["They're smart and kind.", "They are intelligent and kind."],
+        "vocabRefs": ["a1-02.v.inteligente", "a1-02.v.amable"]
+      }
+    ]
+  },
+  "conversation": {
+    "id": "a1-02.c.01",
+    "kind": "conversation",
+    "scenario": "Chatting with a friend about people you both know.",
+    "personaPrompt": "You are Lucía, a friendly student. Speak only in short, present-tense Spanish sentences using this lesson's adjectives, ser, and se llama. Describe one person (looks, nationality, a quality), then let the learner describe someone back. Use tú with the learner, never vosotros, no slang, and only declarative sentences — no questions, since question words come later.",
+    "openingLine": "Hola. Ella se llama Camila y es muy simpática.",
+    "openingLineGloss": "Hi. Her name is Camila and she's very friendly.",
+    "goalPhrases": ["Ella es alta y simpática.", "Él es mexicano.", "Yo soy amable.", "Ella se llama Ana."],
+    "vocabRefs": [
+      "a1-02.v.alto",
+      "a1-02.v.simpatico",
+      "a1-02.v.mexicano",
+      "a1-02.v.amable",
+      "a1-01.v.se-llama"
+    ]
+  },
+  "quickChecks": [
+    {
+      "id": "a1-02.q.01",
+      "kind": "multipleChoice",
+      "prompt": "La señora es ___.",
+      "choices": ["simpática", "simpático", "simpáticos", "simpáticas"],
+      "correctIndex": 0,
+      "explanation": "Señora is feminine singular, so the adjective takes the feminine singular form simpática.",
+      "grammarTags": ["agreement.gender-number"],
+      "vocabRefs": ["a1-01.v.senora", "a1-02.v.simpatico"],
+      "difficulty": 2
+    },
+    {
+      "id": "a1-02.q.02",
+      "kind": "multipleChoice",
+      "prompt": "Ellos son ___.",
+      "choices": ["altos", "alto", "alta", "altas"],
+      "correctIndex": 0,
+      "explanation": "Ellos is masculine plural, so 'tall' agrees as altos.",
+      "grammarTags": ["agreement.gender-number"],
+      "vocabRefs": ["a1-02.v.alto"],
+      "difficulty": 2
+    },
+    {
+      "id": "a1-02.q.03",
+      "kind": "multipleChoice",
+      "prompt": "Nosotras somos ___.",
+      "choices": ["colombianas", "colombianos", "colombiana", "colombiano"],
+      "correctIndex": 0,
+      "explanation": "Nosotras is feminine plural, so the nationality is colombianas.",
+      "grammarTags": ["agreement.gender-number"],
+      "vocabRefs": ["a1-02.v.colombiano"],
+      "difficulty": 3
+    },
+    {
+      "id": "a1-02.q.04",
+      "kind": "multipleChoice",
+      "prompt": "In the reading, where is Diego from?",
+      "passageRef": "a1-02.p.01.03",
+      "choices": ["De Colombia.", "De México.", "De Perú.", "De Chile."],
+      "correctIndex": 0,
+      "explanation": "The reading says «Él se llama Diego y es de Colombia.»",
+      "grammarTags": [],
+      "vocabRefs": [],
+      "difficulty": 1
+    }
+  ],
+  "contentVersion": 2
+}

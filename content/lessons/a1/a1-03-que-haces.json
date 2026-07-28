@@ -1,0 +1,698 @@
+{
+  "schemaVersion": 1,
+  "id": "a1-03-que-haces",
+  "ordinal": 3,
+  "level": "A1",
+  "title": "Qué haces: saying what you do",
+  "objective": "You can say what you and others do using regular -ar verbs, and ask a simple question about it.",
+  "grammarFocus": [
+    "verb.regular.ar",
+    "question.formation",
+    "negation"
+  ],
+  "prerequisites": [
+    "a1-02-soy-asi"
+  ],
+  "explanation": {
+    "id": "a1-03.e.01",
+    "kind": "explanation",
+    "markdown": "Spanish verbs in their dictionary form end in **-ar**, like *hablar* (\"to speak\") and *estudiar* (\"to study\"). To say who does the action, drop the *-ar* and add an ending: *yo hablo*, *tú hablas*, *él/ella habla*, *nosotros hablamos*, *ustedes/ellos hablan*. So: *Yo hablo español* (\"I speak Spanish\"), *Ella estudia mucho* (\"She studies a lot\"), *Ustedes trabajan* (\"You all work\").\n\nSpanish usually drops the subject pronoun, so *Hablo español* sounds more natural than *Yo hablo español* — both are correct.\n\nOne caution: don't add an extra word for \"do\" in questions or \"am/are\" in statements. *¿Dónde trabajas?* is simply \"Where do you work?\" — the verb ending already carries all of that.",
+    "grammarTags": [
+      "verb.regular.ar"
+    ]
+  },
+  "vocab": [
+    {
+      "id": "a1-03.v.hablar",
+      "kind": "vocab",
+      "es": "hablar",
+      "en": "to speak / to talk",
+      "pos": "verb",
+      "exampleEs": "Yo hablo español.",
+      "exampleEn": "I speak Spanish."
+    },
+    {
+      "id": "a1-03.v.estudiar",
+      "kind": "vocab",
+      "es": "estudiar",
+      "en": "to study",
+      "pos": "verb",
+      "exampleEs": "Ella estudia mucho.",
+      "exampleEn": "She studies a lot."
+    },
+    {
+      "id": "a1-03.v.trabajar",
+      "kind": "vocab",
+      "es": "trabajar",
+      "en": "to work",
+      "pos": "verb",
+      "exampleEs": "Yo trabajo hoy.",
+      "exampleEn": "I'm working today."
+    },
+    {
+      "id": "a1-03.v.escuchar",
+      "kind": "vocab",
+      "es": "escuchar",
+      "en": "to listen (to)",
+      "pos": "verb",
+      "exampleEs": "Escucho a la señora.",
+      "exampleEn": "I listen to the lady."
+    },
+    {
+      "id": "a1-03.v.descansar",
+      "kind": "vocab",
+      "es": "descansar",
+      "en": "to rest",
+      "pos": "verb",
+      "exampleEs": "Hoy descanso.",
+      "exampleEn": "Today I rest."
+    },
+    {
+      "id": "a1-03.v.caminar",
+      "kind": "vocab",
+      "es": "caminar",
+      "en": "to walk",
+      "pos": "verb",
+      "exampleEs": "Camino mucho.",
+      "exampleEn": "I walk a lot."
+    },
+    {
+      "id": "a1-03.v.practicar",
+      "kind": "vocab",
+      "es": "practicar",
+      "en": "to practice",
+      "pos": "verb",
+      "exampleEs": "Practico español.",
+      "exampleEn": "I practice Spanish."
+    },
+    {
+      "id": "a1-03.v.necesitar",
+      "kind": "vocab",
+      "es": "necesitar",
+      "en": "to need",
+      "pos": "verb",
+      "exampleEs": "Necesito descansar.",
+      "exampleEn": "I need to rest."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "a1-03.s.01",
+      "kind": "sentence",
+      "es": "Hablo español y también inglés.",
+      "en": "I speak Spanish and English too.",
+      "acceptedEs": [
+        "Yo hablo español y también inglés.",
+        "Hablo inglés y también español.",
+        "Yo hablo inglés y también español.",
+        "Hablo español e inglés también."
+      ],
+      "acceptedEn": [
+        "I speak both Spanish and English.",
+        "I speak Spanish, and English too."
+      ],
+      "grammarTags": [
+        "verb.regular.ar"
+      ],
+      "vocabRefs": [
+        "a1-03.v.hablar"
+      ],
+      "difficulty": 2,
+      "hints": [
+        "Say what you speak with the *yo* form of the -ar verb for 'to speak,' then add the second language with 'also.'",
+        "'To speak' is *hablar*; in *yo* it becomes *hablo*. 'Also' is *también*.",
+        "*Hablo español y también ___* — fill in the language 'English.'"
+      ],
+      "flashcard": {
+        "eligible": true,
+        "front": "es"
+      }
+    },
+    {
+      "id": "a1-03.s.02",
+      "kind": "sentence",
+      "es": "Ella estudia mucho hoy.",
+      "en": "She's studying a lot today.",
+      "acceptedEs": [
+        "Estudia mucho hoy.",
+        "Hoy ella estudia mucho.",
+        "Hoy estudia mucho.",
+        "Ella está estudiando mucho hoy.",
+        "Está estudiando mucho hoy."
+      ],
+      "acceptedEn": [
+        "She studies a lot today."
+      ],
+      "grammarTags": [
+        "verb.regular.ar"
+      ],
+      "vocabRefs": [
+        "a1-03.v.estudiar"
+      ],
+      "difficulty": 2,
+      "hints": [
+        "Talk about 'she' with the third-person form of the -ar verb for 'to study.'",
+        "'To study' is *estudiar*; for *ella* it becomes *estudia*. 'A lot' is *mucho*.",
+        "*Ella ___ mucho hoy* — fill in the *ella* form of *estudiar*."
+      ]
+    },
+    {
+      "id": "a1-03.s.03",
+      "kind": "sentence",
+      "es": "¿Dónde trabajas?",
+      "en": "Where do you work?",
+      "acceptedEs": [
+        "¿En dónde trabajas?",
+        "¿Dónde trabajas tú?",
+        "¿Tú dónde trabajas?"
+      ],
+      "acceptedEn": [
+        "Where are you working?"
+      ],
+      "grammarTags": [
+        "verb.regular.ar",
+        "question.formation"
+      ],
+      "vocabRefs": [
+        "a1-03.v.trabajar"
+      ],
+      "difficulty": 2,
+      "hints": [
+        "Ask about a place with the 'where' question word, then the *tú* form of 'to work.'",
+        "'Where' is *dónde*; 'to work' is *trabajar*, which becomes *trabajas* for *tú*.",
+        "*¿Dónde ___?* — fill in the *tú* form of *trabajar*."
+      ]
+    },
+    {
+      "id": "a1-03.s.04",
+      "kind": "sentence",
+      "es": "Camino mucho hoy.",
+      "en": "I'm walking a lot today.",
+      "acceptedEs": [
+        "Yo camino mucho hoy.",
+        "Hoy camino mucho.",
+        "Hoy yo camino mucho.",
+        "Estoy caminando mucho hoy.",
+        "Yo estoy caminando mucho hoy."
+      ],
+      "acceptedEn": [
+        "I walk a lot today."
+      ],
+      "grammarTags": [
+        "verb.regular.ar"
+      ],
+      "vocabRefs": [
+        "a1-03.v.caminar"
+      ],
+      "difficulty": 2,
+      "hints": [
+        "Say how much you walk with the *yo* form of the -ar verb for 'to walk.'",
+        "'To walk' is *caminar*; in *yo* it becomes *camino*. 'A lot' is *mucho*.",
+        "*___ mucho hoy* — fill in the *yo* form of *caminar*."
+      ],
+      "flashcard": {
+        "eligible": true,
+        "front": "es"
+      }
+    },
+    {
+      "id": "a1-03.s.05",
+      "kind": "sentence",
+      "es": "Hoy practico español con la señora.",
+      "en": "Today I'm practicing Spanish with the lady.",
+      "acceptedEs": [
+        "Practico español con la señora hoy.",
+        "Yo practico español con la señora hoy.",
+        "Hoy yo practico español con la señora.",
+        "Hoy estoy practicando español con la señora.",
+        "Hoy yo estoy practicando español con la señora."
+      ],
+      "acceptedEn": [
+        "Today I practice Spanish with the lady.",
+        "I practice Spanish with the woman today."
+      ],
+      "grammarTags": [
+        "verb.regular.ar"
+      ],
+      "vocabRefs": [
+        "a1-03.v.practicar",
+        "a1-01.v.senora"
+      ],
+      "difficulty": 3,
+      "hints": [
+        "Say what you practice with the *yo* form, then add who you do it with using 'with.'",
+        "'To practice' is *practicar* (*practico* in *yo*); 'with' is *con*.",
+        "*Hoy ___ español con la señora* — fill in the *yo* form of *practicar*."
+      ]
+    },
+    {
+      "id": "a1-03.s.06",
+      "kind": "sentence",
+      "es": "Hoy escucho a la señora.",
+      "en": "Today I'm listening to the lady.",
+      "acceptedEs": [
+        "Escucho a la señora hoy.",
+        "Yo escucho a la señora hoy.",
+        "Hoy yo escucho a la señora.",
+        "Hoy estoy escuchando a la señora.",
+        "Hoy yo estoy escuchando a la señora."
+      ],
+      "acceptedEn": [
+        "I listen to the lady today.",
+        "Today I listen to the woman."
+      ],
+      "grammarTags": [
+        "verb.regular.ar"
+      ],
+      "vocabRefs": [
+        "a1-03.v.escuchar",
+        "a1-01.v.senora"
+      ],
+      "difficulty": 3,
+      "hints": [
+        "Say who you're listening to with the *yo* form of 'to listen,' plus the little word *a* before the person.",
+        "'To listen' is *escuchar* (*escucho* in *yo*); Spanish adds *a* before a person object.",
+        "*Hoy ___ a la señora* — fill in the *yo* form of *escuchar*."
+      ]
+    },
+    {
+      "id": "a1-03.s.07",
+      "kind": "sentence",
+      "es": "Hoy no descanso.",
+      "en": "Today I'm not resting.",
+      "acceptedEs": [
+        "No descanso hoy.",
+        "Hoy yo no descanso.",
+        "Yo no descanso hoy.",
+        "Hoy no estoy descansando.",
+        "Hoy yo no estoy descansando."
+      ],
+      "acceptedEn": [
+        "I'm not resting today.",
+        "Today I don't rest."
+      ],
+      "grammarTags": [
+        "verb.regular.ar",
+        "negation"
+      ],
+      "vocabRefs": [
+        "a1-03.v.descansar"
+      ],
+      "difficulty": 2,
+      "hints": [
+        "Make it negative: put the little 'not' word right before the *yo* form of 'to rest.'",
+        "'Not' is *no*, placed before the verb; 'to rest' is *descansar* (*descanso* in *yo*).",
+        "*Hoy no ___* — fill in the *yo* form of *descansar*."
+      ],
+      "flashcard": {
+        "eligible": true,
+        "front": "es"
+      }
+    },
+    {
+      "id": "a1-03.s.08",
+      "kind": "sentence",
+      "es": "Hoy necesito descansar.",
+      "en": "Today I need to rest.",
+      "acceptedEs": [
+        "Necesito descansar hoy.",
+        "Yo necesito descansar hoy.",
+        "Hoy yo necesito descansar."
+      ],
+      "acceptedEn": [
+        "I need to rest today."
+      ],
+      "grammarTags": [
+        "verb.regular.ar"
+      ],
+      "vocabRefs": [
+        "a1-03.v.necesitar",
+        "a1-03.v.descansar"
+      ],
+      "difficulty": 2,
+      "hints": [
+        "Say what you need with the *yo* form of 'to need,' then leave the second verb in its dictionary form.",
+        "'To need' is *necesitar* (*necesito* in *yo*); after it, 'to rest' stays as *descansar*.",
+        "*Hoy necesito ___* — fill in the dictionary form of 'to rest.'"
+      ],
+      "flashcard": {
+        "eligible": true,
+        "front": "es"
+      }
+    },
+    {
+      "id": "a1-03.s.09",
+      "kind": "sentence",
+      "es": "No hablo inglés pero estudio mucho.",
+      "en": "I don't speak English, but I study a lot.",
+      "acceptedEs": [
+        "Yo no hablo inglés pero estudio mucho.",
+        "No hablo inglés pero yo estudio mucho.",
+        "Yo no hablo inglés pero yo estudio mucho."
+      ],
+      "acceptedEn": [
+        "I don't speak English but I study a lot.",
+        "I do not speak English, but I study a lot."
+      ],
+      "grammarTags": [
+        "verb.regular.ar",
+        "negation"
+      ],
+      "vocabRefs": [
+        "a1-03.v.hablar",
+        "a1-03.v.estudiar"
+      ],
+      "difficulty": 4,
+      "hints": [
+        "Two ideas joined by 'but': one thing you don't do, one thing you do.",
+        "Put *no* before *hablo* to negate it; *pero* means 'but'; 'to study' is *estudiar* (*estudio* in *yo*).",
+        "*No hablo inglés pero ___ mucho* — fill in the *yo* form of *estudiar*."
+      ]
+    },
+    {
+      "id": "a1-03.s.10",
+      "kind": "sentence",
+      "es": "¿Tú estudias español?",
+      "en": "Do you study Spanish?",
+      "acceptedEs": [
+        "¿Estudias español?",
+        "¿Estudias tú español?",
+        "¿Estudias español tú?"
+      ],
+      "acceptedEn": [
+        "Are you studying Spanish?"
+      ],
+      "grammarTags": [
+        "verb.regular.ar",
+        "question.formation"
+      ],
+      "vocabRefs": [
+        "a1-03.v.estudiar"
+      ],
+      "difficulty": 2,
+      "hints": [
+        "Turn a statement into a yes/no question — no extra word for 'do' is needed.",
+        "'To study' is *estudiar*, which becomes *estudias* for *tú*; just add question marks.",
+        "*¿Tú ___ español?* — fill in the *tú* form of *estudiar*."
+      ]
+    },
+    {
+      "id": "a1-03.s.11",
+      "kind": "sentence",
+      "es": "No trabajo hoy, descanso.",
+      "en": "I'm not working today, I'm resting.",
+      "acceptedEs": [
+        "Hoy no trabajo, descanso.",
+        "No trabajo hoy, yo descanso.",
+        "Yo no trabajo hoy, descanso.",
+        "No estoy trabajando hoy, estoy descansando.",
+        "Hoy no estoy trabajando, estoy descansando."
+      ],
+      "acceptedEn": [
+        "I don't work today, I rest.",
+        "I'm not working today; I'm resting."
+      ],
+      "grammarTags": [
+        "verb.regular.ar",
+        "negation"
+      ],
+      "vocabRefs": [
+        "a1-03.v.trabajar",
+        "a1-03.v.descansar"
+      ],
+      "difficulty": 3,
+      "hints": [
+        "Say what you're not doing, then what you are doing instead — two short *yo* actions.",
+        "Put *no* before *trabajo* ('I work'); the second action is *descanso* ('I rest').",
+        "*No trabajo hoy, ___* — fill in the *yo* form of *descansar*."
+      ]
+    },
+    {
+      "id": "a1-03.s.12",
+      "kind": "sentence",
+      "es": "Camino y practico español hoy.",
+      "en": "I'm walking and practicing Spanish today.",
+      "acceptedEs": [
+        "Practico español y camino hoy.",
+        "Hoy camino y practico español.",
+        "Yo camino y practico español hoy.",
+        "Estoy caminando y practicando español hoy.",
+        "Hoy estoy caminando y practicando español."
+      ],
+      "acceptedEn": [
+        "I walk and practice Spanish today."
+      ],
+      "grammarTags": [
+        "verb.regular.ar"
+      ],
+      "vocabRefs": [
+        "a1-03.v.caminar",
+        "a1-03.v.practicar"
+      ],
+      "difficulty": 3,
+      "hints": [
+        "Join two *yo* actions with 'and': one is walking, the other is practicing.",
+        "'I walk' is *camino*; 'and' is *y*; 'I practice' is *practico*.",
+        "*___ y practico español hoy* — fill in the *yo* form of *caminar*."
+      ]
+    },
+    {
+      "id": "a1-03.s.13",
+      "kind": "sentence",
+      "es": "Hoy estudio y practico español, pero necesito descansar.",
+      "en": "Today I study and practice Spanish, but I need to rest.",
+      "acceptedEs": [
+        "Hoy yo estudio y practico español, pero necesito descansar.",
+        "Estudio y practico español hoy, pero necesito descansar.",
+        "Hoy practico y estudio español, pero necesito descansar."
+      ],
+      "acceptedEn": [
+        "Today I study and practice Spanish, but I need a rest."
+      ],
+      "grammarTags": [
+        "verb.regular.ar"
+      ],
+      "vocabRefs": [
+        "a1-03.v.estudiar",
+        "a1-03.v.practicar",
+        "a1-03.v.necesitar",
+        "a1-03.v.descansar"
+      ],
+      "difficulty": 5,
+      "hints": [
+        "Stack two things you do today, then contrast with something you need, joined by 'but.'",
+        "Chain *estudio y practico* for the actions; *pero* is 'but'; after *necesito*, leave *descansar* in its dictionary form.",
+        "*Hoy estudio y practico español, pero necesito ___* — fill in the dictionary form of 'to rest.'"
+      ]
+    },
+    {
+      "id": "a1-03.s.14",
+      "kind": "sentence",
+      "es": "¿Tú también trabajas y estudias?",
+      "en": "Do you work and study too?",
+      "acceptedEs": [
+        "¿También trabajas y estudias?",
+        "¿Trabajas y estudias también?",
+        "¿También estudias y trabajas?"
+      ],
+      "acceptedEn": [
+        "Do you also work and study?"
+      ],
+      "grammarTags": [
+        "verb.regular.ar",
+        "question.formation"
+      ],
+      "vocabRefs": [
+        "a1-03.v.trabajar",
+        "a1-03.v.estudiar"
+      ],
+      "difficulty": 4,
+      "hints": [
+        "Ask a yes/no question about two actions the other person also does, using 'also.'",
+        "'Also' is *también*; the *tú* forms are *trabajas* ('work') and *estudias* ('study').",
+        "*¿Tú también trabajas y ___?* — fill in the *tú* form of *estudiar*."
+      ]
+    }
+  ],
+  "passage": {
+    "id": "a1-03.p.01",
+    "kind": "passage",
+    "title": "Un día normal (A normal day)",
+    "segments": [
+      {
+        "id": "a1-03.p.01.01",
+        "es": "Me llamo Ana y soy de México.",
+        "en": [
+          "My name is Ana and I'm from Mexico.",
+          "I'm called Ana and I am from Mexico."
+        ],
+        "vocabRefs": [
+          "a1-01.v.me-llamo"
+        ]
+      },
+      {
+        "id": "a1-03.p.01.02",
+        "es": "Hoy trabajo y estudio mucho.",
+        "en": [
+          "Today I work and study a lot.",
+          "Today I'm working and studying a lot."
+        ],
+        "vocabRefs": [
+          "a1-03.v.trabajar",
+          "a1-03.v.estudiar"
+        ]
+      },
+      {
+        "id": "a1-03.p.01.03",
+        "es": "Hablo español con la señora.",
+        "en": [
+          "I speak Spanish with the lady.",
+          "I talk in Spanish with the woman."
+        ],
+        "vocabRefs": [
+          "a1-03.v.hablar",
+          "a1-01.v.senora"
+        ]
+      },
+      {
+        "id": "a1-03.p.01.04",
+        "es": "Camino mucho y practico inglés.",
+        "en": [
+          "I walk a lot and practice English.",
+          "I walk a lot and I practice English."
+        ],
+        "vocabRefs": [
+          "a1-03.v.caminar",
+          "a1-03.v.practicar"
+        ]
+      },
+      {
+        "id": "a1-03.p.01.05",
+        "es": "No descanso mucho hoy.",
+        "en": [
+          "I'm not resting much today.",
+          "I don't rest much today."
+        ],
+        "vocabRefs": [
+          "a1-03.v.descansar"
+        ]
+      },
+      {
+        "id": "a1-03.p.01.06",
+        "es": "¡Necesito descansar!",
+        "en": [
+          "I need to rest!",
+          "I need a rest!"
+        ],
+        "vocabRefs": [
+          "a1-03.v.necesitar",
+          "a1-03.v.descansar"
+        ]
+      }
+    ]
+  },
+  "conversation": {
+    "id": "a1-03.c.01",
+    "kind": "conversation",
+    "scenario": "A new coworker asks what you do day to day.",
+    "personaPrompt": "You are Mateo, a friendly new coworker. Speak only in short, present-tense Spanish sentences using this lesson's -ar verbs (hablar, estudiar, trabajar, escuchar, descansar, caminar, practicar, necesitar) plus greetings from before. Ask the learner what they do (work/study) with simple questions, then let them ask you back. Use tú with the learner, never vosotros, and no slang.",
+    "openingLine": "Hola. Yo trabajo mucho. ¿Dónde trabajas tú?",
+    "openingLineGloss": "Hi. I work a lot. Where do you work?",
+    "goalPhrases": [
+      "Yo trabajo y estudio.",
+      "Hablo español.",
+      "¿Dónde trabajas?",
+      "No trabajo hoy."
+    ],
+    "vocabRefs": [
+      "a1-03.v.trabajar",
+      "a1-03.v.estudiar",
+      "a1-03.v.hablar",
+      "a1-03.v.descansar"
+    ]
+  },
+  "quickChecks": [
+    {
+      "id": "a1-03.q.01",
+      "kind": "multipleChoice",
+      "prompt": "Yo ___ español.",
+      "choices": [
+        "hablo",
+        "hablas",
+        "habla",
+        "hablan"
+      ],
+      "correctIndex": 0,
+      "explanation": "For yo, an -ar verb ends in -o, so hablar becomes hablo.",
+      "grammarTags": [
+        "verb.regular.ar"
+      ],
+      "vocabRefs": [
+        "a1-03.v.hablar"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "a1-03.q.02",
+      "kind": "multipleChoice",
+      "prompt": "Ella ___ mucho.",
+      "choices": [
+        "estudia",
+        "estudias",
+        "estudio",
+        "estudian"
+      ],
+      "correctIndex": 0,
+      "explanation": "For él/ella, an -ar verb ends in -a, so estudiar becomes estudia.",
+      "grammarTags": [
+        "verb.regular.ar"
+      ],
+      "vocabRefs": [
+        "a1-03.v.estudiar"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "a1-03.q.03",
+      "kind": "multipleChoice",
+      "prompt": "¿___ trabajas? (asking about a place)",
+      "choices": [
+        "Dónde",
+        "Qué",
+        "No",
+        "Y"
+      ],
+      "correctIndex": 0,
+      "explanation": "Dónde means 'where' and asks about a place; qué means 'what.'",
+      "grammarTags": [
+        "question.formation"
+      ],
+      "vocabRefs": [
+        "a1-03.v.trabajar"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "a1-03.q.04",
+      "kind": "multipleChoice",
+      "prompt": "Say it in Spanish: I don't work today",
+      "choices": [
+        "No trabajo hoy.",
+        "Trabajo no hoy.",
+        "Trabajo hoy no.",
+        "No hoy trabajo."
+      ],
+      "correctIndex": 0,
+      "explanation": "Negation puts no directly before the verb: No trabajo hoy.",
+      "grammarTags": [
+        "negation",
+        "verb.regular.ar"
+      ],
+      "vocabRefs": [
+        "a1-03.v.trabajar"
+      ],
+      "difficulty": 2
+    }
+  ],
+  "contentVersion": 2
+}

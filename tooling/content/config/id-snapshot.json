@@ -1,0 +1,336 @@
+{
+  "schema": 1,
+  "updatedAt": "2026-07-22T00:10:35.402Z",
+  "ids": {
+    "a1-01-hola-me-llamo": {
+      "contentVersion": 1
+    },
+    "a1-01.e.01": {
+      "contentVersion": 1
+    },
+    "a1-01.v.hola": {
+      "contentVersion": 1
+    },
+    "a1-01.v.adios": {
+      "contentVersion": 1
+    },
+    "a1-01.v.gracias": {
+      "contentVersion": 1
+    },
+    "a1-01.v.por-favor": {
+      "contentVersion": 1
+    },
+    "a1-01.v.perdon": {
+      "contentVersion": 1
+    },
+    "a1-01.v.buenos-dias": {
+      "contentVersion": 1
+    },
+    "a1-01.v.buenas-noches": {
+      "contentVersion": 1
+    },
+    "a1-01.v.senor": {
+      "contentVersion": 1
+    },
+    "a1-01.v.senora": {
+      "contentVersion": 1
+    },
+    "a1-01.v.me-llamo": {
+      "contentVersion": 1
+    },
+    "a1-01.v.te-llamas": {
+      "contentVersion": 1
+    },
+    "a1-01.v.se-llama": {
+      "contentVersion": 1
+    },
+    "a1-01.s.01": {
+      "contentVersion": 1
+    },
+    "a1-01.s.02": {
+      "contentVersion": 1
+    },
+    "a1-01.s.03": {
+      "contentVersion": 1
+    },
+    "a1-01.s.04": {
+      "contentVersion": 1
+    },
+    "a1-01.s.05": {
+      "contentVersion": 1
+    },
+    "a1-01.s.06": {
+      "contentVersion": 1
+    },
+    "a1-01.s.07": {
+      "contentVersion": 1
+    },
+    "a1-01.s.08": {
+      "contentVersion": 1
+    },
+    "a1-01.s.09": {
+      "contentVersion": 1
+    },
+    "a1-01.s.10": {
+      "contentVersion": 1
+    },
+    "a1-01.s.11": {
+      "contentVersion": 1
+    },
+    "a1-01.s.12": {
+      "contentVersion": 1
+    },
+    "a1-01.s.13": {
+      "contentVersion": 1
+    },
+    "a1-01.s.14": {
+      "contentVersion": 1
+    },
+    "a1-01.p.01": {
+      "contentVersion": 1
+    },
+    "a1-01.c.01": {
+      "contentVersion": 1
+    },
+    "a1-01.q.01": {
+      "contentVersion": 1
+    },
+    "a1-01.q.02": {
+      "contentVersion": 1
+    },
+    "a1-01.q.03": {
+      "contentVersion": 1
+    },
+    "a1-02-soy-asi": {
+      "contentVersion": 1
+    },
+    "a1-02.e.01": {
+      "contentVersion": 1
+    },
+    "a1-02.v.alto": {
+      "contentVersion": 1
+    },
+    "a1-02.v.joven": {
+      "contentVersion": 1
+    },
+    "a1-02.v.bonito": {
+      "contentVersion": 1
+    },
+    "a1-02.v.simpatico": {
+      "contentVersion": 1
+    },
+    "a1-02.v.inteligente": {
+      "contentVersion": 1
+    },
+    "a1-02.v.delgado": {
+      "contentVersion": 1
+    },
+    "a1-02.v.amable": {
+      "contentVersion": 1
+    },
+    "a1-02.v.trabajador": {
+      "contentVersion": 1
+    },
+    "a1-02.v.mexicano": {
+      "contentVersion": 1
+    },
+    "a1-02.v.colombiano": {
+      "contentVersion": 1
+    },
+    "a1-02.s.01": {
+      "contentVersion": 1
+    },
+    "a1-02.s.02": {
+      "contentVersion": 1
+    },
+    "a1-02.s.03": {
+      "contentVersion": 1
+    },
+    "a1-02.s.04": {
+      "contentVersion": 1
+    },
+    "a1-02.s.05": {
+      "contentVersion": 1
+    },
+    "a1-02.s.06": {
+      "contentVersion": 1
+    },
+    "a1-02.s.07": {
+      "contentVersion": 1
+    },
+    "a1-02.s.08": {
+      "contentVersion": 1
+    },
+    "a1-02.s.09": {
+      "contentVersion": 1
+    },
+    "a1-02.s.10": {
+      "contentVersion": 1
+    },
+    "a1-02.s.11": {
+      "contentVersion": 1
+    },
+    "a1-02.s.12": {
+      "contentVersion": 1
+    },
+    "a1-02.s.13": {
+      "contentVersion": 1
+    },
+    "a1-02.s.14": {
+      "contentVersion": 1
+    },
+    "a1-02.p.01": {
+      "contentVersion": 1
+    },
+    "a1-02.c.01": {
+      "contentVersion": 1
+    },
+    "a1-02.q.01": {
+      "contentVersion": 1
+    },
+    "a1-02.q.02": {
+      "contentVersion": 1
+    },
+    "a1-02.q.03": {
+      "contentVersion": 1
+    },
+    "a1-02.q.04": {
+      "contentVersion": 1
+    },
+    "a1-03-que-haces": {
+      "contentVersion": 1
+    },
+    "a1-03.e.01": {
+      "contentVersion": 1
+    },
+    "a1-03.v.hablar": {
+      "contentVersion": 1
+    },
+    "a1-03.v.estudiar": {
+      "contentVersion": 1
+    },
+    "a1-03.v.trabajar": {
+      "contentVersion": 1
+    },
+    "a1-03.v.escuchar": {
+      "contentVersion": 1
+    },
+    "a1-03.v.descansar": {
+      "contentVersion": 1
+    },
+    "a1-03.v.caminar": {
+      "contentVersion": 1
+    },
+    "a1-03.v.practicar": {
+      "contentVersion": 1
+    },
+    "a1-03.v.necesitar": {
+      "contentVersion": 1
+    },
+    "a1-03.s.01": {
+      "contentVersion": 1
+    },
+    "a1-03.s.02": {
+      "contentVersion": 1
+    },
+    "a1-03.s.03": {
+      "contentVersion": 1
+    },
+    "a1-03.s.04": {
+      "contentVersion": 1
+    },
+    "a1-03.s.05": {
+      "contentVersion": 1
+    },
+    "a1-03.s.06": {
+      "contentVersion": 1
+    },
+    "a1-03.s.07": {
+      "contentVersion": 1
+    },
+    "a1-03.s.08": {
+      "contentVersion": 1
+    },
+    "a1-03.s.09": {
+      "contentVersion": 1
+    },
+    "a1-03.s.10": {
+      "contentVersion": 1
+    },
+    "a1-03.s.11": {
+      "contentVersion": 1
+    },
+    "a1-03.s.12": {
+      "contentVersion": 1
+    },
+    "a1-03.s.13": {
+      "contentVersion": 1
+    },
+    "a1-03.s.14": {
+      "contentVersion": 1
+    },
+    "a1-03.p.01": {
+      "contentVersion": 1
+    },
+    "a1-03.c.01": {
+      "contentVersion": 1
+    },
+    "a1-03.q.01": {
+      "contentVersion": 1
+    },
+    "a1-03.q.02": {
+      "contentVersion": 1
+    },
+    "a1-03.q.03": {
+      "contentVersion": 1
+    },
+    "a1-03.q.04": {
+      "contentVersion": 1
+    },
+    "a1-01.p.01.01": {
+      "contentVersion": 1
+    },
+    "a1-01.p.01.02": {
+      "contentVersion": 1
+    },
+    "a1-01.p.01.03": {
+      "contentVersion": 1
+    },
+    "a1-01.p.01.04": {
+      "contentVersion": 1
+    },
+    "a1-02.p.01.01": {
+      "contentVersion": 2
+    },
+    "a1-02.p.01.02": {
+      "contentVersion": 2
+    },
+    "a1-02.p.01.03": {
+      "contentVersion": 2
+    },
+    "a1-02.p.01.04": {
+      "contentVersion": 2
+    },
+    "a1-02.p.01.05": {
+      "contentVersion": 2
+    },
+    "a1-03.p.01.01": {
+      "contentVersion": 2
+    },
+    "a1-03.p.01.02": {
+      "contentVersion": 2
+    },
+    "a1-03.p.01.03": {
+      "contentVersion": 2
+    },
+    "a1-03.p.01.04": {
+      "contentVersion": 2
+    },
+    "a1-03.p.01.05": {
+      "contentVersion": 2
+    },
+    "a1-03.p.01.06": {
+      "contentVersion": 2
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "lessonId": "a1-01-hola-me-llamo",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "MINOR",
+      "checklistPoint": 8,
+      "itemId": "a1-01.s.09",
+      "issue": "grammarTag `agreement.gender-number` on a bare-vocative courtesy phrase (`Gracias, señor.`) overstates what the item exercises: there is no article+noun or adjective+noun pairing, so no agreement is actually demonstrated — only a lone gendered noun is present. Same pattern on s.10 (`Perdón, señora.`), s.11 (`Por favor, señor.`), s.12 (`Adiós, señora.`). Tagging these as agreement.gender-number risks misattributing a typo to that weakness bucket. Inconsistent, too, with s.05, whose fixed phrase `Buenos días` is NOT tagged for agreement. Defensible only under the generous reading of §7 tag 14 ('noun gender/number'), and schema requires min(1) tag, so this is advisory rather than an error.",
+      "proposedFix": "Acknowledged there is no cleaner enum tag for pure courtesy formulas (schema forces ≥1); if kept, apply the reading consistently — either tag the parallel fixed phrases too or treat all bare-vocative courtesy items uniformly."
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 5,
+      "itemId": "a1-01.s.14",
+      "issue": "Speaker/group gender is open in the EN prompt ('We're from Colombia and they're from Mexico'), but only masculine/default subject forms are accepted. The feminine-group variant using glue pronouns nosotras/ellas is fully correct and register-valid (mirrors the Style Guide §4 cansado/cansada gender-open worked example) yet absent.",
+      "proposedFix": "Add `Nosotras somos de Colombia y ellas son de México.` to acceptedEs."
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 5,
+      "itemId": "a1-01.s.03",
+      "issue": "Pronoun-inclusion is only accepted on one clause at a time; the both-clauses-included variant a learner may plausibly type is not accepted. Grammatical and register-valid (yo is free glue).",
+      "proposedFix": "Add `Yo me llamo Diego y yo soy de Colombia.` to acceptedEs."
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 5,
+      "itemId": "a1-01.s.05",
+      "issue": "Same as s.03 — both-clauses pronoun-inclusion variant absent.",
+      "proposedFix": "Add `Buenos días. Yo me llamo Diego y yo soy de Perú.` to acceptedEs."
+    }
+  ],
+  "missingAlternates": [
+    { "sentenceId": "a1-01.s.14", "alternate": "Nosotras somos de Colombia y ellas son de México." },
+    { "sentenceId": "a1-01.s.03", "alternate": "Yo me llamo Diego y yo soy de Colombia." },
+    { "sentenceId": "a1-01.s.05", "alternate": "Buenos días. Yo me llamo Diego y yo soy de Perú." }
+  ],
+  "stats": {
+    "sentencesReviewed": 14,
+    "alternatesFound": 3,
+    "validatorPassed": true,
+    "notes": "Validator PASSED (0 errors, 5 ACCEPTED_ES_COUNT warnings on s.02/s.04/s.10/s.11/s.12 — its structural findings, not re-reported here). Those thin cases are structurally alternate-poor (s.02/s.04 have full-noun subjects with no pronoun to drop; s.10/s.11/s.12 are two-word courtesy formulas), so no fully-correct additional alternates could be manufactured for them without wrong-register or non-native forms — the thinness is defensible, not authorial laziness. Grammar, accents (adiós/perdón/Perú/México/Sofía/él-vs-el), register (tú throughout, no vosotros, no banned words), vocab leakage (all content words are this-lesson vocab, chunks, or free glue/proper nouns), hints (exactly 3, escalating, none reveals the literal string — consistent with Style Guide §5 examples), passage segments, conversation seed, and quickChecks all clean. openingLine has no EN gloss but that is out of scope per review instructions (handled by concurrent patch)."
+  }
+}

@@ -1,0 +1,43 @@
+# Open items — follow-ups, deferred work, captured ideas
+
+> Every row has an owner (a wave/slice) or a trigger. Mid-wave ideas land HERE, never in the
+> active wave. /feature promotes rows into roadmap slices.
+>
+> Rows OI-001..OI-024 are the decision work-list for the **A0 Design-Close wave** (seeded 2026-07-23 from
+> HANDOFF-NEXT-SESSION §3/§5, MVP-DESIGN-CONSENSUS §2/§3, and FEATURES-ROADMAP §6/§7/§9). Each is
+> a decision to settle into a spec/ADR. Close them one block at a time.
+
+| ID | Item | Why deferred / context | Owner or trigger | Status |
+|---|---|---|---|---|
+| OI-025 | **C2 contract prep:** P-003 vocab accept-set backfill on a1-01/02/03; validator check-5 `setId` partition; reconcile curriculum/style/draft/validator guidance from EN→ES-priority to ADR-0005 **Both** | P-003 approval + later A0 direction ruling left content/tooling follow-through; found in A0-H because the content lane was parked when ADR-0005 landed | Content hygiene before C2 drafting | open |
+| OI-023 | **Content lane un-pause**: give or withhold the go for wave C2 (mass-draft a1-04…a1-12) | Trigger: A0 closes + operator explicit go. **Intent 2026-07-28: GO** (wordfreq for lesson checks; frequency decks stay PM-015 — not now) | A0 close | open |
+
+## Closed
+| ID | Item | Settled | Where |
+|---|---|---|---|
+| OI-022 | **Panel recs triage**: 7 locked in ADRs; W1 metric → PM-014; “10 vocab” superseded by ADR-0003 (12–15); EN→ES-only superseded by ADR-0005 (Both). No reopen. | 2026-07-28 | ADRs 0003–0010; [post-mvp.md](post-mvp.md) PM-014 |
+| OI-021 | **SessionEngine**: Continue = full Mix arc; Blend/Review = size-10; weights = weakness × staleness × tag/saved boosts; three recipes only | 2026-07-28 | [session-engine.md](../Specs/Areas/session-engine.md); Consensus §1.3 |
+| OI-020 | **DB model** confirmed: lessons/items, sessions, evaluations (+ modality/direction/sessionId), item stats, lesson progress, saved_items, users dailyGoal+timezone; no evaluationCache | 2026-07-28; legacy audit completed missing session fact | [data-model.md](../Specs/Areas/data-model.md); ADR-0013 |
+| OI-019 | **Proficiency**: split live **today’s accuracy** from **next-day-confirmed** proficiency; confirmed = coverage × best-score with recency + later-day gate (aligns Completed/Mastered) | 2026-07-28 | [proficiency.md](../Specs/Areas/proficiency.md); ADR-0004 / ADR-0011 |
+| OI-024 | **Mode-smart help UX** (MVP): MC = post-answer `explanation` only; word type = one example/blank cue; sentences/story = Reveal + Ask tutor (not the 3-hint ladder UI); credit-for-trying floor on typed attempts | 2026-07-28 operator chose option 1 | [module-spec.md](../Specs/Features/module-spec.md) §Settled; deferred authoring rewrite → [post-mvp.md](post-mvp.md) |
+| OI-001 | **Direction section** in side panel | 2026-07-28 **KEEP**; learner can choose EN→ES / ES→EN / Both; launch default ruled by OI-007 = Both | [module-spec.md](../Specs/Features/module-spec.md) §Settled; ADR-0005 |
+| OI-002 | **Lesson multi-select** UI | 2026-07-28 **DROP for MVP** — Continue + Blend + Review/Saved only | [module-spec.md](../Specs/Features/module-spec.md) §Settled; picker → [post-mvp.md](post-mvp.md) |
+| OI-003 | **Daily goal** UI + Reminders row | 2026-07-28 **one slider** (default 50); **cut** “Reminders: none” row | [module-spec.md](../Specs/Features/module-spec.md) §Settled; notifications still OI-013 |
+| OI-004a | **Home path vs Lessons tab** | 2026-07-28 **KEEP BOTH** — Home = Continue/path/stats; Lessons = catalog by level | [module-spec.md](../Specs/Features/module-spec.md) §Settled |
+| OI-004b | **Review · N due** row on Home | 2026-07-28 **YES** — tap starts Review; hide/0 when empty | [module-spec.md](../Specs/Features/module-spec.md) §Settled |
+| OI-004c | **Word-level error diff** on typed answers | 2026-07-28 **YES for MVP** — from evaluate `wordDiff` | [module-spec.md](../Specs/Features/module-spec.md) §Settled |
+| OI-004 | **Module-spec UI bundle** (full) | 2026-07-28 **closed**: 004a–c as above + first-run zeros · status done/current/locked · data-driven lesson detail · quieter cards | [module-spec.md](../Specs/Features/module-spec.md) |
+| OI-005 | **Vocab + practice load** (authoring guideline) | 2026-07-28 **lean vocab, more practice**: aim vocab **12–15** (ceiling 15); aim sentences **18–20** (band 12–20). Not 25–50 vocab — raise reps, not word-dump. Schema unchanged. | Operator choice 1; [ADR-0003](../Specs/ADRs/ADR-0003-lesson-load-lean-vocab-more-practice.md) |
+| OI-006 | **Mastery spacing** | 2026-07-28 **Completed today / Mastered on a later day** — unlock next on Completed; Mastered needs ≥1 later-day confirm | Operator choice 1; [ADR-0004](../Specs/ADRs/ADR-0004-completed-vs-mastered.md) |
+| OI-007 | **Direction policy at launch** | 2026-07-28 **Both on by default** (EN→ES and ES→EN); Direction control still lets learner change | Operator choice 3; [ADR-0005](../Specs/ADRs/ADR-0005-direction-both-default.md); raises alternate-authoring load |
+| OI-008 | **evaluationCache** | 2026-07-28 **DROP table**; log `evalSource` + `normalizedInputHash` on evaluations so cache can be rebuilt later | Operator choice 1; [ADR-0006](../Specs/ADRs/ADR-0006-drop-evaluation-cache.md) |
+| OI-009 | **Provider / model** | 2026-07-28 **Vercel AI Gateway** + default **GPT-5 mini**; **Haiku 4.5** as bake-off runner-up. Old `claude-3-haiku-20240307` retired. | Operator choice 1; [ADR-0007](../Specs/ADRs/ADR-0007-provider-model-gateway.md) |
+| OI-010 | **Level expansion + start-level story** | 2026-07-28 **A1-first**: build full app plumbing on one level (A1); expand A2/B1 only after verified. A2+ self-ID → unlock A1 + honest banner, no A2 content pre-launch | Operator; [ADR-0008](../Specs/ADRs/ADR-0008-a1-first-then-expand.md) |
+| OI-011 | **Content review bar** | 2026-07-28 **4-layer**: CI validator → adversarial LLM → founder checklist → one paid native pass on launch 12 (~$200–400); in-app flag for bad items | Operator choice 1; [ADR-0009](../Specs/ADRs/ADR-0009-content-review-bar.md) |
+| OI-012 | **Success metric** (W1 return / other) | 2026-07-28 **PARKED** — not needed to design/build; revisit when first real users exist | [post-mvp.md](post-mvp.md) PM-014 |
+| OI-013 | **Streak / notifications** | 2026-07-28 **streak yes, notifications no** — calendar-day streak from completed sessions; no reminder emails/push at MVP | Operator choice 1; [ADR-0010](../Specs/ADRs/ADR-0010-streak-no-notifications.md) |
+| OI-014 | **Mastery model** (5-level vs binary) | 2026-07-28 **keep Completed/Mastered** for MVP (ADR-0004); 5-level + user threshold deferred | Operator choice 1; [ADR-0011](../Specs/ADRs/ADR-0011-mvp-mastery-binary.md); [post-mvp.md](post-mvp.md) PM-006 |
+| OI-015 | **Notes model** (feature 8) | 2026-07-28 **DEFER** — saved words/sentences only at launch; no notes data model yet | Operator choice 1; [post-mvp.md](post-mvp.md) PM-003 |
+| OI-016 | **Schema P-003** (vocab accept sets · `formula.courtesy` · `setId`) | 2026-07-28 **APPROVED all three**; schema + a1-01 re-tag done; backfill/validator → OI-025 | [schema-proposals.md](schema-proposals.md) |
+| OI-017 | **Schema P-004** (dialect region on accept entries) | 2026-07-28 **APPROVED reserve shape only** — no dialect content at launch | [schema-proposals.md](schema-proposals.md); content → [post-mvp.md](post-mvp.md) PM-005 |
+| OI-018 | **Schema P-005** (`referenceCard` study cards) | 2026-07-28 **APPROVED for MVP** — optional cards; UI on lesson detail / study; not in Mix arc | [schema-proposals.md](schema-proposals.md); [ADR-0012](../Specs/ADRs/ADR-0012-reference-cards-mvp.md) |

@@ -1,0 +1,1381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AIdioma</title>
+<style>
+  :root {
+    --bg: #efece3;
+    --panel: #faf8f4;
+    --card: #ffffff;
+    --soft: #f3efe6;
+    --line: #e3ded4;
+    --ink: #23262d;
+    --muted: #6b7078;
+    --faint: #7d828b;
+    --accent: #b8722c;
+    --accent-soft: #f3e4d0;
+    --accent-ink: #ffffff;
+    --good: #3f8f63;
+    --close: #c65038;
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c0e11; --panel: #14161b; --card: #1c1f26; --soft: #232732; --line: #2b2f3a;
+      --ink: #e9e6df; --muted: #9aa0ab; --faint: #868c98;
+      --accent: #e0a054; --accent-soft: #3a2d1a; --accent-ink: #14161b;
+      --good: #6fbf8b; --close: #e07856;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c0e11; --panel: #14161b; --card: #1c1f26; --soft: #232732; --line: #2b2f3a;
+    --ink: #e9e6df; --muted: #9aa0ab; --faint: #868c98;
+    --accent: #e0a054; --accent-soft: #3a2d1a; --accent-ink: #14161b;
+    --good: #6fbf8b; --close: #e07856;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Avenir Next", "Seravek", ui-sans-serif, system-ui, sans-serif;
+    font-size: 16px; line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+  }
+  button { font-family: inherit; }
+  button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+
+  /* ---------- shell ---------- */
+  #app { height: 100dvh; display: flex; flex-direction: column; max-width: 560px; margin: 0 auto; background: var(--panel); position: relative; overflow: hidden; }
+  #screens { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .screen { display: none; flex: 1; min-height: 0; overflow-y: auto; padding: 0 1.15rem 1.5rem; }
+  .screen.active { display: block; }
+  .screen.column { padding: 0; }
+  .screen.column.active { display: flex; flex-direction: column; overflow: hidden; }
+
+  nav#tabbar {
+    flex: none; display: flex; border-top: 1px solid var(--line); background: var(--panel);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  nav#tabbar button {
+    flex: 1; background: none; border: none; color: var(--faint); cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: .55rem 0 .5rem; font-size: .66rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  }
+  nav#tabbar button.active { color: var(--accent); }
+  nav#tabbar svg { width: 21px; height: 21px; }
+
+  @media (min-width: 880px) {
+    #app {
+      flex-direction: row; max-width: 1000px;
+      border-left: 1px solid var(--line); border-right: 1px solid var(--line);
+    }
+    nav#tabbar {
+      order: -1; flex-direction: column; width: 200px; border-top: none;
+      border-right: 1px solid var(--line); padding: 1.4rem 0; justify-content: flex-start; gap: .2rem;
+    }
+    nav#tabbar button {
+      flex: none; flex-direction: row; gap: .7rem; justify-content: flex-start;
+      padding: .6rem 1.4rem; font-size: .78rem;
+    }
+    #screens { flex: 1; min-width: 0; }
+    .screen { padding: 0 2.2rem 2rem; }
+    .screen.column.active { padding: 0; }
+    .screen:not(.column) > * { max-width: 620px; margin-left: auto; margin-right: auto; }
+  }
+
+  /* ---------- shared ---------- */
+  h1 { font-size: 1.4rem; font-weight: 600; margin: 0; letter-spacing: -.01em; }
+  h2 { font-size: .72rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin: 0; }
+  .h2row { display: flex; align-items: baseline; justify-content: space-between; gap: .8rem; margin: 1.7rem 0 .6rem; }
+  .linkbtn { background: none; border: none; color: var(--muted); font-size: .76rem; font-weight: 600; cursor: pointer; padding: .2rem 0; }
+  .linkbtn:hover { color: var(--accent); }
+  .pagehead { display: flex; align-items: center; justify-content: space-between; gap: .8rem; padding: 1.2rem 0 .3rem; }
+  .badges { display: flex; align-items: center; gap: .55rem; }
+  .badge {
+    display: inline-flex; align-items: center; gap: .3rem;
+    font-size: .74rem; font-weight: 600; color: var(--muted);
+    background: var(--card); border: 1px solid var(--line); border-radius: 999px;
+    padding: .3rem .65rem; white-space: nowrap;
+  }
+  .badge .zap { color: var(--accent); }
+  .badge.ring { font-size: .8rem; padding: .32rem .62rem; }
+  .ring svg { width: 26px; height: 26px; transform: rotate(-90deg); display: block; }
+  .ring circle { fill: none; stroke-width: 3.4; }
+  .ring .track { stroke: var(--line); }
+  .ring .fill { stroke: var(--accent); stroke-linecap: round; }
+
+  .bar { height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+  .bar > i { display: block; height: 100%; border-radius: 2px; background: var(--accent); transition: width .4s ease; }
+  @media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: .9rem 1.05rem; }
+  .btn {
+    display: block; width: 100%; text-align: center; border: none; cursor: pointer;
+    background: var(--accent); color: var(--accent-ink); font-weight: 600; font-size: .95rem;
+    padding: .85rem 1rem; border-radius: 12px;
+  }
+  .btn.ghost { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
+  .chev { color: var(--faint); }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* ---------- HOME / CATALOG ---------- */
+  .statgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; margin-top: .5rem; }
+  .stat { text-align: center; padding: .8rem .4rem; }
+  .stat .n { font-size: 1.35rem; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: .64rem; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin-top: .15rem; }
+
+  .continue { margin-top: 1rem; cursor: pointer; border-left: 3px solid var(--accent); }
+  .continue .top { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem; }
+  .continue .lt { font-weight: 600; font-size: 1.02rem; }
+  .continue .arrow { color: var(--accent); font-weight: 600; font-size: .88rem; }
+  .continue .bar { margin-top: .65rem; }
+  .continue .sub { font-size: .78rem; color: var(--muted); margin-top: .45rem; }
+
+  .path { display: flex; flex-direction: column; }
+  .lrow { display: flex; align-items: center; gap: .8rem; padding: .7rem .15rem; border-bottom: 1px solid var(--line); }
+  .lrow:last-child { border-bottom: none; }
+  .lrow.locked { opacity: .5; }
+  .lrow.clickable { cursor: pointer; }
+  .lrow .mid { flex: 1; min-width: 0; }
+  .lrow .lt { font-weight: 600; font-size: .92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lrow .obj { font-size: .76rem; color: var(--muted); margin-top: .1rem; }
+  .lrow .bar { margin-top: .35rem; max-width: 190px; }
+  .lrow .pct { flex: none; font-size: .72rem; color: var(--faint); font-variant-numeric: tabular-nums; }
+  .tag {
+    flex: none; font-size: .62rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    border-radius: 6px; padding: .18rem .45rem; border: 1px solid var(--line); color: var(--faint); background: var(--card);
+  }
+  .tag.focus { background: var(--accent-soft); border-color: var(--accent-soft); color: var(--accent); }
+  .tag.review { color: var(--muted); }
+  .tag.mastered { color: var(--good); border-color: var(--good); }
+  .tag.preview { color: var(--accent); border-color: var(--accent-soft); }
+
+  .lvl { margin-bottom: .7rem; }
+  .lvl summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: .7rem;
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: .7rem .9rem; }
+  .lvl summary::-webkit-details-marker { display: none; }
+  .lvl.current > summary { border-left: 3px solid var(--accent); }
+  .lvl.complete > summary .lvlt { color: var(--muted); }
+  .lvl summary .mid { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .lvlt { font-weight: 600; font-size: .95rem; }
+  .lvlsub { font-size: .72rem; color: var(--faint); }
+  .lvl .caret { transition: transform .15s ease; font-size: .8rem; }
+  .lvl[open] .caret { transform: rotate(180deg); }
+  @media (prefers-reduced-motion: reduce) { .lvl .caret { transition: none; } }
+  .lvlbody { margin-top: .5rem; }
+
+  .week { padding: .4rem .2rem 0; }
+  .week .plot { position: relative; display: flex; gap: .5rem; height: 72px; }
+  .week .goal { position: absolute; left: 0; right: 0; border-top: 1px dashed var(--faint); }
+  .week .col { flex: 1; display: flex; align-items: flex-end; justify-content: center; height: 100%; }
+  .week .col i { display: block; width: 60%; max-width: 26px; border-radius: 4px 4px 0 0; background: var(--soft); border: 1px solid var(--line); border-bottom: none; }
+  .week .col.today i { background: var(--accent); border-color: var(--accent); }
+  .week .wlabels { display: flex; gap: .5rem; margin-top: .35rem; }
+  .week .wlabels b { flex: 1; text-align: center; font-size: .66rem; color: var(--faint); font-weight: 600; }
+  .weeknote { font-size: .72rem; color: var(--faint); margin-top: .5rem; }
+
+  .trow { display: flex; align-items: center; gap: .7rem; font-size: .88rem; padding: .3rem 0; }
+  .trow .tn { flex: none; width: 9.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .trow .bar { flex: 1; }
+  .trow .tc { flex: none; font-size: .72rem; color: var(--faint); font-variant-numeric: tabular-nums; }
+  .trow .bar > i.bad { background: var(--close); }
+
+  /* ---------- LESSON ---------- */
+  .backrow { display: flex; align-items: center; gap: .5rem; padding: 1rem 0 .2rem; }
+  .backbtn { background: none; border: none; color: var(--accent); font-size: .88rem; font-weight: 600; cursor: pointer; padding: .2rem .4rem .2rem 0; }
+  .lkicker { font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  .objective { color: var(--muted); font-size: .95rem; margin: .3rem 0 0; max-width: 55ch; }
+  .prose { font-size: .95rem; max-width: 58ch; }
+  .prose p { margin: 0 0 .8rem; }
+  .prose em { color: var(--accent); font-style: normal; font-weight: 600; }
+  .pairgrid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+  @media (max-width: 420px) { .pairgrid { grid-template-columns: 1fr; } }
+  .pair h3 { margin: 0 0 .4rem; font-size: .72rem; color: var(--accent); letter-spacing: .1em; text-transform: uppercase; font-weight: 600; }
+  .pair ul { margin: 0; padding: 0; list-style: none; font-size: .88rem; }
+  .pair li { margin-bottom: .4rem; }
+  .pair li .gl { color: var(--faint); font-size: .78rem; }
+  .callout { border-left: 3px solid var(--accent); font-size: .92rem; }
+  .vrow { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: .5rem 0; border-bottom: 1px solid var(--line); font-size: .92rem; }
+  .vrow:last-child { border-bottom: none; }
+  .vrow .es { font-weight: 600; }
+  .vrow .en { color: var(--muted); }
+  .lesson-cta { position: sticky; bottom: .8rem; margin-top: 1.4rem; box-shadow: 0 6px 24px rgba(35,38,45,.14); }
+
+  /* ---------- PRACTICE ---------- */
+  #practice header { flex: none; border-bottom: 1px solid var(--line); padding: .85rem 1.15rem .7rem; background: var(--panel); }
+  @media (min-width: 880px) { #practice header { padding: 1rem 2.2rem .7rem; } }
+  .phead-row { display: flex; align-items: center; justify-content: space-between; gap: .7rem; }
+  .lesson-link {
+    background: none; border: none; color: var(--ink); cursor: pointer; padding: 0;
+    font-size: 1rem; font-weight: 600; display: inline-flex; align-items: center; gap: .3rem; min-width: 0;
+  }
+  .lesson-link span.t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .iconbtn { background: var(--card); border: 1px solid var(--line); border-radius: 999px; width: 38px; height: 38px; display: grid; place-items: center; color: var(--muted); cursor: pointer; flex: none; }
+  .iconbtn svg { width: 17px; height: 17px; }
+  .iconbtn:disabled { opacity: .38; cursor: default; }
+  .prof-row { display: flex; align-items: center; gap: .6rem; margin-top: .6rem; }
+  .prof-row .bar { flex: 1; }
+  .prof-row .pct { font-size: .68rem; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  #feed { flex: 1; min-height: 0; overflow-y: auto; padding: .9rem 1.15rem; display: flex; flex-direction: column; gap: .65rem; }
+  @media (min-width: 880px) { #feed { padding: .9rem 2.2rem; } }
+  #feed > * { flex: none; }
+
+  .divider { display: flex; align-items: center; gap: .7rem; color: var(--faint); font-size: .66rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; margin: .3rem 0; }
+  .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+  .plabel { display: flex; justify-content: space-between; align-items: center; gap: .6rem; font-size: .66rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+  .plabel .rv { color: var(--accent); }
+  .plabel .hintbtn { background: none; border: none; color: var(--accent); font-size: .66rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; padding: .45rem .5rem; margin: -.45rem -.5rem; }
+  .prompt { font-size: 1.02rem; font-weight: 600; margin-top: .3rem; }
+  .hinttext { font-size: .8rem; color: var(--muted); margin-top: .35rem; display: none; }
+  .hinttext.show { display: block; }
+
+  .learncard { display: flex; align-items: center; justify-content: space-between; gap: .8rem; cursor: pointer; border-left: 3px solid var(--accent); }
+  .learncard .t { font-weight: 600; font-size: .92rem; }
+  .learncard .s { font-size: .76rem; color: var(--muted); }
+
+  .flash { text-align: center; }
+  .flash .word { font-size: 1.5rem; font-weight: 600; }
+  .flash .pos { color: var(--faint); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; margin-top: .1rem; }
+
+  .opts { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .6rem; }
+  .opt {
+    font-size: .85rem; padding: .4rem .8rem; min-height: 36px;
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink);
+    border-radius: 10px; cursor: pointer;
+  }
+  .opt:not([disabled]):hover { border-color: var(--accent); }
+  .opt.right { border-color: var(--good); color: var(--good); font-weight: 600; }
+  .opt.wrong { border-color: var(--close); color: var(--close); }
+  .opt[disabled] { cursor: default; }
+
+  .bubble {
+    align-self: flex-end; background: var(--accent-soft); border-radius: 14px 14px 4px 14px;
+    padding: .5rem .8rem; max-width: 85%; font-size: .9rem;
+  }
+  .bubble.ai { align-self: flex-start; background: var(--card); border: 1px solid var(--line); border-radius: 14px 14px 14px 4px; }
+  .bubble.ai .who { color: var(--accent); font-weight: 600; font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: .1rem; }
+
+  .verdict { display: flex; align-items: center; gap: .8rem; }
+  .radial { flex: none; width: 2.4rem; height: 2.4rem; border-radius: 50%; display: grid; place-items: center; }
+  .radial span { background: var(--card); border-radius: 50%; width: 1.85rem; height: 1.85rem; display: grid; place-items: center; font-weight: 600; font-size: .78rem; font-variant-numeric: tabular-nums; }
+  .vmain { flex: 1; min-width: 0; }
+  .vmain .ans { font-size: .98rem; font-weight: 600; }
+  .vmain .note { font-size: .78rem; color: var(--muted); margin-top: .1rem; }
+  .save { flex: none; background: none; border: none; color: var(--faint); font-size: 1.05rem; cursor: pointer; padding: .6rem .55rem; margin: -.3rem -.25rem; }
+  .save.on { color: var(--close); }
+  .speakbtn { flex: none; background: none; border: none; color: var(--faint); cursor: pointer; padding: .45rem; display: inline-grid; place-items: center; vertical-align: middle; }
+  .speakbtn:hover { color: var(--accent); }
+  .speakbtn svg { width: 15px; height: 15px; }
+
+  .passage { font-size: .95rem; margin-top: .3rem; }
+  .passage .tap { border-bottom: 1px dashed var(--accent); cursor: help; }
+  .passage strong { color: var(--accent); }
+
+  .summary { border-left: 3px solid var(--accent); }
+  .summary .actions { display: flex; gap: .6rem; margin-top: .8rem; }
+  .summary .actions .btn { font-size: .85rem; padding: .6rem .8rem; flex: 1; }
+
+  #inputbar { flex: none; display: flex; gap: .55rem; padding: .7rem 1.15rem calc(.85rem + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--panel); }
+  @media (min-width: 880px) { #inputbar { padding: .7rem 2.2rem .95rem; } }
+  #field {
+    flex: 1; background: var(--card); border: 1px solid var(--line); min-height: 44px;
+    border-radius: 999px; padding: .55rem 1rem; color: var(--ink); font: inherit; font-size: 16px;
+  }
+  #field::placeholder { color: var(--faint); }
+  #send { flex: none; width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--accent); color: var(--accent-ink); font-weight: 600; cursor: pointer; font-size: 1.05rem; }
+
+  /* ---------- SIDE PANEL ---------- */
+  #scrim { position: absolute; inset: 0; background: rgba(35,38,45,.28); z-index: 20; }
+  #scrim[hidden] { display: none; }
+  #sidepanel {
+    position: absolute; top: 0; right: 0; bottom: 0; width: min(300px, 86%);
+    background: var(--panel); border-left: 1px solid var(--line); z-index: 21;
+    padding: 1.1rem 1.15rem 1.4rem; overflow-y: auto;
+    transform: translateX(102%); transition: transform .22s ease;
+  }
+  @media (prefers-reduced-motion: reduce) { #sidepanel { transition: none; } }
+  #sidepanel.open { transform: translateX(0); }
+  #sidepanel h3 { font-size: .7rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin: 1.3rem 0 .55rem; }
+  #sidepanel h3:first-of-type { margin-top: .4rem; }
+  #sidepanel h3 .h3note { color: var(--faint); letter-spacing: .04em; text-transform: none; font-weight: 500; }
+  .panelhead { display: flex; justify-content: space-between; align-items: center; }
+  .panelhead b { font-size: .95rem; }
+  .closebtn { background: none; border: none; color: var(--faint); font-size: 1.1rem; cursor: pointer; padding: .3rem .5rem; }
+  .optrow { display: flex; flex-direction: column; gap: .4rem; }
+  .optbtn {
+    text-align: left; font-size: .88rem; font-weight: 600; padding: .55rem .75rem; min-height: 44px;
+    background: var(--card); border: 1px solid var(--line); color: var(--ink); border-radius: 10px; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; gap: .6rem;
+  }
+  .optbtn small { font-weight: 500; color: var(--faint); font-size: .72rem; }
+  .optbtn.on { border-color: var(--accent); background: var(--accent-soft); }
+  .optbtn[disabled] { opacity: .5; cursor: not-allowed; }
+  .unitseg { display: flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .unitseg button { flex: 1; border: none; background: var(--card); color: var(--muted); font-size: .84rem; font-weight: 600; padding: .55rem; min-height: 44px; cursor: pointer; }
+  .unitseg button.on { background: var(--accent); color: var(--accent-ink); }
+  .wordchips { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .1rem; }
+  .wordchip { font-size: .76rem; font-weight: 600; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: .22rem .6rem; }
+  .wordchip.miss { border-color: var(--close); color: var(--close); }
+  .emptynote { font-size: .78rem; color: var(--faint); }
+
+  /* ---------- SETTINGS ---------- */
+  .setrow { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .85rem 0; border-bottom: 1px solid var(--line); }
+  .setrow:last-child { border-bottom: none; }
+  .setrow .sl { font-size: .92rem; font-weight: 600; }
+  .setrow .sd { font-size: .76rem; color: var(--muted); max-width: 34ch; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .seg button { border: none; background: var(--card); color: var(--muted); font-size: .82rem; font-weight: 600; padding: .45rem .7rem; cursor: pointer; min-height: 44px; }
+  .seg button.on { background: var(--accent); color: var(--accent-ink); }
+  .goalwrap { display: flex; align-items: center; justify-content: flex-end; gap: .45rem; flex-wrap: wrap; }
+  #goal-custom {
+    width: 4.9rem; min-height: 44px; background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: .45rem .55rem; font: inherit; font-size: 16px; font-weight: 600; color: var(--muted); text-align: center;
+  }
+  @media (min-width: 880px) { #goal-custom { font-size: .82rem; } }
+  #goal-custom.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+  #goal-custom::placeholder { color: var(--faint); font-size: .78rem; font-weight: 500; }
+  .pill-soon { font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); border: 1px solid var(--line); border-radius: 5px; padding: .12rem .4rem; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="screens">
+
+    <!-- ================= HOME ================= -->
+    <section class="screen" id="home">
+      <div class="pagehead">
+        <h1>Hola, Mike</h1>
+      </div>
+
+      <div class="statgrid">
+        <div class="card stat" title="Practice any day to keep your streak"><div class="n">4</div><div class="l">day streak</div></div>
+        <div class="card stat"><div class="n">47</div><div class="l">mastered</div></div>
+        <div class="card stat" title="Exercises today, toward your daily goal"><div class="n" id="stat-today">23</div><div class="l">today</div></div>
+      </div>
+
+      <div class="card continue" id="continue-card" role="button" tabindex="0">
+        <div class="top">
+          <span class="lt">Lesson 3 · Ser vs Estar</span>
+          <span class="arrow">Continue →</span>
+        </div>
+        <div class="bar"><i data-prof="3" style="width:58%"></i></div>
+        <div class="sub"><span data-profpct="3">58</span>% proficiency · next: quick quiz</div>
+      </div>
+
+      <div class="h2row"><h2>Your path</h2><button class="linkbtn" id="view-all">All lessons ›</button></div>
+      <div class="card path" id="path"></div>
+
+      <div class="h2row"><h2>This week</h2></div>
+      <div class="card">
+        <div class="week" id="week"></div>
+        <div class="weeknote">Dashed line = daily goal (<span id="goal-label">50</span>)</div>
+      </div>
+
+      <div class="h2row"><h2>Focus on</h2></div>
+      <div class="card">
+        <div class="trow"><span class="tn">ser vs estar</span><div class="bar"><i class="bad" style="width:60%"></i></div><span class="tc">6 misses</span></div>
+        <div class="trow"><span class="tn">gender agreement</span><div class="bar"><i class="bad" style="width:40%"></i></div><span class="tc">4 misses</span></div>
+        <div class="trow"><span class="tn">vocabulary</span><div class="bar"><i class="bad" style="width:20%"></i></div><span class="tc">2 misses</span></div>
+      </div>
+    </section>
+
+    <!-- ================= CATALOG ================= -->
+    <section class="screen" id="catalog">
+      <div class="pagehead"><h1>Lessons</h1></div>
+      <p style="font-size:.85rem;color:var(--muted);margin:.2rem 0 1rem;max-width:52ch">Your road, level by level.
+      Replay anything you've done, preview what's next.</p>
+      <div id="levels"></div>
+    </section>
+
+    <!-- ================= LESSON ================= -->
+    <section class="screen" id="lesson">
+      <div class="backrow"><button class="backbtn" id="lesson-back">‹ Back</button></div>
+      <div class="lkicker">Lesson 3 · A1</div>
+      <h1>Ser vs Estar</h1>
+      <p class="objective">Say what things <em style="font-style:normal;color:var(--accent);font-weight:600">are</em> — and how they are right now.</p>
+      <div class="prof-row" style="margin-top:.7rem; max-width: 340px;">
+        <div class="bar"><i data-prof="3" style="width:58%"></i></div>
+        <span class="pct"><span data-profpct="3">58</span>%</span>
+      </div>
+
+      <div class="h2row"><h2>The rule</h2></div>
+      <div class="prose">
+        <p>Spanish has two verbs for “to be,” and they split the world in a way English doesn't.
+        <em>Ser</em> is for what something fundamentally <em>is</em> — identity, origin, profession,
+        the date. <em>Estar</em> is for how something is <em>at the moment</em> — states, feelings,
+        and location.</p>
+        <p>The same adjective can change meaning with the verb: <em>el café es frío</em> means coffee
+        is cold by nature (iced coffee, say); <em>el café está frío</em> means your coffee has gone cold.</p>
+      </div>
+
+      <div class="pairgrid" style="margin-top:.4rem">
+        <div class="card pair">
+          <h3>Ser — what it is</h3>
+          <ul>
+            <li>Soy Miguel. <span class="gl">identity</span></li>
+            <li>Mi hermana es doctora. <span class="gl">profession</span></li>
+            <li>Somos de Madrid. <span class="gl">origin</span></li>
+            <li>Es lunes. <span class="gl">date</span></li>
+          </ul>
+        </div>
+        <div class="card pair">
+          <h3>Estar — how it is now</h3>
+          <ul>
+            <li>Estoy cansado. <span class="gl">feeling</span></li>
+            <li>El café está frío. <span class="gl">state</span></li>
+            <li>Estamos en la ciudad. <span class="gl">location</span></li>
+            <li>Está ocupada hoy. <span class="gl">temporary</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card callout" style="margin-top:.6rem">
+        <strong>Quick test:</strong> could it change by tomorrow? Use <span style="color:var(--accent);font-weight:600">estar</span>.
+        Would it still be true next year? Probably <span style="color:var(--accent);font-weight:600">ser</span>.
+      </div>
+
+      <div class="h2row"><h2>Vocabulary · 10 words</h2></div>
+      <div class="card" id="vlist"></div>
+
+      <button class="btn lesson-cta" id="start-practice">Start practice</button>
+    </section>
+
+    <!-- ================= PRACTICE ================= -->
+    <section class="screen column" id="practice">
+      <header>
+        <div class="phead-row">
+          <button class="lesson-link" id="practice-lesson-link" title="Open lesson">
+            <span class="t" id="p-title">Ser vs Estar</span> <span class="chev">›</span>
+          </button>
+          <div class="badges">
+            <span class="badge ring" id="prof-practice" title="Proficiency — this selection"></span>
+            <span class="badge ring" id="ring-practice" title="Today's exercises toward your daily goal"></span>
+            <button class="iconbtn" id="lesson-open" title="Open lesson" aria-label="Open lesson">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2.5H2z"/><path d="M22 4h-6a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2.5H22z"/></svg>
+            </button>
+            <button class="iconbtn" id="panel-open" title="Practice options" aria-label="Practice options">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 5h18M6 12h12M10 19h4"/></svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div id="feed"></div>
+      <div id="sr" class="visually-hidden" aria-live="polite"></div>
+
+      <div id="inputbar">
+        <input id="field" type="text" autocomplete="off" placeholder="…" aria-label="Answer or ask anything">
+        <button id="send" title="Send">↑</button>
+      </div>
+    </section>
+
+    <!-- ================= SETTINGS ================= -->
+    <section class="screen" id="settings">
+      <div class="pagehead"><h1>Settings</h1></div>
+
+      <div class="h2row"><h2>Practice</h2></div>
+      <div class="card">
+        <div class="setrow">
+          <div><div class="sl">Daily goal</div><div class="sd">Exercises per day — every answer counts, right or wrong. Wrong answers are how you learn.</div></div>
+          <div class="goalwrap">
+            <div class="seg" id="goal-seg">
+              <button data-goal="20">20</button>
+              <button data-goal="50" class="on">50</button>
+              <button data-goal="100">100</button>
+              <button data-goal="150">150</button>
+            </div>
+            <input id="goal-custom" type="number" min="5" max="500" inputmode="numeric" placeholder="custom…" aria-label="Custom daily goal">
+          </div>
+        </div>
+        <div class="setrow">
+          <div><div class="sl">Talk mode</div><div class="sd">Speak your answers instead of typing.</div></div>
+          <span class="pill-soon">soon</span>
+        </div>
+      </div>
+
+      <div class="h2row"><h2>Appearance</h2></div>
+      <div class="card">
+        <div class="setrow">
+          <div><div class="sl">Theme</div><div class="sd">Auto follows your system setting.</div></div>
+          <div class="seg" id="theme-seg">
+            <button data-theme="auto" class="on">Auto</button>
+            <button data-theme="light">Light</button>
+            <button data-theme="dark">Dark</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="h2row"><h2>Notifications</h2></div>
+      <div class="card">
+        <div class="setrow">
+          <div><div class="sl">Reminders</div><div class="sd">None — by design. AIdioma earns your return; it doesn't nag.</div></div>
+          <span class="pill-soon">none</span>
+        </div>
+      </div>
+
+      <div class="h2row"><h2>About</h2></div>
+      <div class="card">
+        <div class="setrow">
+          <div><div class="sl">AIdioma prototype v7</div><div class="sd">Local mock — no account, no AI calls, canned tutor replies. Proficiency is a live toy calculation.</div></div>
+        </div>
+        <div class="setrow">
+          <div><div class="sl">Reset prototype data</div><div class="sd">Clears goal, theme, saved words, and progress on this device.</div></div>
+          <button class="linkbtn" id="reset-data" style="color:var(--close)">Reset</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ================= SIDE PANEL ================= -->
+  <div id="scrim" hidden></div>
+  <aside id="sidepanel" aria-label="Practice options">
+    <div class="panelhead"><b>Practice options</b><button class="closebtn" id="panel-close" aria-label="Close">✕</button></div>
+
+    <h3>Lessons <span class="h3note">· tap to combine</span></h3>
+    <div class="optrow" id="lesson-opts">
+      <button class="optbtn" data-lesson="l1">Lesson 1 · Greetings <small>replay</small></button>
+      <button class="optbtn" data-lesson="l2">Lesson 2 · Numbers &amp; time <small>replay</small></button>
+      <button class="optbtn on" data-lesson="l3">Lesson 3 · Ser vs Estar <small>current</small></button>
+      <button class="optbtn" data-lesson="l4">Lesson 4 · The family <small>preview</small></button>
+    </div>
+
+    <h3>Or practice</h3>
+    <div class="optrow" id="pool-opts">
+      <button class="optbtn" data-pool="blend">Blend <small>lesson 3 + smart review</small></button>
+      <button class="optbtn" data-pool="saved" id="scope-saved">Saved words <small id="saved-count">nothing saved yet</small></button>
+    </div>
+
+    <h3>How to practice</h3>
+    <div class="optrow" id="mode-opts">
+      <button class="optbtn on" data-mode="mix">Mix <small>the full arc</small></button>
+      <button class="optbtn" data-mode="quiz">Quiz <small>multiple choice</small></button>
+      <button class="optbtn" data-mode="type">Type <small>words or sentences</small></button>
+      <button class="optbtn" data-mode="story">Story <small>read &amp; translate</small></button>
+    </div>
+    <div class="unitseg" id="unit-seg" style="margin-top:.5rem; display:none">
+      <button data-unit="words" class="on">Words</button>
+      <button data-unit="sentences">Sentences</button>
+    </div>
+
+    <h3>Direction</h3>
+    <div class="unitseg" id="dir-seg">
+      <button data-dir="en-es" class="on">EN→ES</button>
+      <button data-dir="es-en">ES→EN</button>
+      <button data-dir="both">Both</button>
+    </div>
+
+    <h3>Missed this session</h3>
+    <div id="missed-list"><div class="emptynote">Nothing missed yet.</div></div>
+
+    <h3>Saved</h3>
+    <div id="saved-list"><div class="emptynote">Tap ♡ on any answer to save it here.</div></div>
+
+    <h3>Session</h3>
+    <div class="optrow"><button class="optbtn" id="end-session">End now <small>see your summary</small></button></div>
+  </aside>
+
+  <nav id="tabbar">
+    <button data-screen="home" class="active" aria-label="Home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>
+      Home
+    </button>
+    <button data-screen="catalog" aria-label="Lessons">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 19V6a2 2 0 0 1 2-2h13v15H6a2 2 0 0 0-2 2zm0 0a2 2 0 0 0 2 2h13"/></svg>
+      Lessons
+    </button>
+    <button data-screen="practice" aria-label="Practice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4V6a1 1 0 0 1 1-1z"/></svg>
+      Practice
+    </button>
+    <button data-screen="settings" aria-label="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
+      Settings
+    </button>
+  </nav>
+</div>
+
+<!-- Real, CI-validated lesson content (generated by tooling/prototype/export-lessons.ts).
+     Defines window.AIDIOMA_LESSONS; merged over the mock lessons below. Optional — absent = mock only. -->
+<script src="lesson-data.js"></script>
+<script>
+(function () {
+  /* ================= state ================= */
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem('aidioma.' + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+    set(k, v) { try { localStorage.setItem('aidioma.' + k, JSON.stringify(v)); } catch {} }
+  };
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const state = {
+    goal: store.get('goal', 50),
+    done: (() => {
+      const v = store.get('done.' + todayKey, null);
+      if (v !== null) return v;
+      if (!store.get('seeded', false)) { store.set('seeded', true); return 23; }
+      return 0;
+    })(),
+    prof3: store.get('prof3', 58),
+    lastScreen: 'home',
+    pool: 'lessons',        // 'lessons' | 'blend' | 'saved'
+    sels: ['l3'],           // selected lessons when pool = 'lessons' (multi)
+    mode: 'mix', unit: 'words',
+    dir: 'en-es',           // 'en-es' | 'es-en' | 'both'
+    saved: store.get('saved', [])
+  };
+  function persistSaved() { store.set('saved', state.saved); }
+
+  /* ================= content (mock lessons) ================= */
+  const VOCAB = [
+    ['cansado / cansada', 'tired'], ['enfermo / enferma', 'sick'], ['contento / contenta', 'happy'],
+    ['ocupado / ocupada', 'busy'], ['frío / fría', 'cold'], ['la salud', 'health'],
+    ['la hermana', 'sister'], ['la doctora, el doctor', 'doctor'], ['el lunes', 'Monday'], ['la ciudad', 'city']
+  ];
+  const MOCK_LESSONS = {
+    l1: { n: 1, title: 'Greetings', prof: 92, items: {
+      quiz: [
+        { type: 'mc', label: 'Quiz', prompt: '“hola” means…', options: ['hello', 'goodbye', 'thanks'], correct: 0,
+          why: 'The universal greeting.', hint: '¡Hola!' }
+      ],
+      words: [
+        { type: 'flash', es: 'buenos días', en: 'good morning', pos: 'phrase', accEs: ['buenos días'], accEn: ['good morning'], hint: 'Morning greeting.' },
+        { type: 'flash', es: 'adiós', en: 'goodbye', pos: 'phrase', accEs: ['adiós'], accEn: ['goodbye', 'bye'], hint: 'Leaving.' }
+      ],
+      sentences: [
+        { type: 'tr', es: 'Me llamo Miguel', en: 'My name is Miguel.', accEs: ['me llamo miguel', 'mi nombre es miguel'],
+          accEn: ['my name is miguel', 'i am called miguel'], hint: '“Me llamo…” = I call myself…' }
+      ],
+      story: []
+    }},
+    l2: { n: 2, title: 'Numbers & time', prof: 78, items: {
+      quiz: [
+        { type: 'mc', label: 'Quiz', prompt: '“la mañana” means…', options: ['the night', 'the morning', 'the afternoon'], correct: 1,
+          why: 'la mañana = the morning.', hint: 'Buenos días…' }
+      ],
+      words: [
+        { type: 'flash', es: 'la tarde', en: 'afternoon', pos: 'noun · f', accEs: ['la tarde', 'tarde'], accEn: ['afternoon', 'the afternoon'], hint: '“Buenas tardes.”' },
+        { type: 'flash', es: 'la noche', en: 'night', pos: 'noun · f', accEs: ['la noche', 'noche'], accEn: ['night', 'the night'], hint: '“Buenas noches.”' }
+      ],
+      sentences: [
+        { type: 'tr', es: 'Es lunes', en: 'It is Monday.', accEs: ['es lunes', 'hoy es lunes'],
+          accEn: ['it is monday', 'today is monday'], hint: 'Days take ser.' }
+      ],
+      story: []
+    }},
+    l3: { n: 3, title: 'Ser vs Estar', prof: null, items: {
+      quiz: [
+        { type: 'mc', label: 'Quiz', prompt: 'El café ___ frío.', options: ['es', 'está'], correct: 1,
+          why: 'Temperature is a state — it could change by tomorrow.', hint: 'Could it change by tomorrow?' },
+        { type: 'mc', label: 'Quiz', prompt: 'Mi hermana ___ doctora.', options: ['es', 'está'], correct: 0,
+          why: 'Profession is identity → ser.', hint: 'Identity or state?' },
+        { type: 'mc', label: 'Quiz', prompt: '“cansado” means…', options: ['busy', 'tired', 'sad'], correct: 1,
+          why: '“Estoy cansado” = I\'m tired.', hint: 'Estoy cansado…' }
+      ],
+      words: [
+        { type: 'flash', es: 'cansado', en: 'tired', pos: 'adjective', accEs: ['cansado', 'cansada'], accEn: ['tired'], hint: '“Estoy cansado.”' },
+        { type: 'flash', es: 'la salud', en: 'health', pos: 'noun · f', accEs: ['la salud', 'salud'], accEn: ['health', 'the health'], hint: '“La salud es importante.”' },
+        { type: 'flash', es: 'enfermo', en: 'sick', pos: 'adjective', accEs: ['enfermo', 'enferma'], accEn: ['sick', 'ill'], hint: 'States take estar.' }
+      ],
+      sentences: [
+        { type: 'tr', es: 'Estoy cansado', en: 'I\'m tired.', accEs: ['estoy cansado', 'estoy cansada', 'yo estoy cansado', 'yo estoy cansada'],
+          accEn: ['i am tired'], hint: 'A feeling → estar.' },
+        { type: 'tr', es: 'El café está frío', en: 'The coffee is cold.', accEs: ['el café está frío'],
+          accEn: ['the coffee is cold', 'coffee is cold'], hint: 'Could it change by tomorrow?' },
+        { type: 'tr', es: 'Mi hermana es doctora', en: 'My sister is a doctor.', accEs: ['mi hermana es doctora', 'mi hermana es médica'],
+          accEn: ['my sister is a doctor'], hint: 'Identity → ser. No “una” before professions.' }
+      ],
+      story: [
+        { type: 'seg',
+          context: 'María <span class="tap" title="está — is (location)">está</span> en el café con su <span class="tap" title="hermana = sister">hermana</span>.',
+          es: 'Las dos están cansadas porque es lunes.',
+          accept: ['both are tired because it is monday', 'both of them are tired because it is monday',
+                   'the two are tired because it is monday', 'the two of them are tired because it is monday',
+                   'they are both tired because it is monday'],
+          show: 'Both of them are tired because it\'s Monday.', hint: '“las dos” = both (of them).' },
+        { type: 'mc', label: 'Comprehension', prompt: 'Why is María at the café?',
+          options: ['She works there', 'She\'s with her sister', 'Waiting for a bus'], correct: 1,
+          why: '“…en el café con su hermana.”', hint: 'Re-read the first line.' }
+      ]
+    }},
+    l4: { n: 4, title: 'The family', prof: 0, preview: true, items: {
+      quiz: [
+        { type: 'mc', label: 'Quiz', prompt: '“el hermano” means…', options: ['brother', 'sister', 'uncle'], correct: 0,
+          why: 'hermano / hermana = brother / sister.', hint: 'la hermana = sister' }
+      ],
+      words: [
+        { type: 'flash', es: 'la madre', en: 'mother', pos: 'noun · f', accEs: ['la madre', 'madre'], accEn: ['mother', 'mom', 'the mother'], hint: 'mamá, informally.' },
+        { type: 'flash', es: 'el hermano', en: 'brother', pos: 'noun · m', accEs: ['el hermano', 'hermano'], accEn: ['brother', 'the brother'], hint: 'la hermana = sister.' }
+      ],
+      sentences: [], story: []
+    }}
+  };
+  // Real content (window.AIDIOMA_LESSONS from lesson-data.js) overrides mock lessons by key
+  // (l<ordinal>); mock l2/l3/l4 remain so multi-lesson UI states still demo. Absent = mock only.
+  const LESSONS = Object.assign({}, MOCK_LESSONS, window.AIDIOMA_LESSONS || {});
+  const PHASE_LABEL = { quiz: 'Quiz', words: 'Words', sentences: 'Sentences', story: 'Story' };
+  const CATALOG = [
+    { sel: 'l1', st: 'mastered', tag: 'Mastered', obj: 'Say hello, introduce yourself.' },
+    { sel: 'l2', st: 'completed', tag: 'In review', obj: 'Count, tell the day and time.' },
+    { sel: 'l3', st: 'current', tag: 'Focus', obj: 'Say what things are — and how they are right now.' },
+    { sel: 'l4', st: 'preview', tag: 'Preview', obj: 'Talk about the people in your life.' },
+    { n: 5, title: 'Daily routines', st: 'locked', obj: 'Describe your day with common -ar verbs.' },
+    { n: 6, title: 'Food & ordering', st: 'locked', obj: 'Order at a café; me gusta.' },
+    { n: 7, title: 'More present tense', st: 'locked', obj: 'Comer, vivir and friends (-er / -ir).' },
+    { n: 8, title: 'Gender & articles', st: 'locked', obj: 'el / la / los / las and agreement.' },
+    { n: 9, title: 'Asking questions', st: 'locked', obj: 'Qué, dónde, cuándo, por qué.' },
+    { n: 10, title: 'Places & location', st: 'locked', obj: 'Estar + prepositions of place.' }
+  ];
+
+  /* ================= tiny eval engine ================= */
+  const deacc = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const norm = s => s.toLowerCase()
+    .replace(/it['’]s/g, 'it is').replace(/i['’]m/g, 'i am').replace(/they['’]re/g, 'they are')
+    .replace(/[.,!?¡¿«»"“”'’]/g, '').replace(/\s+/g, ' ').trim();
+  function lev(a, b) {
+    const m = a.length, n = b.length;
+    if (!m) return n;
+    if (!n) return m;
+    let prev = Array.from({ length: n + 1 }, (_, i) => i);
+    for (let i = 1; i <= m; i++) {
+      const cur = [i];
+      for (let j = 1; j <= n; j++)
+        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      prev = cur;
+    }
+    return prev[n];
+  }
+  function evaluate(input, accept) {
+    const inN = norm(input), inD = deacc(inN);
+    let best = { score: 10, note: null, exp: accept[0] };
+    for (const a of accept) {
+      const aN = norm(a), aD = deacc(aN);
+      if (inN === aN) return { score: 100, note: null, exp: a };
+      if (inD === aD) { if (best.score < 92) best = { score: 92, note: 'Watch the accents', exp: a }; continue; }
+      const d = lev(inD, aD);
+      if (d <= 2 && best.score < 78) best = { score: 78, note: 'Close', exp: a };
+      else if (d <= 5 && best.score < 45) best = { score: 45, note: null, exp: a };
+    }
+    return best;
+  }
+  const isQuestion = s => /\?\s*$/.test(s) ||
+    /^(why|how|what|when|who|where|can|could|does|do|is|are|qué|que|por qué|cómo|como)\b/i.test(s.trim());
+  function cannedAnswer(q) {
+    const s = q.toLowerCase();
+    if (/(ser|estar|está|esta|\bes\b)/.test(s))
+      return 'Cold coffee is a <strong>state</strong>, not what coffee <em>is</em> — so <strong>está</strong>. “Es frío” would mean cold by nature. Test: could it change by tomorrow?';
+    if (/accent|tilde/.test(s))
+      return 'Accents mark the stressed syllable — “está” stresses the end. I accept accent-less answers but nudge you, so the habit builds.';
+    if (/doctora|doctor|profession/.test(s))
+      return 'Professions take the person\'s gender — <strong>doctora</strong> for a woman — and drop the article: “Mi hermana es doctora.”';
+    return 'Good question — in the real app I answer with your exact card and last mistake as context. This prototype only has canned replies; try asking about ser vs estar.';
+  }
+
+  /* ================= helpers ================= */
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => document.querySelectorAll(sel);
+  function el(html) { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstChild; }
+  const esc = s => s.replace(/</g, '&lt;');
+  function activate(node, fn) {
+    node.addEventListener('click', fn);
+    node.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); } });
+  }
+  function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function announce(text) { const sr = $('#sr'); if (sr) sr.textContent = text; }
+
+  const SPK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 0 1 0 6" stroke-linecap="round"/></svg>';
+  function speakBtn(text) { return `<button class="speakbtn" data-say="${text}" title="Listen">${SPK}</button>`; }
+  function speak(text) {
+    try {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'es-ES'; u.rate = 0.9;
+      speechSynthesis.speak(u);
+    } catch {}
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('.speakbtn');
+    if (b) speak(b.dataset.say);
+  });
+
+  // direction-aware fields; story is always ES→EN; 'both' alternates per card
+  function dirFields(item) {
+    if (item.type === 'seg') return { front: item.es, accept: item.accept, show: item.show };
+    const dir = state.dir === 'both' ? (item.dirA || 'en-es') : state.dir;
+    if (dir === 'en-es') return { dir, front: item.en, accept: item.accEs, show: item.es };
+    return { dir, front: item.es, accept: item.accEn, show: item.en };
+  }
+
+  /* ================= rings / goal / proficiency ================= */
+  function ringSVG(frac) {
+    const r = 7.5, c = 2 * Math.PI * r, off = c * (1 - Math.min(1, frac));
+    return `<svg viewBox="0 0 20 20" aria-hidden="true">
+      <circle class="track" cx="10" cy="10" r="${r}"></circle>
+      <circle class="fill" cx="10" cy="10" r="${r}" stroke-dasharray="${c}" stroke-dashoffset="${off}"></circle>
+    </svg>`;
+  }
+  function renderRings() {
+    $('#ring-practice').innerHTML = ringSVG(state.done / state.goal) + `<span>${state.done}/${state.goal}</span>`;
+    $('#stat-today').textContent = state.done;
+    $('#goal-label').textContent = state.goal;
+    renderWeek();
+  }
+  function bumpDaily() {
+    state.done++; store.set('done.' + todayKey, state.done); renderRings();
+    if (state.done === state.goal) {
+      const feedEl = document.getElementById('feed');
+      if (feedEl) { feedEl.appendChild(el(`<div class="divider">✓ daily goal met · ${state.goal}</div>`)); feedEl.scrollTop = feedEl.scrollHeight; }
+    }
+  }
+  function setProf(v) {
+    state.prof3 = Math.max(0, Math.min(100, Math.round(v)));
+    store.set('prof3', state.prof3);
+    $$('[data-prof="3"]').forEach(b => b.style.width = state.prof3 + '%');
+    $$('[data-profpct="3"]').forEach(s => s.textContent = state.prof3);
+    renderHeaderProf();
+  }
+  function profOf(sel) { return sel === 'l3' ? state.prof3 : (LESSONS[sel] ? LESSONS[sel].prof : 0); }
+  function profOfSelection() {
+    if (state.pool !== 'lessons') return state.prof3;
+    const vals = state.sels.map(profOf);
+    return Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
+  }
+  function renderHeaderProf() {
+    const p = profOfSelection();
+    $('#prof-practice').innerHTML = ringSVG(p / 100) + `<span>${p}%</span>`;
+  }
+  function learnFrom(score) {
+    if (state.pool === 'blend' || (state.pool === 'lessons' && state.sels.includes('l3')))
+      setProf(state.prof3 + (score - state.prof3) * 0.06);
+  }
+
+  function renderWeek() {
+    const week = $('#week'); week.innerHTML = '';
+    const data = [32, 50, 41, 0, 50, 38, state.done];
+    const names = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+    const labels = data.map((_, i) => {
+      if (i === 6) return 'today';
+      const d = new Date(); d.setDate(d.getDate() - (6 - i));
+      return names[d.getDay()];
+    });
+    const max = Math.max(state.goal, ...data) * 1.15;
+    const plot = el(`<div class="plot"></div>`);
+    const goalLine = el(`<div class="goal"></div>`);
+    goalLine.style.bottom = (state.goal / max * 100) + '%';
+    plot.appendChild(goalLine);
+    data.forEach((v, i) => {
+      plot.appendChild(el(`<div class="col${i === 6 ? ' today' : ''}"><i style="height:${Math.max(3, v / max * 100)}%"></i></div>`));
+    });
+    week.appendChild(plot);
+    week.appendChild(el(`<div class="wlabels">${labels.map(l => `<b>${l}</b>`).join('')}</div>`));
+  }
+
+  /* ================= router ================= */
+  const tabs = $$('#tabbar button');
+  function show(name) {
+    $$('.screen').forEach(s => s.classList.toggle('active', s.id === name));
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.screen === name));
+    if (name !== 'lesson') state.lastScreen = name;
+  }
+  tabs.forEach(t => t.addEventListener('click', () => show(t.dataset.screen)));
+  $('#lesson-back').addEventListener('click', () => show(state.lastScreen));
+  // Only l3 has a lesson detail page in the prototype; button disables honestly elsewhere.
+  function lessonPageAvailable() {
+    return state.pool === 'blend' || (state.pool === 'lessons' && state.sels.includes('l3'));
+  }
+  $('#practice-lesson-link').addEventListener('click', () => {
+    if (lessonPageAvailable()) show('lesson');
+  });
+  $('#lesson-open').addEventListener('click', () => {
+    if (lessonPageAvailable()) show('lesson');
+  });
+  $('#start-practice').addEventListener('click', () => show('practice'));
+  $('#view-all').addEventListener('click', () => show('catalog'));
+  activate($('#continue-card'), () => { setLessons(['l3']); show('practice'); });
+
+  /* ================= path + catalog rows ================= */
+  function lessonRow(entry, withObj) {
+    const l = entry.sel ? LESSONS[entry.sel] : null;
+    const n = l ? l.n : entry.n;
+    const title = l ? l.title : entry.title;
+    const prof = entry.sel ? profOf(entry.sel) : 0;
+    const clickable = !!entry.sel;
+    const hasBar = entry.st !== 'locked' && entry.st !== 'preview';
+    let tagCls = 'mastered';
+    if (entry.tag === 'Focus') tagCls = 'focus';
+    else if (entry.tag === 'In review') tagCls = 'review';
+    else if (entry.tag === 'Preview') tagCls = 'preview';
+    const row = el(`<div class="lrow ${entry.st}${clickable ? ' clickable' : ''}" ${clickable ? 'role="button" tabindex="0"' : ''}>
+      <span class="mid"><span class="lt">${n} · ${title}</span>
+      ${withObj ? `<span class="obj">${entry.obj}</span>` : ''}
+      ${hasBar ? `<span class="bar"><i ${entry.sel === 'l3' ? 'data-prof="3"' : ''} style="width:${prof}%"></i></span>` : ''}</span>
+      ${hasBar ? `<span class="pct">${entry.sel === 'l3' ? `<span data-profpct="3">${prof}</span>` : prof}%</span>` : ''}
+      ${entry.tag ? `<span class="tag ${tagCls}">${entry.tag}</span>` : ''}
+      ${clickable ? '<span class="chev">›</span>' : ''}
+    </div>`);
+    if (clickable) activate(row, () => {
+      if (entry.sel === 'l3') { show('lesson'); return; }
+      setLessons([entry.sel]);
+      show('practice');
+    });
+    return row;
+  }
+  CATALOG.slice(0, 5).forEach(e => $('#path').appendChild(lessonRow(e, false)));
+
+  const LEVELS = [
+    { title: 'Sounds & spelling', sub: '3 lessons', state: 'complete',
+      rows: ['i · The Spanish alphabet', 'ii · Vowels & stress', 'iii · Accents & the ñ'] },
+    { title: 'A1 · Foundations', sub: 'Lessons 1–10', state: 'current', catalog: true },
+    { title: 'A1 · Building blocks', sub: 'Lessons 11–20', state: 'locked',
+      rows: ['11 · Ir + places', '12 · Tener & age', '13 · Me gusta'], more: '+ 7 more as you progress' },
+    { title: 'A2 · Everyday fluency', sub: 'Lessons 21–40', state: 'locked',
+      teaser: 'Past tenses, plans, opinions. Unlocks when A1 is complete.' }
+  ];
+  LEVELS.forEach(lv => {
+    let chip = '<span class="tag">Locked</span>';
+    if (lv.state === 'complete') chip = '<span class="tag mastered">✓ Complete</span>';
+    else if (lv.state === 'current') chip = '<span class="tag focus">You are here</span>';
+    const det = el(`<details class="lvl ${lv.state}"${lv.state === 'current' ? ' open' : ''}>
+      <summary><span class="mid"><span class="lvlt">${lv.title}</span><span class="lvlsub">${lv.sub}</span></span>${chip}<span class="chev caret">▾</span></summary>
+      <div class="lvlbody"></div></details>`);
+    const body = det.querySelector('.lvlbody');
+    if (lv.catalog) {
+      const cardEl = el('<div class="card path"></div>');
+      CATALOG.forEach(e => cardEl.appendChild(lessonRow(e, true)));
+      body.appendChild(cardEl);
+    } else if (lv.rows) {
+      const cardEl = el('<div class="card path"></div>');
+      lv.rows.forEach(t => cardEl.appendChild(el(`<div class="lrow ${lv.state === 'complete' ? '' : 'locked'}">
+        <span class="mid"><span class="lt">${t}</span></span>
+        ${lv.state === 'complete' ? '<span class="tag mastered">✓</span>' : ''}</div>`)));
+      if (lv.more) cardEl.appendChild(el(`<div class="lrow locked"><span class="mid"><span class="obj">${lv.more}</span></span></div>`));
+      body.appendChild(cardEl);
+    } else if (lv.teaser) {
+      body.appendChild(el(`<div class="card" style="font-size:.8rem;color:var(--muted)">${lv.teaser}</div>`));
+    }
+    $('#levels').appendChild(det);
+  });
+  VOCAB.forEach(([es, en]) => $('#vlist').appendChild(el(
+    `<div class="vrow"><span class="es">${es} ${speakBtn(es.split(' /')[0])}</span><span class="en">${en}</span></div>`)));
+
+  /* ================= practice engine ================= */
+  const feed = $('#feed'), field = $('#field'), send = $('#send');
+  let deck = [], pos = 0, results = [];
+
+  function buildDeck() {
+    const d = [];
+    if (state.pool === 'saved') {
+      d.push({ type: 'phase', key: 'words' });
+      state.saved.forEach(w => d.push({
+        type: 'flash', phase: 'words', es: w.es, en: w.en, pos: 'saved',
+        accEs: [w.es.toLowerCase()], accEn: [w.en.toLowerCase()], hint: 'From your saved deck.'
+      }));
+    } else {
+      const sels = state.pool === 'blend' ? ['l3'] : state.sels;
+      const multi = sels.length > 1;
+      let phases;
+      if (state.mode === 'mix') phases = ['quiz', 'words', 'sentences', 'story'];
+      else if (state.mode === 'type') phases = [state.unit];
+      else phases = [state.mode];
+      for (const p of phases) {
+        const pool = sels.flatMap(sel => (LESSONS[sel].items[p] || [])
+          .map(it => multi ? { ...it, src: 'L' + LESSONS[sel].n } : { ...it }));
+        if (state.pool === 'blend' && LESSONS.l2.items[p] && LESSONS.l2.items[p].length)
+          pool.push({ ...LESSONS.l2.items[p][0], review: 'L2' });
+        if (!pool.length) continue;
+        shuffle(pool);   // fresh order every session — repeats aren't the same run twice
+        d.push({ type: 'phase', key: p });
+        pool.forEach(it => d.push({ ...it, phase: p }));
+      }
+    }
+    // 'both' direction: alternate per typed card
+    let flip = false;
+    for (const it of d) {
+      if (it.type === 'flash' || it.type === 'tr') { it.dirA = flip ? 'es-en' : 'en-es'; flip = !flip; }
+    }
+    d.push({ type: 'summary' });
+    return d;
+  }
+  function push(node) { feed.appendChild(node); feed.scrollTop = feed.scrollHeight; }
+  function counterFor(item) {
+    const same = deck.filter(d => d.phase === item.phase);
+    return `${same.indexOf(item) + 1}/${same.length}`;
+  }
+  function plabelFor(item, base) {
+    let extra = '';
+    if (item.review) extra = ` <span class="rv">· review ${item.review}</span>`;
+    else if (item.src) extra = ` <span class="rv">· ${item.src}</span>`;
+    return `${base} · ${counterFor(item)}${extra}`;
+  }
+  function hintify(card, item) {
+    const btn = card.querySelector('.hintbtn:not(.reveal)');
+    if (btn) btn.addEventListener('click', () => {
+      item.hinted = true;
+      let h = card.querySelector('.hinttext');
+      if (!h) { h = el(`<div class="hinttext">${item.hint}</div>`); card.appendChild(h); }
+      h.classList.toggle('show');
+    });
+    const rev = card.querySelector('.reveal');
+    if (rev) rev.addEventListener('click', () => {
+      if (item.answered || deck[pos] !== item) return;
+      const f = dirFields(item);
+      record(item, 10);
+      push(verdictCard(10, f.show, 'Revealed — it will come back around.', item));
+      pos++; setTimeout(dealCurrent, 350);
+    });
+  }
+
+  function dealCurrent() {
+    const item = deck[pos];
+    if (!item) return;
+    if (item.type === 'phase') {
+      push(el(`<div class="divider">${PHASE_LABEL[item.key]}</div>`));
+      pos++; dealCurrent(); return;
+    }
+    if (item.type === 'summary') { renderSummary(); field.placeholder = 'Session complete — ask anything'; return; }
+
+    if (item.type === 'mc') {
+      const opts = item.options.map((o, i) => `<button class="opt" data-i="${i}">${o}</button>`).join('');
+      const card = el(`<div class="card">
+        <div class="plabel"><span>${plabelFor(item, item.label)}</span><button class="hintbtn">hint</button></div>
+        <div class="prompt">${item.prompt}</div>
+        <div class="opts">${opts}</div></div>`);
+      card.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => answerMC(item, card, +b.dataset.i)));
+      hintify(card, item);
+      push(card);
+      field.placeholder = 'Pick an answer… or ask anything';
+    } else if (item.type === 'flash') {
+      const f = dirFields(item);
+      const hear = f.front === item.es ? ' ' + speakBtn(item.es) : '';
+      const card = el(`<div class="card">
+        <div class="plabel"><span>${plabelFor(item, 'Words')}</span><span><button class="hintbtn">hint</button> <button class="hintbtn reveal">reveal</button></span></div>
+        <div class="flash" style="padding:.55rem 0 .1rem"><div class="word">${f.front}${hear}</div><div class="pos">${item.pos}</div></div></div>`);
+      hintify(card, item);
+      push(card);
+      field.placeholder = f.dir === 'en-es' ? 'Type the Spanish… or ask anything' : 'Type the English… or ask anything';
+    } else if (item.type === 'tr') {
+      const f = dirFields(item);
+      const hear = f.front === item.es ? ' ' + speakBtn(item.es) : '';
+      const card = el(`<div class="card">
+        <div class="plabel"><span>${plabelFor(item, 'Sentences')}</span><span><button class="hintbtn">hint</button> <button class="hintbtn reveal">reveal</button></span></div>
+        <div class="prompt">“${f.front}”${hear}</div></div>`);
+      hintify(card, item);
+      push(card);
+      field.placeholder = f.dir === 'en-es' ? 'Type your translation (Spanish)… or ask anything' : 'Type your translation (English)… or ask anything';
+    } else if (item.type === 'seg') {
+      const card = el(`<div class="card">
+        <div class="plabel"><span>Story · translate the highlighted line</span><span><button class="hintbtn">hint</button> <button class="hintbtn reveal">reveal</button></span></div>
+        <div class="passage">${item.context} <strong>${item.es}</strong> ${speakBtn(item.es)}</div></div>`);
+      hintify(card, item);
+      push(card);
+      field.placeholder = 'Translate the line… or ask anything';
+    }
+  }
+
+  function radial(score) {
+    let color = 'var(--close)';
+    if (score >= 90) color = 'var(--good)';
+    else if (score >= 60) color = 'var(--accent)';
+    return `<div class="radial" style="background: conic-gradient(${color} ${score * 3.6}deg, var(--line) 0)"><span>${score}</span></div>`;
+  }
+  function saveEntryFor(item) {
+    if (item.type === 'flash' || item.type === 'tr') return { es: item.es, en: item.en };
+    if (item.type === 'seg') return { es: item.es, en: item.show };
+    return { es: item.prompt, en: item.options ? item.options[item.correct] : '' };
+  }
+  function verdictCard(score, ansHtml, note, item) {
+    if (item.hinted && score >= 80) note = (note ? note + ' · ' : '') + 'with hint';
+    const hear = item.es ? speakBtn(item.es) : '';
+    const node = el(`<div class="card"><div class="verdict">
+      ${radial(score)}
+      <div class="vmain"><div class="ans">${ansHtml}</div>${note ? `<div class="note">${note}</div>` : ''}</div>
+      ${hear}<button class="save" title="Save to your deck">♡</button>
+    </div></div>`);
+    node.querySelector('.save').addEventListener('click', function () {
+      const entry = saveEntryFor(item);
+      const idx = state.saved.findIndex(w => w.es === entry.es);
+      if (idx >= 0) { state.saved.splice(idx, 1); this.classList.remove('on'); this.textContent = '♡'; }
+      else { state.saved.push(entry); this.classList.add('on'); this.textContent = '♥'; }
+      persistSaved();
+      renderPanelInfo();
+    });
+    return node;
+  }
+  function record(item, score) {
+    item.answered = true; results.push({ item, score }); bumpDaily(); learnFrom(score);
+    // a missed item comes back before the summary — the session isn't over until it's retrieved
+    if (score < 80 && !item.requeued)
+      deck.splice(deck.length - 1, 0, { ...item, requeued: true, review: 'again', answered: false, hinted: false });
+    announce(`Score ${score} out of 100.`);
+    renderPanelInfo();
+  }
+
+  function answerMC(item, card, i) {
+    if (item.answered) return;
+    const btns = card.querySelectorAll('.opt');
+    btns.forEach(b => b.disabled = true);
+    const right = i === item.correct;
+    btns[item.correct].classList.add('right');
+    if (!right) btns[i].classList.add('wrong');
+    record(item, right ? 100 : 15);
+    push(verdictCard(right ? 100 : 15, right ? item.options[item.correct] : `It's “${item.options[item.correct]}”`, item.why, item));
+    pos++; setTimeout(dealCurrent, 350);
+  }
+
+  function answerTyped(input) {
+    const item = deck[pos];
+    const f = dirFields(item);
+    push(el(`<div class="bubble">${esc(input)}</div>`));
+    const r = evaluate(input, f.accept);
+    record(item, r.score);
+    let note;
+    if (r.score >= 90) note = r.note;
+    else note = (r.note ? r.note + ' — ' : '') + (item.hint || '');
+    push(verdictCard(r.score, f.show, note, item));
+    pos++; setTimeout(dealCurrent, 350);
+  }
+
+  function renderSummary() {
+    if (!results.length) return;
+    const avg = Math.round(results.reduce((s, r) => s + r.score, 0) / results.length);
+    const weak = results.filter(r => r.score < 80);
+    const node = el(`<div class="card summary">
+      <div class="plabel"><span>Session summary</span></div>
+      <div class="verdict" style="margin-top:.3rem">${radial(avg)}
+        <div class="vmain">
+          <div class="ans">${results.length} answered · ${state.done}/${state.goal} today</div>
+          <div class="note">${weak.length ? weak.length + ' to revisit — they return in tomorrow\'s mix.' : 'Clean run. Tomorrow confirms mastery.'}</div>
+        </div></div>
+      <div class="actions">
+        <button class="btn again">Keep going</button>
+        <button class="btn ghost done">Done for now</button>
+      </div></div>`);
+    node.querySelector('.again').addEventListener('click', () => start());
+    node.querySelector('.done').addEventListener('click', () => show('home'));
+    push(node);
+  }
+
+  function interject(q) {
+    push(el(`<div class="bubble">${esc(q)}</div>`));
+    setTimeout(() => {
+      const reply = cannedAnswer(q);
+      push(el(`<div class="bubble ai"><div class="who">AIdioma</div>${reply}</div>`));
+      announce('AIdioma: ' + reply.replace(/<[^>]+>/g, ''));
+    }, 300);
+  }
+
+  function start() {
+    deck = buildDeck(); pos = 0; results = [];
+    feed.innerHTML = '';
+    const single = state.pool === 'lessons' && state.sels.length === 1 ? LESSONS[state.sels[0]] : null;
+    if (single && single.preview) {
+      push(el(`<div class="card learncard"><div><div class="t">🔭 ${single.title} — preview</div>
+        <div class="s">An upcoming lesson. It unlocks properly after Lesson 3.</div></div></div>`));
+    } else if (state.pool === 'blend' || (state.pool === 'lessons' && state.sels.includes('l3'))) {
+      const lc = el(`<div class="card learncard" role="button" tabindex="0">
+        <div><div class="t">📖 Ser vs Estar — the 30-second read</div><div class="s">Tap to review the lesson before you practice</div></div>
+        <span class="chev">›</span></div>`);
+      activate(lc, () => show('lesson'));
+      push(lc);
+    }
+    dealCurrent();
+    renderPanelInfo();
+    renderHeaderProf();
+  }
+
+  function submit() {
+    const v = field.value.trim();
+    if (!v) return;
+    field.value = '';
+    if (isQuestion(v)) { interject(v); return; }
+    const item = deck[pos];
+    if (!item || item.type === 'summary') { interject(v); return; }
+    if (item.type === 'mc') {
+      const idx = item.options.findIndex(o => deacc(norm(o)) === deacc(norm(v)));
+      const optEls = feed.querySelectorAll('.opts');
+      const cardNode = optEls.length ? optEls[optEls.length - 1].closest('.card') : null;
+      if (idx >= 0 && cardNode) { answerMC(item, cardNode, idx); return; }
+      push(el(`<div class="bubble">${esc(v)}</div>`));
+      push(el(`<div class="bubble ai"><div class="who">AIdioma</div>Tap one of the options above — or type the option itself.</div>`));
+      return;
+    }
+    answerTyped(v);
+  }
+  send.addEventListener('click', submit);
+  field.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+
+  /* ================= side panel ================= */
+  const panel = $('#sidepanel'), scrim = $('#scrim');
+  function openPanel() { scrim.hidden = false; panel.classList.add('open'); renderPanelInfo(); }
+  function closePanel() { scrim.hidden = true; panel.classList.remove('open'); }
+  $('#panel-open').addEventListener('click', openPanel);
+  $('#panel-close').addEventListener('click', closePanel);
+  scrim.addEventListener('click', closePanel);
+
+  function midSession() { return results.length > 0 && deck[pos] && deck[pos].type !== 'summary'; }
+  function confirmRestart() { return !midSession() || window.confirm('Change practice? This ends the current session.'); }
+
+  function titleForSelection() {
+    if (state.pool === 'blend') return 'Blend · L3 + review';
+    if (state.pool === 'saved') return 'Saved words';
+    if (state.sels.length === 1) {
+      const l = LESSONS[state.sels[0]];
+      return l.preview ? l.title + ' · preview' : l.title;
+    }
+    return 'Mix · ' + state.sels.map(s => 'L' + LESSONS[s].n).join(' + ');
+  }
+  function renderScopeUI() {
+    $$('#lesson-opts .optbtn').forEach(b =>
+      b.classList.toggle('on', state.pool === 'lessons' && state.sels.includes(b.dataset.lesson)));
+    $$('#pool-opts .optbtn').forEach(b => b.classList.toggle('on', state.pool === b.dataset.pool));
+    $('#p-title').textContent = titleForSelection();
+    const lo = $('#lesson-open');
+    lo.disabled = !lessonPageAvailable();
+    lo.title = lo.disabled ? 'Lesson page — not yet built for this lesson' : 'Open lesson';
+  }
+  function setLessons(sels) {
+    state.pool = 'lessons'; state.sels = sels;
+    renderScopeUI(); start();
+  }
+
+  $$('#lesson-opts .optbtn').forEach(b => b.addEventListener('click', () => {
+    const sel = b.dataset.lesson;
+    if (!confirmRestart()) return;
+    if (state.pool !== 'lessons') { setLessons([sel]); return; }
+    let sels = [...state.sels];
+    if (sels.includes(sel)) {
+      if (sels.length === 1) return;              // keep at least one
+      sels = sels.filter(s => s !== sel);
+    } else {
+      sels.push(sel);
+      sels.sort((a, b2) => LESSONS[a].n - LESSONS[b2].n);
+    }
+    setLessons(sels);
+  }));
+  $$('#pool-opts .optbtn').forEach(b => b.addEventListener('click', () => {
+    if (b.disabled || state.pool === b.dataset.pool) return;
+    if (!confirmRestart()) return;
+    state.pool = b.dataset.pool;
+    renderScopeUI(); start();
+  }));
+  $$('#mode-opts .optbtn').forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.mode === state.mode) return;
+    if (!confirmRestart()) return;
+    state.mode = b.dataset.mode;
+    $$('#mode-opts .optbtn').forEach(x => x.classList.toggle('on', x === b));
+    $('#unit-seg').style.display = state.mode === 'type' ? 'flex' : 'none';
+    start();
+  }));
+  $$('#unit-seg button').forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.unit === state.unit) return;
+    if (!confirmRestart()) return;
+    state.unit = b.dataset.unit;
+    $$('#unit-seg button').forEach(x => x.classList.toggle('on', x === b));
+    start();
+  }));
+  $$('#dir-seg button').forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.dir === state.dir) return;
+    if (!confirmRestart()) return;
+    state.dir = b.dataset.dir;
+    $$('#dir-seg button').forEach(x => x.classList.toggle('on', x === b));
+    start();
+  }));
+
+  function renderPanelInfo() {
+    const missed = $('#missed-list');
+    const misses = results.filter(r => r.score < 80);
+    missed.innerHTML = misses.length
+      ? `<div class="wordchips">${misses.map(r => `<span class="wordchip miss">${r.item.es || r.item.prompt}</span>`).join('')}</div>`
+      : '<div class="emptynote">Nothing missed yet.</div>';
+
+    const savedList = $('#saved-list'), savedCount = $('#saved-count'), savedBtn = $('#scope-saved');
+    if (state.saved.length) {
+      savedList.innerHTML = `<div class="wordchips">${state.saved.map(w =>
+        `<span class="wordchip" role="button" tabindex="0" title="Tap to remove" style="cursor:pointer">${w.es} ✕</span>`).join('')}</div>`;
+      savedList.querySelectorAll('.wordchip').forEach((c, i) => activate(c, () => {
+        state.saved.splice(i, 1); persistSaved(); renderPanelInfo();
+      }));
+      savedCount.textContent = `${state.saved.length} saved`;
+      savedBtn.disabled = false;
+    } else {
+      savedList.innerHTML = '<div class="emptynote">Tap ♡ on any answer to save it here.</div>';
+      savedCount.textContent = 'nothing saved yet';
+      savedBtn.disabled = true;
+      if (state.pool === 'saved') setLessons(['l3']);
+    }
+  }
+
+  /* ================= settings: daily goal ================= */
+  const goalCustom = $('#goal-custom');
+  function renderGoalUI() {
+    const presets = [...$$('#goal-seg button')];
+    let matched = false;
+    presets.forEach(b => {
+      const on = +b.dataset.goal === state.goal;
+      b.classList.toggle('on', on);
+      if (on) matched = true;
+    });
+    goalCustom.value = matched ? '' : state.goal;
+    goalCustom.classList.toggle('on', !matched);
+  }
+  $$('#goal-seg button').forEach(b => b.addEventListener('click', () => {
+    state.goal = +b.dataset.goal; store.set('goal', state.goal);
+    renderGoalUI(); renderRings();
+  }));
+  goalCustom.addEventListener('change', () => {
+    const v = Math.max(5, Math.min(500, parseInt(goalCustom.value, 10) || 0));
+    if (!v) { renderGoalUI(); return; }
+    state.goal = v; store.set('goal', state.goal);
+    renderGoalUI(); renderRings();
+  });
+
+  /* ================= theme / end session / reset ================= */
+  function applyTheme() {
+    const t = store.get('theme', 'auto');
+    if (t === 'auto') delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = t;
+    $$('#theme-seg button').forEach(b => b.classList.toggle('on', b.dataset.theme === t));
+  }
+  $$('#theme-seg button').forEach(b => b.addEventListener('click', () => {
+    store.set('theme', b.dataset.theme); applyTheme();
+  }));
+
+  $('#end-session').addEventListener('click', () => {
+    closePanel();
+    if (deck[pos] && deck[pos].type !== 'summary') {
+      if (!results.length) { show('home'); return; }
+      pos = deck.length - 1;
+      dealCurrent();
+    }
+  });
+
+  $('#reset-data').addEventListener('click', () => {
+    if (!window.confirm('Reset all prototype data on this device?')) return;
+    try {
+      Object.keys(localStorage).filter(k => k.startsWith('aidioma.')).forEach(k => localStorage.removeItem(k));
+    } catch {}
+    location.reload();
+  });
+
+  /* ================= boot ================= */
+  applyTheme();
+  setProf(state.prof3);
+  renderGoalUI();
+  renderRings();
+  renderScopeUI();
+  start();
+  show('home');
+})();
+</script>
+</body>
+</html>
