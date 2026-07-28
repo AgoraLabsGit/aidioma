@@ -9,6 +9,7 @@
 
 | ID | Item | Why deferred / context | Owner or trigger | Status |
 |---|---|---|---|---|
+| OI-026 | **Upstream dependency advisories:** npm reports 4 production findings through Next 16.2.12 (`postcss` and optional `sharp`) and 9 additional dev-tool findings through ESLint/minimatch; no compatible fix is currently published | A1-1 uses the latest stable compatible stack. Current exposure is bounded: CSS input is repository-controlled and the shell does not invoke `next/image`; unsupported overrides and `--force` upgrades were rejected. Recheck on each Next/ESLint release and before deployment. | A1-H dependency hygiene / upstream patched release | open |
 
 ## Closed
 | ID | Item | Settled | Where |

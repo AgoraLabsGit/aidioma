@@ -3,25 +3,27 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-28 (A1 and C2 opened in parallel)
+**Updated:** 2026-07-28 (A1-1 proven; C2 a1-04 fix loop active)
 
 ## Position
 
-**Lane A — App (ACTIVE: A1-1)**
+**Lane A — App (ACTIVE: A1-2 next)**
 - **A0 Design Close CLOSED.** Operator gave design VERIFIED + close GO on 2026-07-28.
 - A0-1…A0-H proven: design, legacy review, Docs SSOT, archive, and directory cleanup complete.
-- Operator approved A1 on 2026-07-28. A1-1 now scaffolds the real responsive Next.js shell with Clerk, Neon, Vercel boundaries, and app gates.
+- A1-1 is proven: responsive Next.js shell, keyless-safe Clerk boundary, lazy server-only Neon + Drizzle, and root app gates all pass.
+- A1 remains active; A1-2 shared-contract import plus idempotent Neon content seed is next.
+- OI-026 tracks unpatched upstream Next/ESLint dependency advisories before deployment.
 - Local A0 baseline exists; no remote or push is configured.
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
 - OI-025 is proven and closed: P-003 accept sets + `setId` validation + Both-direction guidance, with clean audit/re-audit.
-- Draft and independently L2-QA a1-04…a1-12 next. Keep wordfreq lesson checks; no top-N deck now.
+- a1-04 was drafted; independent L2 QA failed it and the corrective/re-QA loop is active. Then continue a1-05…a1-12 one lesson at a time.
 
 ## Next
-1. Finish A1-1 while C2 drafts and independently L2-QAs a1-04 next.
-2. Integrate root workspace/gates centrally, audit both lane diffs, and record proof.
-3. Continue C2 drafting only after OI-025 proves; never push without wave-close GO.
+1. Finish a1-04 corrections and independent L2 re-QA, then merge and refresh prototype data.
+2. Start A1-2 contract import/content seed while C2 continues a1-05 one lesson at a time.
+3. Never push without wave-close GO.
 
 ## Standing decisions (highlights)
 - A1-first · vocab 12–15 / sentences 18–20 · Completed/Mastered · Direction default Both.

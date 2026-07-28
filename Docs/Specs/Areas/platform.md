@@ -17,8 +17,9 @@ updated: 2026-07-28
 - **AI:** Vercel AI SDK + AI Gateway, server-side, behind `EvaluationService`. Use schema-validated
   output for grading. A direct provider SDK is only a fallback adapter when Gateway lacks a required
   model/capability; it must not bypass the service contract.
-- **Auth:** Clerk's Next.js SDK. **Data:** Neon Postgres through a server-side TypeScript driver/ORM
-  selected in A1 (Neon serverless driver + Drizzle is the default candidate, not yet frozen).
+- **Auth:** Clerk's Next.js SDK. **Data:** Neon Postgres through the server-only Neon serverless
+  driver + Drizzle ORM boundary frozen in A1-1. Connection construction is lazy so builds and
+  zero-data public shell routes do not require credentials.
 - AI calls, database credentials, reviewed answer sets, thresholds, and `correctIndex` remain on the
   authenticated server. Web and future native clients consume learner-safe APIs only.
 

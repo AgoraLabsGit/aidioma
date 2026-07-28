@@ -113,7 +113,7 @@ waves:
     slices:
       - id: A1-1
         title: Fresh Next.js repo scaffold
-        status: active
+        status: proven
         summary: "Greenfield Next.js on Vercel; wire Neon + Clerk; set the app-lane verify: gates. Delivers feature 1 foundation."
       - id: A1-2
         title: Freeze shared contracts + content CI/seed
