@@ -2,6 +2,7 @@ import { chromium } from "@playwright/test";
 import axeCore from "axe-core";
 import { spawn } from "node:child_process";
 import { access, mkdir } from "node:fs/promises";
+import { createServer } from "node:net";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
@@ -11,8 +12,29 @@ const nextBuild = path.join(appDirectory, ".next", "BUILD_ID");
 const nextBinary = path.join(appDirectory, "node_modules", "next", "dist", "bin", "next");
 const resultsDirectory = path.join(appDirectory, "artifacts");
 const screenshotPath = path.join(resultsDirectory, "a1-shell-mobile.png");
-const port = Number(process.env.AIDIOMA_SMOKE_PORT ?? "4311");
+const port = await reserveSmokePort(process.env.AIDIOMA_SMOKE_PORT);
 const baseUrl = `http://127.0.0.1:${port}`;
+
+async function reserveSmokePort(requestedPort) {
+  const preferredPort = requestedPort === undefined ? 0 : Number(requestedPort);
+  if (!Number.isInteger(preferredPort) || preferredPort < 0 || preferredPort > 65_535) {
+    throw new Error(`Invalid AIDIOMA_SMOKE_PORT: ${requestedPort}.`);
+  }
+
+  return new Promise((resolve, reject) => {
+    const reservation = createServer();
+    reservation.once("error", reject);
+    reservation.listen(preferredPort, "127.0.0.1", () => {
+      const address = reservation.address();
+      const availablePort = typeof address === "object" && address ? address.port : undefined;
+      reservation.close((error) => {
+        if (error) reject(error);
+        else if (availablePort === undefined) reject(new Error("Could not reserve a smoke-test port."));
+        else resolve(availablePort);
+      });
+    });
+  });
+}
 
 async function requireBuild() {
   try {
@@ -49,12 +71,11 @@ async function assertAccessible(page, label) {
       },
     }),
   );
-  const blocking = results.violations.filter(
-    (violation) => violation.impact === "critical" || violation.impact === "serious",
-  );
-  if (blocking.length > 0) {
+  if (results.violations.length > 0) {
     throw new Error(
-      `${label} has accessibility violations: ${blocking.map((item) => item.id).join(", ")}.`,
+      `${label} has accessibility violations: ${results.violations
+        .map((item) => `${item.id} (${item.impact ?? "unknown"})`)
+        .join(", ")}.`,
     );
   }
 }
@@ -64,6 +85,21 @@ async function assertNoHorizontalOverflow(page, label) {
     () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
   );
   if (overflows) throw new Error(`${label} overflows horizontally.`);
+}
+
+async function stopServer(server) {
+  if (server.exitCode !== null) return;
+
+  const exited = new Promise((resolve) => server.once("exit", resolve));
+  server.kill("SIGTERM");
+  const stopped = await Promise.race([
+    exited.then(() => true),
+    new Promise((resolve) => setTimeout(() => resolve(false), 5_000)),
+  ]);
+  if (!stopped && server.exitCode === null) {
+    server.kill("SIGKILL");
+    await exited;
+  }
 }
 
 async function run() {
@@ -102,6 +138,7 @@ async function run() {
 
     await assertNoHorizontalOverflow(page, "Home page at 390px");
     await assertAccessible(page, "Light home page");
+    await page.screenshot({ path: screenshotPath });
 
     await page.keyboard.press("Tab");
     const firstFocusedClass = await page.locator(":focus").getAttribute("class");
@@ -116,11 +153,10 @@ async function run() {
       throw new Error("Keyboard focus indicator is not visible.");
     }
 
-    await page.screenshot({ path: screenshotPath });
-
     await page.getByRole("link", { name: "Lessons", exact: true }).click();
     await page.getByRole("heading", { name: "Lessons", exact: true }).waitFor();
     await page.getByText("No lessons loaded yet", { exact: true }).waitFor();
+    await assertAccessible(page, "Lessons page");
 
     await page.goto(baseUrl, { waitUntil: "networkidle" });
     await page.evaluate(() => {
@@ -140,6 +176,7 @@ async function run() {
     await page
       .getByRole("heading", { name: "Authentication is ready to connect" })
       .waitFor();
+    await assertAccessible(page, "Keyless sign-in page");
 
     console.log(
       "SMOKE PASS: light/dark accessibility, keyboard focus, 200% text, and home/lessons/keyless sign-in at phone/desktop widths.",
@@ -147,7 +184,7 @@ async function run() {
     console.log(`Screenshot: ${screenshotPath}`);
   } finally {
     await browser?.close();
-    server.kill("SIGTERM");
+    await stopServer(server);
   }
 }
 
