@@ -117,7 +117,7 @@ waves:
         summary: "Greenfield Next.js on Vercel; wire Neon + Clerk; set the app-lane verify: gates. Delivers feature 1 foundation."
       - id: A1-1R
         title: Port the approved prototype UI system into Next.js
-        status: pending
+        status: proven
         summary: >
           Correct the A1-1 visual divergence before adding data: port the prototype's shell,
           tokens, density, responsive navigation, and screen styling exactly into reusable React

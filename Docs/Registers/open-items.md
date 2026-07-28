@@ -9,12 +9,12 @@
 
 | ID | Item | Why deferred / context | Owner or trigger | Status |
 |---|---|---|---|---|
-| OI-027 | **A1 shell visual divergence:** the Next.js scaffold replaced the approved prototype's compact app shell with a large editorial landing layout | The A1-1 brief and audits lacked an explicit side-by-side fidelity gate. Mike selected the prototype and approved an exact styling/layout port while retaining settled A0 behavior and real architecture. | A1-1R | open |
 | OI-026 | **Upstream dependency advisories:** npm reports 4 production findings through Next 16.2.12 (`postcss` and optional `sharp`) and 9 additional dev-tool findings through ESLint/minimatch; no compatible fix is currently published | A1-1 uses the latest stable compatible stack. Current exposure is bounded: CSS input is repository-controlled and the shell does not invoke `next/image`; unsupported overrides and `--force` upgrades were rejected. Recheck on each Next/ESLint release and before deployment. | A1-H dependency hygiene / upstream patched release | open |
 
 ## Closed
 | ID | Item | Settled | Where |
 |---|---|---|---|
+| OI-027 | **A1 shell visual divergence:** the scaffold diverged from the approved compact prototype | 2026-07-28 A1-1R proven: componentized responsive shell aligned across four screens, two themes, and phone/desktop evidence while retaining truthful application state | [A1-1R wave record](../Waves/A1-1R-prototype-ui-alignment.md) |
 | OI-025 | **C2 contract prep:** P-003 vocab accept sets, validator `setId` partition, and Both-direction guidance | 2026-07-28 complete: all 30 pilot vocab items reviewed; 18/18 fixtures; audit + delta re-audit clean | [C2-1 wave record](../Waves/C2-1-draft-launch-lessons.md); `content/SESSION-LOG.md` |
 | OI-023 | **Content lane un-pause**: wave C2 (mass-draft a1-04…a1-12) | 2026-07-28 **GO**, with OI-025 contract prep first; keep wordfreq lesson checks; frequency decks remain PM-015 | [ROADMAP.yaml](../ROADMAP.yaml) C2; [C2-1 wave record](../Waves/C2-1-draft-launch-lessons.md) |
 | OI-022 | **Panel recs triage**: 7 locked in ADRs; W1 metric → PM-014; “10 vocab” superseded by ADR-0003 (12–15); EN→ES-only superseded by ADR-0005 (Both). No reopen. | 2026-07-28 | ADRs 0003–0010; [post-mvp.md](post-mvp.md) PM-014 |
