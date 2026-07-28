@@ -4,7 +4,7 @@ The production learner app is a responsive Next.js 16 App Router application.
 
 ## Local setup
 
-1. Use Node.js 20.9 or newer.
+1. Use Node.js 22.22.2 or newer.
 2. Install dependencies from the repository root after the root workspace includes `apps/web`.
 3. Copy `.env.example` to `.env.local` and add Clerk/Neon credentials when those integrations are needed.
 4. Run `npm run dev` from this directory.
