@@ -72,3 +72,22 @@ Decisions and dispatch history for the Lesson Plan agent (coordinator). Newest e
 - **Targeted r2 re-QA dispatched on a1-02** (explanation truth + new alternates only → review/qa/a1-02.qa2.json + REVIEW-LOG).
 - **Prototype export regenerated**: lesson-data.js now l1+l2+l3 all real (Hola / Soy así / Qué haces). NOTE: real l3 displaced the mock "Ser vs Estar" lesson the prototype's static lesson-detail page + learn-card + prof3 mechanics were keyed to — demo mismatch flagged to Mike (lesson page shows Ser-vs-Estar content under a Qué-haces selection); candidate fix = render lesson page from real data (needs explanation added to export).
 - **a1-02 r2 re-QA: L2-PASS (targeted)** — explanation verified true claim-by-claim (one non-blocking advisory: "-n invariable" is an A1 simplification, sanctioned latitude), all 10 r1 alternates present and register-valid, y→e correct. review/qa/a1-02.qa2.json; REVIEW-LOG updated. **PILOT COMPLETE: a1-02 + a1-03 both L2-PASS, corpus 0 errors, prototype l1–l3 real.** Founder review package → review/FOUNDER-REVIEW-PILOT.md; go/no-go on a1-04…a1-12 is Mike's.
+
+## 2026-07-28 — OI-025 preparation gate
+
+- **Vocab accept-set backfill complete:** reviewed all 30 vocab items in a1-01…03 under the P-003
+  composition rule (canonical/display-split variants join at consumption and are not copied into
+  arrays). Added explicit arrays corpus-wide with 16 Spanish and 29 English noncanonical entries;
+  kept neutral LatAm / `tú`; bumped all three lessons to contentVersion 3 with immutable IDs intact.
+- **Validator check 5 fixed:** ordinary vocab still requires individual sentence coverage; vocab
+  sharing `setId` is partitioned and passes when any member represents the set. Added paired
+  regressions for the old false failure and the wholly-unrepresented-set failure. The fixture runner
+  now resolves the `tsx` module rather than assuming worktree-local `node_modules`, so isolated
+  worktrees execute the suite reliably.
+- **Both-direction reconciliation complete:** curriculum map, Style Guide, draft prompt, QA prompt,
+  validator messaging, and tooling README now follow ADR-0005. Both answer sides receive review;
+  English contractions/paraphrases are no longer described as optional EN→ES cleanup.
+- **Gate evidence:** `npm run content:typecheck` PASS; `npm run content:validate` PASS (0 errors;
+  five documented a1-01 entry-lesson warnings); `npm run contract:smoke` PASS (13); `npm run
+  content:fixtures` PASS (18/18); `npm run prototype:check` PASS. OI-025 is ready for coordinator
+  status closure; a1-04 drafting has not started.

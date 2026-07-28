@@ -27,6 +27,8 @@
       "kind": "vocab",
       "es": "hablar",
       "en": "to speak / to talk",
+      "acceptedEs": [],
+      "acceptedEn": [],
       "pos": "verb",
       "exampleEs": "Yo hablo español.",
       "exampleEn": "I speak Spanish."
@@ -36,6 +38,8 @@
       "kind": "vocab",
       "es": "estudiar",
       "en": "to study",
+      "acceptedEs": [],
+      "acceptedEn": [],
       "pos": "verb",
       "exampleEs": "Ella estudia mucho.",
       "exampleEn": "She studies a lot."
@@ -45,6 +49,8 @@
       "kind": "vocab",
       "es": "trabajar",
       "en": "to work",
+      "acceptedEs": [],
+      "acceptedEn": [],
       "pos": "verb",
       "exampleEs": "Yo trabajo hoy.",
       "exampleEn": "I'm working today."
@@ -54,6 +60,8 @@
       "kind": "vocab",
       "es": "escuchar",
       "en": "to listen (to)",
+      "acceptedEs": [],
+      "acceptedEn": ["to listen to"],
       "pos": "verb",
       "exampleEs": "Escucho a la señora.",
       "exampleEn": "I listen to the lady."
@@ -63,6 +71,8 @@
       "kind": "vocab",
       "es": "descansar",
       "en": "to rest",
+      "acceptedEs": [],
+      "acceptedEn": ["to relax", "to take a break"],
       "pos": "verb",
       "exampleEs": "Hoy descanso.",
       "exampleEn": "Today I rest."
@@ -72,6 +82,8 @@
       "kind": "vocab",
       "es": "caminar",
       "en": "to walk",
+      "acceptedEs": [],
+      "acceptedEn": [],
       "pos": "verb",
       "exampleEs": "Camino mucho.",
       "exampleEn": "I walk a lot."
@@ -81,6 +93,8 @@
       "kind": "vocab",
       "es": "practicar",
       "en": "to practice",
+      "acceptedEs": [],
+      "acceptedEn": [],
       "pos": "verb",
       "exampleEs": "Practico español.",
       "exampleEn": "I practice Spanish."
@@ -90,6 +104,8 @@
       "kind": "vocab",
       "es": "necesitar",
       "en": "to need",
+      "acceptedEs": [],
+      "acceptedEn": ["to require"],
       "pos": "verb",
       "exampleEs": "Necesito descansar.",
       "exampleEn": "I need to rest."
@@ -694,5 +710,5 @@
       "difficulty": 2
     }
   ],
-  "contentVersion": 2
+  "contentVersion": 3
 }

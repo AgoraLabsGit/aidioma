@@ -15,19 +15,21 @@
  * Covers: W1 (--lesson keeps global ERRORs), W2 (fenced-code word count), W3
  * (ordinal↔slug↔item-id-prefix), W4 (snapshot refuses a red build),
  * N1 (hint-3 substring leak), N2 (exampleEs scan + dropped capitalization exemption),
- * N5 (duplicate-id ordinal map is dedupe-safe). Plus a green baseline on the real corpus.
+ * N5 (duplicate-id ordinal map is dedupe-safe), and P-003 setId partitioning for vocab
+ * exercise coverage. Plus a green baseline on the real corpus.
  */
 
 import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
 import { join, dirname, resolve as resolvePath } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
+import { createRequire } from 'node:module';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolvePath(HERE, '..', '..', '..');
 const LESSONS = resolvePath(REPO, 'content', 'lessons', 'a1');
 const VALIDATE = resolvePath(REPO, 'tooling', 'content', 'validate.ts');
-const TSX = resolvePath(REPO, 'node_modules', '.bin', 'tsx');
+const TSX_CLI = createRequire(import.meta.url).resolve('tsx/cli');
 const TMP_ROOT = join(HERE, '.gen');
 
 type Lesson = any;
@@ -48,7 +50,7 @@ function runValidate(dir: string, lessons: Lesson[], extraArgs: string[] = [], e
   let exitCode = 0;
   let stdout = '';
   try {
-    stdout = execFileSync(TSX, [VALIDATE, dir, '--json', ...extraArgs], {
+    stdout = execFileSync(process.execPath, [TSX_CLI, VALIDATE, dir, '--json', ...extraArgs], {
       encoding: 'utf8',
       env: { ...process.env, ...env },
     });
@@ -192,6 +194,39 @@ function main() {
     l.sentences[0].hints[2] = 'La respuesta es: ' + l.sentences[0].es;
     const res = runValidate(tmp('n1'), [l]);
     check('N1: hint-3 containing the full answer trips HINT_ANSWER_LEAK', has(res, { code: 'HINT_ANSWER_LEAK', itemId: l.sentences[0].id } as any));
+  }
+
+  /* ---- P-003.3a: one exercised member represents its whole set (old false FAIL) ---- */
+  {
+    const l = a1();
+    const represented = l.vocab[0];
+    const unreferenced = l.vocab[1];
+    represented.setId = 'fixture-greetings';
+    unreferenced.setId = 'fixture-greetings';
+    for (const s of l.sentences) {
+      s.vocabRefs = s.vocabRefs.filter((ref: string) => ref !== unreferenced.id);
+    }
+    const res = runValidate(tmp('p003-set-represented'), [l]);
+    const coverageFindings = res.findings.filter((f) => f.code === 'VOCAB_EXERCISED');
+    check('P-003.3a: represented set passes when a different member is unreferenced', coverageFindings.length === 0);
+  }
+
+  /* ---- P-003.3b: a wholly unrepresented set fails once at group grain ---- */
+  {
+    const l = a1();
+    const first = l.vocab[0];
+    const second = l.vocab[1];
+    first.setId = 'fixture-greetings';
+    second.setId = 'fixture-greetings';
+    for (const s of l.sentences) {
+      s.vocabRefs = s.vocabRefs.filter((ref: string) => ref !== first.id && ref !== second.id);
+    }
+    const res = runValidate(tmp('p003-set-unrepresented'), [l]);
+    const coverageFindings = res.findings.filter((f) => f.code === 'VOCAB_EXERCISED');
+    check(
+      'P-003.3b: unrepresented set emits one group-level VOCAB_EXERCISED error',
+      coverageFindings.length === 1 && coverageFindings[0].message.includes('fixture-greetings') && res.exitCode === 1,
+    );
   }
 
   /* ---- N2a: vocab exampleEs is now scanned for leaks ---- */

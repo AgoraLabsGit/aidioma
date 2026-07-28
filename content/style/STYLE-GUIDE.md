@@ -113,10 +113,13 @@ Spread the 12–20 sentences across the range; don't cluster at 3.
 así, adiós*); the *ñ* where required. `tú` (you) vs `tu` (your) and *él* vs *el* must be right —
 these are graded.
 
-## 4. Alternates authoring — the highest-ROI work
+## 4. Bidirectional alternates authoring — the highest-ROI work
 
-`acceptedEs[]` (EN→ES, the launch priority) is where grading feels fair or infuriating. Target **3–6
-alternates per sentence.** Generate them systematically:
+Typed practice defaults to **Both** directions (ADR-0005), so `acceptedEs[]` and `acceptedEn[]` are
+both grading-critical. The canonical `es` and `en` always join their own accept sets at consumption;
+never duplicate them in the authored arrays. Target **3–6 Spanish alternates per sentence** and add
+every common, meaning-preserving English contraction or paraphrase that a learner is likely to type.
+Do not pad either array with marginal variants. Generate and review them systematically:
 
 **Entry-lesson exemption (L1–L2).** Lessons 1–2 may fall below 3 alternates on sentences whose closed
 lexicon offers **no register-safe variants** — fixed courtesy formulae (*Gracias, señor.*) and
@@ -131,8 +134,9 @@ as documentation, not a defect (do not pad with marginal variants to silence it)
 - **Clitic position (where relevant):** *Lo quiero comer* ↔ *Quiero comerlo*. Both accepted.
 - **Natural word-order variants:** *Hoy estoy cansado* ↔ *Estoy cansado hoy*. Include only orders a
   native would actually say.
-- **Contractions on the EN side** (`acceptedEn`): *I am* → *I'm*, *do not* → *don't*, *she is* →
-  *she's*. Author these when cheap; EN→ES is priority but ES→EN grading benefits.
+- **Contractions and idiomatic paraphrases on the EN side** (`acceptedEn`): *I am* ↔ *I'm*, *do not*
+  ↔ *don't*, *she is* ↔ *she's*. Include common natural equivalents where the canonical wording does
+  not already cover them; English paraphrase space is often wider than Spanish form variation.
 - **EN-progressive → ES progressive rendering:** when the `en` prompt uses **progressive aspect**
   for an action verb (*I'm listening*, *She's studying*), accept the Spanish progressive (*estar* +
   gerund; -ar→*-ando*, -er/-ir→*-iendo*) as `acceptedEs` alternates — **with and without the
@@ -145,6 +149,11 @@ as documentation, not a defect (do not pad with marginal variants to silence it)
 **Never accept:** wrong agreement (*cansada* for a male speaker), wrong register (*vosotros* forms,
 *vale*, *ordenador*, *coche*, *zumo*), *coger* in any sense, missing accents that change meaning, or
 awkward word orders no native uses. An alternate must be *fully correct*, not merely understandable.
+
+**Vocab cards use the same Both-direction rule.** Keep `en`/`es` as display strings and author
+`acceptedEn[]`/`acceptedEs[]` only for additional valid answers that splitting the display string
+cannot derive: contractions, spelling variants, neutral synonyms, or context-free gender forms.
+An explicit empty array means the canonical/split display variants are already sufficient.
 
 **Worked example** — EN prompt *"I'm tired today."* `es`: *Hoy estoy cansado.*
 `acceptedEs`: [`Estoy cansado hoy`, `Hoy estoy cansado`, `Estoy cansada hoy` (female speaker),
@@ -252,12 +261,13 @@ content, keep the ID. Retire, never renumber. **File naming:** one file per less
 
 **Set-type vocab (numbers, days, months).** Each member is **still one lemma-keyed vocab item** with a
 normal ID — `a1-09.v.lunes`, `a1-05.v.veinte` — keeping IDs immutable and one-concept-per-item. What
-changes is **budget + exercise accounting**: the whole set counts as **one item** against the ~10-item
+changes is **grouping + budget + exercise accounting**: assign the same descriptive `setId` to every
+member of the closed set (for example, `days-of-week` or `numbers-0-30`). The whole set counts as **one item** against the ~10-item
 lesson cap (a closed class learned as a group), and QA #6's "every vocab item exercised by ≥1 sentence"
 is satisfied when the **set is represented** by sentences — not every one of 30 members needs its own
 sentence. Sentence `vocabRefs` still resolve to the individual member IDs actually used. (Don't invent
-a `numeros-0-30` composite ID; there is no such thing — the members are the IDs, the set is an
-authoring/budget grouping.) **Question words** (qué/dónde/cómo) are **not vocab** — they enter via
+a `numeros-0-30` composite item ID; `setId` is only the grouping key — the members remain the immutable
+item IDs.) **Question words** (qué/dónde/cómo) are **not vocab** — they enter via
 their `grammarTag` (`question.formation`), spend no vocab budget, and get no `v.` ID.
 
 ## 10. Author's pre-flight checklist
@@ -268,7 +278,9 @@ Run this against every lesson before marking it done. Each item maps to a QA poi
 - [ ] **2. Naturalness** — no anglicisms or calques; `es` reads like real speech, not a word-bridge.
 - [ ] **3. Register** — neutral LatAm throughout; `tú`/`ustedes`; zero `vosotros`; no banned/regional words (§1).
 - [ ] **4. English** — every `en` accurate *and* idiomatic US English; contractions where natural.
-- [ ] **5. Alternates** — 3–6 `acceptedEs` per sentence incl. pronoun-drop; contractions in `acceptedEn`; no wrong-register/agreement entries.
+- [ ] **5. Alternates** — Both directions reviewed: 3–6 `acceptedEs` per sentence incl. pronoun-drop;
+      common contractions/paraphrases in `acceptedEn`; vocab accept arrays explicit; no wrong-register,
+      agreement, or meaning-shifting entries.
 - [ ] **6. Vocab leakage** — every content word traces to this or a prior lesson; every noun/verb/adj has a `vocabRef`.
 - [ ] **7. Hints** — exactly 3, escalating nudge→near-reveal, none states the literal answer.
 - [ ] **8. grammarTags** — each sentence's tags match what it actually exercises.
@@ -279,6 +291,11 @@ Run this against every lesson before marking it done. Each item maps to a QA poi
 ---
 
 ## Changelog
+
+**v2.5 (2026-07-28) — Both-direction accept sets (ADR-0005 / OI-025).** Replaced the obsolete
+EN→ES-priority wording with the launch Both-direction default. Canonical strings join accept sets in
+the consumer; authors review both language sides for sentences and vocab without duplicating the
+canonical value or padding arrays.
 
 **v2.4 (2026-07-21) — EN-progressive accepts ES progressive rendering (Mike's live prototype
 testing, 2026-07-21).** Added a §4 alternates bullet: when an `en` prompt uses progressive aspect

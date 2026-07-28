@@ -30,11 +30,15 @@ Take the map row's candidate lemmas. For **each**, verify it is usable in short 
 sentences with **only cumulative + this-lesson vocab** — if a candidate needs an untaught
 word to be exercised, drop or replace it (stay within the row's domain). Target 8–12
 items (15 hard max; schema min 8). Number/day **sets** count as **one** item against the
-budget: give each member its own lemma-keyed id (`a1-05.v.veinte`), but the set only needs
-to be *represented* by sentences, not each member. Mark map-flagged **CHUNK** items with
+budget: give each member its own lemma-keyed id (`a1-05.v.veinte`) and the same descriptive
+`setId` (for example, `numbers-0-30`); the set only needs to be *represented* by sentences,
+not each member. Mark map-flagged **CHUNK** items with
 `pos:'phrase'` + `chunk:true` (they grant **no** underlying grammar). Question words
 (qué/dónde/cómo) are **not vocab** — they enter via `question.formation`, no `v.` id.
-Each VocabItem needs `es, en, pos, gender?(m|f for nouns), exampleEs, exampleEn`.
+Each VocabItem needs `es, en, acceptedEs, acceptedEn, pos, gender?(m|f for nouns), setId?(shared
+by every member of a closed set), exampleEs, exampleEn`. Typed practice defaults to Both directions. The consumer always adds canonical `es`/`en`
+(including display-string split variants) to the grading set, so arrays contain only useful additional
+answers; use explicit `[]` when review finds none.
 
 ### (b) Write the explanation (`≤150 words`)
 Drill the **Primary** focus only: (1) the rule in 1–2 sentences; (2) 2–3 inline Spanish
@@ -59,14 +63,18 @@ resolves to a real vocab id), `grammarTags` (**≥1**, matching what it exercise
 `difficulty`. Accents, `¿`/`¡`, `ñ`, `tú`/`tu`, `él`/`el` mandatory. Optionally mark a
 short, memorable sentence `flashcard:{eligible:true, front?}`.
 
-### (d) Alternates pass — highest-ROI
-For **each** sentence add **3–6 `acceptedEs`** using the systematic taxonomy:
+### (d) Bidirectional alternates pass — highest-ROI
+For **each** sentence add **3–6 `acceptedEs`** using the systematic taxonomy, then review the
+ES→EN side and add common, meaning-preserving contractions and idiomatic paraphrases to
+`acceptedEn`. Canonical strings always join their accept sets at consumption and must not be copied
+into the arrays:
 - **Pronoun drop / inclusion** — *Yo hablo español* ↔ *Hablo español* (always do this one).
 - **Synonym swaps** — only pairs from the §1 contested-word table (*carro↔auto*, *celular↔teléfono*).
 - **Word-order variants** — only orders a native actually says (*Hoy estoy cansado* ↔ *Estoy cansado hoy*).
 - **Clitic position** where relevant — *Lo quiero comer* ↔ *Quiero comerlo*.
 - **Open agreement** — if speaker gender is unspecified, accept masc **and** fem forms.
-Add `acceptedEn` contractions where cheap (*I am*→*I'm*). **Never** accept wrong
+Add likely `acceptedEn` contractions and paraphrases (*I am*↔*I'm*, *smart*↔*intelligent*).
+English answer space is often wider, so do not treat this as an optional cleanup. **Never** accept wrong
 agreement/register (*vosotros*, *vale*, *coche*, *zumo*, *ordenador*), *coger* in any
 sense, or meaning-changing missing accents. Each alternate must be *fully correct*.
 

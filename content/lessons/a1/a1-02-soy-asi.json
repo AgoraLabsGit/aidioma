@@ -19,6 +19,8 @@
       "kind": "vocab",
       "es": "alto",
       "en": "tall",
+      "acceptedEs": ["alta"],
+      "acceptedEn": [],
       "pos": "adj",
       "exampleEs": "Él es alto.",
       "exampleEn": "He's tall."
@@ -28,6 +30,8 @@
       "kind": "vocab",
       "es": "joven",
       "en": "young",
+      "acceptedEs": [],
+      "acceptedEn": [],
       "pos": "adj",
       "exampleEs": "Ella es joven.",
       "exampleEn": "She's young."
@@ -37,6 +41,8 @@
       "kind": "vocab",
       "es": "bonito",
       "en": "pretty / nice-looking",
+      "acceptedEs": ["bonita", "lindo", "linda"],
+      "acceptedEn": ["good-looking"],
       "pos": "adj",
       "exampleEs": "Ella es bonita.",
       "exampleEn": "She's pretty."
@@ -46,6 +52,8 @@
       "kind": "vocab",
       "es": "simpático",
       "en": "nice / friendly",
+      "acceptedEs": ["simpática"],
+      "acceptedEn": [],
       "pos": "adj",
       "exampleEs": "El señor es simpático.",
       "exampleEn": "The man is friendly."
@@ -55,6 +63,8 @@
       "kind": "vocab",
       "es": "inteligente",
       "en": "intelligent / smart",
+      "acceptedEs": [],
+      "acceptedEn": ["clever"],
       "pos": "adj",
       "exampleEs": "Tú eres inteligente.",
       "exampleEn": "You're smart."
@@ -64,6 +74,8 @@
       "kind": "vocab",
       "es": "delgado",
       "en": "slim / thin",
+      "acceptedEs": ["delgada"],
+      "acceptedEn": ["slender"],
       "pos": "adj",
       "exampleEs": "Él es delgado.",
       "exampleEn": "He's slim."
@@ -73,6 +85,8 @@
       "kind": "vocab",
       "es": "amable",
       "en": "kind",
+      "acceptedEs": [],
+      "acceptedEn": ["nice"],
       "pos": "adj",
       "exampleEs": "La señora es amable.",
       "exampleEn": "The lady is kind."
@@ -82,6 +96,8 @@
       "kind": "vocab",
       "es": "trabajador",
       "en": "hardworking",
+      "acceptedEs": ["trabajadora"],
+      "acceptedEn": ["hard-working", "industrious"],
       "pos": "adj",
       "exampleEs": "El señor es trabajador.",
       "exampleEn": "The man is hardworking."
@@ -91,6 +107,8 @@
       "kind": "vocab",
       "es": "mexicano",
       "en": "Mexican",
+      "acceptedEs": ["mexicana"],
+      "acceptedEn": [],
       "pos": "adj",
       "exampleEs": "Él es mexicano.",
       "exampleEn": "He's Mexican."
@@ -100,6 +118,8 @@
       "kind": "vocab",
       "es": "colombiano",
       "en": "Colombian",
+      "acceptedEs": ["colombiana"],
+      "acceptedEn": [],
       "pos": "adj",
       "exampleEs": "Ella es colombiana.",
       "exampleEn": "She's Colombian."
@@ -499,5 +519,5 @@
       "difficulty": 1
     }
   ],
-  "contentVersion": 2
+  "contentVersion": 3
 }

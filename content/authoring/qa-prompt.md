@@ -33,9 +33,12 @@ reproduced so this doc is standalone) is the QA spec:
 2. **Naturalness** — no anglicisms or literal calques; "would a native actually say this?"
 3. **Register** — neutral Latin American Spanish, `tú` throughout, `ustedes` plural; no
    `vosotros`, no region-locked slang, no banned words (Style Guide §1; **`coger` banned**).
-4. **English** — every `en` accurate *and* natural US English.
-5. **Alternates** — 3–6 `acceptedEs` per sentence; pronoun-drop, contractions, common
-   synonyms present; each one you'd actually accept. **This is the cost gate's fuel.**
+4. **English** — every `en` and `acceptedEn` entry accurate, meaning-preserving, and natural US
+   English.
+5. **Alternates** — typed practice defaults to Both directions: 3–6 `acceptedEs` per sentence;
+   common English contractions/paraphrases present in `acceptedEn`; vocab accept arrays reviewed on
+   both sides; each entry is one you'd actually accept. Canonical values join the set at consumption
+   and should not be duplicated. **This is the cost gate's fuel.**
 6. **Vocab leakage** — sentences use only this + prior lessons' vocab; every content
    noun/verb/adj resolves to a `vocabRef` (validator checks resolution; **you** check the
    free text for words that have a ref but shouldn't be available yet, and chunks that leak grammar).
@@ -56,6 +59,10 @@ For **EVERY** sentence, **before** reading its `acceptedEs`:
    draft is a finding → add it to `missingAlternates`. Anything in the draft that is *wrong*
    (bad agreement, wrong register, awkward order no native uses, *coger*) is a CRITICAL/MAJOR
    finding under point 5.
+4. Independently paraphrase the Spanish into natural US English, then diff against `en` plus
+   `acceptedEn`. Flag missing common contractions/paraphrases and any accepted entry that changes
+   meaning. Apply the same two-sided review to every vocab item's `es`/`en` accept sets; explicit
+   empty arrays are valid only when canonical/display-split variants are sufficient.
 Do the same for passage segments (their `en` array is the accepted-English set — check it's
 complete and each entry is natural).
 
