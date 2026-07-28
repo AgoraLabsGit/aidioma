@@ -41,6 +41,10 @@ updated: 2026-07-28
 - Deleted the superseded custom icon implementation and replaced the divergent shell/styles instead of retaining a second UI system. Residue scan found no remaining imports or duplicate shell implementation.
 - The prototype remains authoritative evidence until A4-2, so its existing deprecation trigger has not fired. `OI-026` remains open: `npm audit --omit=dev` still reports the same 4 upstream production findings with no compatible fix.
 
+## Publish
+- Local `main` merge: `603526f` (includes feature `2a4b096` and keyless-smoke hardening `4cd3c28`).
+- Authorized normal push to `https://github.com/AgoraLabsGit/aidioma.git` was attempted without force and failed with GitHub `Repository not found`; no remote repository was created or overwritten.
+
 ## Human check
 1. Open `/`, then switch Home → Lessons → Practice → Settings; expect the active rail/tab item to follow the exact route.
 2. Resize to phone width; expect bottom navigation, no horizontal scroll, and the Practice composer pinned above it.

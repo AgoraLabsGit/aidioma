@@ -14,7 +14,7 @@
 - Proof covers 16 route/theme/viewport states, axe, keyboard focus, reduced motion, 200% text, exact route state, and no horizontal overflow.
 - A1-2 shared-contract import plus idempotent Neon content seed follows the UI correction.
 - OI-026 tracks unpatched upstream Next/ESLint dependency advisories before deployment.
-- Local `origin` targets `AgoraLabsGit/aidioma`; remote availability must be confirmed before publishing.
+- Local `origin` targets `AgoraLabsGit/aidioma`; the authorized 2026-07-28 push attempt returned GitHub `Repository not found`, so publishing awaits repository restore/create or access correction.
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
