@@ -1,7 +1,7 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-import { shouldUseClerk } from "./src/lib/auth/config";
+import { shouldUseClerk } from "./lib/auth/config";
 
 function keylessProxy() {
   return NextResponse.next();

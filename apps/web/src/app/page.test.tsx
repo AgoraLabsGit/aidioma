@@ -2,6 +2,8 @@ import { render, screen } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, expect, it } from "vitest";
 
+import { AppShell } from "@/components/app-shell";
+
 import HomePage from "./page";
 
 expect.extend(toHaveNoViolations);
@@ -24,7 +26,11 @@ describe("HomePage", () => {
   });
 
   it("has no detectable axe violations", async () => {
-    const { container } = render(<HomePage />);
+    const { container } = render(
+      <AppShell>
+        <HomePage />
+      </AppShell>,
+    );
     expect(await axe(container)).toHaveNoViolations();
   });
 });

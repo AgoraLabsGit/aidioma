@@ -1,3 +1,6 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import { isClerkConfigured, shouldUseClerk } from "./config";
@@ -42,5 +45,13 @@ describe("isClerkConfigured", () => {
         "development",
       ),
     ).toBe(false);
+  });
+
+  it("keeps the Next.js 16 proxy beside the src app directory", () => {
+    const sourceProxy = path.resolve(process.cwd(), "src/proxy.ts");
+    const misplacedRootProxy = path.resolve(process.cwd(), "proxy.ts");
+
+    expect(existsSync(sourceProxy)).toBe(true);
+    expect(existsSync(misplacedRootProxy)).toBe(false);
   });
 });

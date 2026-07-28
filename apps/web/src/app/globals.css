@@ -8,6 +8,8 @@
   --line: #d8cdbf;
   --accent: #87452f;
   --accent-strong: #6d3422;
+  --accent-hover: #6d3422;
+  --accent-panel: #6d3422;
   --accent-ink: #fffaf2;
   --focus: #1d5f75;
   --shadow: 0 18px 50px rgb(69 46 30 / 8%);
@@ -21,7 +23,6 @@
 }
 
 html {
-  min-width: 20rem;
   background: var(--paper);
 }
 
@@ -145,7 +146,7 @@ textarea {
 }
 
 .button-solid:hover {
-  background: var(--accent-strong);
+  background: var(--accent-hover);
 }
 
 .button-quiet {
@@ -181,7 +182,15 @@ textarea {
 
 .page-stack {
   display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(1.15rem, 3vw, 2rem);
+}
+
+.page-stack > *,
+.home-grid,
+.support-grid {
+  min-width: 0;
 }
 
 .narrow-page {
@@ -273,6 +282,7 @@ h3 {
 .home-grid,
 .support-grid {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
 }
 
@@ -294,7 +304,7 @@ h3 {
   color: var(--accent-ink);
   background:
     linear-gradient(145deg, rgb(255 255 255 / 8%), transparent 42%),
-    var(--accent-strong);
+    var(--accent-panel);
 }
 
 .continue-card h2 {
@@ -474,8 +484,9 @@ h3 {
 
 .nav-link {
   display: flex;
-  min-width: 4rem;
+  min-width: 0;
   min-height: 3.25rem;
+  flex: 1 1 0;
   align-items: center;
   flex-direction: column;
   justify-content: center;
@@ -514,7 +525,7 @@ h3 {
   justify-content: center;
   padding: clamp(1.5rem, 6vw, 3.5rem);
   color: var(--accent-ink);
-  background: var(--accent-strong);
+  background: var(--accent-panel);
 }
 
 .auth-introduction h1 {
@@ -613,6 +624,7 @@ h3 {
 
   .desktop-navigation .nav-link {
     min-width: auto;
+    flex: none;
     flex-direction: row;
     padding: 0.5rem 0.75rem;
     font-size: 0.82rem;
@@ -640,8 +652,10 @@ h3 {
     --ink: #f5eee5;
     --ink-soft: #c7bdb0;
     --line: #4b433b;
-    --accent: #b96647;
-    --accent-strong: #6d3422;
+    --accent: #a65338;
+    --accent-strong: #c78367;
+    --accent-hover: #87452f;
+    --accent-panel: #6d3422;
     --accent-ink: #fffaf2;
     --focus: #6cc4df;
     --shadow: 0 18px 50px rgb(0 0 0 / 22%);

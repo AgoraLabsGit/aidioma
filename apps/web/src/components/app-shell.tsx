@@ -10,9 +10,9 @@ const navigation = [
   { href: "/settings", label: "Settings", icon: "settings" as const },
 ];
 
-function PrimaryNavigation() {
+function PrimaryNavigation({ label }: { label: string }) {
   return (
-    <nav className="primary-navigation" aria-label="Primary navigation">
+    <nav className="primary-navigation" aria-label={label}>
       {navigation.map((item) => (
         <Link key={item.href} className="nav-link" href={item.href}>
           <Icon name={item.icon} />
@@ -37,7 +37,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <span>AIdioma</span>
         </Link>
         <div className="desktop-navigation">
-          <PrimaryNavigation />
+          <PrimaryNavigation label="Primary navigation" />
         </div>
         <AuthControls />
       </header>
@@ -45,7 +45,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
       <div className="mobile-navigation">
-        <PrimaryNavigation />
+        <PrimaryNavigation label="Mobile primary navigation" />
       </div>
     </div>
   );
