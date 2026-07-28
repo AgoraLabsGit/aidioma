@@ -1,0 +1,13 @@
+{
+  "lessonId": "a1-04-donde-esta",
+  "verdict": "PASS",
+  "findings": [],
+  "missingAlternates": [],
+  "stats": {
+    "sentencesReviewed": 0,
+    "alternatesFound": 0,
+    "validatorPassed": true,
+    "curriculumAlignment": "UNCHANGED_PASS",
+    "notes": "TARGETED r3 metadata-only recheck of 5e2c4d8..003d5ec. The lesson delta is exactly `contentVersion: 1` to `contentVersion: 2`; no lesson, item, or segment ID and no authored vocab, sentence, explanation, passage, conversation, or quick-check payload changed. REVIEW-LOG records version 2 and correctly leaves L2 failed pending this independent check. SESSION-LOG records the r2 metadata correction; its adjacent stale pending-r2 sentence is reconciled by this evidence commit to record the completed r2/r3 sequence. The version bump closes the sole r2 MAJOR finding and conforms to the lesson-schema and content-pipeline edit/version contract. GATES: content typecheck PASS; focused a1-04 validator PASS (0 errors / 0 warnings / 0 info); full validator PASS (0 errors, five documented a1-01 warnings, one documented a1-01 info); contract smoke PASS (13); content fixtures PASS (18/18). No lesson content was changed by this reviewer. VERDICT PASS: 0 CRITICAL / 0 MAJOR / 0 MINOR; mark L2-PASS at r3."
+  }
+}

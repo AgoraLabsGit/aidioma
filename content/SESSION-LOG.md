@@ -126,8 +126,9 @@ Decisions and dispatch history for the Lesson Plan agent (coordinator). Newest e
   sentences. Reworked active material away from retired references. All original IDs remain in the
   artifact, `contentVersion` is now 2 after the r2 metadata correction, and even retired items retain
   corrected accept sets.
-- **Review boundary:** all 12 QA findings are addressed on the author side, but the recorded status
-  remains `L2-FAIL(1)` pending a separate targeted r2 adversarial review; no pass was self-awarded.
+- **Independent review closure:** targeted r2 verified all 12 content repairs and found one metadata
+  blocker; `contentVersion` was bumped to 2, and metadata-only r3 independently confirmed that exact
+  delta with no remaining findings. The lesson is `L2-PASS (r3)`.
 - **Gate evidence:** content typecheck PASS; focused validator PASS (0 errors / 0 warnings / 0 info);
   full four-lesson validator PASS (0 errors, five pre-existing a1-01 warnings); contract smoke PASS
   (13); content fixtures PASS (18/18). Prototype freshness remains the expected out-of-scope failure
