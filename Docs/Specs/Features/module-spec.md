@@ -58,16 +58,27 @@ Goal **slider** · theme (Auto/Light/Dark) · reset data. **No** reminder/notifi
 
 ## Experience + visual contract
 
-- Warm editorial identity: paper-like ground, one restrained sienna accent, quiet card chrome,
-  uppercase micro-labels, and Avenir or the closest approved web-safe/licensed equivalent.
+- **`apps/prototype/index.html` is the implementation baseline for visual styling and spatial
+  layout.** Port its tokens, proportions, compact density, left-rail desktop shell, mobile tab bar,
+  card/list treatments, and Practice composer into the Next.js app exactly before refining them.
+- Componentization may change markup structure, but must not reinterpret the prototype into a
+  marketing/editorial landing page. Reusable primitives must reproduce the prototype appearance.
+- The prototype's mock data and superseded controls are not authoritative: truthful zero states,
+  current curriculum, one goal slider, no Reminders row, Both-direction default, and mode-smart
+  help remain governed by the settled sections above.
+- Keep one restrained amber accent, quiet dark/light surfaces, compact Avenir-style typography,
+  thin borders, consistent radii, and the prototype's low-chrome application character.
 - Theme control: Auto / Light / Dark; contrast must meet the accessibility spec.
 - First journey: sign up → choose start level → Lesson 1 explainer → first evaluated answer in
   under 90 seconds. Never strand first run on an empty dashboard.
 - Shuffle items per session; emit a clear “daily goal met” feed marker when the threshold crosses.
 - Motion is subtle and reduced-motion safe. Correctness and status never depend on color alone.
 
-## Sources (read, don’t copy)
-Archived design handoff/consensus · `apps/prototype/index.html` · closed open-items · ADRs 0003–0013.
+## Sources
+Visual implementation baseline: `apps/prototype/index.html` plus the operator-supplied dark desktop
+screenshots from 2026-07-28. Behavioral truth: the settled sections above, closed open-items, and
+ADRs 0003–0013. When prototype mock behavior conflicts with those decisions, behavior changes but
+visual styling remains faithful.
 
 ## Still owned elsewhere
 - Proficiency → [Areas/proficiency.md](../Areas/proficiency.md) (OI-019).

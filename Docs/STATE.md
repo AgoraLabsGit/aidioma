@@ -3,15 +3,16 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-28 (A1-1 proven; C2 a1-04 L2-passed)
+**Updated:** 2026-07-28 (prototype UI alignment is next; C2 a1-04 L2-passed)
 
 ## Position
 
-**Lane A — App (ACTIVE: A1-2 next)**
+**Lane A — App (ACTIVE: A1-1R next)**
 - **A0 Design Close CLOSED.** Operator gave design VERIFIED + close GO on 2026-07-28.
 - A0-1…A0-H proven: design, legacy review, Docs SSOT, archive, and directory cleanup complete.
-- A1-1 is proven: responsive Next.js shell, keyless-safe Clerk boundary, lazy server-only Neon + Drizzle, and root app gates all pass.
-- A1 remains active; A1-2 shared-contract import plus idempotent Neon content seed is next.
+- A1-1's framework/auth/database foundations are proven, but its editorial shell diverged from the approved prototype layout.
+- Mike chose the prototype UI over the new shell and approved porting its styling exactly. A1-1R corrects UI fidelity before A1-2.
+- A1-2 shared-contract import plus idempotent Neon content seed follows the UI correction.
 - OI-026 tracks unpatched upstream Next/ESLint dependency advisories before deployment.
 - Local A0 baseline exists; no remote or push is configured.
 
@@ -22,9 +23,9 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Start A1-2 contract import/content seed while C2 drafts and independently L2-QAs a1-05.
-2. Keep both lanes isolated; merge only after deterministic gates, audit/re-QA, and proof.
-3. Never push without wave-close GO.
+1. Run A1-1R: port the prototype's exact visual system into componentized Next.js screens.
+2. After A1-1R proof, start A1-2 while C2 drafts and independently L2-QAs a1-05.
+3. Keep both lanes isolated; merge only after deterministic gates, audit/re-QA, and proof. Never push without wave-close GO.
 
 ## Standing decisions (highlights)
 - A1-first · vocab 12–15 / sentences 18–20 · Completed/Mastered · Direction default Both.
