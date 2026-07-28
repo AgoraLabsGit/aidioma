@@ -2,6 +2,7 @@ import { chromium } from "@playwright/test";
 import axeCore from "axe-core";
 import { spawn } from "node:child_process";
 import { access, mkdir } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { createServer } from "node:net";
 import path from "node:path";
 import process from "node:process";
@@ -9,7 +10,8 @@ import { fileURLToPath } from "node:url";
 
 const appDirectory = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 const nextBuild = path.join(appDirectory, ".next", "BUILD_ID");
-const nextBinary = path.join(appDirectory, "node_modules", "next", "dist", "bin", "next");
+const require = createRequire(import.meta.url);
+const nextBinary = require.resolve("next/dist/bin/next");
 const resultsDirectory = path.join(appDirectory, "artifacts");
 const screenshotPath = path.join(resultsDirectory, "a1-shell-mobile.png");
 const port = await reserveSmokePort(process.env.AIDIOMA_SMOKE_PORT);

@@ -4,9 +4,17 @@
   "private": true,
   "type": "module",
   "workspaces": [
+    "apps/*",
     "packages/*"
   ],
   "scripts": {
+    "app:dev": "npm run dev --workspace @aidioma/web",
+    "app:typecheck": "npm run typecheck --workspace @aidioma/web",
+    "app:lint": "npm run lint --workspace @aidioma/web",
+    "app:test": "npm run test --workspace @aidioma/web",
+    "app:build": "npm run build --workspace @aidioma/web",
+    "app:smoke": "npm run smoke --workspace @aidioma/web",
+    "app:smoke:install": "npm run smoke:install --workspace @aidioma/web",
     "contract:build": "npm run build --workspace @aidioma/lesson-schema",
     "contract:typecheck": "npm run typecheck --workspace @aidioma/lesson-schema",
     "contract:smoke": "npm run smoke --workspace @aidioma/lesson-schema",
