@@ -15,11 +15,11 @@
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
-- OI-025 is the mandatory first gate: P-003 accept sets + `setId` validation + Both-direction guidance.
-- After OI-025 proves, draft and independently L2-QA a1-04…a1-12. Keep wordfreq lesson checks; no top-N deck now.
+- OI-025 is proven and closed: P-003 accept sets + `setId` validation + Both-direction guidance, with clean audit/re-audit.
+- Draft and independently L2-QA a1-04…a1-12 next. Keep wordfreq lesson checks; no top-N deck now.
 
 ## Next
-1. Run A1-1 and C2's OI-025 preparation in parallel with non-overlapping ownership.
+1. Finish A1-1 while C2 drafts and independently L2-QAs a1-04 next.
 2. Integrate root workspace/gates centrally, audit both lane diffs, and record proof.
 3. Continue C2 drafting only after OI-025 proves; never push without wave-close GO.
 

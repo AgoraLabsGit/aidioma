@@ -9,11 +9,11 @@
 
 | ID | Item | Why deferred / context | Owner or trigger | Status |
 |---|---|---|---|---|
-| OI-025 | **C2 contract prep:** P-003 vocab accept-set backfill on a1-01/02/03; validator check-5 `setId` partition; reconcile curriculum/style/draft/validator guidance from EN→ES-priority to ADR-0005 **Both** | P-003 approval + later A0 direction ruling left content/tooling follow-through; found in A0-H because the content lane was parked when ADR-0005 landed | Content hygiene before C2 drafting | open |
 
 ## Closed
 | ID | Item | Settled | Where |
 |---|---|---|---|
+| OI-025 | **C2 contract prep:** P-003 vocab accept sets, validator `setId` partition, and Both-direction guidance | 2026-07-28 complete: all 30 pilot vocab items reviewed; 18/18 fixtures; audit + delta re-audit clean | [C2-1 wave record](../Waves/C2-1-draft-launch-lessons.md); `content/SESSION-LOG.md` |
 | OI-023 | **Content lane un-pause**: wave C2 (mass-draft a1-04…a1-12) | 2026-07-28 **GO**, with OI-025 contract prep first; keep wordfreq lesson checks; frequency decks remain PM-015 | [ROADMAP.yaml](../ROADMAP.yaml) C2; [C2-1 wave record](../Waves/C2-1-draft-launch-lessons.md) |
 | OI-022 | **Panel recs triage**: 7 locked in ADRs; W1 metric → PM-014; “10 vocab” superseded by ADR-0003 (12–15); EN→ES-only superseded by ADR-0005 (Both). No reopen. | 2026-07-28 | ADRs 0003–0010; [post-mvp.md](post-mvp.md) PM-014 |
 | OI-021 | **SessionEngine**: Continue = full Mix arc; Blend/Review = size-10; weights = weakness × staleness × tag/saved boosts; three recipes only | 2026-07-28 | [session-engine.md](../Specs/Areas/session-engine.md); Consensus §1.3 |

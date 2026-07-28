@@ -20,6 +20,13 @@ updated: 2026-07-28
 3. Draft a1-04…a1-12 from the approved curriculum/style/contracts, with cumulative-vocabulary discipline.
 4. For each lesson: validator zero errors → independent adversarial L2 QA → fix loop → revalidation → `content/review/REVIEW-LOG.md`.
 
+## OI-025 checkpoint — proven 2026-07-28
+- All 30 vocab items in a1-01…a1-03 now have explicit reviewed Both-direction accept arrays; lesson versions are 3 and immutable IDs are unchanged.
+- Validator check 5 partitions closed sets by `setId`; paired regressions prove represented-set PASS and unrepresented-set single-error behavior.
+- Gates: typecheck PASS; validate PASS with 0 errors; contract smoke 13/13; fixtures 18/18; prototype freshness PASS.
+- Independent audit: 0 critical, 2 warnings, 1 note. All were fixed; two focused delta re-audits passed clean.
+- Local integration: merged to `main` at `891c1c5`; no remote or push.
+
 ## Gates (stage 2 — record actual results)
 | Gate | Command | Result |
 |---|---|---|
