@@ -7,7 +7,7 @@
  *   vocab.hint (from example pair), passage-seg.hint + quiz.hint (generic nudges).
  * DROPPED (no prototype slot): sentence.difficulty.
  * METADATA (no UI consumer): lesson.objective, lesson.conversation.
- * Lessons exported: a1-01-hola-me-llamo -> l1, a1-02-soy-asi -> l2, a1-03-que-haces -> l3.
+ * Lessons exported: a1-01-hola-me-llamo -> l1, a1-02-soy-asi -> l2, a1-03-que-haces -> l3, a1-04-donde-esta -> l4.
  */
 window.AIDIOMA_LESSONS = {
   "l1": {
@@ -1511,6 +1511,714 @@ window.AIDIOMA_LESSONS = {
             "i need a rest!"
           ],
           "show": "I need to rest!",
+          "hint": "Translate the highlighted Spanish line into natural English."
+        }
+      ]
+    }
+  },
+  "l4": {
+    "n": 4,
+    "title": "¿Dónde está?",
+    "prof": 92,
+    "objective": "You can say where things and people are located and describe what a place contains.",
+    "conversation": {
+      "scenario": "Finding rooms and furniture in a new house",
+      "openingLine": "Hola. ¿Dónde está la cocina?",
+      "openingLineGloss": "Hi. Where is the kitchen?",
+      "goalPhrases": [
+        "La cocina está aquí",
+        "Hay una mesa en la cocina",
+        "El baño está allí",
+        "La silla está debajo de la mesa"
+      ]
+    },
+    "items": {
+      "quiz": [
+        {
+          "type": "mc",
+          "label": "Quiz",
+          "prompt": "La mesa ___ en la cocina.",
+          "options": [
+            "está",
+            "es",
+            "hay",
+            "están"
+          ],
+          "correct": 0,
+          "why": "Use está to locate one specific table.",
+          "hint": "Re-read the prompt and pick the form that fits."
+        },
+        {
+          "type": "mc",
+          "label": "Quiz",
+          "prompt": "___ una silla en el cuarto.",
+          "options": [
+            "Hay",
+            "Está",
+            "Es",
+            "Están"
+          ],
+          "correct": 0,
+          "why": "Use hay to introduce something that exists in a place.",
+          "hint": "Re-read the prompt and pick the form that fits."
+        },
+        {
+          "type": "mc",
+          "label": "Quiz",
+          "prompt": "La silla está ___ la mesa. (under)",
+          "options": [
+            "debajo de",
+            "sobre",
+            "en",
+            "allí"
+          ],
+          "correct": 0,
+          "why": "Debajo de places the chair under the table.",
+          "hint": "Re-read the prompt and pick the form that fits."
+        },
+        {
+          "type": "mc",
+          "label": "Quiz",
+          "prompt": "In the reading, what is not in the bathroom?",
+          "options": [
+            "A table or chair",
+            "A window",
+            "A kitchen",
+            "A room"
+          ],
+          "correct": 0,
+          "why": "The reading says that there is no table or chair in the bathroom.",
+          "hint": "Re-read the prompt and pick the form that fits."
+        }
+      ],
+      "words": [
+        {
+          "type": "flash",
+          "es": "estar",
+          "en": "to be (located)",
+          "pos": "verb",
+          "accEs": [
+            "estar"
+          ],
+          "accEn": [
+            "to be"
+          ],
+          "hint": "La casa está aquí. — The house is here."
+        },
+        {
+          "type": "flash",
+          "es": "hay",
+          "en": "there is / there are",
+          "pos": "verb",
+          "accEs": [
+            "hay"
+          ],
+          "accEn": [
+            "there is",
+            "there are"
+          ],
+          "hint": "Hay una mesa. — There is a table."
+        },
+        {
+          "type": "flash",
+          "es": "casa",
+          "en": "house / home",
+          "pos": "noun · f",
+          "accEs": [
+            "casa"
+          ],
+          "accEn": [
+            "house",
+            "home"
+          ],
+          "hint": "La casa está aquí. — The house is here."
+        },
+        {
+          "type": "flash",
+          "es": "apartamento",
+          "en": "apartment",
+          "pos": "noun · m",
+          "accEs": [
+            "apartamento"
+          ],
+          "accEn": [
+            "apartment"
+          ],
+          "hint": "El apartamento está allí. — The apartment is over there."
+        },
+        {
+          "type": "flash",
+          "es": "mesa",
+          "en": "table",
+          "pos": "noun · f",
+          "accEs": [
+            "mesa"
+          ],
+          "accEn": [
+            "table"
+          ],
+          "hint": "Hay una mesa en la cocina. — There is a table in the kitchen."
+        },
+        {
+          "type": "flash",
+          "es": "silla",
+          "en": "chair",
+          "pos": "noun · f",
+          "accEs": [
+            "silla"
+          ],
+          "accEn": [
+            "chair"
+          ],
+          "hint": "La silla está aquí. — The chair is here."
+        },
+        {
+          "type": "flash",
+          "es": "cocina",
+          "en": "kitchen",
+          "pos": "noun · f",
+          "accEs": [
+            "cocina"
+          ],
+          "accEn": [
+            "kitchen"
+          ],
+          "hint": "La mesa está en la cocina. — The table is in the kitchen."
+        },
+        {
+          "type": "flash",
+          "es": "baño",
+          "en": "bathroom",
+          "pos": "noun · m",
+          "accEs": [
+            "baño"
+          ],
+          "accEn": [
+            "bathroom"
+          ],
+          "hint": "El baño está allí. — The bathroom is over there."
+        },
+        {
+          "type": "flash",
+          "es": "cuarto",
+          "en": "room / bedroom",
+          "pos": "noun · m",
+          "accEs": [
+            "cuarto"
+          ],
+          "accEn": [
+            "room",
+            "bedroom"
+          ],
+          "hint": "Hay una ventana en el cuarto. — There is a window in the room."
+        },
+        {
+          "type": "flash",
+          "es": "ventana",
+          "en": "window",
+          "pos": "noun · f",
+          "accEs": [
+            "ventana"
+          ],
+          "accEn": [
+            "window"
+          ],
+          "hint": "La ventana está sobre la mesa. — The window is above the table."
+        },
+        {
+          "type": "flash",
+          "es": "puerta",
+          "en": "door",
+          "pos": "noun · f",
+          "accEs": [
+            "puerta"
+          ],
+          "accEn": [
+            "door"
+          ],
+          "hint": "La puerta está allí. — The door is over there."
+        },
+        {
+          "type": "flash",
+          "es": "aquí",
+          "en": "here",
+          "pos": "adverb",
+          "accEs": [
+            "aquí"
+          ],
+          "accEn": [
+            "here"
+          ],
+          "hint": "La silla está aquí. — The chair is here."
+        },
+        {
+          "type": "flash",
+          "es": "allí",
+          "en": "there / over there",
+          "pos": "adverb",
+          "accEs": [
+            "allí"
+          ],
+          "accEn": [
+            "there",
+            "over there"
+          ],
+          "hint": "El baño está allí. — The bathroom is over there."
+        },
+        {
+          "type": "flash",
+          "es": "sobre",
+          "en": "on / above",
+          "pos": "expression",
+          "accEs": [
+            "sobre"
+          ],
+          "accEn": [
+            "on",
+            "above"
+          ],
+          "hint": "La ventana está sobre la mesa. — The window is above the table."
+        },
+        {
+          "type": "flash",
+          "es": "debajo de",
+          "en": "under / below",
+          "pos": "phrase",
+          "accEs": [
+            "debajo de"
+          ],
+          "accEn": [
+            "under",
+            "below"
+          ],
+          "hint": "La silla está debajo de la mesa. — The chair is under the table."
+        }
+      ],
+      "sentences": [
+        {
+          "type": "tr",
+          "es": "La casa está aquí.",
+          "en": "The house is here.",
+          "accEs": [
+            "la casa está aquí.",
+            "aquí está la casa.",
+            "la casa está acá.",
+            "acá está la casa."
+          ],
+          "accEn": [
+            "the house is here.",
+            "the home is here."
+          ],
+          "hint": "Locate one specific place rather than describing what it is."
+        },
+        {
+          "type": "tr",
+          "es": "En la cocina hay una mesa y una silla.",
+          "en": "There's a table and a chair in the kitchen.",
+          "accEs": [
+            "en la cocina hay una mesa y una silla.",
+            "hay una mesa y una silla en la cocina.",
+            "en la cocina hay una silla y una mesa.",
+            "hay una silla y una mesa en la cocina."
+          ],
+          "accEn": [
+            "there's a table and a chair in the kitchen.",
+            "there is a table and a chair in the kitchen.",
+            "the kitchen has a table and a chair."
+          ],
+          "hint": "Introduce two things that exist in one room."
+        },
+        {
+          "type": "tr",
+          "es": "El baño está allí.",
+          "en": "The bathroom is over there.",
+          "accEs": [
+            "el baño está allí.",
+            "allí está el baño.",
+            "el baño está allá.",
+            "allá está el baño."
+          ],
+          "accEn": [
+            "the bathroom is over there.",
+            "the bathroom is there.",
+            "the restroom is over there."
+          ],
+          "hint": "Point to the location of one specific room."
+        },
+        {
+          "type": "tr",
+          "es": "En el cuarto hay una mesa y una silla.",
+          "en": "There's a table and a chair in the room.",
+          "accEs": [
+            "en el cuarto hay una mesa y una silla.",
+            "hay una mesa y una silla en el cuarto.",
+            "en el cuarto hay una silla y una mesa.",
+            "hay una silla y una mesa en el cuarto."
+          ],
+          "accEn": [
+            "there's a table and a chair in the room.",
+            "there is a table and a chair in the room.",
+            "the room has a table and a chair."
+          ],
+          "hint": "Say what two things exist in the room."
+        },
+        {
+          "type": "tr",
+          "es": "En la casa, la cocina está aquí y el baño está allí.",
+          "en": "In the house, the kitchen is here and the bathroom is there.",
+          "accEs": [
+            "en la casa, la cocina está aquí y el baño está allí.",
+            "en la casa, el baño está allí y la cocina está aquí.",
+            "la cocina está aquí en la casa y el baño está allí.",
+            "en la casa, la cocina está acá y el baño está allá."
+          ],
+          "accEn": [
+            "in the house, the kitchen is here and the bathroom is there.",
+            "in the house, the kitchen is here and the bathroom is over there.",
+            "in the home, the kitchen is here and the bathroom is there."
+          ],
+          "hint": "Locate two specific rooms in contrasting places."
+        },
+        {
+          "type": "tr",
+          "es": "La silla está debajo de la mesa y la cocina está aquí.",
+          "en": "The chair is under the table, and the kitchen is here.",
+          "accEs": [
+            "la silla está debajo de la mesa y la cocina está aquí.",
+            "debajo de la mesa está la silla y aquí está la cocina.",
+            "la cocina está aquí y la silla está debajo de la mesa.",
+            "aquí está la cocina y debajo de la mesa está la silla.",
+            "la silla está bajo la mesa y la cocina está acá."
+          ],
+          "accEn": [
+            "the chair is under the table, and the kitchen is here.",
+            "the chair is below the table, and the kitchen is here.",
+            "the kitchen is here, and the chair is under the table."
+          ],
+          "hint": "Locate one piece of furniture relative to another, then locate a room near the speaker."
+        },
+        {
+          "type": "tr",
+          "es": "Hay una cocina y un baño en la casa.",
+          "en": "There's a kitchen and a bathroom in the house.",
+          "accEs": [
+            "hay una cocina y un baño en la casa.",
+            "en la casa hay una cocina y un baño.",
+            "hay un baño y una cocina en la casa.",
+            "en la casa hay un baño y una cocina."
+          ],
+          "accEn": [
+            "there's a kitchen and a bathroom in the house.",
+            "there is a kitchen and a bathroom in the house.",
+            "the house has a kitchen and a bathroom.",
+            "the home has a kitchen and a bathroom."
+          ],
+          "hint": "Introduce two rooms that exist in the house."
+        },
+        {
+          "type": "tr",
+          "es": "En el apartamento, la ventana está sobre la mesa y la puerta está allí.",
+          "en": "In the apartment, the window is above the table and the door is there.",
+          "accEs": [
+            "en el apartamento, la ventana está sobre la mesa y la puerta está allí.",
+            "en el apartamento, sobre la mesa está la ventana y allí está la puerta.",
+            "en el apartamento, la puerta está allí y la ventana está sobre la mesa.",
+            "en el apartamento, allí está la puerta y sobre la mesa está la ventana.",
+            "en el departamento, la ventana está encima de la mesa y la puerta está allá."
+          ],
+          "accEn": [
+            "in the apartment, the window is above the table and the door is there.",
+            "in the apartment, the window is over the table and the door is there.",
+            "the door is there and the window is above the table in the apartment.",
+            "in the apartment, the window is on the table and the door is there."
+          ],
+          "hint": "Locate two specific things inside the apartment with two different place expressions."
+        },
+        {
+          "type": "tr",
+          "es": "¿El baño está allí?",
+          "en": "Is the bathroom over there?",
+          "accEs": [
+            "¿el baño está allí?",
+            "¿está allí el baño?",
+            "¿está el baño allí?",
+            "¿el baño está allá?",
+            "¿está allá el baño?"
+          ],
+          "accEn": [
+            "is the bathroom over there?",
+            "is the bathroom there?",
+            "is the restroom over there?"
+          ],
+          "hint": "Ask a yes-or-no question about one specific room's location."
+        },
+        {
+          "type": "tr",
+          "es": "¿Hay una mesa y una silla en la cocina?",
+          "en": "Is there a table and a chair in the kitchen?",
+          "accEs": [
+            "¿hay una mesa y una silla en la cocina?",
+            "¿en la cocina hay una mesa y una silla?",
+            "¿hay una silla y una mesa en la cocina?",
+            "¿en la cocina hay una silla y una mesa?"
+          ],
+          "accEn": [
+            "is there a table and a chair in the kitchen?",
+            "are there a table and a chair in the kitchen?",
+            "does the kitchen have a table and a chair?"
+          ],
+          "hint": "Ask whether two things exist in one room."
+        },
+        {
+          "type": "tr",
+          "es": "El señor está en la casa.",
+          "en": "The man is in the house.",
+          "accEs": [
+            "el señor está en la casa.",
+            "en la casa está el señor.",
+            "el señor está en el hogar.",
+            "en el hogar está el señor."
+          ],
+          "accEn": [
+            "the man is in the house.",
+            "the gentleman is in the house.",
+            "the man is in the home."
+          ],
+          "hint": "Locate a specific person inside a place."
+        },
+        {
+          "type": "tr",
+          "es": "Las señoras están aquí en la casa.",
+          "en": "The ladies are here in the house.",
+          "accEs": [
+            "las señoras están aquí en la casa.",
+            "aquí están las señoras en la casa.",
+            "las señoras están acá en la casa.",
+            "las señoras están aquí en el hogar.",
+            "aquí están las señoras en el hogar."
+          ],
+          "accEn": [
+            "the ladies are here in the house.",
+            "the women are here in the house.",
+            "the ladies are here in the home."
+          ],
+          "hint": "Locate more than one woman in a nearby place."
+        },
+        {
+          "type": "tr",
+          "es": "No hay mesa ni silla en el baño.",
+          "en": "There is no table or chair in the bathroom.",
+          "accEs": [
+            "no hay mesa ni silla en el baño.",
+            "en el baño no hay mesa ni silla.",
+            "no hay silla ni mesa en el baño.",
+            "en el baño no hay silla ni mesa."
+          ],
+          "accEn": [
+            "there is no table or chair in the bathroom.",
+            "there's no table or chair in the bathroom.",
+            "there isn't a table or chair in the bathroom.",
+            "there are no tables or chairs in the bathroom."
+          ],
+          "hint": "Say that neither of two objects exists in the room."
+        },
+        {
+          "type": "tr",
+          "es": "La silla no está aquí; está allí.",
+          "en": "The chair isn't here; it's there.",
+          "accEs": [
+            "la silla no está aquí; está allí.",
+            "la silla está allí, no aquí.",
+            "la silla no está acá; está allá.",
+            "allí está la silla, no aquí.",
+            "la silla está allá y no acá."
+          ],
+          "accEn": [
+            "the chair isn't here; it's there.",
+            "the chair is not here; it is there.",
+            "the chair isn't here; it's over there."
+          ],
+          "hint": "Deny one location, then give the contrasting location."
+        },
+        {
+          "type": "tr",
+          "es": "En la casa hay un cuarto, una cocina y un baño.",
+          "en": "The house has a room, a kitchen, and a bathroom.",
+          "accEs": [
+            "en la casa hay un cuarto, una cocina y un baño.",
+            "hay un cuarto, una cocina y un baño en la casa.",
+            "en la casa hay una cocina, un baño y un cuarto.",
+            "hay un baño, un cuarto y una cocina en la casa."
+          ],
+          "accEn": [
+            "the house has a room, a kitchen, and a bathroom.",
+            "there is a room, a kitchen, and a bathroom in the house.",
+            "there are a room, a kitchen, and a bathroom in the house."
+          ],
+          "hint": "List three rooms that the house contains."
+        },
+        {
+          "type": "tr",
+          "es": "La ventana está sobre la mesa, pero la silla está debajo de la mesa.",
+          "en": "The window is above the table, but the chair is under the table.",
+          "accEs": [
+            "la ventana está sobre la mesa, pero la silla está debajo de la mesa.",
+            "sobre la mesa está la ventana, pero debajo de la mesa está la silla.",
+            "la silla está debajo de la mesa, pero la ventana está sobre la mesa.",
+            "debajo de la mesa está la silla, pero sobre la mesa está la ventana.",
+            "la ventana está encima de la mesa, pero la silla está bajo la mesa."
+          ],
+          "accEn": [
+            "the window is above the table, but the chair is under the table.",
+            "the window is over the table, but the chair is below the table.",
+            "the window is above the table, but the chair is underneath it.",
+            "the window is on the table, but the chair is under the table."
+          ],
+          "hint": "Contrast two locations relative to the same table."
+        },
+        {
+          "type": "tr",
+          "es": "¿La señora está aquí o allí?",
+          "en": "Is the lady here or there?",
+          "accEs": [
+            "¿la señora está aquí o allí?",
+            "¿está la señora aquí o allí?",
+            "¿aquí o allí está la señora?",
+            "¿está aquí o allí la señora?",
+            "¿la señora está acá o allá?"
+          ],
+          "accEn": [
+            "is the lady here or there?",
+            "is the woman here or there?",
+            "is the lady here or over there?"
+          ],
+          "hint": "Ask which of two contrasting places contains the woman."
+        },
+        {
+          "type": "tr",
+          "es": "¿Hay una ventana sobre la mesa y una puerta allí?",
+          "en": "Is there a window above the table and a door over there?",
+          "accEs": [
+            "¿hay una ventana sobre la mesa y una puerta allí?",
+            "¿sobre la mesa hay una ventana y allí hay una puerta?",
+            "¿hay una puerta allí y una ventana sobre la mesa?",
+            "¿allí hay una puerta y sobre la mesa hay una ventana?",
+            "¿hay una ventana encima de la mesa y una puerta allá?"
+          ],
+          "accEn": [
+            "is there a window above the table and a door over there?",
+            "is there a window over the table and a door there?",
+            "is there a window on the table and a door over there?"
+          ],
+          "hint": "Ask whether two things exist in two different locations."
+        },
+        {
+          "type": "tr",
+          "es": "La casa es bonita, pero la cocina está allí y el baño está aquí.",
+          "en": "The house is nice, but the kitchen is there and the bathroom is here.",
+          "accEs": [
+            "la casa es bonita, pero la cocina está allí y el baño está aquí.",
+            "la casa es bonita, pero el baño está aquí y la cocina está allí.",
+            "es bonita la casa, pero la cocina está allá y el baño está acá.",
+            "la casa es linda, pero la cocina está allí y el baño está aquí.",
+            "la cocina está allí y el baño está aquí, pero la casa es bonita."
+          ],
+          "accEn": [
+            "the house is nice, but the kitchen is there and the bathroom is here.",
+            "the house is pretty, but the kitchen is over there and the bathroom is here.",
+            "the house is nice, but the bathroom is here and the kitchen is there.",
+            "the home is nice, but the kitchen is there and the bathroom is here."
+          ],
+          "hint": "Describe the house, then contrast the locations of two rooms."
+        },
+        {
+          "type": "tr",
+          "es": "Aquí hay una cocina, pero el baño está allí.",
+          "en": "There is a kitchen here, but the bathroom is over there.",
+          "accEs": [
+            "aquí hay una cocina, pero el baño está allí.",
+            "hay una cocina aquí, pero el baño está allí.",
+            "el baño está allí, pero aquí hay una cocina.",
+            "acá hay una cocina, pero el baño está allá.",
+            "el baño está allá, pero hay una cocina acá."
+          ],
+          "accEn": [
+            "there is a kitchen here, but the bathroom is over there.",
+            "there's a kitchen here, but the bathroom is over there.",
+            "there is a kitchen here, but the bathroom is there.",
+            "the bathroom is over there, but there is a kitchen here."
+          ],
+          "hint": "Introduce one nearby place, then locate a different specific place farther away."
+        }
+      ],
+      "story": [
+        {
+          "type": "seg",
+          "context": "",
+          "es": "La casa está aquí.",
+          "accept": [
+            "the house is here.",
+            "the home is here."
+          ],
+          "show": "The house is here.",
+          "hint": "Translate the highlighted Spanish line into natural English."
+        },
+        {
+          "type": "seg",
+          "context": "La casa está aquí.",
+          "es": "Hay una cocina y un baño en la casa.",
+          "accept": [
+            "there is a kitchen and a bathroom in the house.",
+            "there's a kitchen and a bathroom in the house.",
+            "the house has a kitchen and a bathroom."
+          ],
+          "show": "There is a kitchen and a bathroom in the house.",
+          "hint": "Translate the highlighted Spanish line into natural English."
+        },
+        {
+          "type": "seg",
+          "context": "La casa está aquí. Hay una cocina y un baño en la casa.",
+          "es": "La mesa y la silla están en la cocina.",
+          "accept": [
+            "the table and chair are in the kitchen.",
+            "the table and the chair are in the kitchen."
+          ],
+          "show": "The table and chair are in the kitchen.",
+          "hint": "Translate the highlighted Spanish line into natural English."
+        },
+        {
+          "type": "seg",
+          "context": "La casa está aquí. Hay una cocina y un baño en la casa. La mesa y la silla están en la cocina.",
+          "es": "La ventana está sobre la mesa.",
+          "accept": [
+            "the window is above the table.",
+            "the window is over the table.",
+            "the window is on the table."
+          ],
+          "show": "The window is above the table.",
+          "hint": "Translate the highlighted Spanish line into natural English."
+        },
+        {
+          "type": "seg",
+          "context": "La casa está aquí. Hay una cocina y un baño en la casa. La mesa y la silla están en la cocina. La ventana está sobre la mesa.",
+          "es": "El cuarto está allí, en la casa.",
+          "accept": [
+            "the room is over there, in the house.",
+            "the room is there in the house."
+          ],
+          "show": "The room is over there, in the house.",
+          "hint": "Translate the highlighted Spanish line into natural English."
+        },
+        {
+          "type": "seg",
+          "context": "La casa está aquí. Hay una cocina y un baño en la casa. La mesa y la silla están en la cocina. La ventana está sobre la mesa. El cuarto está allí, en la casa.",
+          "es": "No hay mesa ni silla en el baño.",
+          "accept": [
+            "there is no table or chair in the bathroom.",
+            "there isn't a table or chair in the bathroom.",
+            "there are no tables or chairs in the bathroom."
+          ],
+          "show": "There is no table or chair in the bathroom.",
           "hint": "Translate the highlighted Spanish line into natural English."
         }
       ]
