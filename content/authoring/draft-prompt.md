@@ -30,12 +30,13 @@ Take the map row's candidate lemmas. For **each**, verify it is usable in short 
 sentences with **only cumulative + this-lesson vocab** — if a candidate needs an untaught
 word to be exercised, drop or replace it (stay within the row's domain). Target 8–12
 items (15 hard max; schema min 8). Number/day **sets** count as **one** item against the
-budget: give each member its own lemma-keyed id (`a1-05.v.veinte`), but the set only needs
-to be *represented* by sentences, not each member. Mark map-flagged **CHUNK** items with
+budget: give each member its own lemma-keyed id (`a1-05.v.veinte`) and the same descriptive
+`setId` (for example, `numbers-0-30`); the set only needs to be *represented* by sentences,
+not each member. Mark map-flagged **CHUNK** items with
 `pos:'phrase'` + `chunk:true` (they grant **no** underlying grammar). Question words
 (qué/dónde/cómo) are **not vocab** — they enter via `question.formation`, no `v.` id.
-Each VocabItem needs `es, en, acceptedEs, acceptedEn, pos, gender?(m|f for nouns), exampleEs,
-exampleEn`. Typed practice defaults to Both directions. The consumer always adds canonical `es`/`en`
+Each VocabItem needs `es, en, acceptedEs, acceptedEn, pos, gender?(m|f for nouns), setId?(shared
+by every member of a closed set), exampleEs, exampleEn`. Typed practice defaults to Both directions. The consumer always adds canonical `es`/`en`
 (including display-string split variants) to the grading set, so arrays contain only useful additional
 answers; use explicit `[]` when review finds none.
 

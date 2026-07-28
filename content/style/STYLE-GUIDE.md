@@ -261,12 +261,13 @@ content, keep the ID. Retire, never renumber. **File naming:** one file per less
 
 **Set-type vocab (numbers, days, months).** Each member is **still one lemma-keyed vocab item** with a
 normal ID — `a1-09.v.lunes`, `a1-05.v.veinte` — keeping IDs immutable and one-concept-per-item. What
-changes is **budget + exercise accounting**: the whole set counts as **one item** against the ~10-item
+changes is **grouping + budget + exercise accounting**: assign the same descriptive `setId` to every
+member of the closed set (for example, `days-of-week` or `numbers-0-30`). The whole set counts as **one item** against the ~10-item
 lesson cap (a closed class learned as a group), and QA #6's "every vocab item exercised by ≥1 sentence"
 is satisfied when the **set is represented** by sentences — not every one of 30 members needs its own
 sentence. Sentence `vocabRefs` still resolve to the individual member IDs actually used. (Don't invent
-a `numeros-0-30` composite ID; there is no such thing — the members are the IDs, the set is an
-authoring/budget grouping.) **Question words** (qué/dónde/cómo) are **not vocab** — they enter via
+a `numeros-0-30` composite item ID; `setId` is only the grouping key — the members remain the immutable
+item IDs.) **Question words** (qué/dónde/cómo) are **not vocab** — they enter via
 their `grammarTag` (`question.formation`), spend no vocab budget, and get no `v.` ID.
 
 ## 10. Author's pre-flight checklist
