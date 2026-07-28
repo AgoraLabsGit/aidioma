@@ -1,7 +1,7 @@
 ---
 title: A1-1 — Fresh Next.js application scaffold
 type: wave-slice
-status: proven
+status: closed
 updated: 2026-07-28
 ---
 

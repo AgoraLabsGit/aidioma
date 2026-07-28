@@ -3,7 +3,7 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-28 (A1-1 proven; C2 a1-04 fix loop active)
+**Updated:** 2026-07-28 (A1-1 proven; C2 a1-04 L2-passed)
 
 ## Position
 
@@ -18,11 +18,12 @@
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
 - OI-025 is proven and closed: P-003 accept sets + `setId` validation + Both-direction guidance, with clean audit/re-audit.
-- a1-04 was drafted; independent L2 QA failed it and the corrective/re-QA loop is active. Then continue a1-05…a1-12 one lesson at a time.
+- a1-04 is merged and L2-PASS (r3): 13 active vocab, 18 active sentences, version 2, all gates green.
+- Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Finish a1-04 corrections and independent L2 re-QA, then merge and refresh prototype data.
-2. Start A1-2 contract import/content seed while C2 continues a1-05 one lesson at a time.
+1. Start A1-2 contract import/content seed while C2 drafts and independently L2-QAs a1-05.
+2. Keep both lanes isolated; merge only after deterministic gates, audit/re-QA, and proof.
 3. Never push without wave-close GO.
 
 ## Standing decisions (highlights)

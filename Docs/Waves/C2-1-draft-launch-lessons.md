@@ -27,23 +27,35 @@ updated: 2026-07-28
 - Independent audit: 0 critical, 2 warnings, 1 note. All were fixed; two focused delta re-audits passed clean.
 - Local integration: merged to `main` at `891c1c5`; no remote or push.
 
+## a1-04 checkpoint — L2 proven 2026-07-28
+- Drafted `a1-04-donde-esta` with 13 active vocabulary items, 18 active sentences, six passage
+  segments, a conversation, and four quick checks; `contentVersion` is 2 and IDs are immutable.
+- L2 r1 found 3 critical, 4 major, and 5 minor issues. The fix loop closed all 12; r2 then caught
+  the required version bump. Narrow r3 passed with 0 findings. Evidence:
+  `content/review/qa/a1-04.qa1.json`, `a1-04.qa2.json`, and `a1-04.qa3.json`.
+- Latest merged gates: typecheck PASS; validate PASS with a1-04 at 0/0/0 and 0 corpus errors;
+  contract smoke 13/13; fixtures 18/18; prototype freshness PASS.
+- Local integration: lesson merged at `b96097e`; generated prototype data refreshed at `38dc0af`.
+
 ## Gates (stage 2 — record actual results)
 | Gate | Command | Result |
 |---|---|---|
-| typecheck | `npm run content:typecheck` | pending |
-| validate | `npm run content:validate` | pending |
-| smoke | `npm run contract:smoke && npm run content:fixtures && npm run prototype:check` | pending |
+| typecheck | `npm run content:typecheck` | PASS at a1-04 checkpoint |
+| validate | `npm run content:validate` | PASS — 0 errors across four lessons; five documented a1-01 warnings |
+| smoke | `npm run contract:smoke && npm run content:fixtures && npm run prototype:check` | PASS — 13/13, 18/18, current export |
 
 ## Audit (stage 3)
 - Auditors: independent linguistic QA per new lesson plus a tooling/contract audit for OI-025.
-- Findings: pending.
-- Delta re-audit: pending.
+- Findings: OI-025 contract audit closed; a1-04 L2 r1 findings and the r2 versioning blocker are
+  closed. The slice remains active for a1-05…a1-12.
+- Delta re-audit: a1-04 r3 PASS with 0 findings.
 
 ## Review (stage 4)
-- Pending.
+- a1-04 L2-PASS (r3). Remaining lessons pending.
 
 ## Proof (stage 6)
-- Pending.
+- Four-lesson corpus validates with zero errors and exports deterministically to the prototype.
+  Full 12-lesson proof remains pending.
 
 ## Clean (stage 7)
 - Pending.

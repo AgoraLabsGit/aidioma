@@ -1,7 +1,7 @@
 ---
 title: Handoff — Parallel A1 app and C2 content kickoff
 type: handoff
-status: active
+status: superseded
 updated: 2026-07-28
 ---
 
