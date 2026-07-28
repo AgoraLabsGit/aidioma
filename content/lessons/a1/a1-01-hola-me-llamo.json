@@ -19,6 +19,8 @@
       "kind": "vocab",
       "es": "hola",
       "en": "hello / hi",
+      "acceptedEs": [],
+      "acceptedEn": [],
       "pos": "other",
       "exampleEs": "Hola, señora.",
       "exampleEn": "Hi, ma'am."
@@ -28,6 +30,8 @@
       "kind": "vocab",
       "es": "adiós",
       "en": "goodbye",
+      "acceptedEs": ["hasta luego"],
+      "acceptedEn": ["bye"],
       "pos": "other",
       "exampleEs": "Adiós, señor.",
       "exampleEn": "Goodbye, sir."
@@ -37,6 +41,8 @@
       "kind": "vocab",
       "es": "gracias",
       "en": "thank you",
+      "acceptedEs": ["muchas gracias"],
+      "acceptedEn": ["thanks"],
       "pos": "other",
       "exampleEs": "Gracias, señora.",
       "exampleEn": "Thank you, ma'am."
@@ -46,6 +52,8 @@
       "kind": "vocab",
       "es": "por favor",
       "en": "please",
+      "acceptedEs": [],
+      "acceptedEn": [],
       "pos": "phrase",
       "exampleEs": "Por favor, señor.",
       "exampleEn": "Please, sir."
@@ -55,6 +63,8 @@
       "kind": "vocab",
       "es": "perdón",
       "en": "excuse me / sorry",
+      "acceptedEs": ["disculpa", "discúlpame"],
+      "acceptedEn": ["pardon me"],
       "pos": "other",
       "exampleEs": "Perdón, señora.",
       "exampleEn": "Excuse me, ma'am."
@@ -64,6 +74,8 @@
       "kind": "vocab",
       "es": "buenos días",
       "en": "good morning",
+      "acceptedEs": [],
+      "acceptedEn": [],
       "pos": "phrase",
       "exampleEs": "Buenos días, señor.",
       "exampleEn": "Good morning, sir."
@@ -73,6 +85,8 @@
       "kind": "vocab",
       "es": "buenas noches",
       "en": "good evening / good night",
+      "acceptedEs": [],
+      "acceptedEn": [],
       "pos": "phrase",
       "exampleEs": "Buenas noches, señora.",
       "exampleEn": "Good evening, ma'am."
@@ -82,6 +96,8 @@
       "kind": "vocab",
       "es": "señor",
       "en": "sir / man / Mr.",
+      "acceptedEs": [],
+      "acceptedEn": ["mister", "gentleman"],
       "pos": "noun",
       "gender": "m",
       "exampleEs": "El señor es de México.",
@@ -92,6 +108,8 @@
       "kind": "vocab",
       "es": "señora",
       "en": "ma'am / lady / Mrs.",
+      "acceptedEs": [],
+      "acceptedEn": ["madam"],
       "pos": "noun",
       "gender": "f",
       "exampleEs": "La señora es de Colombia.",
@@ -102,6 +120,8 @@
       "kind": "vocab",
       "es": "me llamo",
       "en": "my name is (I'm called)",
+      "acceptedEs": ["mi nombre es"],
+      "acceptedEn": ["I'm called", "I am called"],
       "pos": "phrase",
       "chunk": true,
       "exampleEs": "Me llamo Ana.",
@@ -112,6 +132,8 @@
       "kind": "vocab",
       "es": "te llamas",
       "en": "your name is (you're called)",
+      "acceptedEs": ["tu nombre es"],
+      "acceptedEn": ["you're called", "you are called"],
       "pos": "phrase",
       "chunk": true,
       "exampleEs": "Tú te llamas Pedro.",
@@ -122,6 +144,18 @@
       "kind": "vocab",
       "es": "se llama",
       "en": "his/her name is (he/she is called)",
+      "acceptedEs": ["su nombre es"],
+      "acceptedEn": [
+        "his name is",
+        "her name is",
+        "he's called",
+        "she's called",
+        "he is called",
+        "she is called",
+        "your name is",
+        "you're called",
+        "you are called"
+      ],
       "pos": "phrase",
       "chunk": true,
       "exampleEs": "Ella se llama Camila.",
@@ -472,5 +506,5 @@
       "difficulty": 1
     }
   ],
-  "contentVersion": 2
+  "contentVersion": 3
 }

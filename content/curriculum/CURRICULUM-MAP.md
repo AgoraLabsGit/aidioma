@@ -2,8 +2,9 @@
 
 > The canonical scope-and-sequence for AIdioma. Single linear spine, ordered by ordinal; each lesson
 > assumes mastery of **all** prior lessons' vocab and grammar (mastery-gated unlock). App modality at
-> launch: **typed EN→ES translation + flashcards** — so every objective is production-oriented, and
-> every vocab item must be exercisable by short typed sentences.
+> launch: typed translation defaults to **Both directions (EN→ES and ES→EN)** plus flashcards. Every
+> objective remains production-oriented, every vocab item must be exercisable by short typed
+> sentences, and authored accept sets must also make recognition-side grading fair.
 >
 > **Framework backbone:** PCIC A1 inventories 2 (grammar), 5 (functions), 9 (nociones específicas),
 > filtered to what 12 lessons of typed production can carry; CEFR A1 can-do statements phrase the
@@ -375,6 +376,9 @@ CHUNK/SET markers). *Casing: the map's dotted.lowercase wins; research SCREAMING
 ---
 
 ## Changelog
+
+**v2.2 (2026-07-28)** — aligned the launch modality and authoring consequence with ADR-0005:
+typed practice defaults to Both directions, so English and Spanish accept sets both receive review.
 
 **v2.1 (2026-07-21)** — glue list += `hoy` (time adverbs), per a1-03 QA (used 9× as a legitimate high-frequency time adverb; previously unlisted/untaught).
 

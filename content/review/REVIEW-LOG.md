@@ -8,7 +8,7 @@ Per-lesson tracking for the 12 A1 launch lessons through the four-layer content 
 
 Every lesson passes through four gates, cheapest first, before it is launch-ready. A lesson only advances when the prior layer is clean.
 
-- **L1 — CI validator (automated).** The `content:validate` schema/lint pass: valid schema, IDs well-formed and unique, exactly 3 hints per sentence, 3–6 alternates, `vocabRefs` resolve to this-or-prior lessons (no vocab leakage), explanation ≤150 words, difficulty present. Machine-checkable rules only.
+- **L1 — CI validator (automated).** The `content:validate` schema/lint pass: valid schema, IDs well-formed and unique, exactly 3 hints per sentence, 3–6 Spanish sentence alternates, English alternates surfaced for review, `vocabRefs` resolve to this-or-prior lessons (no vocab leakage), explanation ≤150 words, difficulty present. Machine-checkable rules only.
 - **L2 — adversarial LLM pass.** A *different* frontier model from the one that drafted the lesson, prompted as a pedantic native editor, runs the 10-point checklist and returns structured findings. Catches ~80% of the drafting model's blind spots before any human time is spent. Re-run after each fix round; track rounds as `L2-FAIL(n)` → `L2-PASS`.
 - **L3 — founder checklist review.** Mike works the 10-point checklist by hand: grammar, naturalness, register, English quality, alternates, vocab leakage, hints, grammarTags, explanation, difficulty. Catches what a non-native founder reliably *can* catch (structural + grammatical errors); defers naturalness/register authority to L4.
 - **L4 — native-speaker review.** One paid native LatAm reviewer (see `NATIVE-REVIEWER-BRIEF.md`) redlines the full lesson: errors in taught content (<1% bar), the accepted-alternates pass, passage/conversation naturalness. Their flags are triaged, applied, and the lesson is re-validated (back to L1) before it clears.
@@ -50,6 +50,23 @@ Per-lesson `L2` column records the outcome plus rounds, e.g. `PASS (r2)` = passe
 | `a1-12-quiero` | — | PENDING | PENDING | PENDING | PENDING | — | Wants, needs, requests (capstone) |
 
 *Legend: fill each gate column with the reached status (`PENDING` → `DRAFTED` → `PASS`, or `FAIL(n)` for L2). Set `contentVersion` when a lesson reaches `LAUNCH-READY`; bump it on any post-review content change.*
+
+---
+
+## OI-025 cross-lesson contract review — 2026-07-28
+
+- Scope: vocab accept sets only across `a1-01`…`a1-03`, plus validator check-5 `setId`
+  partitioning and Both-direction authoring guidance. Existing per-lesson L2 verdicts were not
+  reopened or advanced.
+- Accept-set review: all 30 vocab items now carry explicit `acceptedEs` and `acceptedEn` arrays;
+  16 Spanish and 29 English noncanonical entries were retained after neutral-LatAm, meaning, and
+  duplicate-purpose review. Empty arrays are explicit where canonical/display-split variants suffice.
+- Version/identity: all three lessons are `contentVersion: 3`; no lesson, item, or segment ID changed.
+- Regression proof: a represented `setId` partition passes when only one member is referenced, while
+  a wholly unrepresented partition emits exactly one group-level `VOCAB_EXERCISED` error.
+- Gate evidence: `content:typecheck` PASS; `content:validate` PASS (0 errors; five documented L1
+  Spanish-alternate exemption warnings); contract smoke PASS (13 checks); content fixtures PASS
+  (18/18); prototype freshness PASS.
 
 ---
 

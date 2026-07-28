@@ -520,12 +520,22 @@ function runPerLessonChecks(l: LessonT, ctx: Ctx) {
   for (const r of l.conversation.vocabRefs) checkRef(r, l.conversation.id);
   for (const q of l.quickChecks) for (const r of q.vocabRefs) checkRef(r, q.id);
 
-  /* ---- Check 5: every own vocab exercised by >=1 own-lesson sentence ---- */
+  /* ---- Check 5: every singleton vocab exercised; every setId group represented ---- */
   const exercised = new Set<string>();
   for (const s of l.sentences) for (const r of s.vocabRefs) if (ownVocabIds.has(r)) exercised.add(r);
+  const vocabSets = new Map<string, VocabT[]>();
   for (const v of l.vocab) {
-    if (!exercised.has(v.id)) {
-      warnOrErrVocabUnused(l, v);
+    if (v.setId !== undefined) {
+      const members = vocabSets.get(v.setId) ?? [];
+      members.push(v);
+      vocabSets.set(v.setId, members);
+    } else if (!exercised.has(v.id)) {
+      errVocabUnused(l, v);
+    }
+  }
+  for (const [setId, members] of vocabSets) {
+    if (!members.some((v) => exercised.has(v.id))) {
+      errVocabSetUnused(l, setId, members);
     }
   }
 
@@ -592,12 +602,12 @@ function runPerLessonChecks(l: LessonT, ctx: Ctx) {
   for (const s of l.sentences) {
     const n = s.acceptedEs.length;
     if (n < 3) {
-      warn('ACCEPTED_ES_COUNT', lid, `acceptedEs has ${n} alternate(s); launch priority is 3–6.`, s.id);
+      warn('ACCEPTED_ES_COUNT', lid, `acceptedEs has ${n} alternate(s); the authored target is 3–6.`, s.id);
     } else if (n > 6) {
       warn('ACCEPTED_ES_COUNT', lid, `acceptedEs has ${n} alternates (>6); trim toward the 3–6 launch range.`, s.id);
     }
     if (s.acceptedEn.length === 0) {
-      info('ACCEPTED_EN_EMPTY', lid, `acceptedEn is empty (informational; en alternates are optional).`, s.id);
+      info('ACCEPTED_EN_EMPTY', lid, `acceptedEn is empty; confirm the canonical English has no useful contraction or paraphrase for Both-direction practice.`, s.id);
     }
   }
 
@@ -652,18 +662,25 @@ function runPerLessonChecks(l: LessonT, ctx: Ctx) {
 }
 
 /**
- * Check 5 is an ERROR per the consensus invariant. Set-type vocab (numbers/days) is
- * satisfied when the SET is represented rather than every member (Style Guide §9), but the
- * schema has no set marker, so we cannot distinguish members here — we report the ERROR and
- * note the exception so an author can confirm a set member is genuinely represented.
+ * Check 5 is an ERROR per the consensus invariant. Ordinary vocab must be exercised
+ * individually. Set-type vocab is partitioned by P-003 `setId`; one exercised member
+ * represents the whole set (Style Guide §9).
  */
-function warnOrErrVocabUnused(l: LessonT, v: VocabT) {
+function errVocabUnused(l: LessonT, v: VocabT) {
   err(
     'VOCAB_EXERCISED',
     l.id,
-    `Vocab "${v.id}" (${v.es}) is not exercised by any sentence vocabRef in its own lesson.` +
-      ` (If it is a set-type member — numbers/days — confirm the set is represented; Style Guide §9.)`,
+    `Vocab "${v.id}" (${v.es}) is not exercised by any sentence vocabRef in its own lesson.`,
     v.id,
+  );
+}
+
+function errVocabSetUnused(l: LessonT, setId: string, members: VocabT[]) {
+  err(
+    'VOCAB_EXERCISED',
+    l.id,
+    `Vocab set "${setId}" is not represented by any sentence vocabRef in its own lesson. ` +
+      `Exercise at least one member (${members.map((v) => v.id).join(', ')}).`,
   );
 }
 
