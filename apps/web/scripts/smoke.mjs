@@ -283,10 +283,13 @@ async function run() {
   await requireBuildAndReferences();
   await mkdir(appScreenshotsDirectory, { recursive: true });
 
-  const environment = { ...process.env, PORT: String(port) };
-  delete environment.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-  delete environment.CLERK_SECRET_KEY;
-  delete environment.DATABASE_URL;
+  const environment = {
+    ...process.env,
+    CLERK_SECRET_KEY: "",
+    DATABASE_URL: "",
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "",
+    PORT: String(port),
+  };
 
   const server = spawn(
     process.execPath,
