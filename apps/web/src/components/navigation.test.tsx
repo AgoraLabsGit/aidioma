@@ -43,4 +43,17 @@ describe("route-aware navigation", () => {
       screen.getByRole("link", { name: "Lessons" }),
     ).not.toHaveAttribute("aria-current");
   });
+
+  it("keeps Lessons selected on a lesson practice route", () => {
+    route.pathname = "/lessons/1";
+    render(<DesktopSidebar account={null} />);
+
+    expect(screen.getByRole("link", { name: "Lessons" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.getByRole("link", { name: "Practice" })).not.toHaveAttribute(
+      "aria-current",
+    );
+  });
 });
