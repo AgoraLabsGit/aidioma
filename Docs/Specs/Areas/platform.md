@@ -46,6 +46,25 @@ updated: 2026-07-29
 - AI calls, database credentials, reviewed answer sets, thresholds, and `correctIndex` remain on the
   authenticated server. Web and future native clients consume learner-safe APIs only.
 
+## Development, Preview, and Production
+
+- **Localhost = build loop.** Run deterministic gates and UI work locally with Development-scoped
+  Clerk/Neon/Gateway credentials. Localhost is never evidence that Vercel auth, Firewall, routing,
+  environment scoping, or Production aliases work.
+- **Git Preview = acceptance.** Push a non-`main` release-candidate branch and use its PR deployment.
+  The commit-specific URL is the immutable evidence target; the branch URL is only a moving
+  convenience alias. Preview uses only Preview-scoped credentials and the Preview database.
+- **Production = released behavior.** `main` is Vercel's sole Production branch; `aidioma.io`,
+  `aidioma-agoralabs.vercel.app`, and the `git-main` alias are post-GO verification targets, never
+  pre-merge test environments. A push to `main` is a Production release action.
+- Ad-hoc `vercel deploy` Preview URLs are limited to deployment diagnosis. They do not replace the
+  Git Preview because they lack the canonical branch/commit review trail and share one moving CLI alias.
+- A custom `staging` environment is deferred until the shared Preview environment becomes a real
+  constraint: long-running migration rehearsal, external webhook allowlisting, or parallel QA.
+- App CI must pass typecheck, lint, tests, build, and smoke on the PR. External proof then covers
+  authenticated routes, Preview database isolation, Gateway/Firewall receipts, and absence of
+  unintended writes. Only the exact verified commit may merge to `main`.
+
 ## Shared application boundary
 
 - `@aidioma/lesson-schema` remains the authored-content contract and is now a direct web-workspace
