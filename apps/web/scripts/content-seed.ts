@@ -1,11 +1,8 @@
 import { neon } from "@neondatabase/serverless";
 
 import { loadSeedLessons } from "../src/lib/content/seed";
-import {
-  assertDatabaseIdentity,
-  resolveDatabaseExpectation,
-  type DatabaseIdentityRow,
-} from "../src/lib/db/safety";
+import { runContentSeed } from "../src/lib/content/seed-runner";
+import { resolveDatabaseExpectation, type DatabaseIdentityRow } from "../src/lib/db/safety";
 
 async function main(): Promise<void> {
   const connectionString = process.env.DATABASE_URL?.trim();
@@ -20,13 +17,16 @@ async function main(): Promise<void> {
 
   const sql = neon(connectionString);
   const expectation = resolveDatabaseExpectation();
-  const identity = (await sql`
-    SELECT current_database() AS database, current_user AS role
-  `) as DatabaseIdentityRow[];
-  assertDatabaseIdentity(identity, expectation);
-  const results = await sql.transaction((transaction) =>
-    lessons.flatMap((lesson) => [
-      transaction`
+  const changedRowCount = await runContentSeed(
+    {
+      identity: async () =>
+        (await sql`
+          SELECT current_database() AS database, current_user AS role
+        `) as DatabaseIdentityRow[],
+      upsert: async (seedLessons) =>
+        sql.transaction((transaction) =>
+          seedLessons.flatMap((lesson) => [
+            transaction`
         INSERT INTO lessons (
           id, slug, ordinal, level, title, objective, grammar_focus,
           content_version, content_hash, is_active
@@ -55,8 +55,8 @@ async function main(): Promise<void> {
            OR lessons.is_active IS DISTINCT FROM EXCLUDED.is_active
         RETURNING id
       `,
-      ...lesson.items.map(
-        (item) => transaction`
+            ...lesson.items.map(
+              (item) => transaction`
           INSERT INTO lesson_items (
             id, lesson_id, kind, payload, grammar_tags, difficulty,
             content_version, deprecated
@@ -83,12 +83,15 @@ async function main(): Promise<void> {
              OR lesson_items.deprecated IS DISTINCT FROM (lesson_items.deprecated OR EXCLUDED.deprecated)
           RETURNING id
         `,
-      ),
-    ]),
+            ),
+          ]),
+        ),
+    },
+    lessons,
+    expectation,
   );
 
   const authoredItemCount = lessons.reduce((count, lesson) => count + lesson.items.length, 0);
-  const changedRowCount = results.reduce((count, rows) => count + rows.length, 0);
   console.log(
     `[content:seed] Seeded ${lessons.length} lessons and ${authoredItemCount} items; ${changedRowCount} rows changed.`,
   );

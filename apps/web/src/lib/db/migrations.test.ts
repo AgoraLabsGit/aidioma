@@ -36,16 +36,10 @@ describe("migration journal planning", () => {
     ).toThrow(/missing from the repository: 0000_first\.sql/);
   });
 
-  it("rejects a journal gap or out-of-order history", () => {
+  it("rejects a journal gap that is not a repository prefix", () => {
     expect(() => pendingMigrations(migrations, [{ name: "0001_second.sql", checksum: "bbb" }])).toThrow(
       /ordered prefix/,
     );
-    expect(() =>
-      pendingMigrations(migrations, [
-        { name: "0001_second.sql", checksum: "bbb" },
-        { name: "0000_first.sql", checksum: "aaa" },
-      ]),
-    ).toThrow(/ordered prefix/);
   });
 });
 

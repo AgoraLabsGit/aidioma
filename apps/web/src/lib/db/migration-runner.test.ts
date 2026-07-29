@@ -25,6 +25,7 @@ class FakeClient implements MigrationClient {
   constructor(
     private readonly applied: Array<{ name: string; checksum: string }> = [],
     private readonly failOn: string[] = [],
+    private readonly identity = { database: expectation.database, role: expectation.role },
   ) {}
 
   async connect(): Promise<void> {
@@ -43,7 +44,7 @@ class FakeClient implements MigrationClient {
     }
     if (normalized.startsWith("SELECT current_database()")) {
       return {
-        rows: [{ database: expectation.database, role: expectation.role }],
+        rows: [this.identity],
       };
     }
     if (normalized.startsWith("SELECT name, checksum")) {
@@ -105,6 +106,21 @@ describe("serialized migration runner", () => {
 
     expect(texts.some((text) => text.includes("FROM pg_constraint"))).toBe(true);
     expect(result).toEqual({ current: 2, applied: [] });
+  });
+
+  it("rejects the wrong database identity before locking, journaling, or applying DDL", async () => {
+    const client = new FakeClient([], [], { database: "neondb", role: "neondb_owner" });
+
+    await expect(runMigrations(client, migrations, expectation)).rejects.toThrow(
+      /Database target mismatch/,
+    );
+    const texts = client.calls.map((call) => call.text);
+    expect(texts).not.toContain("SELECT pg_advisory_xact_lock($1, $2)");
+    expect(texts.some((text) => text.includes("CREATE TABLE IF NOT EXISTS aidioma_migrations"))).toBe(
+      false,
+    );
+    expect(texts).not.toContain("CREATE TABLE first_table ()");
+    expect(texts).toContain("ROLLBACK");
   });
 
   it("rolls back and closes the client after a failure", async () => {

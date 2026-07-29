@@ -9,13 +9,14 @@
 
 | ID | Item | Why deferred / context | Owner or trigger | Status |
 |---|---|---|---|---|
+| OI-035 | **Pin GitHub Actions to immutable commit SHAs** | Current `actions/checkout@v4` and `actions/setup-node@v4` run with read-only permissions and no secrets, bounding present exposure. Pin exact reviewed SHAs in the next CI supply-chain hardening pass. | Next workflow security pass | deferred |
 | OI-034 | **Promote Clerk to live keys before real users** | A1-H proved a matching test-class pair in all local/Vercel scopes, which is appropriate for prelaunch auth verification. Rotate Production to a live-class pair and complete the public sign-in/sign-up smoke before inviting users; never print or commit values. | Prelaunch / first-user gate | deferred |
 | OI-026 | **Upstream dependency advisories:** 2026-07-29 recheck reports 4 production findings (1 moderate, 3 high) and 13 total (1 moderate, 12 high) through Next/PostCSS/optional sharp and ESLint/minimatch; `fixAvailable=false` for the production paths | Explicitly dispositioned in A1-H: Next, `eslint-config-next`, and Clerk are current stable; repository-controlled CSS and no current `next/image` path bound exposure. No force, downgrade, or unsupported override. Recheck before deployment and on a patched upstream release. | Upstream patched release / pre-deployment recheck | deferred |
 
 ## Closed
 | ID | Item | Settled | Where |
 |---|---|---|---|
-| OI-033 | **Always-on memory and handoff residue** | 2026-07-29: stale A0/parked/TBD facts in `CLAUDE.md`, `STATE.md`, and the A1 kickoff handoff were found in A1-H and reconciled; the fired prototype deprecation was checked and remains correctly pending for A4-2 | [A1-H wave record](../Waves/A1-H-hygiene.md); `CLAUDE.md`; [deprecations.md](deprecations.md) |
+| OI-033 | **Always-on memory and handoff residue** | 2026-07-29: stale A0/parked/TBD facts in memory/records and stale A1-2 placeholder copy in Practice were found in A1-H and reconciled; the prototype deprecation trigger was checked and has not fired, so it remains pending for A4-2 | [A1-H wave record](../Waves/A1-H-hygiene.md); `CLAUDE.md`; [deprecations.md](deprecations.md) |
 | OI-032 | **Complete Clerk deployment environment** | 2026-07-29: all four documented route variables added locally; all six Clerk names configured in Vercel Production, Preview, and Development without values entering tracked files or output. The matching pair is test-class; live promotion is explicitly OI-034. | [A1-H wave record](../Waves/A1-H-hygiene.md); `apps/web/.env.example` |
 | OI-031 | **Local env hygiene** | 2026-07-29: the redundant root `.env.local` had no unique durable setting and was removed; `apps/web/.env.local` is the sole local authority at mode `0600` | [A1-H wave record](../Waves/A1-H-hygiene.md); `package.json` env loading |
 | OI-030 | **Serialize migration runners** | 2026-07-29: planning, immutable journal validation, application, and drift checks now share one transaction-scoped advisory lock; two fresh Development runners both exited 0 | [A1-H wave record](../Waves/A1-H-hygiene.md); `apps/web/src/lib/db/migration-runner.ts` |

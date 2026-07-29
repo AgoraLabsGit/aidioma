@@ -60,8 +60,8 @@ never persist provider secrets or hidden answer sets in client-visible session s
 - JSON lessons/items are canonical; database rows are idempotent serving copies keyed by immutable IDs.
 - Seed updates content/version/hash, never deletes an authored ID, and excludes `deprecated=true` items from new sessions.
 - Applied SQL files are journaled transactionally with checksums; editing or removing an applied migration fails closed.
-- Applied journal rows must be an exact ordered prefix of repository migrations; gaps, unknown
-  names, and out-of-order history fail closed before DDL runs.
+- Applied journal rows must be an exact name/checksum prefix of repository migrations; gaps and
+  unknown names fail closed before DDL runs.
 - Lesson ordinals are unique at transaction commit (deferred so valid swaps work), and a database trigger rejects moving an authored item ID between lessons.
 - Immutable SQL files are the sole DDL authority; Drizzle schema declarations are typed query maps,
   not a `push`/generation source. The ordinal constraint is intentionally absent from Drizzle because

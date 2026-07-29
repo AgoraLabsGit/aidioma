@@ -19,7 +19,7 @@ checksum-protected migrations, and idempotently upserts lessons/items into Neon.
 `DATABASE_URL` in `apps/web/.env.local`; repeating it must report zero changed rows.
 Operator scripts default to the dedicated `aidioma_development` database/role and fail if an
 ambient URL resolves anywhere else. Set `AIDIOMA_DB_TARGET=preview` for Preview. Production also
-requires the one-shot acknowledgement `AIDIOMA_ALLOW_PRODUCTION_WRITES=AIDIOMA_PRODUCTION`.
+requires the second explicit acknowledgement `AIDIOMA_ALLOW_PRODUCTION_WRITES=AIDIOMA_PRODUCTION`.
 
 SQL files in `drizzle/` are the sole DDL authority. The Drizzle schema is a typed query map and
 intentionally omits the deferred `lessons_ordinal_unique` constraint that Drizzle cannot model.

@@ -15,6 +15,9 @@ updated: 2026-07-29
 - **Verify plan:** run all cache-free App and Content gates; prove secret names/scopes without values, isolated Neon branch identities, migration lock/drift assertions, repeat zero-change seed, and a high-effort review of the full A1 diff.
 
 ## Gates (stage 2 — record actual results)
+Before the suite, `apps/web/.next` and `apps/web/node_modules/.vite` were deleted. All commands
+below then ran sequentially; the operator-owned `next-env.d.ts` was backed up and restored.
+
 | Gate | Command | Result |
 |---|---|---|
 | app typecheck | `npm run app:typecheck` | PASS |
@@ -52,7 +55,8 @@ updated: 2026-07-29
 - Local/Vercel configuration: all six Clerk names in Production/Preview/Development; local matching
   pair is test-class; route variables complete; `apps/web/.env.local` mode 0600; root env absent.
 - Every write command checks the selected database and role. Development is default; Preview is
-  explicit; Production requires an exact acknowledgement. Unit tests cover mismatch/fail-closed paths.
+  explicit; Production requires an exact acknowledgement. Command-level tests prove a mismatch
+  reaches no lock, journal, DDL, seed upsert, or commit.
 - Vercel reports no deployments. No push, deployment, preview/user write, or production seed occurred.
 
 ## Clean (stage 7)
@@ -60,6 +64,14 @@ updated: 2026-07-29
 - DEP-001 trigger remains A4-2 and has not fired. The remote-live handoff was already superseded;
   kickoff handoff 008 is superseded by this record.
 - Operator-owned unstaged `apps/web/.gitignore` and `apps/web/next-env.d.ts` were preserved.
+
+## Operational incident
+- A failed shell-quoted connection-string transform echoed a credential in local tool output. This
+  was an operator-session incident, not an application defect: the credential was rotated
+  immediately, then superseded by dedicated environment roles. No value entered the repository.
+- Prevention is procedural: never pass secret-bearing URLs through commands whose parse errors may
+  echo their input; inspect only value-free identity/classification output. The write-target tests
+  are separate protection against wrong-database mutation, not claimed as a regression for output.
 
 ## Decisions
 - The superseded remote-live handoff does not reopen Lane C work in this App-lane session.
