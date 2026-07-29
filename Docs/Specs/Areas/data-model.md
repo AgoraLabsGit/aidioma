@@ -61,6 +61,11 @@ never persist provider secrets or hidden answer sets in client-visible session s
 - Seed updates content/version/hash, never deletes an authored ID, and excludes `deprecated=true` items from new sessions.
 - Applied SQL files are journaled transactionally with checksums; editing or removing an applied migration fails closed.
 - Lesson ordinals are unique at transaction commit (deferred so valid swaps work), and a database trigger rejects moving an authored item ID between lessons.
+- Immutable SQL files are the sole DDL authority; Drizzle schema declarations are typed query maps,
+  not a `push`/generation source. The ordinal constraint is intentionally absent from Drizzle because
+  it cannot express `DEFERRABLE INITIALLY DEFERRED` safely.
+- One transaction-scoped advisory lock serializes journal planning plus every pending migration.
+  Every run, including a zero-pending run, asserts the exact live ordinal constraint before commit.
 - User-owned tables cascade from user deletion. Authored item deletion is forbidden; historical evaluations remain addressable.
 - Server resolves grading inputs from active versioned items; browser requests never supply expected answers.
 

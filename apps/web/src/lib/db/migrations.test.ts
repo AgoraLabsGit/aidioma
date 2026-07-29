@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { pendingMigrations, type Migration } from "./migrations";
+import {
+  assertDeferredLessonOrdinalConstraint,
+  pendingMigrations,
+  type Migration,
+} from "./migrations";
 
 const migrations: Migration[] = [
   { name: "0000_first.sql", checksum: "aaa", statements: ["SELECT 1"] },
@@ -30,5 +34,34 @@ describe("migration journal planning", () => {
     expect(() =>
       pendingMigrations(migrations.slice(1), [{ name: "0000_first.sql", checksum: "aaa" }]),
     ).toThrow(/missing from the repository: 0000_first\.sql/);
+  });
+});
+
+describe("lesson ordinal drift assertion", () => {
+  const correct = {
+    constraintType: "u",
+    columns: ["ordinal"],
+    isDeferrable: true,
+    isInitiallyDeferred: true,
+  };
+
+  it("accepts the authoritative deferred unique constraint", () => {
+    expect(() => assertDeferredLessonOrdinalConstraint([correct])).not.toThrow();
+  });
+
+  it.each([
+    { ...correct, constraintType: "p" },
+    { ...correct, columns: ["slug"] },
+    { ...correct, isDeferrable: false },
+    { ...correct, isInitiallyDeferred: false },
+  ])("rejects a drifted constraint", (constraint) => {
+    expect(() => assertDeferredLessonOrdinalConstraint([constraint])).toThrow(/Database drift/);
+  });
+
+  it("rejects a missing or duplicated constraint", () => {
+    expect(() => assertDeferredLessonOrdinalConstraint([])).toThrow(/Database drift/);
+    expect(() => assertDeferredLessonOrdinalConstraint([correct, correct])).toThrow(
+      /Database drift/,
+    );
   });
 });

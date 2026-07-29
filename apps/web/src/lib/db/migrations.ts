@@ -13,6 +13,13 @@ export interface AppliedMigration {
   checksum: string;
 }
 
+export interface LessonOrdinalConstraintRow {
+  constraintType: string;
+  columns: string[];
+  isDeferrable: boolean;
+  isInitiallyDeferred: boolean;
+}
+
 export async function loadMigrations(directoryUrl: URL): Promise<Migration[]> {
   const directory = fileURLToPath(directoryUrl);
   const names = (await readdir(directory))
@@ -56,4 +63,22 @@ export function pendingMigrations(
   }
 
   return migrations.filter((migration) => !completed.has(migration.name));
+}
+
+export function assertDeferredLessonOrdinalConstraint(
+  rows: readonly LessonOrdinalConstraintRow[],
+): void {
+  const constraint = rows[0];
+  if (
+    rows.length !== 1 ||
+    constraint.constraintType !== "u" ||
+    constraint.columns.length !== 1 ||
+    constraint.columns[0] !== "ordinal" ||
+    !constraint.isDeferrable ||
+    !constraint.isInitiallyDeferred
+  ) {
+    throw new Error(
+      "Database drift: lessons_ordinal_unique must be UNIQUE (ordinal) DEFERRABLE INITIALLY DEFERRED.",
+    );
+  }
 }

@@ -39,6 +39,8 @@ then reads the shared schema and upserts `lessons` by slug plus `lesson_items` b
 stores `contentVersion` + deterministic content hash, never deletes missing rows, never revives a
 deprecated item, and rejects item reparenting. Future serving queries must select only active
 non-deprecated items. The DB is a serving copy; JSON in `content/lessons/` is canonical.
+Migration planning/application is serialized under one database advisory lock. SQL migrations—not
+Drizzle generation/push—own DDL, and each run fails closed if the deferred ordinal constraint drifts.
 
 ## Deferred pipeline work
 

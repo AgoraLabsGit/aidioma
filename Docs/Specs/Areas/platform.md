@@ -21,9 +21,11 @@ updated: 2026-07-29
   driver + Drizzle ORM boundary frozen in A1-1. Connection construction is lazy so builds and
   zero-data public shell routes do not require credentials.
 - **Deployment baseline:** Vercel project `agoralabs/aidioma` tracks `AgoraLabsGit/aidioma`, uses
-  `apps/web` as its Next.js root on Node 22.x, and has the free `aidioma-db` Neon resource connected
-  for development, preview, and production. The Clerk key pair exists locally, but Vercel Clerk
-  configuration and explicit Neon preview/development isolation remain deployment prerequisites.
+  `apps/web` as its Next.js root on Node 22.x, and has the free `aidioma-db` Neon resource connected.
+  Production, Preview, and Development use distinct databases (`neondb`, `aidioma_preview`, and
+  `aidioma_development`); only Production receives user data. Branch-per-preview may replace the
+  shared Preview database later, but Preview writes cannot reach Production now. All six documented
+  Clerk names are configured locally and in all three Vercel environments; values stay untracked.
 - AI calls, database credentials, reviewed answer sets, thresholds, and `correctIndex` remain on the
   authenticated server. Web and future native clients consume learner-safe APIs only.
 
