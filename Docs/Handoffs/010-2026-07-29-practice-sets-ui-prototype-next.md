@@ -1,15 +1,27 @@
 ---
-title: Handoff — Practice Sets fixture-backed UI prototype
+title: Closeout — Practice Sets fixture-backed UI prototype
 type: handoff
-status: active
+status: closed
 updated: 2026-07-29
 ---
 
-# Handoff — Practice Sets fixture-backed UI prototype
+# Closeout — Practice Sets fixture-backed UI prototype
 
 **Role:** isolated UI-prototype agent; do not take over A2 planning or C2 content work
-**Operator:** Mike; expect design revisions after he uses the prototype
-**Hard rule:** this is design proof, not active A6 production implementation; never push
+**Operator:** Mike
+**Boundary:** this remains design proof, not active A6 production implementation.
+
+## Closeout
+
+- Mike approved and merged the fixture-backed UI to `main` on 2026-07-29.
+- The approved IA is deliberately flat: equal **Current lesson** and **Your practice** cards lead
+  the Practice page; Collections are immediately below; Your practice defaults to Saved.
+- Popular is deferred. The set-detail / Quick-practice interstitial is removed. The compact card
+  actions use a quiet bookmark and configuration affordance rather than a separate control rail.
+- Current Lesson and all set sessions are fixture previews. Saved state is session-local; A4 owns
+  the real session engine and A5 owns durable saved items.
+- Production A6 keeps its existing A4/A5 dependencies. The implementation must use the approved
+  IA recorded in `practice-sets.md` and ROADMAP A6-2.
 
 ## Position
 
@@ -19,51 +31,23 @@ updated: 2026-07-29
 - Curated sets are first-class content using the same Practice surface/evaluator/session history;
   they never complete or master lessons. MVP supports Type + Flashcards; later activities appear
   only when a set carries their required reviewed assets.
-- Catalog facets are Vocabulary, Verbs, Phrases, Topics, and Situations. Popular is a badge/filter;
-  My Sets is ownership. Settings are capability-aware and snapshotted at session start.
+- Catalog facets are Vocabulary, Verbs, Phrases, Topics, and Situations. Popular is deferred;
+  saved practice lives within Your practice. Settings are capability-aware and snapshotted at
+  session start.
 - Durable boundaries: immutable IDs/history, provenance, server-owned answers, shared GrammarTags,
   valid grammatical features, and strict lesson/set progress separation. Prototype-responsive:
   labels, layout, defaults, facets, and presets may change after Mike tests them.
-- The feature commit was rebased onto A1-complete `main`. A1 is now published and closed; Handoff
-  009 is superseded. This parallel prototype still does not open or implement production A6.
-- Continue in `.worktrees/practice-sets` on `prototype/practice-sets-ui`; it was clean and aligned
-  with local `main` when this handoff was finalized.
+- The approved fixture changes are now merged to `main`. This closeout does not open or implement
+  production A6.
 
-## Prototype scope now
+## Next-wave preparation
 
-Build a self-contained, fixture-backed React prototype in the existing Next.js shell. Reuse current
-tokens, primitives, responsive navigation, themes, and Practice workspace styling. Do not add DB
-migrations, API/evaluator behavior, persistence, generated content, or real proficiency writes.
-
-Representative provisional fixtures should exercise the model, not claim launch-grade content:
-
-- Essential Verbs; Everyday Phrases; Core Vocabulary; Food; Ordering at a Restaurant.
-- Include overlapping facets, Popular state, supported/unavailable activities, and an empty My Sets.
-- Essential Verbs must expose meaningful capability rules for direction, size, tense/form, person,
-  and drill type; invalid combinations are disabled rather than silently repaired.
-
-Prototype these flows:
-
-1. Practice entry → browse/filter set catalog.
-2. Set detail → Quick practice using a concise configuration summary.
-3. Customize → activity, direction, size, difficulty, and applicable grammatical controls.
-4. Start → same Practice feed with set title/configuration and representative Type/Flashcard states.
-5. Return/reconfigure, remembered defaults, unsupported-activity explanation, and mobile empty states.
-
-## Exact next actions
-
-1. Read `Docs/STATE.md`, `Docs/ROADMAP.yaml`, `Docs/PROCESS.md`, this handoff, ADR-0015,
-   `practice-sets.md`, `module-spec.md`, `accessibility.md`, and `session-engine.md`.
-2. Confirm the worktree is clean and based on current local `main`; preserve root-checkout changes.
-3. Write a tiny prototype acceptance checklist before code. Keep fixtures isolated and visibly
-   provisional so they cannot be mistaken for canonical `content/practice-sets/` launch data.
-4. Implement the catalog/detail/configuration/session-preview flow with the smallest client islands.
-   Prefer existing primitives; add complex control dependencies only with a concrete accessibility need.
-5. Add focused interaction/semantic tests. Run App typecheck, lint, tests, build, and smoke.
-6. Capture phone + desktop, light + dark screenshots; prove keyboard operation, visible focus,
-   200% text, reduced motion, and no horizontal overflow.
-7. Present the prototype to Mike as a design review. Record requested UX changes in the feature spec;
-   do not promote fixture data or start A6 persistence/engine work.
+1. Continue A2-H as the active App wave. Do not pull production Practice Sets forward.
+2. When A4/A5 are proven and A6 opens, start from `practice-sets.md`, ADR-0015, and ROADMAP A6-2.
+3. Replace fixture session and saved behavior only through the approved SessionEngine and
+   `saved_items` paths; preserve strict lesson/set progress separation.
+4. Keep actual launch copy and curated targets in the future reviewed content pack, not in the
+   fixture module.
 
 ## Production dependency boundary
 

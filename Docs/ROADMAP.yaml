@@ -227,9 +227,11 @@ waves:
         title: Set catalog, detail, and capability-aware configuration UI
         status: pending
         summary: >
-          Add Browse Sets/Popular/My Sets entry surfaces, set detail, Quick practice, Customize,
-          presets, and responsive/accessibility proof. Type + Flashcards only at launch; unsupported
-          activities are truthful. Prototype-informed labels/layout may change inside the spec boundary.
+          Build the approved flat Practice IA: equal Current lesson and Your practice shortcuts,
+          Collections directly on Practice, and a Saved default within Your practice. Keep Popular
+          deferred; do not restore a set-detail/Quick-practice interstitial. Add capability-aware
+          configuration, presets, and responsive/accessibility proof. Type + Flashcards only at
+          launch; unsupported activities are truthful.
       - id: A6-3
         title: Set recipe, evaluation/persistence, and separate set progress
         status: pending

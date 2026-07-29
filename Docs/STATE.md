@@ -3,7 +3,7 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-29 (A1 CLOSED and published; A2 ACTIVE)
+**Updated:** 2026-07-29 (A1 CLOSED and published; A2 ACTIVE; Practice IA prototype closed)
 
 ## Position
 
@@ -34,6 +34,9 @@
   high-effort whole-diff review are code-clean after fixes.
 - A2-H is active. OI-036 blocks production promotion until Mike authorizes and the team proves a
   distributed WAF/Gateway abuse-cost limit; the current per-user guard is explicitly per instance.
+- The fixture-backed Practice IA prototype is merged to `main`: equal Current lesson and Your
+  practice shortcuts, inline Collections, and a session-local Saved view. It is design proof only;
+  durable saved items and the real lesson/session loop remain A4/A5 work.
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
@@ -45,8 +48,8 @@
 1. Complete A2-H, resolve OI-036, then present the authenticated human VERIFIED runsheet.
 2. Continue C2 with a1-05 through validator zero errors and independent L2 PASS.
 3. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
-4. Curated Practice Sets are MVP wave A6; fixture-backed UI prototyping may precede A6, while the
-   production path waits for A5 dependencies. Custom-topic generation follows in A9.
+4. Curated Practice Sets are MVP wave A6. Its approved IA is now frozen in the feature spec; the
+   production path still waits for A4/A5 dependencies. Custom-topic generation follows in A9.
 
 ## Standing decisions (highlights)
 - A1-first · vocab 12–15 / sentences 18–20 · Completed/Mastered · Direction default Both.
