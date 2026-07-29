@@ -14,9 +14,10 @@ reuse the Practice workspace and evaluation/session infrastructure but are first
 not synthetic lessons. MVP includes the catalog, reviewed prebuilt sets, capability-aware settings,
 Type + Flashcards, set persistence/progress, and structured verb filters.
 
-Sets use overlapping Vocabulary/Verbs/Phrases/Topics/Situations facets. Popular is a curation badge,
-not a content kind. Set evaluations never advance lesson completion or mastery. The initial content
-is original and frequency-informed; AIdioma does not ship a copied third-party ranked table.
+Sets use overlapping Vocabulary/Verbs/Phrases/Topics/Situations facets. The MVP does not rank,
+badge, or filter collections by popularity. Set evaluations never advance lesson completion or
+mastery. The initial content is original and frequency-informed; AIdioma does not ship a copied
+third-party ranked table.
 
 Private custom-topic generation is designed into the contract but implemented in A9 after the
 curated path is proven. It must generate structured candidates, pass validation/quality gates,
