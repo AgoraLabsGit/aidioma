@@ -2,7 +2,7 @@
 title: Evaluation — secure comparison-first grading
 type: area-spec
 status: active
-updated: 2026-07-28
+updated: 2026-07-29
 ---
 
 # Evaluation — secure comparison-first grading
@@ -15,6 +15,7 @@ the answer, or server grading thresholds. It sends only:
 ```ts
 type BrowserEvaluationRequest = {
   sessionId: string;
+  sourceType: 'lesson' | 'set';
   itemRef: string; // stable authored item/segment id
   modality: 'translate' | 'reading' | 'conversation';
   direction: 'es-en' | 'en-es';
@@ -22,7 +23,7 @@ type BrowserEvaluationRequest = {
 };
 ```
 
-The authenticated server resolves lesson/item, canonical answer + reviewed alternates, tags,
+The authenticated server resolves the session-owned lesson item or set target, canonical answer + reviewed alternates, tags,
 direction, and `contentVersion`. It rejects a missing/inactive item or a session owned by another
 user. MC is graded server-side by submitted choice index and persists as modality
 `multipleChoice`; it never calls AI. Flashcards never call AI.
@@ -35,7 +36,8 @@ user. MC is graded server-side by submitted choice index and persists as modalit
 4. Poor match or no authored answer → one AI call through EvaluationService.
 5. Validate the structured result, persist it, then return learner-safe feedback.
 
-AI judges the submitted answer; it does not generate scored source material at MVP. Every result
+AI judges the submitted answer; it does not generate scored source material at MVP. Curated set
+targets are authored/reviewed under ADR-0015. Every result
 uses the one GrammarTag/ErrorTag taxonomy from `@aidioma/lesson-schema`.
 
 ## Result

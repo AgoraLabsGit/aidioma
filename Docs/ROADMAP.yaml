@@ -13,7 +13,10 @@ mvp_finish_line: >
   answer matches no authored alternate), they can ask the tutor a question inline, they get a
   session recap (score, items that moved up, top error tags), and the next day their weak items
   and unconfirmed lessons re-serve automatically. Two modalities at launch: typed translation
-  (Both directions by default) + flashcards. "Done" = that loop working on real data on a real screen.
+  (Both directions by default) + flashcards. They can also browse reviewed Vocabulary, Verbs,
+  Phrases, Topics, and Situations sets, configure a valid 10-item practice session, and practice it
+  in the same panel without changing lesson mastery. "Done" = both loops working on real data on a
+  real screen.
 
 # --- TWO LANES ------------------------------------------------------------------------------
 # This project runs two parallel lanes under this one roadmap. Only ONE wave per lane is active
@@ -206,19 +209,33 @@ waves:
 
   - id: A6
     lane: App
-    title: Progress + session summary + SHIP (consensus W6)
+    title: Curated Practice Sets - catalog, configuration, and shared practice loop
     status: pending
-    operator_sees: "Progress on real data, an end-of-session recap screen, and all 12 lessons QA-passed - the shippable MVP."
-    depends_on: [A5, "C3 (12 lessons native-reviewed)"]
+    operator_sees: >
+      A learner browses reviewed Vocabulary, Verbs, Phrases, Topics, and Situations sets, filters a
+      valid session (including verb person/form controls), and completes it in the same Practice UI.
+    depends_on: [A5]
     slices:
       - id: A6-1
-        title: Progress on real data + session summary screen
+        title: Practice Set contract, validator, seed, and curated launch pack
         status: pending
-        summary: "Progress page from real stats; session-summary recap (score, moved-up items, top error tags, next step). Features 9-core, 12."
+        summary: >
+          Add the shared set/target contract, capability + grammatical-feature validation,
+          idempotent serving-copy seed, and a small original frequency-informed pack spanning all
+          five catalog facets. Deterministic gates + L2/founder review; native pass lands in C3.
       - id: A6-2
-        title: Launch quality gate + full audit
+        title: Set catalog, detail, and capability-aware configuration UI
         status: pending
-        summary: "Content QA of 12 lessons landed; full cache-free gate suite; high-effort review of the whole MVP; ship readiness."
+        summary: >
+          Add Browse Sets/Popular/My Sets entry surfaces, set detail, Quick practice, Customize,
+          presets, and responsive/accessibility proof. Type + Flashcards only at launch; unsupported
+          activities are truthful. Prototype-informed labels/layout may change inside the spec boundary.
+      - id: A6-3
+        title: Set recipe, evaluation/persistence, and separate set progress
+        status: pending
+        summary: >
+          Add snapshotted Set sessions to SessionEngine; server-resolved set targets; evaluation XOR
+          source integrity; target/set rollups and recap. Never update lesson completion/mastery.
       - id: A6-H
         title: Hygiene slice (mandatory)
         status: pending
@@ -226,16 +243,62 @@ waves:
 
   - id: A7
     lane: App
-    title: Reading (ES->EN) fast-follow (consensus W7-8)
+    title: Progress + session summary + SHIP (formerly A6 / consensus W6)
     status: pending
-    operator_sees: "A reading exercise graded ES->EN, reusing the same evaluation pipeline."
-    depends_on: [A6]
+    operator_sees: "Progress on real data, an end-of-session recap screen, all launch lessons and curated sets QA-passed - the shippable MVP."
+    depends_on: [A6, "C3 (lessons + curated sets native-reviewed)"]
     slices:
       - id: A7-1
+        title: Progress on real data + session summary screen
+        status: pending
+        summary: "Progress page from real stats; session-summary recap (score, moved-up items, top error tags, next step). Features 9-core, 12; lesson and set views stay distinct."
+      - id: A7-2
+        title: Launch quality gate + full audit
+        status: pending
+        summary: "Content QA of 12 lessons and launch Practice Sets landed; full cache-free gate suite; high-effort review of the whole MVP; ship readiness."
+      - id: A7-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "residue scan · fired deprecations · registers/specs reconcile"
+
+  - id: A8
+    lane: App
+    title: Reading (ES->EN) fast-follow (formerly A7 / consensus W7-8)
+    status: pending
+    operator_sees: "A reading exercise graded ES->EN, reusing the same evaluation pipeline."
+    depends_on: [A7]
+    slices:
+      - id: A8-1
         title: Reading modality
         status: pending
         summary: "ES->EN reading; cheap by design (reuses the evaluation pipeline). Then decide conversations vs more lessons on real usage."
-      - id: A7-H
+      - id: A8-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "residue scan · fired deprecations · registers/specs reconcile"
+
+  - id: A9
+    lane: App
+    title: Private custom-topic Practice Sets (post-MVP generation workflow)
+    status: pending
+    operator_sees: >
+      A learner describes a topic, reviews a validated generated set, saves it privately, and runs
+      it through the proven Set recipe with provenance and version history intact.
+    depends_on: [A7, "A6 (curated set path proven)", "A2 (Gateway/evaluation boundary)"]
+    slices:
+      - id: A9-1
+        title: Generate -> validate -> quality-check -> preview workflow
+        status: pending
+        summary: >
+          Normalize/cache requests; generate structured candidates; run schema, policy, answer,
+          level, duplicate, and independent quality gates; support preview/edit/regenerate.
+      - id: A9-2
+        title: Private persistence, reuse, reporting, and lifecycle
+        status: pending
+        summary: >
+          Persist private versioned sets with model/prompt provenance; reuse exact candidates safely;
+          report/deactivate without dangling evaluations. Public promotion requires content review.
+      - id: A9-H
         title: Hygiene slice (mandatory)
         status: pending
         summary: "residue scan · fired deprecations · registers/specs reconcile"
@@ -283,13 +346,13 @@ waves:
     lane: Content
     title: Native-speaker review (QA layer 4)
     status: pending
-    operator_sees: "All 12 launch lessons corrected against a paid native-speaker pass - launch-grade content."
-    depends_on: [C2]
+    operator_sees: "All 12 launch lessons and the curated Practice Set pack corrected against a paid native-speaker pass - launch-grade content."
+    depends_on: [C2, "A6-1 (curated launch set pack)"]
     slices:
       - id: C3-1
-        title: Native pass on all 12 + apply corrections
+        title: Native pass on all 12 + curated set pack; apply corrections
         status: pending
-        summary: "Paid native-speaker review (brief at content/review/NATIVE-REVIEWER-BRIEF.md); apply corrections; re-gate. Gates A6 ship."
+        summary: "Paid native-speaker review of 12 lessons plus curated set pack; apply corrections; re-gate. Gates A7 ship."
       - id: C3-H
         title: Hygiene slice (mandatory)
         status: pending

@@ -2,7 +2,7 @@
 title: SessionEngine — recipes + blender
 type: area-spec
 status: active
-updated: 2026-07-28
+updated: 2026-07-29
 ---
 
 # SessionEngine — recipes + blender
@@ -11,15 +11,26 @@ updated: 2026-07-28
 > Consensus §1.3 — this file locks MVP recipes and the Continue vs size-10 split.
 > UI surface: [module-spec](../Features/module-spec.md). Data inputs: [data-model](data-model.md).
 
-## MVP recipes (exactly three)
+## MVP recipes
 
 | Recipe | Scope | Session shape |
 |---|---|---|
 | **Continue** | Current lesson | **Full Mix arc:** Learn → Quiz(MC) → Words → Sentences → Story. Study/reference cards stay on lesson detail (ADR-0012), not in Mix. |
 | **Blend** | Current + review | **Size 10** weighted sample: ~60% current lesson / ~40% review pool |
 | **Review / Saved** | Saved + weak/due | **Size 10**, 100% review pool |
+| **Set** | One curated Practice Set | **Size 10 default**, sampled from the frozen capability/filter configuration |
 
-No multi-lesson picker UI, no ratio sliders (OI-002 / module-spec). Engine may accept richer recipes later; MVP UI only exposes these three.
+No multi-lesson picker UI and no ratio sliders (OI-002 / module-spec). The Set recipe is not a
+lesson picker and never changes lesson progress. Custom-generated sets reuse it after A9 gating.
+
+## Set recipe
+
+Resolve the active set version server-side, intersect requested activity/direction/size/difficulty
+and grammatical filters with declared capabilities, reject an empty/invalid intersection, then
+persist the resolved configuration snapshot before dealing items. Verb sampling balances selected
+tense/person targets where possible; invalid forms are absent from the target pool. The initial
+renderer supports Type + Flashcards. Later Quiz/Sentences/Story/Reading/Conversation activities
+enter only when the set version carries their required reviewed assets.
 
 ## Review pool (Blend + Review)
 
@@ -45,8 +56,8 @@ Weighted sample without replacement to size; **no two consecutive items** share 
 ## Continues / ends
 
 - Continue completes when the Mix arc for that lesson run finishes (or learner ends session).
-- Blend/Review complete at size 10 (or end-session).
-- Session summary: score, items moved, top error tags, next step (roadmap A6).
+- Blend/Review complete at size 10 (or end-session); Set completes at its snapshotted size.
+- Session summary: score, items moved, top error tags, next step (roadmap A7).
 - Every run creates `practice_sessions`. Recipe completion sets `completedAt`; explicit early end sets
   `endedAt`; abandonment sets neither. Evaluations carry the session ID (ADR-0013).
 - Shuffle within each run; preserve the same in-progress ordering when resuming rather than silently

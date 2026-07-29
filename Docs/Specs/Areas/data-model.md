@@ -16,10 +16,14 @@ updated: 2026-07-29
 |---|---|
 | `lessons` | Authored lesson serving copy |
 | `lesson_items` | One row per authored item; discriminated JSON payload |
+| `practice_sets` | Curated/private set metadata, capabilities, version, and lifecycle |
+| `practice_set_targets` | Immutable, versioned set targets and optional knowledge key |
 | `practice_sessions` | Authoritative session start/terminal outcome (ADR-0013) |
 | `evaluations` | One row per graded submission, linked to a session |
 | `user_item_stats` | Derived item rollup for blend/proficiency |
+| `user_practice_target_stats` | Derived set-target/knowledge-key rollup across sets |
 | `user_lesson_progress` | Derived lesson state/score |
+| `user_set_progress` | Derived coverage/score for one set version; never lesson state |
 | `saved_items` | Learner-saved authored references |
 | `users` | Clerk-backed learner preferences/current position |
 
@@ -29,10 +33,14 @@ updated: 2026-07-29
 |---|---|
 | `lessons` | slug unique, ordinal, level, title, objective, grammarFocus, contentVersion, contentHash, isActive |
 | `lesson_items` | lessonId FK, kind, payload jsonb, grammarTags jsonb, difficulty nullable, contentVersion, deprecated boolean/default false |
-| `practice_sessions` | userId, recipe (`continue\|blend\|review`), focusLessonId nullable, plannedSize nullable, startedAt, completedAt nullable, endedAt nullable |
-| `evaluations` | userId, sessionId, itemId, lessonId, modality, direction, userInput, score, verdict, feedback, wordDiff, errorTags, evalSource, modelUsed nullable, contentVersion, normalizedInputHash |
+| `practice_sets` | slug, title, description, levelRange, facets, origin, visibility, ownerUserId nullable, supportedActivities, defaults, contentVersion, provenance, isActive |
+| `practice_set_targets` | practiceSetId, immutable targetKey, kind, payload, grammarFeatures, grammarTags, difficulty, knowledgeKey nullable, contentVersion, deprecated |
+| `practice_sessions` | userId, recipe (`continue\|blend\|review\|set`), focusLessonId nullable, focusPracticeSetId nullable, configuration jsonb nullable, plannedSize nullable, startedAt, completedAt nullable, endedAt nullable |
+| `evaluations` | userId, sessionId, sourceType (`lesson\|set`), lessonItemId nullable, setTargetId nullable, lessonId nullable, modality, direction, userInput, score, verdict, feedback, wordDiff, errorTags, evalSource, modelUsed nullable, contentVersion, normalizedInputHash |
 | `user_item_stats` | userId+itemId unique, attempts, bestScore, avgScore, lastAttemptAt, missedTags; nullable SRS fields reserved |
+| `user_practice_target_stats` | userId+statKey unique (`knowledgeKey` else target ID), attempts, bestScore, avgScore, lastAttemptAt, missedTags |
 | `user_lesson_progress` | userId+lessonId unique, status (`locked\|active\|completed\|mastered`), masteryScore, completedAt, masteredAt |
+| `user_set_progress` | userId+practiceSetId+contentVersion unique, coverage, score, lastPracticedAt |
 | `saved_items` | userId, refType, refId, createdAt; unique(userId, refType, refId) |
 | `users` | Clerk subject unique, email/profile minimum, CEFR/start level, currentLessonId, dailyGoal, IANA timezone |
 
@@ -45,13 +53,15 @@ never persist provider secrets or hidden answer sets in client-visible session s
 - **No `evaluationCache` table** — ADR-0006; hashes/source on `evaluations` instead.
 - MC / Quiz attempts **persist as `evaluations`** with modality **`multipleChoice`** (A0-H lock; closes P-001 app-track note). Still index-graded / never calls AI.
 - Sessions are first-class and evaluations carry `sessionId` — ADR-0013. Streak uses completed session rows.
+- Every evaluation identifies exactly one server-resolved source target: lesson or set (XOR). Set
+  evaluations update set/target stats only and cannot update `user_lesson_progress`.
 - MC / modality / recipe phases+pool are first-class in SessionEngine; item kinds come from lesson schema (incl. study cards — ADR-0012), not extra tables.
 - Drop legacy `sentences` / derived-analytics tables when migrating from V1 reference (Lesson 0 fixture if needed).
 - MVP saved affordances are vocab/sentence. The polymorphic shape may reserve passage/lesson without exposing those controls.
 
 ## Not stored as tables
 
-- **SessionRecipe** (scope, focusLessonId, size, phases/pool) — app runtime / request shape (OI-021).
+- **SessionRecipe** (scope, lesson/set focus, configuration snapshot, phases/pool) — app runtime / request shape (OI-021 / ADR-0015).
 - **Today’s accuracy / confirmed proficiency** — derived (OI-019 Area spec), not denormalized SSOT.
 - Streak and session summaries — derived from `practice_sessions` + linked evaluations.
 
@@ -73,6 +83,7 @@ never persist provider secrets or hidden answer sets in client-visible session s
   `current_database()` and `current_user` before taking its migration lock or seeding.
 - User-owned tables cascade from user deletion. Authored item deletion is forbidden; historical evaluations remain addressable.
 - Server resolves grading inputs from active versioned items; browser requests never supply expected answers.
+- Retiring a set/target is non-destructive; historical sessions remain tied to the evaluated version.
 
 ## Closes
 OI-020.

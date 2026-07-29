@@ -2,7 +2,7 @@
 title: Progress — honest evaluation-derived views
 type: feature-spec
 status: active
-updated: 2026-07-28
+updated: 2026-07-29
 ---
 
 # Progress — honest evaluation-derived views
@@ -18,9 +18,11 @@ analytics truth. Show:
 - weakest GrammarTag/ErrorTag areas with plain-language labels;
 - calendar-day streak from completed practice sessions;
 - weekly completed work versus the learner’s goal.
+- Practice Set coverage/performance, visibly separate from lesson Completed/Mastered.
 
 Home owns the compact snapshot and Continue/Review actions. Progress owns trends and by-grammar
-detail. Lesson detail owns that lesson’s activity/proficiency view.
+detail. Lesson detail owns that lesson’s activity/proficiency view; set detail owns that set/version’s
+coverage and last-practiced view.
 
 ## Explicit cuts
 
@@ -35,5 +37,5 @@ zero state. “Completed” and “Mastered” follow ADR-0004 and the proficien
 
 ## Data
 
-Reads `practice_sessions`, `evaluations`, `user_item_stats`, and `user_lesson_progress`. Formula
+Reads `practice_sessions`, `evaluations`, lesson stats/progress, and set target/progress rollups. Formula
 authority remains `Specs/Areas/proficiency.md`; this file owns presentation and scope.

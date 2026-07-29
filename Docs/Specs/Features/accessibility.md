@@ -2,7 +2,7 @@
 title: Accessibility — MVP acceptance contract
 type: feature-spec
 status: active
-updated: 2026-07-28
+updated: 2026-07-29
 ---
 
 # Accessibility — MVP acceptance contract
@@ -24,5 +24,5 @@ AIdioma targets WCAG 2.2 AA for the production web app.
 ## Gate
 
 A1 establishes automated lint/axe coverage. Each user-visible wave adds keyboard + screen-reader
-semantics to its browser smoke path. A6 launch audit includes phone/desktop zoom, contrast,
+semantics to its browser smoke path. A7 launch audit includes phone/desktop zoom, contrast,
 reduced-motion, keyboard-only, and a manual screen-reader pass.

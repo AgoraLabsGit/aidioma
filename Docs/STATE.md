@@ -40,6 +40,8 @@
 2. Continue C2 with a1-05 through validator zero errors and independent L2 PASS.
 3. On explicit GO only: push `main`, wait for Vercel, then run public route + Clerk smoke and close A1.
 4. Recheck OI-026 and promote OI-034 before real users; keep both lanes isolated.
+5. Curated Practice Sets are MVP wave A6; fixture-backed UI prototyping may precede A6, while the
+   production path waits for A5 dependencies. Custom-topic generation follows in A9.
 
 ## Standing decisions (highlights)
 - A1-first · vocab 12–15 / sentences 18–20 · Completed/Mastered · Direction default Both.
@@ -49,4 +51,5 @@
 - Live today’s accuracy ≠ next-day confirmed proficiency.
 - Quiz/MC → evaluations with modality `multipleChoice` (no AI).
 - Responsive web (phone + desktop); no native stores in MVP.
-- P-004 dialect shape only · **frequency decks = post-MVP (PM-015)**; wordfreq stays the lesson vocab check.
+- P-004 dialect shape only · curated Practice Sets are MVP (ADR-0015/A6); wordfreq informs original
+  selection rather than becoming a copied shippable table.

@@ -39,10 +39,16 @@ Schema may still store `hints.length(3)`; UI need not show all three. Authoring 
 ## Screen map (MVP)
 
 ### Session panel (Practice)
-Mix arc: **Learn → Quiz(MC) → Words → Sentences → Story**. Dual-duty input (answer or ask tutor). Side panel: Blend, Saved, mode/unit filters, Direction, missed-this-session, end-session — **no** multi-lesson picker. Modes: Type (words/sentences) + flashcards; Voice grayed “soon.”
+Lesson Mix arc: **Learn → Quiz(MC) → Words → Sentences → Story**. Set sessions use the same feed,
+composer, evaluation feedback, and recap but show the set title and configuration rather than lesson
+position. Dual-duty input (answer or ask tutor). Side panel: Blend, Saved, activity filters,
+Direction, missed-this-session, end-session — **no** multi-lesson picker. Modes: Type
+(words/sentences) + flashcards; Voice grayed “soon.”
 
 ### Home
-Continue (dominant) · stat tiles · **Review · N due** · compact path (done / current / locked) · weekly vs goal. Progress may separately show Completed / Mastered. First run: zeros + land toward Lesson 1 fast.
+Continue (dominant) · stat tiles · **Review · N due** · Practice Sets entry · compact path
+(done / current / locked) · weekly vs goal. Progress may separately show Completed / Mastered.
+First run: zeros + land toward Lesson 1 fast.
 
 ### Lessons tab
 Level sections (A1 Foundations “you are here”; locked teasers). Status: done / current / locked only. Tap an available lesson → data-driven lesson detail (objective, explainer, activities, mastery, **study/reference cards** when present — ADR-0012). Locked future lessons may show labeled previews, but never expose Quiz/Practice on material that has not been taught.
@@ -50,11 +56,19 @@ Level sections (A1 Foundations “you are here”; locked teasers). Status: done
 ### Settings
 Goal **slider** · theme (Auto/Light/Dark) · reset data. **No** reminder/notifications row (ADR-0010).
 
+### Practice Sets
+Catalog filters: Vocabulary · Verbs · Phrases · Topics · Situations; Popular is a badge/filter and
+My Sets is ownership. Set detail leads with Quick practice and a compact configuration summary;
+Customize reveals only supported activity, direction, size, difficulty, and grammatical controls.
+Set sessions never present lesson unlock/completion language. Exact contract and prototype-change
+boundary: [practice-sets.md](practice-sets.md).
+
 ### Confirmed session capabilities (MVP)
 - **Ask tutor** in the dual-duty input (any time in Practice).
 - **Saved / Review** practice outside the current lesson path (saved words/sentences).
 - **Save affordance** on every eligible vocab/sentence surface; save is not confined to Review UI.
 - **Study cards** on lesson detail when authored (not in Mix arc).
+- **Curated Practice Sets** outside the lesson path, using the same Practice workspace (ADR-0015).
 
 ## Experience + visual contract
 
@@ -89,5 +103,6 @@ visual styling remains faithful.
 - Data model → [Areas/data-model.md](../Areas/data-model.md) (OI-020).
 - Evaluation trust/failure contract → [Areas/evaluation.md](../Areas/evaluation.md).
 - SessionEngine → [Areas/session-engine.md](../Areas/session-engine.md) (OI-021).
+- Practice Set catalog, settings, capabilities, and generation boundary → [practice-sets.md](practice-sets.md).
 - Progress surface → [progress.md](progress.md); accessibility → [accessibility.md](accessibility.md).
 - Lesson shape → `@aidioma/lesson-schema` (`packages/lesson-schema`).

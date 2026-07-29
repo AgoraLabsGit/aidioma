@@ -10,10 +10,13 @@ updated: 2026-07-29
 ## Boundaries
 
 - `content/` owns authored lessons, curriculum, style, review evidence, and authoring history.
+- `content/practice-sets/` owns curated set payloads and their review/provenance evidence.
 - `tooling/content/` owns validation, fixtures, immutable-ID snapshot, and allowlist.
 - `packages/lesson-schema/` owns the executable shared contract and GrammarTag/ErrorTag taxonomy.
 - `Docs/Registers/schema-proposals.md` owns additive schema proposals and rulings.
 - The app imports `@aidioma/lesson-schema`; it never redeclares content types or tags.
+- A6 adds `@aidioma/practice-set-schema`, importing shared answer/provenance/GrammarTag contracts
+  rather than redefining them.
 
 ## Invariants
 
@@ -24,6 +27,8 @@ updated: 2026-07-29
   deletes an item missing from a later export.
 - Canonical text always joins its accept set; reviewed alternates extend it.
 - Direction lives on evaluations. Optional `audioUrl` and provenance remain reserved in content.
+- Curated set IDs/target IDs are immutable; edits bump the set content version. Frequency sources
+  inform original selection but ranked third-party tables are not copied wholesale.
 
 ## Gate
 
@@ -32,6 +37,9 @@ paid native L4 for launch lessons. Current commands live in root `package.json` 
 GitHub Content CI runs the deterministic contract, validator, fixture, prototype-current, and seed
 transformation tests plus the full credential-free app typecheck/test suites whenever their direct
 inputs change; it requires no database credentials.
+The A6 set validator adds capability/filter consistency, accepted-answer coverage, grammatical-form
+validity, duplicate target, provenance, and supported-activity asset checks. Launch sets receive the
+same L2/founder/native-review bar as scored lesson content.
 
 ## App consumption
 
@@ -44,6 +52,10 @@ Migration planning/application is serialized under one database advisory lock. S
 Drizzle generation/push—own DDL, and each run fails closed if the deferred ordinal constraint drifts.
 The local write target defaults to Development and is verified by database plus role identity before
 any mutation. Preview is explicit; Production also requires the documented exact acknowledgement.
+
+Curated sets use the same validate-then-idempotent-seed boundary into `practice_sets` and
+`practice_set_targets`; JSON remains canonical. Private generated sets do not enter `content/` and
+must pass the generation gate in the Practice Sets spec before persistence.
 
 ## Deferred pipeline work
 

@@ -2,7 +2,7 @@
 title: ADR-0012 — Reference / study cards in MVP
 type: adr
 status: accepted
-updated: 2026-07-28
+updated: 2026-07-29
 ---
 
 # ADR-0012 — Reference / study cards in MVP
@@ -21,6 +21,9 @@ Ship **study / reference cards** in MVP (schema P-005 **APPROVED**):
 | Ask AI questions in the practice input | **Yes** (dual-duty) |
 | Practice saved words/sentences outside lessons | **Yes** (Saved / Review recipes) |
 | Custom + frequency decks (1–100, 101–200…) | **Post-MVP** (PM-015) |
+
+**Timing update:** ADR-0015 supersedes only the row above: reviewed curated Practice Sets now enter
+MVP wave A6, while private custom-topic generation is A9. The reference-card decision is unchanged.
 
 ## Closes
 OI-018 / P-005.

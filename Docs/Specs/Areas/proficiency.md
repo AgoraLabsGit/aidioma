@@ -2,7 +2,7 @@
 title: Proficiency — live accuracy vs confirmed
 type: area-spec
 status: active
-updated: 2026-07-28
+updated: 2026-07-29
 ---
 
 # Proficiency — live accuracy vs confirmed
@@ -33,6 +33,9 @@ For a lesson (or comparable item set):
 - **Mastered** — confirmed proficiency hits the bar after later-day confirm (ADR-0004).
 
 No 5-level per-item scale at MVP (ADR-0011 / PM-006).
+
+Practice Set coverage/performance uses its own target and set rollups (ADR-0015). It may share a
+knowledge key across sets, but it never contributes to lesson Completed/Mastered.
 
 ## Data inputs (read, don’t redefine)
 
