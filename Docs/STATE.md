@@ -7,9 +7,7 @@
 
 ## Position
 
-**Lane A — App (A2 ACTIVE: A2-H)**
-- **A0 Design Close CLOSED.** Operator gave design VERIFIED + close GO on 2026-07-28.
-- A0-1…A0-H proven: design, legacy review, Docs SSOT, archive, and directory cleanup complete.
+**Lane A — App (A2 ACTIVE: all slices proven; close controls pending)**
 - A1-2 is proven: the web app imports the shared contract; Content CI is live; checksum-journaled
   SQL and the idempotent seed loaded 4 canonical lessons / 134 items into real Neon with zero-change reruns.
 - Neon Production, Preview, and Development now have distinct databases, owners, and Vercel
@@ -32,8 +30,10 @@
 - Cache-free App gates pass at 17 files / 109 tests. Real Development DB + live Gateway proof passed,
   and the built Next route returns Clerk-signed-out 401 safely. Three audits, delta re-audits, and a
   high-effort whole-diff review are code-clean after fixes.
-- A2-H is active. OI-036 blocks production promotion until Mike authorizes and the team proves a
-  distributed WAF/Gateway abuse-cost limit; the current per-user guard is explicitly per instance.
+- A2-H is proven: integrated-main gates pass at 18 files / 116 tests; residue, dependencies, specs,
+  and registers are reconciled. OI-036 blocks wave close/retention pending a distributed limit.
+- A concurrent process pushed shared `main` at A2 merge `0eaa286` before VERIFIED/GO; Production is
+  Ready and safely rejects signed-out evaluation requests. OI-037 owns rollback-vs-retain/process repair.
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
@@ -42,7 +42,7 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Complete A2-H, resolve OI-036, then present the authenticated human VERIFIED runsheet.
+1. Mike chooses rollback vs retain; if retained, resolve OI-036 before authenticated A2 verification.
 2. Continue C2 with a1-05 through validator zero errors and independent L2 PASS.
 3. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
 4. Curated Practice Sets are MVP wave A6; fixture-backed UI prototyping may precede A6, while the

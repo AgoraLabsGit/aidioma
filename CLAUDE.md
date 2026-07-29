@@ -20,7 +20,8 @@ coordinate through files (this repo's `Docs/` + `content/`), never assume shared
 
 ## Two lanes (see ROADMAP.yaml)
 - **Lane A (App)** — greenfield Next.js (Vercel + Neon + Clerk). V1/V2 are read-only reference.
-  A0 is closed; **A1 foundation** is active, with A1-H preparing the wave-close verification.
+  A0/A1 are closed; **A2 evaluation** has both slices proven, with an unapproved concurrent
+  publication and distributed abuse-control decision blocking wave close.
 - **Lane C (Content)** — lesson authoring; working records in `/content`. **C2 is active**:
   a1-04 is L2-passed and a1-05 is next.
 - Only one wave per lane is active at a time. The lanes coordinate via files.

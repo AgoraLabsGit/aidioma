@@ -1,7 +1,7 @@
 ---
 title: Handoff — A2 kickoff with parallel Practice Sets prototype
 type: handoff
-status: active
+status: superseded
 updated: 2026-07-29
 ---
 
