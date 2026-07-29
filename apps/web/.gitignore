@@ -6,3 +6,6 @@ test-results/
 *.tsbuildinfo
 .env*
 !.env.example
+
+# clerk configuration (can include secrets)
+/.clerk/
