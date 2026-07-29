@@ -144,11 +144,11 @@ waves:
     slices:
       - id: A2-1
         title: One /api/evaluate behind a Gateway abstraction
-        status: active
+        status: proven
         summary: "Consolidate to one evaluation service (~4,900 -> ~500 lines): delete claude-service + universal service; Gateway abstraction; non-fatal key/health failure; comparison-first then AI. Feature 4."
       - id: A2-H
         title: Hygiene slice (mandatory)
-        status: pending
+        status: active
         summary: "delete the superseded services in-slice or file DEP rows with triggers"
 
   - id: A3
