@@ -3,6 +3,9 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import {
+  EVALUATION_ANSWER_MAX_COUNT,
+  EVALUATION_ANSWER_MAX_LENGTH,
+  EVALUATION_SOURCE_TEXT_MAX_LENGTH,
   EvaluationSourceIntegrityError,
   EvaluationSourceNotFoundError,
   resolveLessonSource,
@@ -153,6 +156,40 @@ describe("lesson evaluation source resolver", () => {
 
     await expect(
       resolveLessonSource(emptyAnswers.id, "en-es", repository(emptyAnswers)),
+    ).rejects.toBeInstanceOf(EvaluationSourceIntegrityError);
+  });
+
+  it("rejects authored grading data that exceeds the bounded AI prompt budget", async () => {
+    const tooManyAnswers = row({
+      payload: {
+        ...vocabPayload,
+        acceptedEs: Array.from(
+          { length: EVALUATION_ANSWER_MAX_COUNT + 1 },
+          (_, index) => `answer ${index}`,
+        ),
+      },
+    });
+    const longAnswer = row({
+      payload: {
+        ...vocabPayload,
+        acceptedEs: ["x".repeat(EVALUATION_ANSWER_MAX_LENGTH + 1)],
+      },
+    });
+    const longSource = row({
+      payload: {
+        ...vocabPayload,
+        en: "x".repeat(EVALUATION_SOURCE_TEXT_MAX_LENGTH + 1),
+      },
+    });
+
+    await expect(
+      resolveLessonSource(tooManyAnswers.id, "en-es", repository(tooManyAnswers)),
+    ).rejects.toBeInstanceOf(EvaluationSourceIntegrityError);
+    await expect(
+      resolveLessonSource(longAnswer.id, "en-es", repository(longAnswer)),
+    ).rejects.toBeInstanceOf(EvaluationSourceIntegrityError);
+    await expect(
+      resolveLessonSource(longSource.id, "en-es", repository(longSource)),
     ).rejects.toBeInstanceOf(EvaluationSourceIntegrityError);
   });
 

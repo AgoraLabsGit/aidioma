@@ -2,6 +2,8 @@ import { GrammarTag } from "@aidioma/lesson-schema";
 import { z } from "zod";
 
 export const EVALUATION_INPUT_MAX_LENGTH = 1_000;
+export const EVALUATION_WORD_DIFF_MAX_ENTRIES = 100;
+export const EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH = 200;
 
 export const EvaluationSourceSchema = z.enum(["comparison", "ai"]);
 export const EvaluationVerdictSchema = z.enum(["correct", "close", "wrong"]);
@@ -31,9 +33,13 @@ export const BrowserEvaluationRequestSchema = EvaluationRequestSchema;
 
 export const WordDiffEntrySchema = z
   .object({
-    text: z.string().min(1).max(200),
+    text: z.string().min(1).max(EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH),
     mark: z.enum(["correct", "close", "wrong", "missing", "extra"]),
-    suggestion: z.string().min(1).max(200).optional(),
+    suggestion: z
+      .string()
+      .min(1)
+      .max(EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH)
+      .optional(),
   })
   .strict();
 
@@ -41,7 +47,7 @@ const gradedFields = {
   score: z.number().int().min(10).max(100),
   verdict: EvaluationVerdictSchema,
   feedback: z.string().trim().min(1).max(800),
-  wordDiff: z.array(WordDiffEntrySchema).max(100).optional(),
+  wordDiff: z.array(WordDiffEntrySchema).max(EVALUATION_WORD_DIFF_MAX_ENTRIES).optional(),
   errorTags: z.array(GrammarTag).max(53),
 };
 
@@ -65,9 +71,13 @@ function addScoreVerdictIssue(
 
 const AiWordDiffEntrySchema = z
   .object({
-    text: z.string().min(1).max(200),
+    text: z.string().min(1).max(EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH),
     mark: z.enum(["correct", "close", "wrong", "missing", "extra"]),
-    suggestion: z.string().min(1).max(200).nullable(),
+    suggestion: z
+      .string()
+      .min(1)
+      .max(EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH)
+      .nullable(),
   })
   .strict();
 
@@ -79,7 +89,7 @@ export const AiEvaluationResultSchema = z
     score: gradedFields.score,
     verdict: gradedFields.verdict,
     feedback: gradedFields.feedback,
-    wordDiff: z.array(AiWordDiffEntrySchema).max(100),
+    wordDiff: z.array(AiWordDiffEntrySchema).max(EVALUATION_WORD_DIFF_MAX_ENTRIES),
     errorTags: gradedFields.errorTags,
   })
   .strict()

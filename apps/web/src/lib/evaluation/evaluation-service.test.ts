@@ -11,6 +11,7 @@ const source: ResolvedLessonSource = {
   sourceType: "lesson",
   itemRef: "a1-01.s.01",
   lessonId: "a1-01-hola-me-llamo",
+  sourceText: "My name is Ana.",
   item: {
     id: "a1-01.s.01",
     kind: "sentence",

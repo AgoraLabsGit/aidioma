@@ -2,6 +2,7 @@ import "server-only";
 
 import { createHash, randomUUID } from "node:crypto";
 
+import { admitEvaluation, type EvaluationAdmitter } from "./admission-control";
 import { EvaluationRequestSchema } from "./contracts";
 import type {
   EvaluationService,
@@ -29,17 +30,19 @@ type EvaluateHandlerDependencies = {
   authenticate: EvaluationAuthenticator;
   service: EvaluationServicePort;
   resolveSource?: EvaluationSourceResolver;
+  admit?: EvaluationAdmitter;
   requestId?: () => string;
 };
 
 class BodyTooLargeError extends Error {}
 
-function json(body: unknown, status: number): Response {
+function json(body: unknown, status: number, headers?: HeadersInit): Response {
   return Response.json(body, {
     status,
     headers: {
       "Cache-Control": "no-store",
       "X-Content-Type-Options": "nosniff",
+      ...headers,
     },
   });
 }
@@ -102,6 +105,7 @@ export function createEvaluateHandler({
   authenticate,
   service,
   resolveSource = resolveLessonSource,
+  admit = admitEvaluation,
   requestId: createRequestId = randomUUID,
 }: EvaluateHandlerDependencies): (request: Request) => Promise<Response> {
   return async function handleEvaluate(request: Request): Promise<Response> {
@@ -209,12 +213,31 @@ export function createEvaluateHandler({
     }
 
     let outcome: EvaluationServiceOutcome;
+    const userKey = trackingId(principal.userId);
+    const requestFingerprint = createHash("sha256")
+      .update(JSON.stringify(parsed.data))
+      .digest("hex");
+    const admission = admit(userKey, requestFingerprint);
+    if (!admission.allowed) {
+      return json(
+        {
+          requestId,
+          error: {
+            code: "evaluation_rate_limited",
+            message: "Too many evaluation requests. Try again shortly.",
+          },
+        },
+        429,
+        { "Retry-After": String(admission.retryAfterSeconds) },
+      );
+    }
+
     try {
       const serviceRequest: EvaluationServiceRequest = {
         requestId,
         request: parsed.data,
         source,
-        userTrackingId: trackingId(principal.userId),
+        userTrackingId: userKey,
         signal: request.signal,
       };
       outcome = await service.evaluate(serviceRequest);
@@ -225,6 +248,8 @@ export function createEvaluateHandler({
         "evaluation_unavailable",
         "Evaluation is temporarily unavailable.",
       );
+    } finally {
+      admission.release();
     }
 
     if (outcome.kind === "invalid") {

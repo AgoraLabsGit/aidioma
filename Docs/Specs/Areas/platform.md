@@ -16,9 +16,10 @@ updated: 2026-07-29
   Web or a generated ML interface.
 - **AI:** Vercel AI SDK 7 + AI Gateway, server-side, behind `EvaluationService`. Plain
   `provider/model` IDs route through Gateway; grading uses non-streaming `generateText` with
-  `Output.object` validation, minimal reasoning, zero SDK retries, and a 12-second total timeout. Vercel OIDC is the
-  deployed default; `AI_GATEWAY_API_KEY` is the local/CI alternative. A direct provider SDK is only
-  a fallback adapter when Gateway lacks a required model/capability; it must not bypass the service contract.
+  `Output.object` validation, minimal reasoning, zero SDK retries, an 800-token output ceiling, and
+  a 12-second total timeout. Vercel OIDC is the deployed default; `AI_GATEWAY_API_KEY` is the
+  local/CI alternative. A direct provider SDK is only a fallback adapter when Gateway lacks a
+  required model/capability; it must not bypass the service contract.
 - **Auth:** Clerk's Next.js SDK. **Data:** Neon Postgres through the server-only Neon serverless
   driver + Drizzle ORM boundary frozen in A1-1. Connection construction is lazy so builds and
   zero-data public shell routes do not require credentials.

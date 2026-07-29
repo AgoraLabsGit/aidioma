@@ -7,6 +7,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   AiEvaluationResultSchema,
+  EVALUATION_WORD_DIFF_MAX_ENTRIES,
+  EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH,
   EvaluationRequestSchema,
   EvaluationResultSchema,
 } from "./contracts";
@@ -148,6 +150,15 @@ describe("normalization and similarity", () => {
     expect(normalizeForComparison("'Hello'")).toBe("hello");
   });
 
+  it("normalizes equivalent English negative contractions", () => {
+    expect(normalizeForComparison("I don't know")).toBe(
+      normalizeForComparison("I do not know"),
+    );
+    expect(normalizeForComparison("I can't go")).toBe(
+      normalizeForComparison("I cannot go"),
+    );
+  });
+
   it("treats punctuation-only input as empty", () => {
     expect(normalizeForComparison("¿...? ¡!")).toBe("");
   });
@@ -230,6 +241,24 @@ describe("word diff", () => {
       { text: "estoy", mark: "extra" },
     ]);
   });
+
+  it("bounds entry count and text lengths to the response contract", () => {
+    const manyTokens = Array.from({ length: 150 }, (_, index) => `token${index}`).join(" ");
+    const longToken = "a".repeat(250);
+    const diff = createWordDiff(`${longToken} ${manyTokens}`, `b${longToken} ${manyTokens}`);
+
+    expect(diff.length).toBeLessThanOrEqual(EVALUATION_WORD_DIFF_MAX_ENTRIES);
+    expect(diff.every((entry) => entry.text.length <= EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH)).toBe(
+      true,
+    );
+    expect(
+      diff.every(
+        (entry) =>
+          entry.suggestion === undefined ||
+          entry.suggestion.length <= EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH,
+      ),
+    ).toBe(true);
+  });
 });
 
 describe("comparison gate", () => {
@@ -284,6 +313,34 @@ describe("comparison gate", () => {
     expect(compareAnswer("Tengo 20 años y vivo aquí", ["Tengo 21 años y vivo aquí"]).kind).toBe(
       "ai-required",
     );
+    expect(
+      compareAnswer("Quiero café con azúcar por favor", [
+        "Quiero café sin azúcar por favor",
+      ]).kind,
+    ).toBe("ai-required");
+    expect(
+      compareAnswer("Tomo 4 pastillas cada 2 horas", [
+        "Tomo 2 pastillas cada 4 horas",
+      ]).kind,
+    ).toBe("ai-required");
+    expect(
+      compareAnswer("Tengo dos gatos en mi casa hoy", [
+        "Tengo tres gatos en mi casa hoy",
+      ]).kind,
+    ).toBe("ai-required");
+  });
+
+  it("routes semantically uncertain missing, extra, and wrong words to AI", () => {
+    expect(
+      compareAnswer("Quiero azúcar en mi café por favor", [
+        "Quiero poco azúcar en mi café por favor",
+      ]).kind,
+    ).toBe("ai-required");
+    expect(
+      compareAnswer("Quiero muchísimo azúcar en mi café por favor", [
+        "Quiero poco azúcar en mi café por favor",
+      ]).kind,
+    ).toBe("ai-required");
   });
 
   it("uses authored order to break equal-similarity ties", () => {

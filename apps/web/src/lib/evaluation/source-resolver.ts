@@ -17,6 +17,11 @@ import type { EvaluationDirection } from "./contracts";
 
 export type EvaluableLessonItem = VocabItemData | SentenceItemData;
 
+export const EVALUATION_SOURCE_TEXT_MAX_LENGTH = 2_000;
+export const EVALUATION_ANSWER_MAX_LENGTH = 1_000;
+export const EVALUATION_ANSWER_MAX_COUNT = 32;
+export const EVALUATION_ANSWERS_TOTAL_MAX_LENGTH = 8_000;
+
 export interface LessonSourceRow {
   id: string;
   lessonId: string;
@@ -37,6 +42,7 @@ export interface ResolvedLessonSource {
   itemRef: string;
   lessonId: string;
   item: EvaluableLessonItem;
+  sourceText: string;
   authoritativeAnswers: readonly string[];
   grammarTags: readonly GrammarTag[];
   contentVersion: number;
@@ -133,6 +139,22 @@ function nonEmptyDistinctAnswers(answers: readonly string[]): string[] {
   return result;
 }
 
+function sourceTextFor(item: EvaluableLessonItem, direction: EvaluationDirection): string {
+  return direction === "en-es" ? item.en : item.es;
+}
+
+function gradingPromptIsBounded(sourceText: string, answers: readonly string[]): boolean {
+  return (
+    sourceText.length > 0 &&
+    sourceText.length <= EVALUATION_SOURCE_TEXT_MAX_LENGTH &&
+    answers.length > 0 &&
+    answers.length <= EVALUATION_ANSWER_MAX_COUNT &&
+    answers.every((answer) => answer.length <= EVALUATION_ANSWER_MAX_LENGTH) &&
+    answers.reduce((total, answer) => total + answer.length, 0) <=
+      EVALUATION_ANSWERS_TOTAL_MAX_LENGTH
+  );
+}
+
 export async function resolveLessonSource(
   itemRef: string,
   direction: EvaluationDirection,
@@ -147,8 +169,9 @@ export async function resolveLessonSource(
   const authoritativeAnswers = nonEmptyDistinctAnswers(
     acceptedAnswersForItem(item, direction),
   );
+  const sourceText = sourceTextFor(item, direction).trim();
 
-  if (authoritativeAnswers.length === 0) {
+  if (!gradingPromptIsBounded(sourceText, authoritativeAnswers)) {
     throw new EvaluationSourceIntegrityError();
   }
 
@@ -157,6 +180,7 @@ export async function resolveLessonSource(
     itemRef: row.id,
     lessonId: row.lessonId,
     item,
+    sourceText,
     authoritativeAnswers,
     grammarTags: item.kind === "sentence" ? item.grammarTags : [],
     contentVersion: row.contentVersion,

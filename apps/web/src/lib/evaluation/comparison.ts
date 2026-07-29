@@ -7,6 +7,8 @@ import type {
 
 import {
   EVALUATION_INPUT_MAX_LENGTH,
+  EVALUATION_WORD_DIFF_MAX_ENTRIES,
+  EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH,
   type EvaluationDirection,
   type EvaluationResult,
   type WordDiffEntry,
@@ -22,12 +24,69 @@ const NEGATION_WORDS = new Set([
   "cannot",
   "neither",
   "nor",
+  "without",
+  "nobody",
+  "nothing",
+  "nowhere",
   "nunca",
   "jamás",
   "nadie",
   "nada",
   "tampoco",
   "ni",
+  "sin",
+  "ningún",
+  "ninguno",
+  "ninguna",
+  "ningunos",
+  "ningunas",
+]);
+
+const NUMBER_WORDS = new Set([
+  "zero",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+  "eleven",
+  "twelve",
+  "thirteen",
+  "fourteen",
+  "fifteen",
+  "sixteen",
+  "seventeen",
+  "eighteen",
+  "nineteen",
+  "twenty",
+  "cero",
+  "un",
+  "uno",
+  "una",
+  "dos",
+  "tres",
+  "cuatro",
+  "cinco",
+  "seis",
+  "siete",
+  "ocho",
+  "nueve",
+  "diez",
+  "once",
+  "doce",
+  "trece",
+  "catorce",
+  "quince",
+  "dieciséis",
+  "diecisiete",
+  "dieciocho",
+  "diecinueve",
+  "veinte",
 ]);
 
 export type AcceptedAnswerOptions = {
@@ -54,7 +113,7 @@ export type ComparisonDecision =
     };
 
 function prepareText(text: string, lowercase: boolean): string {
-  const prepared = text
+  let prepared = text
     .normalize("NFC")
     .replace(/[\u2018\u2019\u02bc]/gu, "'")
     .replace(/[\u2010-\u2015\u2212]/gu, "-")
@@ -65,7 +124,14 @@ function prepareText(text: string, lowercase: boolean): string {
     .replace(/\s+/gu, " ")
     .trim();
 
-  return lowercase ? prepared.toLowerCase() : prepared;
+  if (!lowercase) return prepared;
+
+  prepared = prepared.toLowerCase();
+  return prepared.replace(/\bcannot\b/gu, "can not")
+    .replace(/\b(can)'t\b/gu, "$1 not")
+    .replace(/\bwon't\b/gu, "will not")
+    .replace(/\bshan't\b/gu, "shall not")
+    .replace(/\b([\p{L}]+)n't\b/gu, "$1 not");
 }
 
 export function normalizeForComparison(text: string): string {
@@ -251,59 +317,72 @@ export function createWordDiff(userInput: string, expected: string): WordDiffEnt
   const userDisplay = prepareText(userInput, false).split(" ").filter(Boolean);
   const expectedDisplay = prepareText(expected, false).split(" ").filter(Boolean);
 
-  return diffTokens(userInput, expected).map((step) => {
-    if (step.type === "same") {
-      return { text: userDisplay[step.userIndex], mark: "correct" };
-    }
+  const boundedText = (value: string): string =>
+    Array.from(value).slice(0, EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH).join("");
 
-    if (step.type === "extra") {
-      return { text: userDisplay[step.userIndex], mark: "extra" };
-    }
+  return diffTokens(userInput, expected)
+    .slice(0, EVALUATION_WORD_DIFF_MAX_ENTRIES)
+    .map((step) => {
+      if (step.type === "same") {
+        return { text: boundedText(userDisplay[step.userIndex]), mark: "correct" };
+      }
 
-    if (step.type === "missing") {
+      if (step.type === "extra") {
+        return { text: boundedText(userDisplay[step.userIndex]), mark: "extra" };
+      }
+
+      if (step.type === "missing") {
+        const expectedText = boundedText(expectedDisplay[step.expectedIndex]);
+        return { text: expectedText, mark: "missing", suggestion: expectedText };
+      }
+
+      const userText = userDisplay[step.userIndex];
       const expectedText = expectedDisplay[step.expectedIndex];
-      return { text: expectedText, mark: "missing", suggestion: expectedText };
-    }
+      const wordSimilarity = comparisonSimilarity(
+        normalizeForComparison(userText),
+        normalizeForComparison(expectedText),
+      );
+      const wordDistance = levenshteinDistance(
+        normalizeForComparison(userText),
+        normalizeForComparison(expectedText),
+      );
 
-    const userText = userDisplay[step.userIndex];
-    const expectedText = expectedDisplay[step.expectedIndex];
-    const wordSimilarity = comparisonSimilarity(
-      normalizeForComparison(userText),
-      normalizeForComparison(expectedText),
-    );
-    const wordDistance = levenshteinDistance(
-      normalizeForComparison(userText),
-      normalizeForComparison(expectedText),
-    );
-
-    return {
-      text: userText,
-      mark: wordDistance === 1 || wordSimilarity >= CLOSE_SIMILARITY ? "close" : "wrong",
-      suggestion: expectedText,
-    };
-  });
+      return {
+        text: boundedText(userText),
+        mark:
+          wordDistance === 1 || wordSimilarity >= CLOSE_SIMILARITY ? "close" : "wrong",
+        suggestion: boundedText(expectedText),
+      };
+    });
 }
 
-function negationTokens(text: string): Set<string> {
-  return new Set(
-    normalizeForComparison(text)
-      .split(" ")
-      .filter((token) => NEGATION_WORDS.has(token) || token.endsWith("n't")),
-  );
+function negationTokens(text: string): string[] {
+  return normalizeForComparison(text)
+    .split(" ")
+    .filter((token) => NEGATION_WORDS.has(token));
 }
 
-function numberTokens(text: string): Set<string> {
-  return new Set(normalizeForComparison(text).split(" ").filter((token) => /^\d+$/u.test(token)));
+function numberTokens(text: string): string[] {
+  return normalizeForComparison(text)
+    .split(" ")
+    .filter((token) => /^\d+(?:[.,]\d+)?$/u.test(token) || NUMBER_WORDS.has(token));
 }
 
-function setsEqual(left: Set<string>, right: Set<string>): boolean {
-  return left.size === right.size && [...left].every((value) => right.has(value));
+function sequencesEqual(left: readonly string[], right: readonly string[]): boolean {
+  return left.length === right.length && left.every((value, index) => value === right[index]);
 }
 
 function hasMeaningRisk(userInput: string, expected: string): boolean {
   return (
-    !setsEqual(negationTokens(userInput), negationTokens(expected)) ||
-    !setsEqual(numberTokens(userInput), numberTokens(expected))
+    !sequencesEqual(negationTokens(userInput), negationTokens(expected)) ||
+    !sequencesEqual(numberTokens(userInput), numberTokens(expected))
+  );
+}
+
+function diffNeedsSemanticReview(wordDiff: readonly WordDiffEntry[]): boolean {
+  return wordDiff.some(
+    (entry) =>
+      entry.mark === "wrong" || entry.mark === "missing" || entry.mark === "extra",
   );
 }
 
@@ -360,7 +439,11 @@ export function compareAnswer(
   }
 
   const wordDiff = createWordDiff(userInput, matchedAnswer);
-  if (hasMeaningRisk(userInput, matchedAnswer) || bestSimilarity < CLOSE_SIMILARITY) {
+  if (
+    hasMeaningRisk(userInput, matchedAnswer) ||
+    diffNeedsSemanticReview(wordDiff) ||
+    bestSimilarity < CLOSE_SIMILARITY
+  ) {
     return {
       kind: "ai-required",
       closestAnswer: matchedAnswer,

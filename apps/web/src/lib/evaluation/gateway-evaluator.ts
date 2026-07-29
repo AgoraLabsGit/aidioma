@@ -23,6 +23,7 @@ export const AI_EVALUATION_MODELS = [
 ] as const;
 export const DEFAULT_AI_EVALUATION_MODEL = AI_EVALUATION_MODELS[0];
 export const AI_EVALUATION_TIMEOUT_MS = 12_000;
+export const AI_EVALUATION_MAX_OUTPUT_TOKENS = 800;
 
 export type AiEvaluationModel = (typeof AI_EVALUATION_MODELS)[number];
 
@@ -85,6 +86,7 @@ type GatewayGenerateOptions = {
   output: ReturnType<typeof Output.object<AiStructuredEvaluationResult>>;
   reasoning: "minimal";
   maxRetries: 0;
+  maxOutputTokens: typeof AI_EVALUATION_MAX_OUTPUT_TOKENS;
   timeout: { totalMs: typeof AI_EVALUATION_TIMEOUT_MS };
   abortSignal?: AbortSignal;
   providerOptions: {
@@ -298,6 +300,7 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
         }),
         reasoning: "minimal",
         maxRetries: 0,
+        maxOutputTokens: AI_EVALUATION_MAX_OUTPUT_TOKENS,
         timeout: { totalMs: AI_EVALUATION_TIMEOUT_MS },
         abortSignal: request.signal,
         providerOptions: {

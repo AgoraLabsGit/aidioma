@@ -50,13 +50,6 @@ function defaultLogger(event: EvaluationLogEvent): void {
   console.info(JSON.stringify(event));
 }
 
-function sourceTextFor(
-  source: ResolvedLessonSource,
-  direction: EvaluationRequest["direction"],
-): string {
-  return direction === "en-es" ? source.item.en : source.item.es;
-}
-
 export class EvaluationService {
   readonly #ai: AiVerdictGenerator;
   readonly #logger: EvaluationLogger;
@@ -108,7 +101,7 @@ export class EvaluationService {
     }
 
     const generation = await this.#ai.evaluate({
-      sourceText: sourceTextFor(input.source, input.request.direction),
+      sourceText: input.source.sourceText,
       userInput: input.request.userInput,
       acceptedAnswers: input.source.authoritativeAnswers,
       direction: input.request.direction,

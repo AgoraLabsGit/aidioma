@@ -45,7 +45,6 @@ uses the one GrammarTag/ErrorTag taxonomy from `@aidioma/lesson-schema`.
 
 ```ts
 type EvaluationResult = {
-  requestId: string; // correlation only; A3 adds the persisted evaluationId
   score: number;
   verdict: 'correct' | 'close' | 'wrong';
   feedback: string;
@@ -57,6 +56,10 @@ type EvaluationResult = {
   errorTags: GrammarTag[];
   evalSource: 'comparison' | 'ai';
   modelUsed?: string;
+};
+
+type EvaluationResponse = EvaluationResult & {
+  requestId: string; // HTTP correlation only; A3 adds the persisted evaluationId
 };
 ```
 
@@ -70,6 +73,9 @@ explanation after the choice; typed modes use mode-smart help from the module sp
 - AI timeout/provider/schema failure after comparison misses → retryable **ungraded** response;
   preserve input for retry and do not fabricate a score, verdict, tags, or feedback.
 - Comparison success stands even if the AI provider is unavailable.
+- The app applies a bounded per-user, per-instance request/concurrency/duplicate-work guard. A
+  distributed Gateway user quota or staged WAF rule is still required before production promotion;
+  an in-memory serverless guard is defense in depth, not the perimeter control.
 - Record latency, path (comparison/AI), provider/model, failure class, and token/cost metadata;
   never log secrets or full private conversation history by default.
 

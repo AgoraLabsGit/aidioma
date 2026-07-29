@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
 
+import type { EvaluationAdmitter } from "./admission-control";
 import {
   EVALUATION_BODY_MAX_BYTES,
   createEvaluateHandler,
@@ -19,6 +20,7 @@ const source: ResolvedLessonSource = {
   sourceType: "lesson",
   itemRef: "a1-01.s.01",
   lessonId: "a1-01-hola-me-llamo",
+  sourceText: "My name is Ana.",
   item: {
     id: "a1-01.s.01",
     kind: "sentence",
@@ -57,10 +59,14 @@ function dependencies(overrides: {
   authenticate?: EvaluationAuthenticator;
   resolveSource?: EvaluationSourceResolver;
   service?: EvaluationServicePort;
+  admit?: EvaluationAdmitter;
 } = {}) {
   return {
     authenticate: overrides.authenticate ?? (async () => ({ userId: "user_private_123" })),
     resolveSource: overrides.resolveSource ?? (async () => source),
+    admit:
+      overrides.admit ??
+      (() => ({ allowed: true as const, release: vi.fn() })),
     service:
       overrides.service ??
       ({
@@ -207,6 +213,23 @@ describe("POST /api/evaluate handler", () => {
       feedback: "Correct.",
       errorTags: [],
       evalSource: "comparison",
+    });
+  });
+
+  it("rejects over-limit work before service evaluation and returns Retry-After", async () => {
+    const service = { evaluate: vi.fn() } satisfies EvaluationServicePort;
+    const response = await createEvaluateHandler(
+      dependencies({
+        service,
+        admit: () => ({ allowed: false, retryAfterSeconds: 17 }),
+      }),
+    )(request());
+
+    expect(response.status).toBe(429);
+    expect(response.headers.get("retry-after")).toBe("17");
+    expect(service.evaluate).not.toHaveBeenCalled();
+    expect(await response.json()).toMatchObject({
+      error: { code: "evaluation_rate_limited" },
     });
   });
 
