@@ -1,7 +1,7 @@
 ---
 title: Handoff — A1 local pass reported; publication gate next
 type: handoff
-status: active
+status: superseded
 updated: 2026-07-29
 ---
 

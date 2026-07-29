@@ -22,6 +22,9 @@ updated: 2026-07-29
   zero-data public shell routes do not require credentials.
 - **Deployment baseline:** Vercel project `agoralabs/aidioma` tracks `AgoraLabsGit/aidioma`, uses
   `apps/web` as its Next.js root on Node 22.x, and has the free `aidioma-db` Neon resource connected.
+  Production is public at `https://aidioma-agoralabs.vercel.app`; Vercel Authentication protects
+  Preview deployments only. The generated production deployment and six app/auth routes passed
+  browser proof on 2026-07-29.
   Production, Preview, and Development use distinct databases and owners (`neondb` /
   `neondb_owner`, `aidioma_preview` / `aidioma_preview_owner`, and `aidioma_development` /
   `aidioma_development_owner`). Vercel scopes use their corresponding dedicated credentials.

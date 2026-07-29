@@ -106,7 +106,7 @@ waves:
   - id: A1
     lane: App
     title: Scaffold the app + freeze shared contracts (consensus W1)
-    status: active
+    status: closed
     operator_sees: >
       A running Next.js app shell, deployed and live (blank but real), and `content:seed` loading
       the real authored lessons into Neon.

@@ -7,7 +7,7 @@ updated: 2026-07-29
 
 # Handoff — Practice Sets fixture-backed UI prototype
 
-**Role:** isolated UI-prototype agent; do not take over the active A1 publication or C2 content work
+**Role:** isolated UI-prototype agent; do not take over A2 planning or C2 content work
 **Operator:** Mike; expect design revisions after he uses the prototype
 **Hard rule:** this is design proof, not active A6 production implementation; never push
 
@@ -24,8 +24,8 @@ updated: 2026-07-29
 - Durable boundaries: immutable IDs/history, provenance, server-owned answers, shared GrammarTags,
   valid grammatical features, and strict lesson/set progress separation. Prototype-responsive:
   labels, layout, defaults, facets, and presets may change after Mike tests them.
-- The feature commit was rebased onto the A1-H-complete local `main`. Handoff 009 remains the
-  authority for A1 publication and must not be superseded by this parallel UI effort.
+- The feature commit was rebased onto A1-complete `main`. A1 is now published and closed; Handoff
+  009 is superseded. This parallel prototype still does not open or implement production A6.
 - Continue in `.worktrees/practice-sets` on `prototype/practice-sets-ui`; it was clean and aligned
   with local `main` when this handoff was finalized.
 
@@ -78,6 +78,5 @@ Prototype these flows:
 - Decision: `Docs/Specs/ADRs/ADR-0015-curated-practice-sets-in-mvp.md`
 - UI/accessibility: `Docs/Specs/Features/module-spec.md` and `accessibility.md`
 - Engine/data boundaries: `Docs/Specs/Areas/session-engine.md`, `evaluation.md`, `data-model.md`
-- Root `main` currently has operator/tool-owned changes in `apps/web/.gitignore` and
-  `apps/web/next-env.d.ts`. Never stage, overwrite, or discard them. Do not clean other agents'
-  worktrees. No push is allowed until the separate A1 publication GO in handoff 009.
+- Root `main` is published and clean. Do not clean other agents' worktrees or push prototype work
+  without its own normal verification and explicit GO.

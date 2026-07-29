@@ -3,11 +3,11 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-29 (A1-H proven/merged; operator reports local test looks good)
+**Updated:** 2026-07-29 (A1 CLOSED and published; A2 pending wave open)
 
 ## Position
 
-**Lane A — App (ACTIVE: A1 `/close` verification)**
+**Lane A — App (A1 CLOSED; A2 next)**
 - **A0 Design Close CLOSED.** Operator gave design VERIFIED + close GO on 2026-07-28.
 - A0-1…A0-H proven: design, legacy review, Docs SSOT, archive, and directory cleanup complete.
 - A1-1R is proven: the four responsive screens now use the approved prototype shell, tokens, density, and navigation with truthful zero states.
@@ -24,10 +24,13 @@
 - The redundant root env is removed; `apps/web/.env.local` is authoritative at mode 0600.
 - A1-H is proven: cache-free App/Content gates pass at 11 files / 39 app tests; three initial
   audits, high-effort review, and all delta re-audits are clean after dispositions.
-- Fresh public remote `AgoraLabsGit/aidioma` is live; proven `main` was pushed on 2026-07-28 for Vercel/Neon setup.
-- No Vercel deployment exists. This session has not pushed or deployed.
-- Mike reported the local `/close` test "Looks good". Explicit `VERIFIED` and publication `GO`
-  have not been recorded, so A1 remains active and unpublished.
+- Mike gave explicit A1 `VERIFIED + GO` on 2026-07-29. `main` is published to the remote, whose
+  only branch is `main`; merged A1 branches/worktrees were removed while active parallel worktrees remain.
+- Production is live at `https://aidioma-agoralabs.vercel.app`. All six routes return 200 with
+  expected headings; Clerk sign-in/up render in test mode; phone navigation has no horizontal overflow.
+- Vercel protects Preview only; Production is public. No Production seed or learner-data write ran.
+- OI-026 was rechecked immediately before publication: 4 production / 13 total advisories and no
+  compatible production fix. OI-034 still requires live Clerk keys before real users.
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
@@ -36,11 +39,10 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Record Mike's explicit `VERIFIED`; recheck OI-026, then request the separate publication `GO`.
+1. Open A2 with the <=5-bullet wave briefing and Mike's plan approval before implementation.
 2. Continue C2 with a1-05 through validator zero errors and independent L2 PASS.
-3. On explicit GO only: push `main`, wait for Vercel, then run public route + Clerk smoke and close A1.
-4. Recheck OI-026 and promote OI-034 before real users; keep both lanes isolated.
-5. Curated Practice Sets are MVP wave A6; fixture-backed UI prototyping may precede A6, while the
+3. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
+4. Curated Practice Sets are MVP wave A6; fixture-backed UI prototyping may precede A6, while the
    production path waits for A5 dependencies. Custom-topic generation follows in A9.
 
 ## Standing decisions (highlights)

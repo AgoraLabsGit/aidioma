@@ -60,7 +60,7 @@ below then ran sequentially; the operator-owned `next-env.d.ts` was backed up an
 - Every write command checks the selected database and role. Development is default; Preview is
   explicit; Production requires an exact acknowledgement. Command-level tests prove a mismatch
   reaches no lock, journal, DDL, seed upsert, or commit.
-- Vercel reports no deployments. No push, deployment, preview/user write, or production seed occurred.
+- Pre-publication proof intentionally made no deployment, preview/user write, or production seed.
 - Current Practice smoke screenshots are under `apps/web/artifacts/a1-h/app/`; the historical
   A1-1R images were restored byte-for-byte after the smoke command wrote its default path.
 
@@ -68,7 +68,9 @@ below then ran sequentially; the operator-owned `next-env.d.ts` was backed up an
 - OI-028…OI-033 closed; OI-026 and live-key promotion OI-034 explicitly deferred.
 - DEP-001 trigger remains A4-2 and has not fired. The remote-live handoff was already superseded;
   kickoff handoff 008 is superseded by this record.
-- Operator-owned unstaged `apps/web/.gitignore` and `apps/web/next-env.d.ts` were preserved.
+- The Clerk ignore rule was committed at publication; generated `next-env.d.ts` was restored to its
+  tracked production-build form. Merged A1 worktrees/branches were removed; active C2/prototype
+  worktrees were preserved.
 
 ## Operational incident
 - A failed shell-quoted connection-string transform echoed a credential in local tool output. This
@@ -99,3 +101,13 @@ below then ran sequentially; the operator-owned `next-env.d.ts` was backed up an
 ## Decisions
 - The superseded remote-live handoff does not reopen Lane C work in this App-lane session.
 - No push or production/preview deployment occurs before Mike's VERIFIED + GO.
+
+## A1 publication close
+- Mike gave explicit `VERIFIED + GO` on 2026-07-29. OI-026 was rechecked unchanged with no
+  compatible Production fix; `main` was pushed to the sole remote branch, `origin/main`.
+- Vercel deployment `dpl_Azh6Ci6meZ2QEhjwNWeUhUmTW9E9` reached Ready. Production is public at
+  `https://aidioma-agoralabs.vercel.app`; Preview alone retains Vercel Authentication.
+- Playwright confirmed `/`, `/lessons`, `/practice`, `/settings`, `/sign-in`, and `/sign-up` all
+  return 200 with expected headings. Clerk sign-in/up load in test mode, mobile navigation is
+  present, horizontal overflow is absent, and no substantive request/page failure occurred.
+- Public screenshots: `apps/web/artifacts/a1-public/`. No Production seed or learner-data write ran.
