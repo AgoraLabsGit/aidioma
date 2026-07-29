@@ -31,7 +31,9 @@ updated: 2026-07-29
   cover numeric order/units/0–100 words, long/Unicode answers, changed-step-first diffs, exact-only
   `correct`, bounded prompts/output, safe handler events, and admission before database/AI work.
 - Delta re-audits: PASS — comparison, provider, and endpoint-security auditors report no remaining
-  code criticals or warnings. Distributed production control is intentionally owned by OI-036.
+  code criticals or warnings. The OI-036 corrective pass added a user-keyed, per-region Firewall SDK
+  admission layer, kept the local guard, and made the dedicated budgeted Gateway key plus opaque
+  user attribution mandatory. Independent security/cost delta audits are clean.
 
 ## Review (stage 4)
 - High-effort whole-diff review: no criticals. Fuzzy `correct` results and swallowed handler
@@ -46,6 +48,9 @@ updated: 2026-07-29
   800-token ceiling. A built Next server on port 3100 returned real Clerk-signed-out `401` JSON with
   `no-store` and `nosniff` for `POST /api/evaluate`. Unit/handler tests prove spoofing, invalid,
   unsupported, inactive/deprecated, provider/schema/timeout, and admission paths without secrets.
+- The final corrective Development proof passed with the budgeted key: 540 input / 206 output / 746 total
+  tokens. This proves the real DB/Gateway path, not the Firewall perimeter; local SDK behavior allows
+  without a development host. Authenticated Preview evidence remains OI-036's close gate.
 
 ## Clean (stage 7)
 - A2 creates the only live evaluator in the greenfield app; archived V1/V2 services remain read-only

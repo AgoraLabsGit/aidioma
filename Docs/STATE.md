@@ -3,38 +3,37 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-29 (A1 CLOSED and published; A2 ACTIVE; Practice IA prototype closed)
+**Updated:** 2026-07-29 (A1 CLOSED; A2 ACTIVE; Practice IA prototype closed)
 
 ## Position
 
-**Lane A — App (A2 ACTIVE: A2-H)**
-- **A0 Design Close CLOSED.** Operator gave design VERIFIED + close GO on 2026-07-28.
-- A0-1…A0-H proven: design, legacy review, Docs SSOT, archive, and directory cleanup complete.
+**Lane A — App (A2 ACTIVE: all slices proven; close controls pending)**
 - A1-2 is proven: the web app imports the shared contract; Content CI is live; checksum-journaled
   SQL and the idempotent seed loaded 4 canonical lessons / 134 items into real Neon with zero-change reruns.
 - Neon Production, Preview, and Development now have distinct databases, owners, and Vercel
   credentials. Both non-production roles are denied Production and each other; all copies passed
   schema/journal/content integrity proof. Local writes default to the Development identity.
-- All six Clerk variables exist locally and in all three Vercel scopes without tracked/printed
-  values. The pair is test-class for prelaunch; live-key promotion is OI-034.
+- All six Clerk variables exist locally/all scopes without tracked values; live-key promotion is OI-034.
 - SQL is the sole DDL authority; the runner enforces exact journal history, serializes migrations,
   and asserts deferred-ordinal drift. OI-028…OI-032 are closed; OI-026 remains deferred upstream.
 - Mike gave explicit A1 `VERIFIED + GO` on 2026-07-29. `main` is published to the remote, whose
   only branch is `main`; merged A1 branches/worktrees were removed while active parallel worktrees remain.
 - Production is live at `https://aidioma-agoralabs.vercel.app`; all routes, Clerk test auth, and phone overflow proof pass.
 - Vercel protects Preview only; Production is public. No Production seed or learner-data write ran.
-- OI-026 was rechecked immediately before publication: 4 production / 13 total advisories and no
-  compatible production fix. OI-034 still requires live Clerk keys before real users.
+- OI-026 remains 4 production / 13 total advisories with no compatible fix.
 - A2-1 is proven locally: one authenticated, server-owned `/api/evaluate`; normalized exact answers
   grade free, safe character-near answers grade `close`, and meaning-uncertain/poor answers make one
   strict Gateway call. It is stateless; A3 still owns sessions, persistence, and derived stats.
-- Cache-free App gates pass at 17 files / 109 tests. Real Development DB + live Gateway proof passed,
-  and the built Next route returns Clerk-signed-out 401 safely. Three audits, delta re-audits, and a
-  high-effort whole-diff review are code-clean after fixes.
-- A2-H is active. OI-036 blocks production promotion until Mike authorizes and the team proves a
-  distributed WAF/Gateway abuse-cost limit; the current per-user guard is explicitly per instance.
-- The revised Practice IA prototype is merged to local `main`: Lessons owns lesson entry and `/lessons/1`;
-  Practice opens on Collections with Saved as a local filter. Real sessions remain A4/A5; not yet pushed.
+- A2 corrective gates pass: 19 files / 133 tests, lint, build, smoke, DB/Gateway proof, clean audits.
+- OI-036 adds opaque user-keyed regional Firewall admission before the preserved local guard, plus a
+  mandatory evaluation-only key with an aggregate $1 monthly request-start budget. The account has
+  attribution but no enforceable per-user budget.
+- A READY hardened Preview exists. OI-036 awaits Mike's Preview-only Firewall publication and
+  authenticated comparison/AI/429 plus dashboard receipts.
+- OI-037 owns the repeated direct-push race. This reconciliation combines the hardened A2 line with
+  the revised Practice IA; publication must use this resolved line, not a divergent tip.
+- The revised fixture-backed Practice IA keeps lesson entry under Lessons and opens Practice on
+  Collections with Saved as a local filter. Real sessions remain A4/A5; Production Sets remain A6.
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
@@ -43,11 +42,10 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Complete A2-H, resolve OI-036, then present the authenticated human VERIFIED runsheet.
-2. Continue C2 with a1-05 through validator zero errors and independent L2 PASS.
-3. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
-4. Curated Practice Sets are MVP wave A6. Its revised IA is now frozen in the feature spec; the
-   production path still waits for A4/A5 dependencies. Custom-topic generation follows in A9.
+1. Publish only the staged Preview Firewall draft and complete authenticated A2 proof.
+2. After VERIFIED/GO, publish the resolved main commit, verify Production, and close OI-036/OI-037.
+3. Continue C2 with a1-05; keep A3 persistence, A4 real session UI, and A6 Production Sets separate.
+4. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
 
 ## Standing decisions (highlights)
 - A1-first · vocab 12–15 / sentences 18–20 · Completed/Mastered · Direction default Both.

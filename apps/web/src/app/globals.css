@@ -26,6 +26,7 @@
   --type-body: 0.92rem;
   --type-screen-title: 1.4rem;
   --content-width: 620px;
+  --auth-width: 48rem;
   --sidebar-width: 200px;
   --app-width: 1000px;
   --mobile-width: 560px;
@@ -1819,7 +1820,7 @@ input {
 /* Auth */
 .auth-page {
   display: grid;
-  width: min(calc(100% - 2.3rem), var(--content-width));
+  width: min(calc(100% - 2.3rem), var(--auth-width));
   min-height: min(34rem, calc(100dvh - 4rem));
   margin: 2rem auto;
   overflow: hidden;
@@ -1860,7 +1861,13 @@ input {
 
 .auth-panel {
   display: grid;
+  min-width: 0;
   place-items: center;
+}
+
+.auth-panel > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .configuration-note h2 {
@@ -2013,12 +2020,14 @@ input {
 }
 
 @media (min-width: 680px) {
-  .auth-page {
-    grid-template-columns: minmax(0, 1fr) minmax(19rem, 1fr);
-  }
-
   .practice-set-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1000px) {
+  .auth-page {
+    grid-template-columns: minmax(19rem, 2fr) minmax(28rem, 3fr);
   }
 }
 

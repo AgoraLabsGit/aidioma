@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import type { EvaluationAdmitter } from "./admission-control";
+import type { EvaluationPerimeterAdmitter } from "./firewall-admission";
 import {
   EVALUATION_BODY_MAX_BYTES,
   createEvaluateHandler,
@@ -60,6 +61,7 @@ function dependencies(overrides: {
   authenticate?: EvaluationAuthenticator;
   resolveSource?: EvaluationSourceResolver;
   service?: EvaluationServicePort;
+  admitAtPerimeter?: EvaluationPerimeterAdmitter;
   admit?: EvaluationAdmitter;
   logger?: EvaluationHandlerLogger;
   now?: () => number;
@@ -67,6 +69,7 @@ function dependencies(overrides: {
   return {
     authenticate: overrides.authenticate ?? (async () => ({ userId: "user_private_123" })),
     resolveSource: overrides.resolveSource ?? (async () => source),
+    admitAtPerimeter: overrides.admitAtPerimeter ?? (async () => ({ allowed: true as const })),
     admit:
       overrides.admit ??
       (() => ({ allowed: true as const, release: vi.fn() })),
@@ -94,12 +97,14 @@ describe("POST /api/evaluate handler", () => {
   it("requires authentication before reading or grading the request", async () => {
     const service = { evaluate: vi.fn() } satisfies EvaluationServicePort;
     const logger = vi.fn<EvaluationHandlerLogger>();
+    const admitAtPerimeter = vi.fn<EvaluationPerimeterAdmitter>();
     const response = await createEvaluateHandler(
-      dependencies({ authenticate: async () => null, service, logger }),
+      dependencies({ authenticate: async () => null, service, logger, admitAtPerimeter }),
     )(request("not json"));
 
     expect(response.status).toBe(401);
     expect(service.evaluate).not.toHaveBeenCalled();
+    expect(admitAtPerimeter).not.toHaveBeenCalled();
     expect(logger).not.toHaveBeenCalled();
     expect(await response.json()).toEqual({
       requestId: "req_test",
@@ -137,7 +142,8 @@ describe("POST /api/evaluate handler", () => {
   });
 
   it("requires JSON and rejects malformed, blank, or answer-spoofing bodies", async () => {
-    const handler = createEvaluateHandler(dependencies());
+    const admitAtPerimeter = vi.fn<EvaluationPerimeterAdmitter>();
+    const handler = createEvaluateHandler(dependencies({ admitAtPerimeter }));
     const wrongMedia = await handler(
       new Request("http://localhost/api/evaluate", {
         method: "POST",
@@ -160,6 +166,7 @@ describe("POST /api/evaluate handler", () => {
     await expect(
       handler(request({ ...validBody, sessionId: "unchecked-session" })),
     ).resolves.toMatchObject({ status: 400 });
+    expect(admitAtPerimeter).not.toHaveBeenCalled();
   });
 
   it("rejects declared and streamed oversized bodies", async () => {
@@ -175,7 +182,8 @@ describe("POST /api/evaluate handler", () => {
 
   it("rejects not-yet-supported source types and modalities before resolution", async () => {
     const resolveSource = vi.fn<EvaluationSourceResolver>();
-    const handler = createEvaluateHandler(dependencies({ resolveSource }));
+    const admitAtPerimeter = vi.fn<EvaluationPerimeterAdmitter>();
+    const handler = createEvaluateHandler(dependencies({ resolveSource, admitAtPerimeter }));
 
     expect(await handler(request({ ...validBody, sourceType: "set" }))).toMatchObject({
       status: 422,
@@ -184,6 +192,7 @@ describe("POST /api/evaluate handler", () => {
       status: 422,
     });
     expect(resolveSource).not.toHaveBeenCalled();
+    expect(admitAtPerimeter).not.toHaveBeenCalled();
   });
 
   it("keeps missing and invalid stored sources learner-safe", async () => {
@@ -210,8 +219,9 @@ describe("POST /api/evaluate handler", () => {
   it("returns a cache-free graded result and passes only an opaque learner identifier", async () => {
     const service = { evaluate: vi.fn(dependencies().service.evaluate) };
     const resolveSource = vi.fn(async () => source);
+    const admitAtPerimeter = vi.fn<EvaluationPerimeterAdmitter>(async () => ({ allowed: true }));
     const response = await createEvaluateHandler(
-      dependencies({ service, resolveSource }),
+      dependencies({ service, resolveSource, admitAtPerimeter }),
     )(request());
 
     expect(response.status).toBe(200);
@@ -224,6 +234,9 @@ describe("POST /api/evaluate handler", () => {
         source,
         userTrackingId: expect.stringMatching(/^usr_[a-f0-9]{32}$/u),
       }),
+    );
+    expect(admitAtPerimeter.mock.calls[0]?.[0]).toBe(
+      service.evaluate.mock.calls[0]?.[0]?.userTrackingId,
     );
     expect(JSON.stringify(service.evaluate.mock.calls[0][0])).not.toContain("user_private_123");
     expect(await response.json()).toEqual({
@@ -254,6 +267,120 @@ describe("POST /api/evaluate handler", () => {
     expect(await response.json()).toMatchObject({
       error: { code: "evaluation_rate_limited" },
     });
+  });
+
+  it("runs the user-keyed perimeter and local guards before source or AI work", async () => {
+    const order: string[] = [];
+    const admitAtPerimeter = vi.fn<EvaluationPerimeterAdmitter>(async (userKey) => {
+      order.push("perimeter");
+      expect(userKey).toMatch(/^usr_[a-f0-9]{32}$/u);
+      return { allowed: true };
+    });
+    const admit = vi.fn<EvaluationAdmitter>(() => {
+      order.push("local");
+      return { allowed: true, release: vi.fn() };
+    });
+    const resolveSource = vi.fn(async () => {
+      order.push("source");
+      return source;
+    });
+    const service = {
+      evaluate: vi.fn(async () => {
+        order.push("service");
+        return {
+          kind: "graded" as const,
+          result: {
+            score: 100,
+            verdict: "correct" as const,
+            feedback: "Correct.",
+            errorTags: [],
+            evalSource: "comparison" as const,
+          },
+        };
+      }),
+    };
+
+    const response = await createEvaluateHandler(
+      dependencies({ admitAtPerimeter, admit, resolveSource, service }),
+    )(request());
+
+    expect(response.status).toBe(200);
+    expect(order).toEqual(["perimeter", "local", "source", "service"]);
+  });
+
+  it("does not run the local guard, database resolver, or AI when the perimeter limits", async () => {
+    const admit = vi.fn<EvaluationAdmitter>();
+    const resolveSource = vi.fn<EvaluationSourceResolver>();
+    const service = { evaluate: vi.fn() } satisfies EvaluationServicePort;
+    const response = await createEvaluateHandler(
+      dependencies({
+        admitAtPerimeter: async () => ({
+          allowed: false,
+          kind: "rate-limited",
+          retryAfterSeconds: 23,
+        }),
+        admit,
+        resolveSource,
+        service,
+      }),
+    )(request());
+
+    expect(response.status).toBe(429);
+    expect(response.headers.get("retry-after")).toBe("23");
+    expect(admit).not.toHaveBeenCalled();
+    expect(resolveSource).not.toHaveBeenCalled();
+    expect(service.evaluate).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    { allowed: false as const, kind: "unavailable" as const, failure: "not-found" as const },
+    { allowed: false as const, kind: "unavailable" as const, failure: "blocked" as const },
+  ])("returns retryable safe unavailability for perimeter failure $failure", async (result) => {
+    const admit = vi.fn<EvaluationAdmitter>();
+    const resolveSource = vi.fn<EvaluationSourceResolver>();
+    const service = { evaluate: vi.fn() } satisfies EvaluationServicePort;
+    const logger = vi.fn<EvaluationHandlerLogger>();
+    const response = await createEvaluateHandler(
+      dependencies({
+        admitAtPerimeter: async () => result,
+        admit,
+        resolveSource,
+        service,
+        logger,
+      }),
+    )(request());
+
+    expect(response.status).toBe(503);
+    expect(response.headers.get("retry-after")).toBe("60");
+    expect(await response.json()).toEqual({
+      requestId: "req_test",
+      status: "ungraded",
+      retryable: true,
+      reason: "evaluation_temporarily_unavailable",
+    });
+    expect(admit).not.toHaveBeenCalled();
+    expect(resolveSource).not.toHaveBeenCalled();
+    expect(service.evaluate).not.toHaveBeenCalled();
+    expect(JSON.stringify(logger.mock.calls)).not.toContain("user_private_123");
+  });
+
+  it("fails closed when an injected perimeter throws", async () => {
+    const service = { evaluate: vi.fn() } satisfies EvaluationServicePort;
+    const resolveSource = vi.fn<EvaluationSourceResolver>();
+    const response = await createEvaluateHandler(
+      dependencies({
+        admitAtPerimeter: async () => {
+          throw new Error("sensitive perimeter detail");
+        },
+        resolveSource,
+        service,
+      }),
+    )(request());
+
+    expect(response.status).toBe(503);
+    expect(JSON.stringify(await response.json())).not.toContain("sensitive perimeter detail");
+    expect(resolveSource).not.toHaveBeenCalled();
+    expect(service.evaluate).not.toHaveBeenCalled();
   });
 
   it("returns retryable ungraded responses without fabricated grading fields", async () => {

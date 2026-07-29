@@ -145,11 +145,11 @@ waves:
       - id: A2-1
         title: One /api/evaluate behind a Gateway abstraction
         status: proven
-        summary: "Consolidate to one evaluation service (~4,900 -> ~500 lines): delete claude-service + universal service; Gateway abstraction; non-fatal key/health failure; comparison-first then AI. Feature 4."
+        summary: "One stateless comparison-first evaluator; one bounded AI call only on poor/uncertain matches; user-keyed regional Firewall SDK plus local guard; dedicated budgeted Gateway key. OI-036 awaits authenticated Preview proof. Feature 4."
       - id: A2-H
         title: Hygiene slice (mandatory)
-        status: active
-        summary: "delete the superseded services in-slice or file DEP rows with triggers"
+        status: proven
+        summary: "Residue/spec/register reconciliation proven; corrective security/cost audits clean. Close waits for Mike's Preview-only Firewall publication and authenticated proof, then VERIFIED and separate GO."
 
   - id: A3
     lane: App
