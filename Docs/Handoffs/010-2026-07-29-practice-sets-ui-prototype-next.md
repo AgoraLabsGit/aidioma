@@ -13,13 +13,15 @@ updated: 2026-07-29
 
 ## Closeout
 
-- Mike approved and merged the fixture-backed UI to `main` on 2026-07-29.
-- The approved IA is deliberately flat: equal **Current lesson** and **Your practice** cards lead
-  the Practice page; Collections are immediately below; Your practice defaults to Saved.
-- Popular is deferred. The set-detail / Quick-practice interstitial is removed. The compact card
-  actions use a quiet bookmark and configuration affordance rather than a separate control rail.
-- Current Lesson and all set sessions are fixture previews. Saved state is session-local; A4 owns
-  the real session engine and A5 owns durable saved items.
+- Mike approved and locally merged the revised fixture-backed UI to `main` on 2026-07-29.
+- The approved IA separates the primary destinations: Home continues the path, Lessons owns lesson
+  entry, and Practice opens directly on the collection catalog without a destination-choice screen.
+- Saved is a catalog filter rather than a separate Your practice page. Popular remains deferred;
+  broader saved/review queues can earn a destination only after the A5 capability exists.
+- The preserved lesson-mix preview moved to `/lessons/1`, returns to Lessons, and keeps Lessons
+  selected. Collection cards drop repeated facet tags and use labeled Save and Options controls.
+- Lesson and set sessions remain fixture previews. Saved state is session-local; A4 owns the real
+  session engine and A5 owns durable saved items.
 - Production A6 keeps its existing A4/A5 dependencies. The implementation must use the approved
   IA recorded in `practice-sets.md` and ROADMAP A6-2.
 
@@ -31,14 +33,13 @@ updated: 2026-07-29
 - Curated sets are first-class content using the same Practice surface/evaluator/session history;
   they never complete or master lessons. MVP supports Type + Flashcards; later activities appear
   only when a set carries their required reviewed assets.
-- Catalog facets are Vocabulary, Verbs, Phrases, Topics, and Situations. Popular is deferred;
-  saved practice lives within Your practice. Settings are capability-aware and snapshotted at
-  session start.
+- Catalog filters are All, Saved, Vocabulary, Verbs, Phrases, Topics, and Situations. Popular is
+  deferred. Settings are capability-aware and snapshotted at session start.
 - Durable boundaries: immutable IDs/history, provenance, server-owned answers, shared GrammarTags,
   valid grammatical features, and strict lesson/set progress separation. Prototype-responsive:
   labels, layout, defaults, facets, and presets may change after Mike tests them.
-- The approved fixture changes are now merged to `main`. This closeout does not open or implement
-  production A6.
+- The approved revision is merged to local `main` but not pushed. This closeout does not open or
+  implement production A6.
 
 ## Next-wave preparation
 
@@ -62,5 +63,5 @@ updated: 2026-07-29
 - Decision: `Docs/Specs/ADRs/ADR-0015-curated-practice-sets-in-mvp.md`
 - UI/accessibility: `Docs/Specs/Features/module-spec.md` and `accessibility.md`
 - Engine/data boundaries: `Docs/Specs/Areas/session-engine.md`, `evaluation.md`, `data-model.md`
-- Root `main` is published and clean. Do not clean other agents' worktrees or push prototype work
-  without its own normal verification and explicit GO.
+- Local `main` is clean and ahead of `origin/main` by the approved prototype revision. Do not clean
+  other agents' worktrees or push without the repository's separate explicit GO.

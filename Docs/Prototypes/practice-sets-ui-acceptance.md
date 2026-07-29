@@ -1,7 +1,7 @@
 ---
 title: Practice Sets UI prototype — acceptance checklist
 type: prototype-checklist
-status: ready-for-review
+status: accepted
 updated: 2026-07-29
 ---
 

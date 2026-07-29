@@ -21,8 +21,7 @@
   and asserts deferred-ordinal drift. OI-028…OI-032 are closed; OI-026 remains deferred upstream.
 - Mike gave explicit A1 `VERIFIED + GO` on 2026-07-29. `main` is published to the remote, whose
   only branch is `main`; merged A1 branches/worktrees were removed while active parallel worktrees remain.
-- Production is live at `https://aidioma-agoralabs.vercel.app`. All six routes return 200 with
-  expected headings; Clerk sign-in/up render in test mode; phone navigation has no horizontal overflow.
+- Production is live at `https://aidioma-agoralabs.vercel.app`; all routes, Clerk test auth, and phone overflow proof pass.
 - Vercel protects Preview only; Production is public. No Production seed or learner-data write ran.
 - OI-026 was rechecked immediately before publication: 4 production / 13 total advisories and no
   compatible production fix. OI-034 still requires live Clerk keys before real users.
@@ -34,9 +33,8 @@
   high-effort whole-diff review are code-clean after fixes.
 - A2-H is active. OI-036 blocks production promotion until Mike authorizes and the team proves a
   distributed WAF/Gateway abuse-cost limit; the current per-user guard is explicitly per instance.
-- The fixture-backed Practice IA prototype is merged to `main`: equal Current lesson and Your
-  practice shortcuts, inline Collections, and a session-local Saved view. It is design proof only;
-  durable saved items and the real lesson/session loop remain A4/A5 work.
+- The revised Practice IA prototype is merged to local `main`: Lessons owns lesson entry and `/lessons/1`;
+  Practice opens on Collections with Saved as a local filter. Real sessions remain A4/A5; not yet pushed.
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
@@ -48,7 +46,7 @@
 1. Complete A2-H, resolve OI-036, then present the authenticated human VERIFIED runsheet.
 2. Continue C2 with a1-05 through validator zero errors and independent L2 PASS.
 3. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
-4. Curated Practice Sets are MVP wave A6. Its approved IA is now frozen in the feature spec; the
+4. Curated Practice Sets are MVP wave A6. Its revised IA is now frozen in the feature spec; the
    production path still waits for A4/A5 dependencies. Custom-topic generation follows in A9.
 
 ## Standing decisions (highlights)
@@ -59,5 +57,4 @@
 - Live today’s accuracy ≠ next-day confirmed proficiency.
 - Quiz/MC → evaluations with modality `multipleChoice` (no AI).
 - Responsive web (phone + desktop); no native stores in MVP.
-- P-004 dialect shape only · curated Practice Sets are MVP (ADR-0015/A6); wordfreq informs original
-  selection rather than becoming a copied shippable table.
+- P-004 dialect shape only · Practice Sets are MVP (ADR-0015/A6) · wordfreq informs original selection only.
