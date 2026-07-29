@@ -110,6 +110,7 @@ describe("evaluation contracts", () => {
         score: 10,
         verdict: "wrong",
         feedback: "Try again.",
+        wordDiff: [],
         errorTags: ["verb.ser"],
       }).success,
     ).toBe(true);
@@ -118,6 +119,7 @@ describe("evaluation contracts", () => {
         score: 0,
         verdict: "wrong",
         feedback: "No zero scores.",
+        wordDiff: [],
         errorTags: [],
       }).success,
     ).toBe(false);
@@ -126,6 +128,7 @@ describe("evaluation contracts", () => {
         score: 50,
         verdict: "wrong",
         feedback: "Unknown tag.",
+        wordDiff: [],
         errorTags: ["not.a.grammar.tag"],
       }).success,
     ).toBe(false);
