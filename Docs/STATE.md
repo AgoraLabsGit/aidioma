@@ -13,8 +13,7 @@
 - Neon Production, Preview, and Development now have distinct databases, owners, and Vercel
   credentials. Both non-production roles are denied Production and each other; all copies passed
   schema/journal/content integrity proof. Local writes default to the Development identity.
-- All six Clerk variables exist locally and in all three Vercel scopes without tracked/printed
-  values. The pair is test-class for prelaunch; live-key promotion is OI-034.
+- All six Clerk variables exist locally/all scopes without tracked values; live-key promotion is OI-034.
 - SQL is the sole DDL authority; the runner enforces exact journal history, serializes migrations,
   and asserts deferred-ordinal drift. OI-028…OI-032 are closed; OI-026 remains deferred upstream.
 - Mike gave explicit A1 `VERIFIED + GO` on 2026-07-29. `main` is published to the remote, whose
@@ -22,16 +21,16 @@
 - Production is live at `https://aidioma-agoralabs.vercel.app`. All six routes return 200 with
   expected headings; Clerk sign-in/up render in test mode; phone navigation has no horizontal overflow.
 - Vercel protects Preview only; Production is public. No Production seed or learner-data write ran.
-- OI-026 was rechecked immediately before publication: 4 production / 13 total advisories and no
-  compatible production fix. OI-034 still requires live Clerk keys before real users.
+- OI-026 remains 4 production / 13 total advisories with no compatible fix.
 - A2-1 is proven locally: one authenticated, server-owned `/api/evaluate`; normalized exact answers
   grade free, safe character-near answers grade `close`, and meaning-uncertain/poor answers make one
   strict Gateway call. It is stateless; A3 still owns sessions, persistence, and derived stats.
-- Cache-free App gates pass at 17 files / 109 tests. Real Development DB + live Gateway proof passed,
-  and the built Next route returns Clerk-signed-out 401 safely. Three audits, delta re-audits, and a
-  high-effort whole-diff review are code-clean after fixes.
-- A2-H is proven: integrated-main gates pass at 18 files / 116 tests; residue, dependencies, specs,
-  and registers are reconciled. OI-036 blocks wave close pending distributed cost/abuse controls.
+- A2 corrective gates pass: 19 files / 133 tests, lint, build, smoke, DB/Gateway proof, clean audits.
+- OI-036 code/config is staged from isolated `fix/A2-oi-036`: opaque user-keyed regional Firewall
+  admission before the preserved local guard, plus a mandatory evaluation-only key with an aggregate
+  $1 monthly request-start budget. The account has attribution but no enforceable per-user budget.
+- A READY Preview exists without push. OI-036 awaits Mike's Preview-only Firewall publication and
+  authenticated comparison/AI/429 plus dashboard receipts.
 - A concurrent process pushed shared `main` at A2 merge `0eaa286` before VERIFIED/GO; Production is
   Ready and rejects signed-out requests. Mike asked whether to harden/redeploy; OI-037 owns process repair.
 
@@ -42,7 +41,8 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Harden A2 forward under OI-036, prove an authenticated Preview flow, then request VERIFIED and GO.
+1. Mike publishes only the staged Preview Firewall draft and runs the authenticated A2 script; then
+   request VERIFIED and, separately, GO. Do not promote Production beforehand.
 2. Continue C2 with a1-05 through validator zero errors and independent L2 PASS.
 3. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
 4. Curated Practice Sets are MVP wave A6; fixture-backed UI prototyping may precede A6, while the

@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { GrammarTag } from "@aidioma/lesson-schema";
+import { createGateway } from "@ai-sdk/gateway";
 import {
   APICallError,
   NoObjectGeneratedError,
@@ -114,21 +115,29 @@ export type GatewayGenerateText = (
   options: GatewayGenerateOptions,
 ) => Promise<GatewayGenerateResult>;
 
-const sdkGenerateText: GatewayGenerateText = async (options) => {
-  const result = await generateText(options);
-  return {
-    output: result.output,
-    usage: result.usage,
-    finalStep: {
-      response: { modelId: result.finalStep.response.modelId },
-      providerMetadata: result.finalStep.providerMetadata,
-    },
+function createSdkGenerateText(apiKey: string): GatewayGenerateText {
+  const evaluationGateway = createGateway({ apiKey });
+  return async (options) => {
+    const result = await generateText({
+      ...options,
+      model: evaluationGateway(options.model),
+    });
+    return {
+      output: result.output,
+      usage: result.usage,
+      finalStep: {
+        response: { modelId: result.finalStep.response.modelId },
+        providerMetadata: result.finalStep.providerMetadata,
+      },
+    };
   };
-};
+}
 
 type GatewayAiVerdictGeneratorOptions = {
   /** Server configuration only; callers cannot select a model per request. */
   model?: string;
+  /** Evaluation-only credential whose Gateway budget governs every AI grading call. */
+  gatewayApiKey?: string;
   generate?: GatewayGenerateText;
   now?: () => number;
 };
@@ -149,8 +158,13 @@ function configuredModel(value: string | undefined): AiEvaluationModel | undefin
   return isAllowedModel(candidate) ? candidate : undefined;
 }
 
+function configuredApiKey(value: string | undefined): string | undefined {
+  const candidate = value?.trim();
+  return candidate ? candidate : undefined;
+}
+
 function safeTrackingId(value: string | undefined): string | undefined {
-  if (value === undefined || !/^[A-Za-z0-9:_-]{1,128}$/u.test(value)) {
+  if (value === undefined || !/^usr_[a-f0-9]{32}$/u.test(value)) {
     return undefined;
   }
   return value;
@@ -260,12 +274,18 @@ function normalizeAiResult(
 
 export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
   readonly #modelValue: string | undefined;
-  readonly #generate: GatewayGenerateText;
+  readonly #gatewayApiKey: string | undefined;
+  readonly #generate: GatewayGenerateText | undefined;
   readonly #now: () => number;
 
   constructor(options: GatewayAiVerdictGeneratorOptions = {}) {
     this.#modelValue = options.model ?? process.env.EVALUATION_AI_MODEL;
-    this.#generate = options.generate ?? sdkGenerateText;
+    this.#gatewayApiKey = configuredApiKey(
+      options.gatewayApiKey ?? process.env.EVALUATION_AI_GATEWAY_API_KEY,
+    );
+    this.#generate =
+      options.generate ??
+      (this.#gatewayApiKey ? createSdkGenerateText(this.#gatewayApiKey) : undefined);
     this.#now = options.now ?? Date.now;
   }
 
@@ -278,7 +298,8 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
       latencyMs: Math.max(0, this.#now() - startedAt),
     });
 
-    if (!model) {
+    const user = safeTrackingId(request.userTrackingId);
+    if (!model || !this.#gatewayApiKey || !this.#generate || !user) {
       return {
         kind: "ungraded",
         retryable: true,
@@ -288,7 +309,6 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
     }
 
     try {
-      const user = safeTrackingId(request.userTrackingId);
       const generated = await this.#generate({
         model,
         system: SYSTEM_PROMPT,
@@ -305,8 +325,8 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
         abortSignal: request.signal,
         providerOptions: {
           gateway: {
-            tags: ["feature:evaluation", "prompt:v1"],
-            ...(user && { user }),
+            tags: ["scope:evaluation-only", "feature:evaluation", "prompt:v1"],
+            user,
           },
         },
       });

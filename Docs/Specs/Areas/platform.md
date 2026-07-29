@@ -17,8 +17,10 @@ updated: 2026-07-29
 - **AI:** Vercel AI SDK 7 + AI Gateway, server-side, behind `EvaluationService`. Plain
   `provider/model` IDs route through Gateway; grading uses non-streaming `generateText` with
   `Output.object` validation, minimal reasoning, zero SDK retries, an 800-token output ceiling, and
-  a 12-second total timeout. Vercel OIDC is the deployed default; `AI_GATEWAY_API_KEY` is the
-  local/CI alternative. A direct provider SDK is only a fallback adapter when Gateway lacks a
+  a 12-second total timeout. Evaluation calls require `EVALUATION_AI_GATEWAY_API_KEY`; ambient
+  Vercel OIDC and legacy `AI_GATEWAY_API_KEY` are intentionally not fallbacks, so the dedicated
+  key's aggregate budget governs every AI grading call. Opaque `user` is spend attribution; this
+  account exposes no enforceable per-user budget control. A direct provider SDK is only a fallback adapter when Gateway lacks a
   required model/capability; it must not bypass the service contract.
 - **Auth:** Clerk's Next.js SDK. **Data:** Neon Postgres through the server-only Neon serverless
   driver + Drizzle ORM boundary frozen in A1-1. Connection construction is lazy so builds and
@@ -34,6 +36,10 @@ updated: 2026-07-29
   Credential tests prove both non-production roles are denied Production and each other; the
   Neon-managed production owner retains one-way administrative reach. Only Production receives user
   data. Branch-per-preview may replace the shared Preview database later.
+- The same evaluation-only Gateway key is currently present in all three Vercel scopes, so its $1
+  monthly budget and spend are aggregate. Budget checks occur at request start and may overshoot on
+  a crossing/in-flight call; this is not an absolute cap. Firewall SDK admission uses an opaque
+  user key, with per-region rather than globally atomic counters, before the separate local guard.
 - All six documented Clerk names are configured locally and in all three Vercel environments;
   values stay untracked. The current matching pair is test-class for prelaunch verification and must
   be promoted to live-class before real users (OI-034).

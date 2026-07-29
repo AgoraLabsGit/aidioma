@@ -31,6 +31,17 @@ updated: 2026-07-29
   redeploy instead of rolling back; that is the inferred working path, not GO. Neither item is a code defect.
 - Authenticated actual-route proof remains the human `/close` step. Automation does not create, extract, or repurpose Clerk user credentials.
 
+## OI-036 corrective pass
+- Clean isolated branch `fix/A2-oi-036` adds the user-keyed Firewall SDK layer before the preserved
+  local guard. Missing, blocked, malformed, or thrown Firewall checks fail closed before source/AI;
+  regional counters are not represented as global or atomic.
+- AI grading now requires the evaluation-only Gateway key and exact opaque `usr_` attribution. Its
+  aggregate $1 monthly budget has 50/75/100% alerts and request-start soft-cap semantics; this
+  account exposes no enforceable per-user budget. Ambient OIDC/legacy key fallback is regression-tested off.
+- Final gates pass at 19 files / 133 tests, build, smoke, Development DB/Gateway proof, and clean
+  independent security/cost delta audits. A READY Preview exists without push. OI-036 remains open
+  until Mike publishes the Preview-only draft and completes authenticated receipts; Production is unchanged.
+
 ## Proof
 - Real Development DB + live Gateway: `PASS evaluate-proof development-db=verified comparison=graded gateway=graded persistence=none` (540 input / 218 output / 758 total tokens on the final run).
 - Built Next `/api/evaluate`: signed-out Clerk request returned 401 learner-safe JSON with `no-store` and `nosniff`.

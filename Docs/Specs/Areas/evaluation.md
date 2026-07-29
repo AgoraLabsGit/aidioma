@@ -75,9 +75,18 @@ explanation after the choice; typed modes use mode-smart help from the module sp
 - AI timeout/provider/schema failure after comparison misses → retryable **ungraded** response;
   preserve input for retry and do not fabricate a score, verdict, tags, or feedback.
 - Comparison success stands even if the AI provider is unavailable.
-- The app applies a bounded per-user, per-instance request/concurrency/duplicate-work guard. A
-  distributed Gateway user quota or staged WAF rule is still required before production promotion;
-  an in-memory serverless guard is defense in depth, not the perimeter control.
+- After authentication and request validation, the app checks the Vercel Firewall SDK with the
+  server-derived `usr_` hash, then applies the separate local per-instance burst/concurrency/
+  duplicate-work guard before source resolution or AI. The Firewall fixed-window counter is
+  per-region, not globally atomic; the local guard remains defense in depth.
+- AI grading requires the dedicated evaluation Gateway key and the same opaque user attribution.
+  Missing/invalid perimeter configuration, key, or user fails closed without an AI call. This
+  account exposes no enforceable per-user Gateway budget, so `providerOptions.gateway.user` is
+  attribution, not a per-user denial control.
+- The evaluation key has one aggregate $1 monthly budget across Development, Preview, and
+  Production, with 50/75/100% alerts. Gateway checks it at request start: the crossing/in-flight
+  request can complete and overshoot, while later calls reject. It is a soft cap, not an absolute
+  global ceiling. The Preview Firewall draft must be published and proven before OI-036 closes.
 - Record latency, path (comparison/AI), provider/model, failure class, and token/cost metadata;
   never log secrets or full private conversation history by default.
 

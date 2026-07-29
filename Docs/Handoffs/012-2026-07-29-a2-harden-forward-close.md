@@ -1,7 +1,7 @@
 ---
 title: Handoff — finish A2 by hardening forward
 type: handoff
-status: active
+status: superseded
 updated: 2026-07-29
 ---
 
