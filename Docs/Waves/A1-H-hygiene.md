@@ -79,7 +79,7 @@ below then ran sequentially; the operator-owned `next-env.d.ts` was backed up an
   are separate protection against wrong-database mutation, not claimed as a regression for output.
 
 ## A1 `/close` operator test
-1. Start the local app with `npm run app:dev`, then open `http://localhost:3000` in a desktop browser.
+1. Start the local app with `npm run app:dev`, then open the `Local` URL it prints in a desktop browser.
 2. On Home, expect `Hola.`, three zero stats, `Lesson 1 · Hola: greetings and introducing yourself`,
    `Not started`, `Review · 0 due`, and `No weak areas yet`. No invented progress may appear.
 3. Click `Lessons`. Expect `A1 · Foundations`, `Lessons 1–12`, `You are here`, Lesson 1 current,
