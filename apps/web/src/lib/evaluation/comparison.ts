@@ -350,12 +350,67 @@ export function createWordDiff(userInput: string, expected: string): WordDiffEnt
 }
 
 function boundText(value: string): string {
-  let result = "";
-  for (const codePoint of value) {
-    if (result.length + codePoint.length > EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH) break;
-    result += codePoint;
+  if (value.length <= EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH) return value;
+
+  const codePoints = Array.from(value);
+  let head = "";
+  let tail = "";
+  for (const codePoint of codePoints) {
+    if (head.length + codePoint.length > 99) break;
+    head += codePoint;
   }
-  return result;
+  for (let index = codePoints.length - 1; index >= 0; index -= 1) {
+    const codePoint = codePoints[index];
+    if (tail.length + codePoint.length > 100) break;
+    tail = codePoint + tail;
+  }
+  return `${head}…${tail}`;
+}
+
+function boundTextAround(value: string, focusIndex: number): string {
+  if (value.length <= EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH) return value;
+
+  const codePoints = Array.from(value);
+  const start = Math.max(0, Math.min(focusIndex - 40, codePoints.length - 1));
+  const prefix = start > 0 ? "…" : "";
+  let body = "";
+  let index = start;
+  const bodyBudget = EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH - prefix.length - 1;
+
+  while (index < codePoints.length && body.length + codePoints[index].length <= bodyBudget) {
+    body += codePoints[index];
+    index += 1;
+  }
+
+  return `${prefix}${body}${index < codePoints.length ? "…" : ""}`;
+}
+
+function firstDifferenceIndex(left: string, right: string): number {
+  const leftCodePoints = Array.from(left);
+  const rightCodePoints = Array.from(right);
+  const sharedLength = Math.min(leftCodePoints.length, rightCodePoints.length);
+  for (let index = 0; index < sharedLength; index += 1) {
+    if (leftCodePoints[index] !== rightCodePoints[index]) return index;
+  }
+  return sharedLength;
+}
+
+function selectLearnerDiffSteps(steps: readonly DiffStep[]): DiffStep[] {
+  if (steps.length <= EVALUATION_WORD_DIFF_MAX_ENTRIES) return [...steps];
+
+  const changedIndexes = steps
+    .map((step, index) => ({ step, index }))
+    .filter(({ step }) => step.type !== "same")
+    .map(({ index }) => index);
+  const selected = new Set(changedIndexes.slice(0, EVALUATION_WORD_DIFF_MAX_ENTRIES));
+
+  for (let index = 0; selected.size < EVALUATION_WORD_DIFF_MAX_ENTRIES; index += 1) {
+    if (!selected.has(index)) selected.add(index);
+  }
+
+  return [...selected]
+    .sort((left, right) => left - right)
+    .map((index) => steps[index]);
 }
 
 function createBoundedWordDiff(
@@ -363,8 +418,7 @@ function createBoundedWordDiff(
   expectedDisplay: readonly string[],
   steps: readonly DiffStep[],
 ): WordDiffEntry[] {
-  return steps
-    .slice(0, EVALUATION_WORD_DIFF_MAX_ENTRIES)
+  return selectLearnerDiffSteps(steps)
     .map((step) => {
       if (step.type === "same") {
         return { text: boundText(userDisplay[step.userIndex]), mark: "correct" };
@@ -381,6 +435,7 @@ function createBoundedWordDiff(
 
       const userText = userDisplay[step.userIndex];
       const expectedText = expectedDisplay[step.expectedIndex];
+      const differenceIndex = firstDifferenceIndex(userText, expectedText);
       const wordSimilarity = comparisonSimilarity(
         normalizeForComparison(userText),
         normalizeForComparison(expectedText),
@@ -391,10 +446,10 @@ function createBoundedWordDiff(
       );
 
       return {
-        text: boundText(userText),
+        text: boundTextAround(userText, differenceIndex),
         mark:
           wordDistance === 1 || wordSimilarity >= CLOSE_SIMILARITY ? "close" : "wrong",
-        suggestion: boundText(expectedText),
+        suggestion: boundTextAround(expectedText, differenceIndex),
       };
     });
 }
@@ -408,12 +463,15 @@ function negationTokens(text: string): string[] {
 function numberTokens(text: string): string[] {
   return normalizeForComparison(text)
     .split(" ")
-    .filter(
-      (token) =>
-        /^\d+(?:[.,]\d+)?$/u.test(token) ||
-        NUMBER_WORDS.has(token) ||
-        (token.includes("-") && token.split("-").every((part) => NUMBER_WORDS.has(part))),
-    );
+    .filter((token) => {
+      if (/\d/u.test(token)) return true;
+      const wordCandidate = token.replace(/^[^\p{L}]+|[^\p{L}]+$/gu, "");
+      return (
+        NUMBER_WORDS.has(wordCandidate) ||
+        (wordCandidate.includes("-") &&
+          wordCandidate.split("-").every((part) => NUMBER_WORDS.has(part)))
+      );
+    });
 }
 
 function sequencesEqual(left: readonly string[], right: readonly string[]): boolean {

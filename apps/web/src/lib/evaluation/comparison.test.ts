@@ -272,6 +272,17 @@ describe("word diff", () => {
       EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH,
     );
   });
+
+  it("keeps a long-token correction visible after bounding", () => {
+    const sharedPrefix = "a".repeat(400);
+    const decision = compareAnswer(`${sharedPrefix}x`, [`${sharedPrefix}y`]);
+
+    expect(decision.kind).toBe("graded");
+    if (decision.kind !== "graded") return;
+    const changed = decision.result.wordDiff?.find((entry) => entry.mark !== "correct");
+    expect(changed?.text).not.toBe(changed?.suggestion);
+    expect(EvaluationResultSchema.safeParse(decision.result).success).toBe(true);
+  });
 });
 
 describe("comparison gate", () => {
@@ -351,6 +362,21 @@ describe("comparison gate", () => {
         "I have thirty-one books at home",
       ]).kind,
     ).toBe("ai-required");
+    expect(
+      compareAnswer("Tengo 21% de descuento en esta tienda", [
+        "Tengo 20% de descuento en esta tienda",
+      ]).kind,
+    ).toBe("ai-required");
+    expect(
+      compareAnswer("La temperatura es 21°C esta mañana", [
+        "La temperatura es 20°C esta mañana",
+      ]).kind,
+    ).toBe("ai-required");
+    expect(
+      compareAnswer("Cuesta $21 en esta tienda hoy", [
+        "Cuesta $20 en esta tienda hoy",
+      ]).kind,
+    ).toBe("ai-required");
   });
 
   it("routes semantically uncertain missing, extra, and wrong words to AI", () => {
@@ -376,6 +402,22 @@ describe("comparison gate", () => {
     expect(decision.kind).toBe("ai-required");
     if (decision.kind !== "ai-required") return;
     expect(decision.wordDiff).toHaveLength(EVALUATION_WORD_DIFF_MAX_ENTRIES);
+  });
+
+  it("keeps a post-cap spelling correction in the bounded learner diff", () => {
+    const prefix = Array.from({ length: EVALUATION_WORD_DIFF_MAX_ENTRIES + 1 }, () =>
+      "hola",
+    ).join(" ");
+    const decision = compareAnswer(`${prefix} holx`, [`${prefix} hola`]);
+
+    expect(decision.kind).toBe("graded");
+    if (decision.kind !== "graded") return;
+    expect(decision.result.wordDiff).toHaveLength(EVALUATION_WORD_DIFF_MAX_ENTRIES);
+    expect(decision.result.wordDiff).toContainEqual({
+      text: "holx",
+      mark: "close",
+      suggestion: "hola",
+    });
   });
 
   it("uses authored order to break equal-similarity ties", () => {
