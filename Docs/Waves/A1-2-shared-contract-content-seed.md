@@ -46,3 +46,10 @@ updated: 2026-07-28
 - Passage segments remain nested in passage payloads; their immutable IDs still support evaluation references.
 - Deprecation is monotonic, missing rows are retained, and authored item IDs cannot move between lessons.
 - SQL migrations are ordered, transactional, journaled, and immutable after application.
+
+## Post-proof wiring audit — 2026-07-29
+- Independent read-only audit re-confirmed the Vercel link, pooled SSL URL, two matching migration
+  checksums, deferred ordinal constraint, reparent trigger, 4 lessons / 134 unique items, and 6/6
+  seed/migration tests.
+- No criticals. Environment isolation, Drizzle/DDL drift protection, migration serialization, and
+  local env hygiene are owned by OI-028…OI-031; Clerk deployment completion is OI-032.

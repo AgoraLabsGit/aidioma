@@ -3,7 +3,7 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-28 (A1-2 proven; C2 a1-04 L2-passed)
+**Updated:** 2026-07-29 (A1-2 proven; Neon wiring audited; C2 a1-04 L2-passed)
 
 ## Position
 
@@ -15,7 +15,9 @@
 - A1-2 is proven: the web app imports the shared contract; Content CI is live; checksum-journaled
   SQL and the idempotent seed loaded 4 canonical lessons / 134 items into real Neon with zero-change reruns.
 - Vercel `agoralabs/aidioma` tracks the public GitHub repo at `apps/web` on Node 22.x; free Neon is
-  attached across environments. Production Clerk keys and an initial deployment remain operator setup.
+  attached across environments. Read-only audit confirmed live schema/journal/seed integrity.
+- The Clerk key pair is present locally; four route variables and all Vercel Clerk configuration
+  remain before authenticated deployment. OI-028…OI-032 own the Neon/env hardening findings.
 - OI-026 tracks unpatched upstream Next/ESLint dependency advisories before deployment.
 - Fresh public remote `AgoraLabsGit/aidioma` is live; proven `main` was pushed on 2026-07-28 for Vercel/Neon setup.
 
@@ -28,7 +30,8 @@
 ## Next
 1. Run A1-H residue/dependency/spec reconciliation, then prepare A1 for `/close`.
 2. Continue C2 with a1-05 through validator zero errors and independent L2 PASS.
-3. Add both Clerk keys plus the four route variables before production auth/deployment verification.
+3. Complete OI-028…OI-032: isolate Neon environments, guard migration/DDL drift and concurrency,
+   remove env duplication, and add the full Clerk configuration to Vercel.
 4. Keep both lanes isolated; never push without wave-close GO.
 
 ## Standing decisions (highlights)
