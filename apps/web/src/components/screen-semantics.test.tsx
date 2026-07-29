@@ -3,6 +3,7 @@ import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, expect, it } from "vitest";
 
 import { LessonCatalog } from "./lesson-catalog";
+import { LessonPracticePreview } from "./lesson-practice-preview";
 import { PracticeWorkspace } from "./practice-workspace";
 
 expect.extend(toHaveNoViolations);
@@ -12,7 +13,12 @@ describe("prototype-aligned screen semantics", () => {
     const { container } = render(<LessonCatalog />);
     expect(
       screen.getByRole("link", { name: /Hola: greetings and introducing yourself/i }),
-    ).toHaveAttribute("href", "/practice?lesson=1");
+    ).toHaveAttribute("href", "/lessons/1");
+    expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("keeps the lesson practice preview accessible", async () => {
+    const { container } = render(<LessonPracticePreview />);
     expect(await axe(container)).toHaveNoViolations();
   });
 

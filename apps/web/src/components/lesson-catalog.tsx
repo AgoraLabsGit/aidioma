@@ -29,7 +29,7 @@ export function LessonCatalog() {
             <ol className="lesson-list">
               {a1Lessons.map((lesson) => (
                 <LessonRow
-                  href={lesson.status === "current" ? `/practice?lesson=${lesson.number}` : undefined}
+                  href={lesson.status === "current" ? `/lessons/${lesson.number}` : undefined}
                   key={lesson.number}
                   lesson={lesson}
                 />

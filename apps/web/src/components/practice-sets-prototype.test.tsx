@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { beforeEach, describe, expect, it } from "vitest";
 
+import { LessonPracticePreview } from "./lesson-practice-preview";
 import { PracticeWorkspace } from "./practice-workspace";
 
 expect.extend(toHaveNoViolations);
@@ -15,21 +16,25 @@ describe("Collections fixture prototype", () => {
     window.localStorage.clear();
   });
 
-  it("leads with equal Current lesson and Your practice shortcuts above collections", () => {
+  it("opens directly on the collection catalog with Saved as a filter", () => {
     render(<PracticeWorkspace />);
 
     expect(screen.getByRole("heading", { name: "Practice" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Current lesson/i })).toBeEnabled();
-    expect(screen.getByRole("button", { name: /Your practice/i })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Saved" })).toBeEnabled();
     expect(screen.getByRole("button", { name: "Start Essential Verbs" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Current lesson/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Your practice/i })).not.toBeInTheDocument();
     expect(screen.queryByText(/Popular right now/i)).not.toBeInTheDocument();
   });
 
-  it("takes Lessons directly to the current lesson-mix preview", () => {
-    render(<PracticeWorkspace />);
-    fireEvent.click(screen.getByRole("button", { name: /Current lesson/i }));
+  it("preserves the lesson-mix preview for the Lessons route", () => {
+    render(<LessonPracticePreview />);
 
     expect(screen.getByRole("heading", { name: "Lesson 1" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "End preview and return to Lessons" })).toHaveAttribute(
+      "href",
+      "/lessons",
+    );
     expect(screen.getByText("Lesson mix · 1 of 10")).toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText("Type a prototype answer"), {
@@ -39,7 +44,7 @@ describe("Collections fixture prototype", () => {
     expect(screen.getByRole("status")).toHaveTextContent("Representative feedback state");
   });
 
-  it("saves collections in Your practice and returns there after direct practice", () => {
+  it("filters saved collections without adding a separate page", () => {
     render(<PracticeWorkspace />);
 
     fireEvent.click(screen.getByRole("button", { name: "Save Essential Verbs" }));
@@ -48,20 +53,21 @@ describe("Collections fixture prototype", () => {
       "true",
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /Your practice/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Saved" }));
     expect(screen.getByRole("button", { name: "Start Essential Verbs" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Start Essential Verbs" }));
-    fireEvent.click(
-      screen.getByRole("button", { name: "End preview and return to Your practice" }),
+    fireEvent.click(screen.getByRole("button", { name: "End preview and return to Practice" }));
+    expect(screen.getByRole("button", { name: "Saved" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
     );
-    expect(screen.getByRole("heading", { name: "Your practice" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Remove Essential Verbs from saved" }));
-    expect(screen.getByRole("heading", { name: "No saved practice" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "No saved collections" })).toBeInTheDocument();
   });
 
-  it("filters overlapping facets without popularity or ownership filters", () => {
+  it("filters overlapping facets without a popularity category", () => {
     render(<PracticeWorkspace />);
 
     fireEvent.click(screen.getByRole("button", { name: "Situations" }));
