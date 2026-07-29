@@ -28,7 +28,7 @@ const routes = [
   { id: "lessons", heading: "Lessons", path: "/lessons", prototypeLabel: "Lessons" },
   {
     id: "practice",
-    heading: "Your first activity will appear here.",
+    heading: "Practice",
     path: "/practice",
     prototypeLabel: "Practice",
   },
@@ -171,7 +171,7 @@ async function captureVisualMetrics(page, kind, routeId) {
       app: {
         home: ".continue-card",
         lessons: ".current-level > summary",
-        practice: ".explainer-row",
+        practice: ".practice-source-button",
         settings: ".settings-card",
       },
       prototype: {

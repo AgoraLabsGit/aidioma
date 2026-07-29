@@ -21,6 +21,7 @@
     "build": "next build",
     "references": "node scripts/capture-prototype-references.mjs",
     "smoke": "node scripts/smoke.mjs",
+    "smoke:practice-sets": "node scripts/smoke-practice-sets-prototype.mjs",
     "smoke:install": "playwright install chromium"
   },
   "dependencies": {

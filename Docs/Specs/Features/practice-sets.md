@@ -19,9 +19,13 @@ custom-topic generation follows in A9 and must use the generation gate below.
 
 ## Catalog and facets
 
-The learner browses **Vocabulary, Verbs, Phrases, Topics, and Situations**. These are overlapping
-facets, not one exclusive enum: a restaurant set may be mixed content, topic `food`, situation
-`ordering`, and marked Popular. **Popular** is a curated badge/filter; **My Sets** is ownership.
+The learner enters Practice through three concise destinations: **Lessons**, **Collections**, and
+**Your practice**. Lessons retains the lesson mix; Collections contains the curated catalog; Your
+practice will contain saved language and private lists/topics when those capabilities ship.
+
+Collections use **Vocabulary, Verbs, Phrases, Topics, and Situations** as overlapping facets, not
+one exclusive enum: a restaurant collection may be mixed content, topic `food`, and situation
+`ordering`. Popularity ranking, badges, and filtering are deferred from MVP.
 
 - Vocabulary: words grouped by frequency or theme.
 - Verbs: lemmas plus reviewed grammatical forms.
@@ -50,15 +54,16 @@ Every set offers only valid intersections of its capabilities:
 - Phrases: recognition/production, register, and communicative function;
 - Topics/Situations: content kinds, subtopic, and—when authored—role or goal.
 
-The detail screen leads with **Quick practice** using remembered defaults, summarizes the resulting
-session, and places advanced choices under **Customize**. Presets may offer Quick practice, Focused
-drill, and Mixed challenge. Starting a session persists a configuration snapshot; changing settings
-starts a new session rather than mutating scoring scope in flight. Invalid combinations (for example
-imperative + first-person singular) are unavailable, not accepted and repaired later.
+Selecting a collection starts practice with remembered defaults. A dedicated options control opens
+advanced choices before starting or while a session is in progress; it does not add an interstitial
+detail screen. Presets may offer Quick practice, Focused drill, and Mixed challenge. Starting a
+session persists a configuration snapshot; changing settings starts a new session rather than
+mutating scoring scope in flight. Invalid combinations (for example imperative + first-person
+singular) are unavailable, not accepted and repaired later.
 
 ## MVP delivery
 
-- Catalog, category/filter browsing, set detail, Quick practice, and Customize.
+- Three-way Practice entry, collection catalog/category filtering, direct start, and options.
 - A small original, reviewed launch pack spanning the five catalog facets; frequency informs
   selection but no third-party ranked table is copied wholesale.
 - Type + Flashcards, Both by default, size 10 by default, with direction/size and applicable
@@ -84,6 +89,6 @@ the authored-content review bar. Document/URL import remains PM-022.
 ## Accessibility and change policy
 
 Catalog controls, capability states, and session settings follow the accessibility spec; unavailable
-activities have text explanations. Prototype feedback may revise labels, layout, defaults, facets,
-and presets. Identity, provenance, answer secrecy, immutable history, and lesson/set progress
-separation require a new decision before changing.
+activities have text explanations in options. Prototype feedback may revise labels, layout,
+defaults, facets, and presets. Identity, provenance, answer secrecy, immutable history, and
+lesson/set progress separation require a new decision before changing.
