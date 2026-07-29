@@ -3,11 +3,11 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-29 (A1 CLOSED and published; A2 pending wave open)
+**Updated:** 2026-07-29 (A1 CLOSED and published; A2 ACTIVE)
 
 ## Position
 
-**Lane A — App (A1 CLOSED; A2 next)**
+**Lane A — App (A2 ACTIVE: A2-1)**
 - **A0 Design Close CLOSED.** Operator gave design VERIFIED + close GO on 2026-07-28.
 - A0-1…A0-H proven: design, legacy review, Docs SSOT, archive, and directory cleanup complete.
 - A1-1R is proven: the four responsive screens now use the approved prototype shell, tokens, density, and navigation with truthful zero states.
@@ -31,6 +31,8 @@
 - Vercel protects Preview only; Production is public. No Production seed or learner-data write ran.
 - OI-026 was rechecked immediately before publication: 4 production / 13 total advisories and no
   compatible production fix. OI-034 still requires live Clerk keys before real users.
+- Mike approved the A2 wave plan on 2026-07-29. A2-1 is active on `slice/A2-1`: one secure
+  comparison-first `/api/evaluate`, with one Gateway call only for poor matches and no persistence.
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
@@ -39,7 +41,7 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Open A2 with the <=5-bullet wave briefing and Mike's plan approval before implementation.
+1. Build and prove A2-1, then complete A2 hygiene and present the human VERIFIED runsheet.
 2. Continue C2 with a1-05 through validator zero errors and independent L2 PASS.
 3. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
 4. Curated Practice Sets are MVP wave A6; fixture-backed UI prototyping may precede A6, while the
