@@ -26,6 +26,8 @@ updated: 2026-07-29
   labels, layout, defaults, facets, and presets may change after Mike tests them.
 - The feature commit was rebased onto the A1-H-complete local `main`. Handoff 009 remains the
   authority for A1 publication and must not be superseded by this parallel UI effort.
+- Continue in `.worktrees/practice-sets` on `prototype/practice-sets-ui`; it was clean and aligned
+  with local `main` when this handoff was finalized.
 
 ## Prototype scope now
 
