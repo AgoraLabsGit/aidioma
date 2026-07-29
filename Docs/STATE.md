@@ -3,7 +3,7 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-29 (A1-H proven and locally merged; A1 operator verification next)
+**Updated:** 2026-07-29 (A1-H proven/merged; operator reports local test looks good)
 
 ## Position
 
@@ -26,6 +26,8 @@
   audits, high-effort review, and all delta re-audits are clean after dispositions.
 - Fresh public remote `AgoraLabsGit/aidioma` is live; proven `main` was pushed on 2026-07-28 for Vercel/Neon setup.
 - No Vercel deployment exists. This session has not pushed or deployed.
+- Mike reported the local `/close` test "Looks good". Explicit `VERIFIED` and publication `GO`
+  have not been recorded, so A1 remains active and unpublished.
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
@@ -34,9 +36,9 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Mike runs the A1 `/close` click script and replies `VERIFIED` or reports the exact mismatch.
+1. Record Mike's explicit `VERIFIED`; recheck OI-026, then request the separate publication `GO`.
 2. Continue C2 with a1-05 through validator zero errors and independent L2 PASS.
-3. After Mike verifies, recheck OI-026; push/deploy only on explicit GO, then run public Clerk smoke.
+3. On explicit GO only: push `main`, wait for Vercel, then run public route + Clerk smoke and close A1.
 4. Recheck OI-026 and promote OI-034 before real users; keep both lanes isolated.
 
 ## Standing decisions (highlights)

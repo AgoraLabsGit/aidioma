@@ -127,7 +127,10 @@ waves:
       - id: A1-H
         title: Hygiene slice (mandatory)
         status: proven
-        summary: "residue scan · fired deprecations · registers/specs reconcile"
+        summary: >
+          Proven: isolated Neon database/role credentials per environment; complete prelaunch Clerk
+          variables; drift-safe serialized migrations with write-target guards; env cleanup; residue,
+          dependency, register, and spec reconciliation; cache-free gates and clean delta audits.
 
   - id: A2
     lane: App
