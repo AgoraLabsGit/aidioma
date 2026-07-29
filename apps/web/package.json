@@ -19,6 +19,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "build": "next build",
+    "prove:evaluate": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx scripts/prove-evaluate.ts",
     "references": "node scripts/capture-prototype-references.mjs",
     "smoke": "node scripts/smoke.mjs",
     "smoke:practice-sets": "node scripts/smoke-practice-sets-prototype.mjs",
@@ -28,13 +29,15 @@
     "@aidioma/lesson-schema": "*",
     "@clerk/nextjs": "^7.6.2",
     "@neondatabase/serverless": "^1.1.0",
+    "ai": "^7.0.41",
     "drizzle-orm": "^0.45.2",
     "lucide-react": "^1.27.0",
     "next": "^16.2.12",
     "next-themes": "^0.4.6",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.0",

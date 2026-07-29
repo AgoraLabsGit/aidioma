@@ -14,7 +14,6 @@ the answer, or server grading thresholds. It sends only:
 
 ```ts
 type BrowserEvaluationRequest = {
-  sessionId: string;
   sourceType: 'lesson' | 'set';
   itemRef: string; // stable authored item/segment id
   modality: 'translate' | 'reading' | 'conversation';
@@ -23,18 +22,22 @@ type BrowserEvaluationRequest = {
 };
 ```
 
-The authenticated server resolves the session-owned lesson item or set target, canonical answer + reviewed alternates, tags,
-direction, and `contentVersion`. It rejects a missing/inactive item or a session owned by another
-user. MC is graded server-side by submitted choice index and persists as modality
-`multipleChoice`; it never calls AI. Flashcards never call AI.
+In A2 the authenticated server accepts only `sourceType=lesson` + `modality=translate`, resolves an
+active, non-deprecated vocab/sentence item, and owns its canonical answer, reviewed alternates,
+tags, direction, and `contentVersion`. Set, reading, and conversation requests fail explicitly until
+their roadmap waves. A3 adds the persisted practice-session reference and ownership check when that
+table exists; A2 never accepts an unchecked session identifier. MC is graded server-side by submitted
+choice index starting with the session/persistence loop; it never calls AI. Flashcards never call AI.
 
 ## Gate order
 
 1. Normalize input and server-owned expected answers.
 2. Exact match → correct, `evalSource=comparison`.
-3. Near-match bands → correct/close with deterministic word diff where possible.
-4. Poor match or no authored answer → one AI call through EvaluationService.
-5. Validate the structured result, persist it, then return learner-safe feedback.
+3. Character-near substitutions → deterministic `close` with a bounded word diff; comparison
+   returns `correct` only for a normalized exact authored match.
+4. Poor or meaning-uncertain match → one AI call through EvaluationService. A missing authored
+   target is source-integrity failure for A2 lesson items, not permission to invent authority.
+5. Validate the structured result, then return learner-safe feedback. A3 persists it.
 
 AI judges the submitted answer; it does not generate scored source material at MVP. Curated set
 targets are authored/reviewed under ADR-0015. Every result
@@ -44,7 +47,6 @@ uses the one GrammarTag/ErrorTag taxonomy from `@aidioma/lesson-schema`.
 
 ```ts
 type EvaluationResult = {
-  evaluationId: string;
   score: number;
   verdict: 'correct' | 'close' | 'wrong';
   feedback: string;
@@ -57,6 +59,10 @@ type EvaluationResult = {
   evalSource: 'comparison' | 'ai';
   modelUsed?: string;
 };
+
+type EvaluationResponse = EvaluationResult & {
+  requestId: string; // HTTP correlation only; A3 adds the persisted evaluationId
+};
 ```
 
 Any non-empty typed attempt receives the approved credit-for-trying floor. MC uses authored
@@ -64,14 +70,19 @@ explanation after the choice; typed modes use mode-smart help from the module sp
 
 ## Failure behavior
 
-- Invalid request/auth/item → explicit 4xx; never grade.
+- Invalid request/auth/item → explicit 4xx; never grade. Unknown request fields are rejected so a
+  browser cannot smuggle answers, thresholds, tags, model choices, or `correctIndex` across the boundary.
 - AI timeout/provider/schema failure after comparison misses → retryable **ungraded** response;
   preserve input for retry and do not fabricate a score, verdict, tags, or feedback.
 - Comparison success stands even if the AI provider is unavailable.
+- The app applies a bounded per-user, per-instance request/concurrency/duplicate-work guard. A
+  distributed Gateway user quota or staged WAF rule is still required before production promotion;
+  an in-memory serverless guard is defense in depth, not the perimeter control.
 - Record latency, path (comparison/AI), provider/model, failure class, and token/cost metadata;
   never log secrets or full private conversation history by default.
 
 ## Persistence
 
-Every graded result writes one `evaluations` row linked to `practice_sessions`; no evaluation
-cache table (ADR-0006). Exact DB fields live in `data-model.md`.
+A2 is deliberately stateless: it returns a correlation `requestId`, not a fake database ID. A3 adds
+`practice_sessions`, session ownership, and one `evaluations` row per graded submission; there is no
+evaluation cache table (ADR-0006). Exact future DB fields live in `data-model.md`.
