@@ -22,7 +22,7 @@ below then ran sequentially; the operator-owned `next-env.d.ts` was backed up an
 |---|---|---|
 | app typecheck | `npm run app:typecheck` | PASS |
 | app lint | `npm run app:lint` | PASS — zero warnings |
-| app tests | `npm run app:test` | PASS — 10 files / 36 tests |
+| app tests | `npm run app:test` | PASS — 11 files / 39 tests |
 | app build | cache-free `npm run app:build` | PASS — 7 routes + proxy |
 | app smoke | cache-free `npm run app:smoke` | PASS — 16 screen states + axe/keyboard/reflow |
 | content typecheck | `npm run content:typecheck` | PASS |
@@ -35,7 +35,10 @@ below then ran sequentially; the operator-owned `next-env.d.ts` was backed up an
   errors, missing write-target identity guards, incomplete Content CI app coverage, duplicate seed
   payload fields/projections, test-class Clerk disposition, and stale lifecycle records. All fixed or
   explicitly re-homed; the live two-runner concurrency proof remains the integration evidence.
-- Delta re-audit: pending.
+- Delta re-audit: PASS — database and security auditors reported no criticals or warnings. The
+  whole-wave reviewer’s final evidence findings were corrected: cache cleanup is explicit, the
+  operational credential event is classified accurately, write-target wiring has direct tests,
+  and new smoke images are isolated from historical A1-1R evidence.
 
 ## Review (stage 4)
 - High-effort whole-A1 review found the same lifecycle, migration-prefix, CI, seed-projection, and
@@ -58,6 +61,8 @@ below then ran sequentially; the operator-owned `next-env.d.ts` was backed up an
   explicit; Production requires an exact acknowledgement. Command-level tests prove a mismatch
   reaches no lock, journal, DDL, seed upsert, or commit.
 - Vercel reports no deployments. No push, deployment, preview/user write, or production seed occurred.
+- Current Practice smoke screenshots are under `apps/web/artifacts/a1-h/app/`; the historical
+  A1-1R images were restored byte-for-byte after the smoke command wrote its default path.
 
 ## Clean (stage 7)
 - OI-028…OI-033 closed; OI-026 and live-key promotion OI-034 explicitly deferred.
