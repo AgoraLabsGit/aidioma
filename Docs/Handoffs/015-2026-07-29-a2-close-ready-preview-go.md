@@ -9,6 +9,7 @@ updated: 2026-07-29
 
 **Role:** sole A2 release coordinator; do not advance A3 or Production Practice Sets
 **Next command:** ask Mike for explicit `PREVIEW GO`
+**Fresh-session prompt:** `Continue AIdioma from Handoff 015 as sole A2 release coordinator; run /close.`
 
 ## Exact local position
 
@@ -44,4 +45,5 @@ updated: 2026-07-29
 3. Keep A2/OI-036/OI-037 open on any mismatch. After Mike says `VERIFIED`, ask separately for
    Production GO. On GO, Mike publishes the Production-conditioned WAF equivalent before the exact
    verified tree is released; then prove Production and close the owned rows.
-4. Only after A2 is closed may a new `/run` select A3-1.
+4. Only after A2 is closed may a new `/run` select A2R-1. A3 waits for the A2R audit, founder UI
+   review, and hygiene close.

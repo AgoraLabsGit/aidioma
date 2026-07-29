@@ -152,12 +152,43 @@ waves:
         status: proven
         summary: "Residue/spec/register reconciliation proven; corrective security/cost audits clean. Close waits for authenticated Preview proof, VERIFIED + Production GO, then Production-conditioned Firewall publication and proof."
 
+  - id: A2R
+    lane: App
+    title: Application baseline and founder UI review
+    status: pending
+    operator_sees: >
+      A plain-language application health scorecard plus a phone/desktop UI review packet that
+      records the approved changes before persistence and the real session UI are built.
+    depends_on: [A2]
+    unblocks: "A3 persistence on an audited foundation"
+    slices:
+      - id: A2R-1
+        title: Cross-cutting architecture, security, integration, and smoke audit
+        status: pending
+        summary: >
+          Audit trust and data seams, composability and code organization, Clerk, Neon, AI Gateway,
+          Firewall, Vercel/CI, failure behavior, and dependency posture. Run the full App suite plus
+          browser -> API -> data smoke on real non-production services. Register and prioritize every
+          finding; route fixes through /fix. Do not implement A3 persistence or A6 Practice Sets.
+      - id: A2R-2
+        title: Founder-led UI/UX review and approved change packet
+        status: pending
+        summary: >
+          Review every current route with Mike on phone and desktop in light and dark modes; capture
+          desired visual, navigation, density, responsive, and accessibility changes. Reconcile the
+          module/accessibility specs and assign approved implementation to A3, A4, or a later wave
+          without building production sessions or Practice Sets in this review slice.
+      - id: A2R-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "reconcile findings/registers/specs · remove review artifacts · confirm every approved change has one owner"
+
   - id: A3
     lane: App
     title: Persistence loop (consensus W3)
     status: pending
     operator_sees: "A typed answer producing a real `evaluations` row, with item/lesson stats visibly updating."
-    depends_on: [A2]
+    depends_on: [A2R]
     slices:
       - id: A3-1
         title: Clerk -> users upsert; evaluations written; stats derived
@@ -186,7 +217,7 @@ waves:
       - id: A4-H
         title: Hygiene slice (mandatory)
         status: pending
-        summary: "delete dead pages/tokens in-slice or DEP rows; reconcile"
+        summary: "delete dead pages/tokens in-slice or DEP rows; repeat the SessionEngine/evaluation/persistence/UI seam review; reconcile"
 
   - id: A5
     lane: App
@@ -258,7 +289,7 @@ waves:
       - id: A7-2
         title: Launch quality gate + full audit
         status: pending
-        summary: "Content QA of 12 lessons and launch Practice Sets landed; full cache-free gate suite; high-effort review of the whole MVP; ship readiness."
+        summary: "Content QA of 12 lessons and launch Practice Sets landed; full cache-free gate suite; repeat the security/architecture/integration audit and browser-to-data smoke across the whole MVP; ship readiness."
       - id: A7-H
         title: Hygiene slice (mandatory)
         status: pending

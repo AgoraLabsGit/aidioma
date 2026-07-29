@@ -25,6 +25,8 @@ while (($#)); do
 done
 
 repo_root="$(git rev-parse --show-toplevel)"
+common_git_dir="$(git rev-parse --path-format=absolute --git-common-dir)"
+repo_family_root="$(dirname "$common_git_dir")"
 cd "$repo_root"
 
 if ((fetch)); then
@@ -68,6 +70,18 @@ echo "CURRENT WORKTREE"
 git status --short --branch
 git diff --check
 git diff --cached --check
+
+echo
+echo "REPO DEV/PREVIEW SERVERS"
+repo_server_processes="$({ ps -axo pid=,ppid=,command= || true; } | awk -v root="$repo_family_root/" '
+  index($0, root) && ($0 ~ /node_modules\/[.]bin\/(next|vite)([[:space:]]|$)/ || $0 ~ /next-server([[:space:]]|$)/ || $0 ~ /vercel[[:space:]]+(dev|serve)([[:space:]]|$)/) { print }
+')"
+if [[ -n "$repo_server_processes" ]]; then
+  printf '%s\n' "$repo_server_processes"
+  echo "FAIL repo_dev_preview_servers_running=1"
+  exit 1
+fi
+echo "none"
 
 echo
 echo "ALL WORKTREES"

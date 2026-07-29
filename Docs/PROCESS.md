@@ -74,6 +74,12 @@ for a deployable App wave: 🧑 PREVIEW GO → release Preview → 🧑 VERIFIED
    same tree, run a bounded post-deploy sanity check, then remove only branches/worktrees proven
    contained in `origin/main`.
 
+## Strategic application reviews
+- **A2R:** baseline architecture, security, integration, and UI review before persistence work begins.
+- **A4-H:** repeat the cross-component seam review after the real SessionEngine and UI exist.
+- **A7-2:** repeat the whole-app audit and browser-to-data smoke before MVP launch.
+- Founder UI review decisions update the specs and roadmap before their implementation wave opens.
+
 ## Standing rules
 - Deterministic checks always run before agent judgment (cheaper, and they don't lie).
 - Every /fix REQUIRES a regression test proven to fail without the fix.
@@ -91,3 +97,5 @@ for a deployable App wave: 🧑 PREVIEW GO → release Preview → 🧑 VERIFIED
 - Invoking `/close` authorizes a clean ordinary worker-branch push and draft PR. It never authorizes
   a release/Preview push, `main` push, live-infrastructure mutation, force push, or deletion of
   uncontained work. Those gates remain explicit in the `/close` command.
+- Every repo-owned long-lived dev/preview server is stopped before final `/close` preflight; the
+  preflight reports and fails on residue instead of killing an ambiguous process automatically.

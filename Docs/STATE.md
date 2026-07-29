@@ -44,7 +44,7 @@
 1. Resume from Handoff 015; review the prepared A2 `/close` evidence and human runsheet.
 2. On PREVIEW GO, publish one candidate; then publish only the staged Preview Firewall draft and
    complete authenticated A2 proof. After VERIFIED/GO, publish and prove the Production rule and main.
-3. Continue C2 with a1-05; keep A3 persistence, A4 real session UI, and A6 Production Sets separate.
+3. After A2 closes, run A2R's application audit and founder UI review before A3; continue C2 with a1-05.
 4. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
 
 ## Standing decisions (highlights)

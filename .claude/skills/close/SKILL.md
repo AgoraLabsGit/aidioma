@@ -16,12 +16,15 @@ description: Close any AIdioma agent session safely. Use when the operator says 
   deploying through the CLI, or changing other live infrastructure.
 - Preserve unrelated or ambiguous changes. Never stage everything blindly, reset a dirty worktree,
   delete an uncontained branch, or use force push.
+- Stop every repo-owned long-lived dev/preview server before final preflight. Preflight reports and
+  fails on server residue; it never kills an ambiguous process automatically.
 
 ## 1. Preflight and choose the mode
 
 1. Read `Docs/STATE.md`, `Docs/ROADMAP.yaml`, `Docs/PROCESS.md`, and the newest relevant Handoff.
-2. Run `.claude/skills/close/scripts/preflight.sh --fetch`. Inspect every dirty worktree and every
-   branch reported as not contained in the current target.
+2. Stop known repo-owned dev/preview servers, then run
+   `.claude/skills/close/scripts/preflight.sh --fetch`. Inspect every dirty worktree, reported server,
+   and branch reported as not contained in the current target.
 3. Stop for an active merge/rebase, secrets, unexplained generated files, failing required checks,
    an ambiguous owner, or remote movement that invalidates the base.
 4. Choose exactly one mode:
