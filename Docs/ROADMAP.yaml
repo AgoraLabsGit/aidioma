@@ -2,7 +2,8 @@
 # status: pending | active | built | proven | closed | parked
 # Every wave: sized to ONE agent session; >=1 slice the operator can SEE working (operator_sees).
 # Wave OPEN = <=5-bullet plain-language briefing + operator approval.
-# Wave CLOSE = /close only (full gates + audit + recap + testing script + operator GO).
+# Wave CLOSE = /close (full gates + audit + recap + runsheet) → PREVIEW GO → Preview →
+# VERIFIED → Production GO → main; non-deploying waves omit Preview.
 version: 1
 updated: 2026-07-29
 
@@ -20,8 +21,8 @@ mvp_finish_line: >
 
 # --- TWO LANES ------------------------------------------------------------------------------
 # This project runs two parallel lanes under this one roadmap. Only ONE wave per lane is active
-# at a time; the operator touches each wave exactly three times (approve plan / VERIFIED pass /
-# GO the push). Lanes coordinate through files, never chat.
+# at a time. A deployable App wave has four explicit operator gates (approve plan / PREVIEW GO /
+# VERIFIED pass / Production GO); non-deploying waves omit PREVIEW GO. Lanes coordinate through files.
 #   Lane A (App)     - the greenfield Next.js app. Owner: App Design Coordinator.
 #   Lane C (Content) - lesson authoring. Owner: Lesson Plan agent. Content and working records
 #                      live in /content; schema rulings live in Docs/Registers/schema-proposals.md.
@@ -149,7 +150,7 @@ waves:
       - id: A2-H
         title: Hygiene slice (mandatory)
         status: proven
-        summary: "Residue/spec/register reconciliation proven; corrective security/cost audits clean. Close waits for Mike's Preview-only Firewall publication and authenticated proof, then VERIFIED and separate GO."
+        summary: "Residue/spec/register reconciliation proven; corrective security/cost audits clean. Close waits for authenticated Preview proof, VERIFIED + Production GO, then Production-conditioned Firewall publication and proof."
 
   - id: A3
     lane: App

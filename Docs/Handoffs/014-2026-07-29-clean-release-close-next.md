@@ -1,7 +1,7 @@
 ---
 title: Handoff — clean release close, then continue the roadmap
 type: handoff
-status: active
+status: superseded
 updated: 2026-07-29
 ---
 
@@ -40,7 +40,9 @@ evaluation/platform specs. Run `.claude/skills/close/scripts/preflight.sh --fetc
    immutable Preview. Prove comparison/correct, safe typo/close, one AI result, spoof 400,
    signed-out 401, rate-limit 429 + `Retry-After`, Firewall/Gateway receipts, and no DB writes.
 4. Keep A2/OI-036/OI-037 open if any proof is absent. After Mike records **VERIFIED**, ask separately
-   for **GO**. Then merge/push that verified tree to `main` once and verify Production.
+   for **GO**. On GO, Mike first publishes the reviewed Production-conditioned Firewall equivalent;
+   then merge/push the verified tree to `main` once and verify Production comparison/AI/429, Firewall
+   and Gateway receipts, and no writes. A Preview-only condition is not Production protection.
 5. Protect `main`, remove contained remote candidate branches, close OI-036/OI-037, close A2, and
    only then run `/run` for A3-1. Lane C may independently continue a1-05.
 

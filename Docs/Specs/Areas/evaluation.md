@@ -93,14 +93,17 @@ explanation after the choice; typed modes use mode-smart help from the module sp
   server-derived `usr_` hash, then applies the separate local per-instance burst/concurrency/
   duplicate-work guard before source resolution or AI. The Firewall fixed-window counter is
   per-region, not globally atomic; the local guard remains defense in depth.
-- AI grading requires the dedicated evaluation Gateway key and the same opaque user attribution.
-  Missing/invalid perimeter configuration, key, or user fails closed without an AI call. This
-  account exposes no enforceable per-user Gateway budget, so `providerOptions.gateway.user` is
-  attribution, not a per-user denial control.
+- AI grading requires the dedicated evaluation Gateway key and the same opaque ID in both
+  `providerOptions.gateway.user` (reporting) and `quotaEntityId` (quota lookup). Missing/invalid
+  perimeter configuration, key, or ID fails closed without an AI call. Per-user denial is claimed
+  only after an account quota policy and a rejected over-quota Preview request are both evidenced.
 - The evaluation key has one aggregate $1 monthly budget across Development, Preview, and
   Production, with 50/75/100% alerts. Gateway checks it at request start: the crossing/in-flight
   request can complete and overshoot, while later calls reject. It is a soft cap, not an absolute
-  global ceiling. The Preview Firewall draft must be published and proven before OI-036 closes.
+  global ceiling. HTTP 402 budget exhaustion is recorded separately and returned as learner-safe,
+  non-retryable ungraded state. The Preview Firewall rule is acceptance proof only. After VERIFIED
+  plus Production GO, a Production-conditioned equivalent must be active before the released
+  endpoint is accepted; OI-036 closes only after Production 429/event and budget receipts pass.
 - Record latency, path (comparison/AI), provider/model, failure class, and token/cost metadata;
   never log secrets or full private conversation history by default.
 

@@ -14,7 +14,7 @@ export type EvaluationServiceOutcome =
   | { kind: "invalid"; reason: "empty" | "too-long" }
   | {
       kind: "ungraded";
-      retryable: true;
+      retryable: boolean;
       failure: AiFailureCategory;
     };
 
@@ -126,7 +126,7 @@ export class EvaluationService {
       });
       return {
         kind: "ungraded",
-        retryable: true,
+        retryable: generation.retryable,
         failure: generation.failure,
       };
     }

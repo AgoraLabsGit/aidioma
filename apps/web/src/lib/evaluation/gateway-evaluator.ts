@@ -43,6 +43,7 @@ export type AiVerdictRequest = {
 export type AiFailureCategory =
   | "aborted"
   | "authentication"
+  | "budget"
   | "configuration"
   | "provider"
   | "rate-limit"
@@ -71,7 +72,7 @@ export type AiVerdictGeneration =
     }
   | {
       kind: "ungraded";
-      retryable: true;
+      retryable: boolean;
       failure: AiFailureCategory;
       metadata: AiVerdictMetadata;
     };
@@ -93,6 +94,7 @@ type GatewayGenerateOptions = {
   providerOptions: {
     gateway: {
       tags: string[];
+      quotaEntityId?: string;
       user?: string;
     };
   };
@@ -213,6 +215,7 @@ function nestedError(error: unknown): unknown {
 function categorizeFailure(error: unknown, callerSignal?: AbortSignal): AiFailureCategory {
   if (callerSignal?.aborted) return "aborted";
   if (NoObjectGeneratedError.isInstance(error)) return "schema";
+  if (statusCode(error) === 402) return "budget";
 
   if (error instanceof Error || error instanceof DOMException) {
     if (error.name === "TimeoutError" || error.name === "GatewayTimeoutError") {
@@ -326,6 +329,7 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
         providerOptions: {
           gateway: {
             tags: ["scope:evaluation-only", "feature:evaluation", "prompt:v1"],
+            quotaEntityId: user,
             user,
           },
         },
@@ -360,10 +364,11 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
 
       return { kind: "graded", result: normalizeAiResult(parsed.data), metadata };
     } catch (error) {
+      const failure = categorizeFailure(error, request.signal);
       return {
         kind: "ungraded",
-        retryable: true,
-        failure: categorizeFailure(error, request.signal),
+        retryable: failure !== "budget",
+        failure,
         metadata: baseMetadata(),
       };
     }

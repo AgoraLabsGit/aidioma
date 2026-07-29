@@ -113,13 +113,16 @@ function ungradedResponse(
     {
       requestId,
       status: "ungraded",
-      retryable: true,
+      retryable: outcome.retryable,
       reason:
         outcome.failure === "rate-limit"
           ? "evaluation_rate_limited"
           : "evaluation_temporarily_unavailable",
     },
     status,
+    status === 429
+      ? { "Retry-After": String(EVALUATION_FIREWALL_RETRY_AFTER_SECONDS) }
+      : undefined,
   );
 }
 

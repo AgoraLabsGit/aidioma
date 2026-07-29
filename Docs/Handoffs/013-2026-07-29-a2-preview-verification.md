@@ -23,8 +23,9 @@ updated: 2026-07-29
 - Firewall fixed-window counters are per-region, not globally atomic. The key has one aggregate $1
   monthly budget across Development/Preview/Production with 50/75/100% alerts. Gateway checks at
   request start, so crossing/in-flight calls may overshoot; the budget is not an absolute cap.
-- The account exposes Gateway user attribution but no enforceable per-user budget. No stronger
-  per-user claim is allowed.
+- Historical account inspection exposed Gateway user attribution but no configured per-user policy.
+  Handoff 015 supersedes this observation: the app now emits `quotaEntityId`, while any enforcement
+  claim still requires a current account policy plus a separately approved rejection proof.
 - App CI, Content CI, and Vercel deployment checks must pass on PR #1's current head. Its exact
   commit deployment must return the expected signed-out 401 with `no-store` and `nosniff`. The
   Preview-only rule `aidioma-evaluate-user` is staged but unpublished; Production is unchanged.

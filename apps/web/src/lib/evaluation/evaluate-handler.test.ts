@@ -428,5 +428,24 @@ describe("POST /api/evaluate handler", () => {
       }),
     )(request());
     expect(limited.status).toBe(429);
+    expect(limited.headers.get("Retry-After")).toBe("60");
+
+    const budgeted = await createEvaluateHandler(
+      dependencies({
+        service: {
+          evaluate: async () => ({
+            kind: "ungraded",
+            retryable: false,
+            failure: "budget",
+          }),
+        },
+      }),
+    )(request());
+    expect(budgeted.status).toBe(503);
+    expect(await budgeted.json()).toMatchObject({
+      status: "ungraded",
+      retryable: false,
+      reason: "evaluation_temporarily_unavailable",
+    });
   });
 });

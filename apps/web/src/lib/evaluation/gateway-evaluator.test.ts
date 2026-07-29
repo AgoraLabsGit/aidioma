@@ -67,6 +67,7 @@ describe("GatewayAiVerdictGenerator", () => {
     expect(options.providerOptions.gateway).toEqual({
       tags: ["scope:evaluation-only", "feature:evaluation", "prompt:v1"],
       user: "usr_0123456789abcdef0123456789abcdef",
+      quotaEntityId: "usr_0123456789abcdef0123456789abcdef",
     });
     expect(JSON.parse(options.prompt)).toEqual({
       sourceText: request.sourceText,
@@ -204,6 +205,24 @@ describe("GatewayAiVerdictGenerator", () => {
     expect(JSON.stringify(outcome)).not.toContain("sensitive upstream detail");
   });
 
+  it("classifies an exhausted Gateway key budget as non-retryable", async () => {
+    const error = Object.assign(new Error("sensitive budget detail"), {
+      name: "GatewayRateLimitError",
+      statusCode: 402,
+    });
+    const generate = vi.fn<GatewayGenerateText>().mockRejectedValue(error);
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
+
+    const outcome = await generator.evaluate(request);
+
+    expect(outcome).toMatchObject({
+      kind: "ungraded",
+      retryable: false,
+      failure: "budget",
+    });
+    expect(JSON.stringify(outcome)).not.toContain("sensitive budget detail");
+  });
+
   it("classifies caller cancellation separately", async () => {
     const controller = new AbortController();
     controller.abort();
@@ -258,6 +277,7 @@ describe("GatewayAiVerdictGenerator", () => {
   it("does not fall back to the legacy or ambient Gateway credential", async () => {
     vi.stubEnv("EVALUATION_AI_GATEWAY_API_KEY", "");
     vi.stubEnv("AI_GATEWAY_API_KEY", "legacy_key_must_not_be_used");
+    vi.stubEnv("VERCEL_OIDC_TOKEN", "ambient_oidc_must_not_be_used");
     const generate = vi.fn<GatewayGenerateText>();
     const generator = new GatewayAiVerdictGenerator({ generate });
 

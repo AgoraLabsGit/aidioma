@@ -1,7 +1,8 @@
 # PROCESS — the machine
 
 > How every unit of work runs. Five commands drive it; everything between is automatic.
-> The operator touches a wave exactly three times: approve the plan · VERIFIED pass · GO the push.
+> A deployable App wave has four explicit gates: approve the plan · PREVIEW GO · VERIFIED pass ·
+> Production GO. Non-deploying waves omit PREVIEW GO; no gate is inferred from another.
 > Hard cap 150 lines. Any process change is an edit to THIS file, never a new convention doc.
 
 ## Two lanes
@@ -36,8 +37,9 @@ scaffolds in wave A1). A slice belongs to exactly one lane and runs the lifecycl
 > decision is recorded and cross-referenced. The lifecycle shape is otherwise identical.
 
 ## The wave lifecycle
-PLAN (operator approves a <=5-bullet briefing) → slices run the lifecycle above →
-**HYGIENE SLICE** (mandatory, below) → **/close** → 🧑 VERIFIED pass → push on 🧑 GO.
+PLAN (operator approves a <=5-bullet briefing) → slices → **HYGIENE SLICE** → **/close** →
+for a deployable App wave: 🧑 PREVIEW GO → release Preview → 🧑 VERIFIED → 🧑 Production GO →
+`main`; a non-deploying wave omits the Preview stage.
 - Every wave has >=1 slice the operator can SEE working (`operator_sees` in ROADMAP). For a
   design wave, "see" = the finished decision record / spec they approve.
 - Mid-wave ideas NEVER join the active wave — they become `Registers/open-items.md` rows

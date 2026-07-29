@@ -19,8 +19,9 @@ updated: 2026-07-29
   `Output.object` validation, minimal reasoning, zero SDK retries, an 800-token output ceiling, and
   a 12-second total timeout. Evaluation calls require `EVALUATION_AI_GATEWAY_API_KEY`; ambient
   Vercel OIDC and legacy `AI_GATEWAY_API_KEY` are intentionally not fallbacks, so the dedicated
-  key's aggregate budget governs every AI grading call. Opaque `user` is spend attribution; this
-  account exposes no enforceable per-user budget control. A direct provider SDK is only a fallback adapter when Gateway lacks a
+  key's aggregate budget governs every AI grading call. The same opaque ID is sent as reporting
+  `user` and quota-enforcement `quotaEntityId`; actual per-user denial still requires a configured,
+  proven account policy. A direct provider SDK is only a fallback adapter when Gateway lacks a
   required model/capability; it must not bypass the service contract.
 - **Auth:** Clerk's Next.js SDK. **Data:** Neon Postgres through the server-only Neon serverless
   driver + Drizzle ORM boundary frozen in A1-1. Connection construction is lazy so builds and
@@ -40,6 +41,9 @@ updated: 2026-07-29
   monthly budget and spend are aggregate. Budget checks occur at request start and may overshoot on
   a crossing/in-flight call; this is not an absolute cap. Firewall SDK admission uses an opaque
   user key, with per-region rather than globally atomic counters, before the separate local guard.
+  Preview and Production require environment-conditioned Firewall publication and receipts; Preview
+  proof alone does not authorize or prove the Production rule; a Preview-only condition may simply
+  not count a Production request, so code fail-closed behavior is not a substitute for that rule.
 - All six documented Clerk names are configured locally and in all three Vercel environments;
   values stay untracked. The current matching pair is test-class for prelaunch verification and must
   be promoted to live-class before real users (OI-034).
