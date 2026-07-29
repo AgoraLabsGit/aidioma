@@ -46,6 +46,9 @@ updated: 2026-07-29
 - Real Development DB + live Gateway: `PASS evaluate-proof development-db=verified comparison=graded gateway=graded persistence=none` (540 input / 218 output / 758 total tokens on the final run).
 - Built Next `/api/evaluate`: signed-out Clerk request returned 401 learner-safe JSON with `no-store` and `nosniff`.
 - Unit/handler coverage owns invalid JSON/size, answer/model/session spoofing, unsupported source/modality, inactive/deprecated/malformed source, admission, abort/timeout/provider/rate/schema failure, exact/near/semantic-risk comparison, strict output, and safe telemetry.
+- The final reconciled release tree passed skill validation plus App typecheck, zero-warning lint,
+  19 files / 137 tests, build, and 16-state smoke; all Content gates also passed. Its unified `/close`
+  serializes integration and Vercel deploys only `release/**`/`main`, directly addressing OI-037.
 
 ## Residue report
 - Live source has exactly one API evaluator route, one `EvaluationService`, and one Gateway adapter. Searches found no live `claude-service`, `universal-ai-learning`, `claude-mvp`, or superseded sentence-evaluation route; references survive only in archived evidence and the roadmap history.

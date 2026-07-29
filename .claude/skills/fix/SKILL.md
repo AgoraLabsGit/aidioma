@@ -17,6 +17,7 @@ description: Fix a bug or make a small product update through a corrective loop 
 6. Run the full lane `verify:` gate set. For risky/mutating fixes add 1 light audit pass.
 7. Prove the fix at the user level (the same path the operator saw it break on) — PASS/FAIL
    script or screenshot evidence.
-8. Merge locally; move the register row to Closed with the proof reference; rewrite STATE if
-   position changed. NEVER push — fixes ride the next /close.
+8. Keep the fix on its isolated branch; move the register row to Closed with the proof reference;
+   rewrite STATE if position changed. Do not merge. `/close` commits/pushes the worker branch and
+   the sole release coordinator decides which candidate receives it.
 9. Report plainly: what was broken, why, what proves it's fixed.

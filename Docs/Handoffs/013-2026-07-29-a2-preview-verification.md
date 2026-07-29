@@ -1,11 +1,13 @@
 ---
 title: Handoff — verify reconciled A2 release candidate
 type: handoff
-status: active
+status: superseded
 updated: 2026-07-29
 ---
 
 # Handoff — verify reconciled A2 release candidate
+
+> Superseded by Handoff 014 after branch reconciliation and the unified `/close` workflow.
 
 **Role:** Mike completes the human Preview gate; agent records evidence and waits for VERIFIED
 **Hard rule:** the release-candidate branch may be pushed for PR/Preview proof. Never merge/push

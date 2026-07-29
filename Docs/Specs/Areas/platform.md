@@ -51,9 +51,11 @@ updated: 2026-07-29
 - **Localhost = build loop.** Run deterministic gates and UI work locally with Development-scoped
   Clerk/Neon/Gateway credentials. Localhost is never evidence that Vercel auth, Firewall, routing,
   environment scoping, or Production aliases work.
-- **Git Preview = acceptance.** Push a non-`main` release-candidate branch and use its PR deployment.
-  The commit-specific URL is the immutable evidence target; the branch URL is only a moving
-  convenience alias. Preview uses only Preview-scoped credentials and the Preview database.
+- **Git Preview = acceptance.** Vercel auto-deploys only `release/**` and `main`; ordinary worker
+  branches remain local/CI-only so parallel sessions do not create Preview builds. Push a gated
+  release candidate only after PREVIEW GO and use its PR deployment. The commit-specific URL is the
+  immutable evidence target; the branch URL is only a moving convenience alias. Preview uses only
+  Preview-scoped credentials and the Preview database.
 - **Production = released behavior.** `main` is Vercel's sole Production branch; `aidioma.io`,
   `aidioma-agoralabs.vercel.app`, and the `git-main` alias are post-GO verification targets, never
   pre-merge test environments. A push to `main` is a Production release action.

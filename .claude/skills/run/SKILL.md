@@ -26,11 +26,14 @@ description: Build the next runnable roadmap slice through the full lifecycle (g
 6. **Audit (stage 3):** spawn isolated read-only auditor(s) sized to risk with ONLY the diff +
    criteria. Triage; fix criticals + warnings; delta re-audit the fixes. Record in the wave file.
 7. **Review (stage 4):** run /code-review (medium) on the slice diff; triage the same way.
-8. **Merge (stage 5):** merge to main locally. NEVER push.
+8. **Handoff (stage 5):** keep the completed work on its isolated branch. Do not merge into
+   `main` or another worker branch; `/close` commits/pushes the worker branch and the sole release
+   coordinator integrates it.
 9. **Prove (stage 6):** exercise the real user path — headless PASS/FAIL script + screenshot
    for UI; real end-to-end run/validate for backend/content. Record the proof. Not proven = not
    done. (Design slices: the recorded, cross-referenced decision IS the proof.)
 10. **Clean + record (stages 7–8):** delete superseded code or file a DEP row; flip ROADMAP
     status to `proven`; rewrite STATE; update touched specs; close the wave file.
-11. **Report** in plain language: what got built, what the operator can see, what's next. If
-    this was the wave's last content slice, say the wave is ready for `/close`.
+11. **Report** in plain language: what got built, what the operator can see, what's next. End every
+    agent session with `/close`, including paused work. If this was the wave's last content slice,
+    say coordinator `/close` can assemble the release candidate.
