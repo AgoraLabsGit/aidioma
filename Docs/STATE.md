@@ -3,7 +3,7 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-29 (A1 CLOSED; A2 ACTIVE; Practice IA prototype closed)
+**Updated:** 2026-07-29 (A1 CLOSED; A2 ACTIVE; Preview AI fix in progress)
 
 ## Position
 
@@ -18,7 +18,6 @@
   and asserts deferred-ordinal drift. OI-028…OI-032 are closed; OI-026 remains deferred upstream.
 - Production is live at `https://aidioma-agoralabs.vercel.app`; all routes, Clerk test auth, and phone overflow proof pass.
 - Vercel protects Preview only; Production is public. No Production seed or learner-data write ran.
-- OI-026 remains 4 production / 13 total advisories with no compatible fix.
 - A2-1 is proven locally: one authenticated, server-owned `/api/evaluate`; normalized exact answers
   grade free, safe character-near answers grade `close`, and meaning-uncertain/poor answers make one
   strict Gateway call. It is stateless; A3 still owns sessions, persistence, and derived stats.
@@ -27,8 +26,10 @@
 - OI-036 adds opaque user-keyed regional Firewall admission before the preserved local guard, plus a
   mandatory evaluation-only key with an aggregate $1 monthly request-start budget. Reporting and
   quota lookup share the opaque ID; account policy and rejection proof remain external close gates.
-- The release candidate remains local; its valid Preview-only Firewall draft is still unpublished.
-  Its next Git-backed Preview requires explicit PREVIEW GO.
+- PR #2 deployed close SHA `9ef2f5e`; CI/Vercel passed. Preview Firewall is active at 30/60; Production is unchanged.
+- Authenticated comparison/spoof passed, but AI returned `503` before a Gateway event. BUG-001 owns it;
+  the active key is nearly unused, excluding budget exhaustion.
+- Diagnostic candidate logs bounded HTTP status; full gates pass at 19 files / 140 tests and audit is clean.
 - OI-037 owns the repeated direct-push race. This reconciliation combines the hardened A2 line with
   the revised Practice IA; publication must use this resolved line, not a divergent tip.
 - The revised fixture-backed Practice IA keeps lesson entry under Lessons and opens Practice on
@@ -41,9 +42,9 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Resume from Handoff 015; review the prepared A2 `/close` evidence and human runsheet.
-2. On PREVIEW GO, publish one candidate; then publish only the staged Preview Firewall draft and
-   complete authenticated A2 proof. After VERIFIED/GO, publish and prove the Production rule and main.
+1. Resume from Handoff 016; review BUG-001 and request PREVIEW GO for the replacement candidate.
+2. Re-run authenticated AI proof first; only after it passes run the Firewall burst and remaining
+   receipts. After VERIFIED/GO, publish and prove the Production rule and main.
 3. After A2 closes, run A2R's application audit and founder UI review before A3; continue C2 with a1-05.
 4. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
 

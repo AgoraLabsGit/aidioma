@@ -1,11 +1,13 @@
 ---
 title: Handoff — A2 close ready for Preview GO
 type: handoff
-status: active
+status: superseded
 updated: 2026-07-29
 ---
 
 # Handoff — A2 close ready for Preview GO
+
+> Superseded by Handoff 016 after the first authenticated Preview AI request returned `503`.
 
 **Role:** sole A2 release coordinator; do not advance A3 or Production Practice Sets
 **Next command:** ask Mike for explicit `PREVIEW GO`

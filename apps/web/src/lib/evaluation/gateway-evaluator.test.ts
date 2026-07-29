@@ -223,6 +223,58 @@ describe("GatewayAiVerdictGenerator", () => {
     expect(JSON.stringify(outcome)).not.toContain("sensitive budget detail");
   });
 
+  it("retains only safe upstream diagnostics for a provider rejection", async () => {
+    const error = Object.assign(new Error("sensitive provider detail"), {
+      name: "APICallError",
+      statusCode: 400,
+      responseBody: JSON.stringify({
+        error: {
+          code: "invalid_gateway_request",
+          message: "sensitive response detail",
+        },
+      }),
+    });
+    const generate = vi.fn<GatewayGenerateText>().mockRejectedValue(error);
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
+
+    const outcome = await generator.evaluate(request);
+
+    expect(outcome).toMatchObject({
+      kind: "ungraded",
+      retryable: false,
+      failure: "provider",
+      metadata: {
+        providerStatus: 400,
+      },
+    });
+    expect(JSON.stringify(outcome)).not.toContain("sensitive provider detail");
+    expect(JSON.stringify(outcome)).not.toContain("sensitive response detail");
+    expect(JSON.stringify(outcome)).not.toContain("invalid_gateway_request");
+  });
+
+  it("bounds safe status traversal for cyclic provider errors", async () => {
+    const error = Object.assign(new Error("sensitive cyclic detail"), {
+      name: "UnexpectedFailure",
+    });
+    const second = Object.assign(new Error("second sensitive cyclic detail"), {
+      name: "UnexpectedFailure",
+      cause: error,
+    });
+    Object.assign(error, { cause: second });
+    const generate = vi.fn<GatewayGenerateText>().mockRejectedValue(error);
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
+
+    const outcome = await generator.evaluate(request);
+
+    expect(outcome).toMatchObject({
+      kind: "ungraded",
+      retryable: true,
+      failure: "unknown",
+    });
+    expect(JSON.stringify(outcome)).not.toContain("sensitive cyclic detail");
+    expect(JSON.stringify(outcome)).not.toContain("second sensitive cyclic detail");
+  });
+
   it("classifies caller cancellation separately", async () => {
     const controller = new AbortController();
     controller.abort();

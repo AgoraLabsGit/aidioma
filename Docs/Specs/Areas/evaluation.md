@@ -86,8 +86,9 @@ explanation after the choice; typed modes use mode-smart help from the module sp
 
 - Invalid request/auth/item → explicit 4xx; never grade. Unknown request fields are rejected so a
   browser cannot smuggle answers, thresholds, tags, model choices, or `correctIndex` across the boundary.
-- AI timeout/provider/schema failure after comparison misses → retryable **ungraded** response;
-  preserve input for retry and do not fabricate a score, verdict, tags, or feedback.
+- AI timeout/transient-provider/schema failure after comparison misses → retryable **ungraded**;
+  deterministic upstream 4xx is non-retryable except 408/429. Preserve input and never fabricate
+  a score, verdict, tags, or feedback.
 - Comparison success stands even if the AI provider is unavailable.
 - After authentication and request validation, the app checks the Vercel Firewall SDK with the
   server-derived `usr_` hash, then applies the separate local per-instance burst/concurrency/
@@ -104,8 +105,8 @@ explanation after the choice; typed modes use mode-smart help from the module sp
   non-retryable ungraded state. The Preview Firewall rule is acceptance proof only. After VERIFIED
   plus Production GO, a Production-conditioned equivalent must be active before the released
   endpoint is accepted; OI-036 closes only after Production 429/event and budget receipts pass.
-- Record latency, path (comparison/AI), provider/model, failure class, and token/cost metadata;
-  never log secrets or full private conversation history by default.
+- Record latency, path (comparison/AI), provider/model, failure class, bounded HTTP status, and
+  token/cost metadata; never log provider bodies/codes, secrets, or private conversation history.
 
 ## Persistence
 

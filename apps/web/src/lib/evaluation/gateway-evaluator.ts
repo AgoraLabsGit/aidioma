@@ -56,6 +56,7 @@ export type AiVerdictMetadata = {
   requestedModel?: AiEvaluationModel;
   responseModel?: string;
   generationId?: string;
+  providerStatus?: number;
   latencyMs: number;
   usage?: {
     inputTokens?: number;
@@ -204,6 +205,21 @@ function statusCode(error: unknown): number | undefined {
   return undefined;
 }
 
+function safeProviderStatus(error: unknown): number | undefined {
+  const seen = new Set<unknown>();
+  let current: unknown = error;
+  for (let depth = 0; depth < 8 && current !== undefined; depth += 1) {
+    if (seen.has(current)) return undefined;
+    seen.add(current);
+    const direct = statusCode(current);
+    if (direct !== undefined && Number.isInteger(direct) && direct >= 400 && direct <= 599) {
+      return direct;
+    }
+    current = nestedError(current);
+  }
+  return undefined;
+}
+
 function nestedError(error: unknown): unknown {
   if (RetryError.isInstance(error)) return error.lastError;
   if (typeof error === "object" && error !== null && "cause" in error) {
@@ -212,8 +228,15 @@ function nestedError(error: unknown): unknown {
   return undefined;
 }
 
-function categorizeFailure(error: unknown, callerSignal?: AbortSignal): AiFailureCategory {
+function categorizeFailure(
+  error: unknown,
+  callerSignal?: AbortSignal,
+  seen: Set<unknown> = new Set(),
+  depth = 0,
+): AiFailureCategory {
   if (callerSignal?.aborted) return "aborted";
+  if (depth >= 8 || seen.has(error)) return "unknown";
+  seen.add(error);
   if (NoObjectGeneratedError.isInstance(error)) return "schema";
   if (statusCode(error) === 402) return "budget";
 
@@ -235,7 +258,7 @@ function categorizeFailure(error: unknown, callerSignal?: AbortSignal): AiFailur
 
   const nested = nestedError(error);
   if (nested !== undefined && nested !== error) {
-    const nestedCategory = categorizeFailure(nested, callerSignal);
+    const nestedCategory = categorizeFailure(nested, callerSignal, seen, depth + 1);
     if (nestedCategory !== "unknown") return nestedCategory;
   }
 
@@ -365,11 +388,19 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
       return { kind: "graded", result: normalizeAiResult(parsed.data), metadata };
     } catch (error) {
       const failure = categorizeFailure(error, request.signal);
+      const providerStatus = safeProviderStatus(error);
+      const retryable =
+        failure !== "budget" &&
+        !(providerStatus !== undefined && providerStatus >= 400 && providerStatus < 500 &&
+          providerStatus !== 408 && providerStatus !== 429);
       return {
         kind: "ungraded",
-        retryable: failure !== "budget",
+        retryable,
         failure,
-        metadata: baseMetadata(),
+        metadata: {
+          ...baseMetadata(),
+          ...(providerStatus !== undefined && { providerStatus }),
+        },
       };
     }
   }

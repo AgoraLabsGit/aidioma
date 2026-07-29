@@ -71,13 +71,20 @@ updated: 2026-07-29
 - Fresh isolated install plus every App gate passed. Built Next with Development auth returned
   signed-out `401`, `no-store`, and `nosniff` from the actual route. The read-only persistence
   receipt query passed against Development with six named columns and both future tables absent.
-- Read-only Vercel inspection found no active custom rule and one valid unpublished draft:
-  `aidioma-evaluate-user`, Preview only, fixed window 30 requests / 60 seconds. Production is unchanged.
-- Preview SDK proof requires Automation Protection Bypass and automatic System Environment Variables.
-  The current CLI cannot re-list Gateway budgets, so Mike must bind the deployed env name/scope to
-  the same safe key ID in the $1 monthly budget receipt and record quota-policy availability.
-- OI-036 remains open. Preview proof is necessary but insufficient: after VERIFIED + Production GO,
-  Mike must publish and prove a Production-conditioned equivalent.
+- Canonical PR #2 deployed close SHA `9ef2f5e`; CI/Vercel passed. Preview rule
+  `rule_a_idioma_evaluate_user_limit_preview_kqNZKH` is active at 30 requests / 60 seconds and
+  conditioned on Preview only. Production remains unchanged.
+- Authenticated Preview proof returned comparison `200`/`200`, AI `503`, and spoof rejection `400`.
+  The burst stopped before rate-limit testing. Request `f3965a82-1813-4b75-9af7-aa9da37e15db`
+  reached the AI service path, but no corresponding Gateway event was registered.
+- BUG-001 owns the failure. The named Gateway key is active at `$0.001528/$1` monthly spend, so
+  budget exhaustion is excluded; the remaining evidence points to pre-generation authentication or
+  request configuration, while the old safe log discarded the upstream status.
+- Isolated diagnostic candidate `fix/BUG-001-preview-ai-503` retains only bounded HTTP status,
+  marks deterministic 4xx non-retryable, and logs no provider body/code. Its full App suite passes
+  19 files / 140 tests, build, and 16-state smoke; the required audit and delta audit are clean.
+- OI-036 and BUG-001 remain open. A replacement Git Preview must reveal the safe upstream status and
+  pass the AI request before the burst, DB, Gateway, budget, and Production gates resume.
 
 ## Human Preview verification runsheet
 1. Coordinator records candidate SHA, release PR, and immutable Git Preview URL; every CI/deployment

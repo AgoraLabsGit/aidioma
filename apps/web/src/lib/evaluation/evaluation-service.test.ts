@@ -151,6 +151,7 @@ describe("EvaluationService", () => {
         provider: "gateway",
         requestedModel: "openai/gpt-5-mini",
         generationId: "gen_safe",
+        providerStatus: 400,
         latencyMs: 5,
         usage: { totalTokens: 42 },
       },
@@ -176,6 +177,7 @@ describe("EvaluationService", () => {
       model: "openai/gpt-5-mini",
       provider: "gateway",
       generationId: "gen_safe",
+      providerStatus: 400,
       usage: { totalTokens: 42 },
     });
     const serialized = JSON.stringify(events);
