@@ -1,7 +1,7 @@
 ---
 title: Handoff — Neon audited; A1-H kickoff
 type: handoff
-status: active
+status: superseded
 updated: 2026-07-29
 ---
 

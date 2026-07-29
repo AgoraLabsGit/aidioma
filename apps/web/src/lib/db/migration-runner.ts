@@ -5,6 +5,11 @@ import {
   type LessonOrdinalConstraintRow,
   type Migration,
 } from "./migrations";
+import {
+  assertDatabaseIdentity,
+  type DatabaseExpectation,
+  type DatabaseIdentityRow,
+} from "./safety";
 
 // Stable two-int namespace: ASCII "AIDI" + "MIGR".
 export const MIGRATION_LOCK_KEYS = [0x41494449, 0x4d494752] as const;
@@ -55,13 +60,21 @@ const ordinalConstraintSql = `
 export async function runMigrations(
   client: MigrationClient,
   migrations: readonly Migration[],
+  expectation: DatabaseExpectation,
 ): Promise<MigrationRunResult> {
   let transactionStarted = false;
+  let hasFailure = false;
+  let failure: unknown;
+  let result: MigrationRunResult | undefined;
 
-  await client.connect();
   try {
+    await client.connect();
     await client.query("BEGIN");
     transactionStarted = true;
+    const identityResult = await client.query(`
+      SELECT current_database() AS database, current_user AS role
+    `);
+    assertDatabaseIdentity(identityResult.rows as DatabaseIdentityRow[], expectation);
     await client.query("SET LOCAL lock_timeout = '30s'");
     await client.query("SELECT pg_advisory_xact_lock($1, $2)", [...MIGRATION_LOCK_KEYS]);
     await client.query(journalSql);
@@ -90,13 +103,30 @@ export async function runMigrations(
     await client.query("COMMIT");
     transactionStarted = false;
 
-    return { current: migrations.length - pending.length, applied: pending };
+    result = { current: migrations.length - pending.length, applied: pending };
   } catch (error) {
+    hasFailure = true;
+    failure = error;
     if (transactionStarted) {
-      await client.query("ROLLBACK");
+      try {
+        await client.query("ROLLBACK");
+      } catch {
+        // Preserve the migration/identity failure; the transaction cleanup error is secondary.
+      }
     }
-    throw error;
   } finally {
-    await client.end();
+    try {
+      await client.end();
+    } catch (error) {
+      if (!hasFailure) {
+        hasFailure = true;
+        failure = error;
+      }
+    }
   }
+
+  if (hasFailure) {
+    throw failure;
+  }
+  return result!;
 }

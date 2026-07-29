@@ -35,6 +35,18 @@ describe("migration journal planning", () => {
       pendingMigrations(migrations.slice(1), [{ name: "0000_first.sql", checksum: "aaa" }]),
     ).toThrow(/missing from the repository: 0000_first\.sql/);
   });
+
+  it("rejects a journal gap or out-of-order history", () => {
+    expect(() => pendingMigrations(migrations, [{ name: "0001_second.sql", checksum: "bbb" }])).toThrow(
+      /ordered prefix/,
+    );
+    expect(() =>
+      pendingMigrations(migrations, [
+        { name: "0001_second.sql", checksum: "bbb" },
+        { name: "0000_first.sql", checksum: "aaa" },
+      ]),
+    ).toThrow(/ordered prefix/);
+  });
 });
 
 describe("lesson ordinal drift assertion", () => {

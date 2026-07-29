@@ -22,10 +22,15 @@ updated: 2026-07-29
   zero-data public shell routes do not require credentials.
 - **Deployment baseline:** Vercel project `agoralabs/aidioma` tracks `AgoraLabsGit/aidioma`, uses
   `apps/web` as its Next.js root on Node 22.x, and has the free `aidioma-db` Neon resource connected.
-  Production, Preview, and Development use distinct databases (`neondb`, `aidioma_preview`, and
-  `aidioma_development`); only Production receives user data. Branch-per-preview may replace the
-  shared Preview database later, but Preview writes cannot reach Production now. All six documented
-  Clerk names are configured locally and in all three Vercel environments; values stay untracked.
+  Production, Preview, and Development use distinct databases and owners (`neondb` /
+  `neondb_owner`, `aidioma_preview` / `aidioma_preview_owner`, and `aidioma_development` /
+  `aidioma_development_owner`). Vercel scopes use their corresponding dedicated credentials.
+  Credential tests prove both non-production roles are denied Production and each other; the
+  Neon-managed production owner retains one-way administrative reach. Only Production receives user
+  data. Branch-per-preview may replace the shared Preview database later.
+- All six documented Clerk names are configured locally and in all three Vercel environments;
+  values stay untracked. The current matching pair is test-class for prelaunch verification and must
+  be promoted to live-class before real users (OI-034).
 - AI calls, database credentials, reviewed answer sets, thresholds, and `correctIndex` remain on the
   authenticated server. Web and future native clients consume learner-safe APIs only.
 

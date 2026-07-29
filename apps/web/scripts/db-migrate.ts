@@ -2,6 +2,7 @@ import { Client } from "@neondatabase/serverless";
 
 import { runMigrations } from "../src/lib/db/migration-runner";
 import { loadMigrations } from "../src/lib/db/migrations";
+import { resolveDatabaseExpectation } from "../src/lib/db/safety";
 
 async function main(): Promise<void> {
   const connectionString = process.env.DATABASE_URL?.trim();
@@ -11,7 +12,8 @@ async function main(): Promise<void> {
 
   const migrationsDirectoryUrl = new URL("../drizzle/", import.meta.url);
   const migrations = await loadMigrations(migrationsDirectoryUrl);
-  const result = await runMigrations(new Client(connectionString), migrations);
+  const expectation = resolveDatabaseExpectation();
+  const result = await runMigrations(new Client(connectionString), migrations, expectation);
 
   for (const migration of result.applied) {
     console.log(

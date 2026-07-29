@@ -1,6 +1,11 @@
 import { neon } from "@neondatabase/serverless";
 
 import { loadSeedLessons } from "../src/lib/content/seed";
+import {
+  assertDatabaseIdentity,
+  resolveDatabaseExpectation,
+  type DatabaseIdentityRow,
+} from "../src/lib/db/safety";
 
 async function main(): Promise<void> {
   const connectionString = process.env.DATABASE_URL?.trim();
@@ -14,6 +19,11 @@ async function main(): Promise<void> {
   }
 
   const sql = neon(connectionString);
+  const expectation = resolveDatabaseExpectation();
+  const identity = (await sql`
+    SELECT current_database() AS database, current_user AS role
+  `) as DatabaseIdentityRow[];
+  assertDatabaseIdentity(identity, expectation);
   const results = await sql.transaction((transaction) =>
     lessons.flatMap((lesson) => [
       transaction`

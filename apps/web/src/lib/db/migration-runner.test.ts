@@ -7,6 +7,12 @@ import {
 } from "./migration-runner";
 import type { Migration } from "./migrations";
 
+const expectation = {
+  target: "development" as const,
+  database: "aidioma_development",
+  role: "aidioma_development_owner",
+};
+
 const migrations: Migration[] = [
   { name: "0000_first.sql", checksum: "aaa", statements: ["CREATE TABLE first_table ()"] },
   { name: "0001_second.sql", checksum: "bbb", statements: ["ALTER TABLE first_table ADD x int"] },
@@ -18,18 +24,27 @@ class FakeClient implements MigrationClient {
 
   constructor(
     private readonly applied: Array<{ name: string; checksum: string }> = [],
-    private readonly failOn?: string,
+    private readonly failOn: string[] = [],
   ) {}
 
   async connect(): Promise<void> {
     this.calls.push({ text: "CONNECT" });
+    if (this.failOn.includes("CONNECT")) {
+      throw new Error("injected failure: CONNECT");
+    }
   }
 
   async query(text: string, values?: unknown[]): Promise<{ rows: unknown[] }> {
     const normalized = text.trim().replace(/\s+/g, " ");
     this.calls.push({ text: normalized, values });
-    if (this.failOn && normalized.includes(this.failOn)) {
-      throw new Error("injected failure");
+    const failure = this.failOn.find((token) => normalized.includes(token));
+    if (failure) {
+      throw new Error(`injected failure: ${failure}`);
+    }
+    if (normalized.startsWith("SELECT current_database()")) {
+      return {
+        rows: [{ database: expectation.database, role: expectation.role }],
+      };
     }
     if (normalized.startsWith("SELECT name, checksum")) {
       return { rows: this.applied };
@@ -52,13 +67,16 @@ class FakeClient implements MigrationClient {
   async end(): Promise<void> {
     this.ended = true;
     this.calls.push({ text: "END" });
+    if (this.failOn.includes("END")) {
+      throw new Error("injected failure: END");
+    }
   }
 }
 
 describe("serialized migration runner", () => {
   it("locks before journal planning and commits migrations plus drift assertion together", async () => {
     const client = new FakeClient();
-    const result = await runMigrations(client, migrations);
+    const result = await runMigrations(client, migrations, expectation);
     const texts = client.calls.map((call) => call.text);
 
     expect(texts.indexOf("SELECT pg_advisory_xact_lock($1, $2)")).toBeLessThan(
@@ -82,7 +100,7 @@ describe("serialized migration runner", () => {
       { name: "0000_first.sql", checksum: "aaa" },
       { name: "0001_second.sql", checksum: "bbb" },
     ]);
-    const result = await runMigrations(client, migrations);
+    const result = await runMigrations(client, migrations, expectation);
     const texts = client.calls.map((call) => call.text);
 
     expect(texts.some((text) => text.includes("FROM pg_constraint"))).toBe(true);
@@ -90,11 +108,26 @@ describe("serialized migration runner", () => {
   });
 
   it("rolls back and closes the client after a failure", async () => {
-    const client = new FakeClient([], "ALTER TABLE first_table");
+    const client = new FakeClient([], ["ALTER TABLE first_table"]);
 
-    await expect(runMigrations(client, migrations)).rejects.toThrow("injected failure");
+    await expect(runMigrations(client, migrations, expectation)).rejects.toThrow(
+      "injected failure: ALTER TABLE first_table",
+    );
     expect(client.calls.map((call) => call.text)).toContain("ROLLBACK");
     expect(client.calls.map((call) => call.text)).not.toContain("COMMIT");
     expect(client.ended).toBe(true);
+  });
+
+  it("closes after a connect failure and preserves primary failures over cleanup failures", async () => {
+    const connectFailure = new FakeClient([], ["CONNECT"]);
+    await expect(runMigrations(connectFailure, migrations, expectation)).rejects.toThrow(
+      "injected failure: CONNECT",
+    );
+    expect(connectFailure.ended).toBe(true);
+
+    const cleanupFailure = new FakeClient([], ["ALTER TABLE first_table", "ROLLBACK", "END"]);
+    await expect(runMigrations(cleanupFailure, migrations, expectation)).rejects.toThrow(
+      "injected failure: ALTER TABLE first_table",
+    );
   });
 });

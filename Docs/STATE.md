@@ -3,23 +3,27 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-29 (A1-2 proven; Neon wiring audited; C2 a1-04 L2-passed)
+**Updated:** 2026-07-29 (A1-H built and gated; independent delta audit next)
 
 ## Position
 
-**Lane A — App (ACTIVE: A1-H next)**
+**Lane A — App (ACTIVE: A1-H audit/close prep)**
 - **A0 Design Close CLOSED.** Operator gave design VERIFIED + close GO on 2026-07-28.
 - A0-1…A0-H proven: design, legacy review, Docs SSOT, archive, and directory cleanup complete.
 - A1-1R is proven: the four responsive screens now use the approved prototype shell, tokens, density, and navigation with truthful zero states.
 - Proof covers 16 route/theme/viewport states, axe, keyboard focus, reduced motion, 200% text, exact route state, and no horizontal overflow.
 - A1-2 is proven: the web app imports the shared contract; Content CI is live; checksum-journaled
   SQL and the idempotent seed loaded 4 canonical lessons / 134 items into real Neon with zero-change reruns.
-- Vercel `agoralabs/aidioma` tracks the public GitHub repo at `apps/web` on Node 22.x; free Neon is
-  attached across environments. Read-only audit confirmed live schema/journal/seed integrity.
-- The Clerk key pair is present locally; four route variables and all Vercel Clerk configuration
-  remain before authenticated deployment. OI-028…OI-032 own the Neon/env hardening findings.
-- OI-026 tracks unpatched upstream Next/ESLint dependency advisories before deployment.
+- Neon Production, Preview, and Development now have distinct databases, owners, and Vercel
+  credentials. Both non-production roles are denied Production and each other; all copies passed
+  schema/journal/content integrity proof. Local writes default to the Development identity.
+- All six Clerk variables exist locally and in all three Vercel scopes without tracked/printed
+  values. The pair is test-class for prelaunch; live-key promotion is OI-034.
+- SQL is the sole DDL authority; the runner enforces exact journal history, serializes migrations,
+  and asserts deferred-ordinal drift. OI-028…OI-032 are closed; OI-026 remains deferred upstream.
+- The redundant root env is removed; `apps/web/.env.local` is authoritative at mode 0600.
 - Fresh public remote `AgoraLabsGit/aidioma` is live; proven `main` was pushed on 2026-07-28 for Vercel/Neon setup.
+- No Vercel deployment exists. This session has not pushed or deployed.
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
@@ -28,11 +32,10 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Run A1-H residue/dependency/spec reconciliation, then prepare A1 for `/close`.
+1. Finish the A1-H delta audit and local merge, then give Mike the A1 `/close` test script.
 2. Continue C2 with a1-05 through validator zero errors and independent L2 PASS.
-3. Complete OI-028…OI-032: isolate Neon environments, guard migration/DDL drift and concurrency,
-   remove env duplication, and add the full Clerk configuration to Vercel.
-4. Keep both lanes isolated; never push without wave-close GO.
+3. After Mike verifies, push/deploy only on explicit GO; then run the public Clerk smoke.
+4. Recheck OI-026 and promote OI-034 before real users; keep both lanes isolated.
 
 ## Standing decisions (highlights)
 - A1-first · vocab 12–15 / sentences 18–20 · Completed/Mastered · Direction default Both.

@@ -71,6 +71,8 @@ function itemPayload(item: LessonItem): Record<string, unknown> {
   delete payload.id;
   delete payload.kind;
   delete payload.deprecated;
+  delete payload.grammarTags;
+  delete payload.difficulty;
   return payload;
 }
 
@@ -199,7 +201,7 @@ export function applySeed(
   );
 
   for (const lesson of incoming) {
-    lessons.set(lesson.slug, cloneLesson(lesson));
+    lessons.set(lesson.slug, { ...cloneLesson(lesson), items: [] });
     for (const item of lesson.items) {
       const existing = items.get(item.id);
       if (existing && existing.lessonId !== item.lessonId) {
@@ -212,6 +214,13 @@ export function applySeed(
         cloneItem({ ...item, deprecated: Boolean(existing?.deprecated || item.deprecated) }),
       );
     }
+  }
+
+  for (const lesson of lessons.values()) {
+    lesson.items = [...items.values()]
+      .filter((item) => item.lessonId === lesson.id)
+      .map(cloneItem)
+      .sort((left, right) => compareText(left.id, right.id));
   }
 
   return { lessons, items };

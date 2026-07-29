@@ -20,9 +20,9 @@ coordinate through files (this repo's `Docs/` + `content/`), never assume shared
 
 ## Two lanes (see ROADMAP.yaml)
 - **Lane A (App)** — greenfield Next.js (Vercel + Neon + Clerk). V1/V2 are read-only reference.
-  Currently in the **A0 Design-Close** wave; no app code until it closes.
-- **Lane C (Content)** — lesson authoring; working records in `/content`. Currently
-  **PARKED** at 3 pilot lessons; un-pause needs the operator's explicit go after A0 closes.
+  A0 is closed; **A1 foundation** is active, with A1-H preparing the wave-close verification.
+- **Lane C (Content)** — lesson authoring; working records in `/content`. **C2 is active**:
+  a1-04 is L2-passed and a1-05 is next.
 - Only one wave per lane is active at a time. The lanes coordinate via files.
 - The **App Design Coordinator role has final approval over the lesson schema** (v1-FROZEN,
   additive-only); rulings are logged in `Docs/Registers/schema-proposals.md`.
@@ -32,7 +32,7 @@ coordinate through files (this repo's `Docs/` + `content/`), never assume shared
 - Work on branches (`slice/<id>`), merge locally at slice close. **NEVER push without the
   operator's explicit GO** (given only at /close after their VERIFIED pass).
 - Deterministic gates (from ROADMAP `verify:` — per lane) run BEFORE any agent judgment, every
-  slice. A gate that didn't run counts as failed. (App-lane gates are TBD until A1 scaffolds.)
+  slice. A gate that didn't run counts as failed. Both lanes now have live commands.
 - Every slice ends with an isolated read-only audit sized to risk (additive → 1 light check;
   mutating/schema/security → 2–3 auditors) plus /code-review on the diff. You triage findings;
   fix criticals + warnings; delta re-audit the fixes. "I reviewed it myself" never substitutes.

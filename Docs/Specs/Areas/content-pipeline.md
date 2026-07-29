@@ -2,7 +2,7 @@
 title: Content pipeline — app-facing contract
 type: area-spec
 status: active
-updated: 2026-07-28
+updated: 2026-07-29
 ---
 
 # Content pipeline — app-facing contract
@@ -30,7 +30,8 @@ updated: 2026-07-28
 Schema parse → cross-file validator → immutable-ID snapshot → adversarial L2 QA → founder L3 →
 paid native L4 for launch lessons. Current commands live in root `package.json` and ROADMAP.
 GitHub Content CI runs the deterministic contract, validator, fixture, prototype-current, and seed
-transformation tests whenever their direct inputs change; it requires no database credentials.
+transformation tests plus the full credential-free app typecheck/test suites whenever their direct
+inputs change; it requires no database credentials.
 
 ## App consumption
 
@@ -41,6 +42,8 @@ deprecated item, and rejects item reparenting. Future serving queries must selec
 non-deprecated items. The DB is a serving copy; JSON in `content/lessons/` is canonical.
 Migration planning/application is serialized under one database advisory lock. SQL migrations—not
 Drizzle generation/push—own DDL, and each run fails closed if the deferred ordinal constraint drifts.
+The local write target defaults to Development and is verified by database plus role identity before
+any mutation. Preview is explicit; Production also requires the documented exact acknowledgement.
 
 ## Deferred pipeline work
 
