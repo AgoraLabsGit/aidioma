@@ -64,6 +64,14 @@ const NUMBER_WORDS = new Set([
   "eighteen",
   "nineteen",
   "twenty",
+  "thirty",
+  "forty",
+  "fifty",
+  "sixty",
+  "seventy",
+  "eighty",
+  "ninety",
+  "hundred",
   "cero",
   "un",
   "uno",
@@ -87,6 +95,26 @@ const NUMBER_WORDS = new Set([
   "dieciocho",
   "diecinueve",
   "veinte",
+  "veintiún",
+  "veintiuno",
+  "veintiuna",
+  "veintidós",
+  "veintitrés",
+  "veinticuatro",
+  "veinticinco",
+  "veintiséis",
+  "veintisiete",
+  "veintiocho",
+  "veintinueve",
+  "treinta",
+  "cuarenta",
+  "cincuenta",
+  "sesenta",
+  "setenta",
+  "ochenta",
+  "noventa",
+  "cien",
+  "ciento",
 ]);
 
 export type AcceptedAnswerOptions = {
@@ -316,23 +344,38 @@ function diffTokens(userInput: string, expected: string): DiffStep[] {
 export function createWordDiff(userInput: string, expected: string): WordDiffEntry[] {
   const userDisplay = prepareText(userInput, false).split(" ").filter(Boolean);
   const expectedDisplay = prepareText(expected, false).split(" ").filter(Boolean);
+  const steps = diffTokens(userInput, expected);
 
-  const boundedText = (value: string): string =>
-    Array.from(value).slice(0, EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH).join("");
+  return createBoundedWordDiff(userDisplay, expectedDisplay, steps);
+}
 
-  return diffTokens(userInput, expected)
+function boundText(value: string): string {
+  let result = "";
+  for (const codePoint of value) {
+    if (result.length + codePoint.length > EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH) break;
+    result += codePoint;
+  }
+  return result;
+}
+
+function createBoundedWordDiff(
+  userDisplay: readonly string[],
+  expectedDisplay: readonly string[],
+  steps: readonly DiffStep[],
+): WordDiffEntry[] {
+  return steps
     .slice(0, EVALUATION_WORD_DIFF_MAX_ENTRIES)
     .map((step) => {
       if (step.type === "same") {
-        return { text: boundedText(userDisplay[step.userIndex]), mark: "correct" };
+        return { text: boundText(userDisplay[step.userIndex]), mark: "correct" };
       }
 
       if (step.type === "extra") {
-        return { text: boundedText(userDisplay[step.userIndex]), mark: "extra" };
+        return { text: boundText(userDisplay[step.userIndex]), mark: "extra" };
       }
 
       if (step.type === "missing") {
-        const expectedText = boundedText(expectedDisplay[step.expectedIndex]);
+        const expectedText = boundText(expectedDisplay[step.expectedIndex]);
         return { text: expectedText, mark: "missing", suggestion: expectedText };
       }
 
@@ -348,10 +391,10 @@ export function createWordDiff(userInput: string, expected: string): WordDiffEnt
       );
 
       return {
-        text: boundedText(userText),
+        text: boundText(userText),
         mark:
           wordDistance === 1 || wordSimilarity >= CLOSE_SIMILARITY ? "close" : "wrong",
-        suggestion: boundedText(expectedText),
+        suggestion: boundText(expectedText),
       };
     });
 }
@@ -365,7 +408,12 @@ function negationTokens(text: string): string[] {
 function numberTokens(text: string): string[] {
   return normalizeForComparison(text)
     .split(" ")
-    .filter((token) => /^\d+(?:[.,]\d+)?$/u.test(token) || NUMBER_WORDS.has(token));
+    .filter(
+      (token) =>
+        /^\d+(?:[.,]\d+)?$/u.test(token) ||
+        NUMBER_WORDS.has(token) ||
+        (token.includes("-") && token.split("-").every((part) => NUMBER_WORDS.has(part))),
+    );
 }
 
 function sequencesEqual(left: readonly string[], right: readonly string[]): boolean {
@@ -379,11 +427,22 @@ function hasMeaningRisk(userInput: string, expected: string): boolean {
   );
 }
 
-function diffNeedsSemanticReview(wordDiff: readonly WordDiffEntry[]): boolean {
-  return wordDiff.some(
-    (entry) =>
-      entry.mark === "wrong" || entry.mark === "missing" || entry.mark === "extra",
-  );
+function diffNeedsSemanticReview(
+  userDisplay: readonly string[],
+  expectedDisplay: readonly string[],
+  steps: readonly DiffStep[],
+): boolean {
+  return steps.some((step) => {
+    if (step.type === "missing" || step.type === "extra") return true;
+    if (step.type === "same") return false;
+
+    const userToken = normalizeForComparison(userDisplay[step.userIndex]);
+    const expectedToken = normalizeForComparison(expectedDisplay[step.expectedIndex]);
+    return (
+      levenshteinDistance(userToken, expectedToken) !== 1 &&
+      comparisonSimilarity(userToken, expectedToken) < CLOSE_SIMILARITY
+    );
+  });
 }
 
 function correctScore(similarity: number): number {
@@ -438,10 +497,13 @@ export function compareAnswer(
     };
   }
 
-  const wordDiff = createWordDiff(userInput, matchedAnswer);
+  const userDisplay = prepareText(userInput, false).split(" ").filter(Boolean);
+  const expectedDisplay = prepareText(matchedAnswer, false).split(" ").filter(Boolean);
+  const steps = diffTokens(userInput, matchedAnswer);
+  const wordDiff = createBoundedWordDiff(userDisplay, expectedDisplay, steps);
   if (
     hasMeaningRisk(userInput, matchedAnswer) ||
-    diffNeedsSemanticReview(wordDiff) ||
+    diffNeedsSemanticReview(userDisplay, expectedDisplay, steps) ||
     bestSimilarity < CLOSE_SIMILARITY
   ) {
     return {

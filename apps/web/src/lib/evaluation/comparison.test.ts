@@ -259,6 +259,19 @@ describe("word diff", () => {
       ),
     ).toBe(true);
   });
+
+  it("bounds Unicode text by the schema's UTF-16 length without splitting code points", () => {
+    const userInput = `${"🙂".repeat(200)}a`;
+    const expected = `${"🙂".repeat(200)}b`;
+    const decision = compareAnswer(userInput, [expected]);
+
+    expect(decision.kind).toBe("graded");
+    if (decision.kind !== "graded") return;
+    expect(EvaluationResultSchema.safeParse(decision.result).success).toBe(true);
+    expect(decision.result.wordDiff?.[0]?.text.length).toBeLessThanOrEqual(
+      EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH,
+    );
+  });
 });
 
 describe("comparison gate", () => {
@@ -328,6 +341,16 @@ describe("comparison gate", () => {
         "Tengo tres gatos en mi casa hoy",
       ]).kind,
     ).toBe("ai-required");
+    expect(
+      compareAnswer("Tengo setenta años y vivo aquí", [
+        "Tengo sesenta años y vivo aquí",
+      ]).kind,
+    ).toBe("ai-required");
+    expect(
+      compareAnswer("I have twenty-one books at home", [
+        "I have thirty-one books at home",
+      ]).kind,
+    ).toBe("ai-required");
   });
 
   it("routes semantically uncertain missing, extra, and wrong words to AI", () => {
@@ -341,6 +364,18 @@ describe("comparison gate", () => {
         "Quiero poco azúcar en mi café por favor",
       ]).kind,
     ).toBe("ai-required");
+  });
+
+  it("reviews semantic edits after the learner-facing diff cap", () => {
+    const prefix = Array.from({ length: EVALUATION_WORD_DIFF_MAX_ENTRIES + 1 }, () =>
+      "hola",
+    ).join(" ");
+
+    const decision = compareAnswer(`${prefix} rojo`, [`${prefix} verde`]);
+
+    expect(decision.kind).toBe("ai-required");
+    if (decision.kind !== "ai-required") return;
+    expect(decision.wordDiff).toHaveLength(EVALUATION_WORD_DIFF_MAX_ENTRIES);
   });
 
   it("uses authored order to break equal-similarity ties", () => {

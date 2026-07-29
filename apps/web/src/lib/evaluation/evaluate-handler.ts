@@ -184,35 +184,6 @@ export function createEvaluateHandler({
       );
     }
 
-    let source: ResolvedLessonSource;
-    try {
-      source = await resolveSource(parsed.data.itemRef, parsed.data.direction);
-    } catch (error) {
-      if (error instanceof EvaluationSourceNotFoundError) {
-        return errorResponse(
-          requestId,
-          404,
-          "source_not_found",
-          "That practice item is not available.",
-        );
-      }
-      if (error instanceof EvaluationSourceIntegrityError) {
-        return errorResponse(
-          requestId,
-          503,
-          "source_unavailable",
-          "That practice item cannot be graded right now.",
-        );
-      }
-      return errorResponse(
-        requestId,
-        503,
-        "evaluation_unavailable",
-        "Evaluation is temporarily unavailable.",
-      );
-    }
-
-    let outcome: EvaluationServiceOutcome;
     const userKey = trackingId(principal.userId);
     const requestFingerprint = createHash("sha256")
       .update(JSON.stringify(parsed.data))
@@ -233,6 +204,34 @@ export function createEvaluateHandler({
     }
 
     try {
+      let source: ResolvedLessonSource;
+      try {
+        source = await resolveSource(parsed.data.itemRef, parsed.data.direction);
+      } catch (error) {
+        if (error instanceof EvaluationSourceNotFoundError) {
+          return errorResponse(
+            requestId,
+            404,
+            "source_not_found",
+            "That practice item is not available.",
+          );
+        }
+        if (error instanceof EvaluationSourceIntegrityError) {
+          return errorResponse(
+            requestId,
+            503,
+            "source_unavailable",
+            "That practice item cannot be graded right now.",
+          );
+        }
+        return errorResponse(
+          requestId,
+          503,
+          "evaluation_unavailable",
+          "Evaluation is temporarily unavailable.",
+        );
+      }
+
       const serviceRequest: EvaluationServiceRequest = {
         requestId,
         request: parsed.data,
@@ -240,7 +239,16 @@ export function createEvaluateHandler({
         userTrackingId: userKey,
         signal: request.signal,
       };
-      outcome = await service.evaluate(serviceRequest);
+      const outcome: EvaluationServiceOutcome = await service.evaluate(serviceRequest);
+
+      if (outcome.kind === "invalid") {
+        return errorResponse(requestId, 400, "invalid_request", "The request is not valid.");
+      }
+      if (outcome.kind === "ungraded") {
+        return ungradedResponse(requestId, outcome);
+      }
+
+      return json({ requestId, ...outcome.result }, 200);
     } catch {
       return errorResponse(
         requestId,
@@ -252,13 +260,5 @@ export function createEvaluateHandler({
       admission.release();
     }
 
-    if (outcome.kind === "invalid") {
-      return errorResponse(requestId, 400, "invalid_request", "The request is not valid.");
-    }
-    if (outcome.kind === "ungraded") {
-      return ungradedResponse(requestId, outcome);
-    }
-
-    return json({ requestId, ...outcome.result }, 200);
   };
 }

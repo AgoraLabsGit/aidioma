@@ -218,15 +218,18 @@ describe("POST /api/evaluate handler", () => {
 
   it("rejects over-limit work before service evaluation and returns Retry-After", async () => {
     const service = { evaluate: vi.fn() } satisfies EvaluationServicePort;
+    const resolveSource = vi.fn<EvaluationSourceResolver>();
     const response = await createEvaluateHandler(
       dependencies({
         service,
+        resolveSource,
         admit: () => ({ allowed: false, retryAfterSeconds: 17 }),
       }),
     )(request());
 
     expect(response.status).toBe(429);
     expect(response.headers.get("retry-after")).toBe("17");
+    expect(resolveSource).not.toHaveBeenCalled();
     expect(service.evaluate).not.toHaveBeenCalled();
     expect(await response.json()).toMatchObject({
       error: { code: "evaluation_rate_limited" },
