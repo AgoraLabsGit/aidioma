@@ -6,12 +6,7 @@ import { PracticeWorkspace } from "./practice-workspace";
 
 expect.extend(toHaveNoViolations);
 
-function openCollections() {
-  fireEvent.click(screen.getByRole("button", { name: "Collections" }));
-}
-
 function openEssentialVerbsOptions() {
-  openCollections();
   fireEvent.click(screen.getByRole("button", { name: "Customize Essential Verbs" }));
 }
 
@@ -20,23 +15,56 @@ describe("Collections fixture prototype", () => {
     window.localStorage.clear();
   });
 
-  it("keeps Practice to three concise destinations and defers unfinished paths honestly", () => {
+  it("leads with equal Current lesson and Your practice shortcuts above collections", () => {
     render(<PracticeWorkspace />);
 
     expect(screen.getByRole("heading", { name: "Practice" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Lessons" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "Collections" })).toBeEnabled();
-    expect(screen.getByRole("button", { name: "Your practice" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /Current lesson/i })).toBeEnabled();
+    expect(screen.getByRole("button", { name: /Your practice/i })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Start Essential Verbs" })).toBeInTheDocument();
     expect(screen.queryByText(/Popular right now/i)).not.toBeInTheDocument();
+  });
+
+  it("takes Lessons directly to the current lesson-mix preview", () => {
+    render(<PracticeWorkspace />);
+    fireEvent.click(screen.getByRole("button", { name: /Current lesson/i }));
+
+    expect(screen.getByRole("heading", { name: "Lesson 1" })).toBeInTheDocument();
+    expect(screen.getByText("Lesson mix · 1 of 10")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Type a prototype answer"), {
+      target: { value: "Hola, me llamo Ana." },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Preview feedback" }));
+    expect(screen.getByRole("status")).toHaveTextContent("Representative feedback state");
+  });
+
+  it("saves collections in Your practice and returns there after direct practice", () => {
+    render(<PracticeWorkspace />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Save Essential Verbs" }));
+    expect(screen.getByRole("button", { name: "Remove Essential Verbs from saved" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /Your practice/i }));
+    expect(screen.getByRole("button", { name: "Start Essential Verbs" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Start Essential Verbs" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "End preview and return to Your practice" }),
+    );
+    expect(screen.getByRole("heading", { name: "Your practice" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Remove Essential Verbs from saved" }));
+    expect(screen.getByRole("heading", { name: "No saved practice" })).toBeInTheDocument();
   });
 
   it("filters overlapping facets without popularity or ownership filters", () => {
     render(<PracticeWorkspace />);
-    openCollections();
 
-    expect(screen.getByText("5 collections")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Situations" }));
-    expect(screen.getByText("2 collections · Situations")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Start Everyday Phrases/i })).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Start Ordering at a Restaurant/i }),
@@ -47,12 +75,11 @@ describe("Collections fixture prototype", () => {
 
   it("starts a collection directly and keeps unsupported activity explanations in options", async () => {
     render(<PracticeWorkspace />);
-    openCollections();
     fireEvent.click(screen.getByRole("button", { name: "Start Essential Verbs" }));
 
     expect(screen.getByLabelText("Type a prototype answer")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "End preview and return to Collections" }));
+    fireEvent.click(screen.getByRole("button", { name: "End preview and return to Practice" }));
     fireEvent.click(screen.getByRole("button", { name: "Customize Ordering at a Restaurant" }));
     await screen.findByRole("dialog", { name: "Practice options" });
     expect(
@@ -103,7 +130,6 @@ describe("Collections fixture prototype", () => {
 
   it("shows the representative Type feedback state without grading or persistence", () => {
     render(<PracticeWorkspace />);
-    openCollections();
     fireEvent.click(screen.getByRole("button", { name: "Start Essential Verbs" }));
 
     fireEvent.change(screen.getByLabelText("Type a prototype answer"), {

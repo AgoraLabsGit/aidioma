@@ -976,6 +976,71 @@ input {
   gap: 0.8rem;
 }
 
+.practice-entry-feed {
+  gap: 0.7rem;
+}
+
+.practice-shortcut-card {
+  display: grid;
+  width: 100%;
+  min-height: 86px;
+  grid-template-columns: 1.4rem minmax(0, 1fr) 1rem;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-card);
+  color: var(--text);
+  background: var(--card);
+  text-align: left;
+  cursor: pointer;
+}
+
+.practice-shortcut-card:hover {
+  border-color: var(--accent);
+}
+
+.practice-shortcut-card > svg:first-child {
+  width: 19px;
+  height: 19px;
+  color: var(--accent-text);
+}
+
+.practice-shortcut-card > svg:last-child {
+  width: 17px;
+  height: 17px;
+  color: var(--muted);
+}
+
+.practice-shortcut-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.practice-shortcut-copy small {
+  color: var(--accent-text);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.practice-shortcut-copy strong {
+  margin-top: 0.18rem;
+  overflow: hidden;
+  font-size: 0.88rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.practice-shortcut-copy span {
+  margin-top: 0.1rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
 .practice-source-list {
   gap: 0.65rem;
   padding-top: 1rem;
@@ -1128,6 +1193,7 @@ input {
 }
 
 .practice-set-card {
+  position: relative;
   display: flex;
   min-width: 0;
   min-height: 178px;
@@ -1145,9 +1211,9 @@ input {
   min-width: 0;
   flex: 1;
   flex-direction: column;
-  padding: 0.95rem 0.25rem 0.95rem 1rem;
+  padding: 0.95rem 1rem;
   border: 0;
-  border-radius: var(--radius-card) 0 0 var(--radius-card);
+  border-radius: var(--radius-card);
   color: var(--text);
   background: transparent;
   text-align: left;
@@ -1155,7 +1221,7 @@ input {
 }
 
 .practice-set-start:hover {
-  background: var(--soft);
+  background: transparent;
 }
 
 .practice-set-start:focus-visible {
@@ -1163,16 +1229,59 @@ input {
   z-index: 1;
 }
 
-.set-options-button {
-  width: 44px;
-  height: 44px;
-  align-self: flex-end;
-  margin: 0 0.55rem 0.55rem 0.25rem;
+.set-card-actions {
+  display: flex;
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  gap: 0.05rem;
 }
 
-.set-options-button svg {
+.set-options-button,
+.saved-toggle {
+  width: 44px;
+  height: 44px;
+}
+
+.set-card-actions .icon-button {
+  border-color: transparent;
+  background: transparent;
+}
+
+.set-card-actions .icon-button:hover {
+  border-color: var(--border);
+  background: var(--soft);
+}
+
+.set-options-button svg,
+.saved-toggle svg {
   width: 18px;
   height: 18px;
+}
+
+.saved-toggle.is-saved {
+  color: var(--accent-text);
+  background: transparent;
+  border-color: transparent;
+}
+
+.saved-toggle.is-saved svg {
+  fill: currentColor;
+}
+
+.saved-empty-state {
+  display: flex;
+  min-height: 12rem;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.8rem;
+  text-align: center;
+}
+
+.saved-empty-state h2 {
+  margin: 0;
+  font-size: 1rem;
 }
 
 .set-card-topline,
@@ -1196,6 +1305,11 @@ input {
   color: var(--accent-text);
   background: var(--accent-soft);
   border-color: var(--accent-soft);
+}
+
+.set-level,
+.practice-set-start > strong {
+  padding-right: 5rem;
 }
 
 .practice-set-start > strong {

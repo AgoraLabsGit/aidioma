@@ -28,7 +28,11 @@ export function LessonCatalog() {
           <Card className="level-body" id="lesson-1">
             <ol className="lesson-list">
               {a1Lessons.map((lesson) => (
-                <LessonRow key={lesson.number} lesson={lesson} />
+                <LessonRow
+                  href={lesson.status === "current" ? `/practice?lesson=${lesson.number}` : undefined}
+                  key={lesson.number}
+                  lesson={lesson}
+                />
               ))}
             </ol>
           </Card>

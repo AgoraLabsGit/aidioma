@@ -19,9 +19,18 @@ custom-topic generation follows in A9 and must use the generation gate below.
 
 ## Catalog and facets
 
-The learner enters Practice through three concise destinations: **Lessons**, **Collections**, and
-**Your practice**. Lessons retains the lesson mix; Collections contains the curated catalog; Your
-practice will contain saved language and private lists/topics when those capabilities ship.
+Practice opens on the curated collection catalog. Equal **Current lesson** and **Your practice**
+shortcuts sit above it: the first starts the learner's active lesson mix and the second opens the
+personal subpage. The main Lessons navigation is the curriculum browser and also opens the current
+lesson mix. Your practice will contain saved language and private lists/topics when those
+capabilities ship.
+
+The prototype sends Lessons directly to the current lesson-mix preview. Its real recipe, session
+record, evaluation, and lesson-progress behavior remain the A4 SessionEngine implementation.
+
+Saved is the default view inside **Your practice**, not a fourth top-level Practice destination.
+Learners can save any practice source with the same bookmark control; the saved view groups those
+references without copying or changing the underlying lesson, collection, or private content.
 
 Collections use **Vocabulary, Verbs, Phrases, Topics, and Situations** as overlapping facets, not
 one exclusive enum: a restaurant collection may be mixed content, topic `food`, and situation
@@ -63,7 +72,7 @@ singular) are unavailable, not accepted and repaired later.
 
 ## MVP delivery
 
-- Three-way Practice entry, collection catalog/category filtering, direct start, and options.
+- Current-lesson shortcut, inline collection catalog/category filtering, direct start, and options.
 - A small original, reviewed launch pack spanning the five catalog facets; frequency informs
   selection but no third-party ranked table is copied wholesale.
 - Type + Flashcards, Both by default, size 10 by default, with direction/size and applicable
@@ -77,6 +86,14 @@ Evaluations identify exactly one source item: lesson item or set target. Set-tar
 roll up across sets by a stable knowledge key such as `hablar|indicative|present|1|singular`, while
 lesson item stats and lesson Completed/Mastered remain separate. Set progress reports coverage and
 retrieval performance only over targets available in that set/version.
+
+## Saved practice identity
+
+Saved practice is a learner-owned reference to one source item, identified by immutable source type
+and ID. It may span lesson mixes, curated collections, and private content, but it never duplicates
+content, changes ownership, or changes progress identity. Durable creation/removal and cross-device
+sync ship with A5 saved/review persistence; the fixture prototype may demonstrate only session-local
+interaction.
 
 ## Custom generation gate (A9)
 

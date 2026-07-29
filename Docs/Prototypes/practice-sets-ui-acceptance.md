@@ -7,8 +7,9 @@ updated: 2026-07-29
 
 # Practice Sets UI prototype — acceptance checklist
 
-- [x] Practice entry presents Lessons, Collections, and Your practice; unavailable destinations are
-  explicit until their supporting waves ship.
+- [x] Practice opens on the collection catalog, with equally prominent Current lesson and Your
+  practice shortcuts. The current Lesson row in the Lessons catalog reaches the same lesson-mix
+  preview; durable saved-item persistence remains deferred to A5.
 - [x] Five visibly provisional fixture sets cover overlapping facets and honest activity capability states.
 - [x] Collections filter by five facets and start directly with remembered defaults; a per-collection
   options control reuses the original Practice drawer and exposes only valid choices.
@@ -16,6 +17,10 @@ updated: 2026-07-29
 - [x] Starting creates a frozen preview configuration in the existing Practice feed; Type and Flashcard states are inspectable without grading or persistence.
 - [x] Returning and reconfiguring preserves prototype defaults; unsupported activities remain explicit
   in options and no popularity/ownership feature is simulated.
+- [x] A shared bookmark control saves/removes a collection from cards and the active practice header;
+  Saved remains inside Your practice rather than becoming a fourth top-level category.
+- [x] Collection cards prioritize title, description, facets, and size; compact top-right bookmark
+  and options targets retain 44px touch areas without becoming a vertical control rail.
 - [x] Focused tests and App typecheck, lint, test, build, smoke, axe, keyboard, reduced-motion, 200% text, and overflow checks pass on phone/desktop in light/dark.
 
 This checklist covers a design-review prototype only. Its fixtures are not reviewed launch content and must never be promoted into `content/practice-sets/`.
