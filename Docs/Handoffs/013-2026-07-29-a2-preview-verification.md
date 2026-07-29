@@ -13,10 +13,11 @@ updated: 2026-07-29
 
 ## Position
 
-- Retain/harden-forward remains the inferred working direction, not publication GO. Current
-  Production still contains the prematurely published A2 commit `0eaa286`; no rollback or new
-  Production change was made.
-- The corrective line exists only in clean `.worktrees/a2-hardening` on `fix/A2-oi-036`. It adds
+- Retain/harden-forward remains the inferred working direction, not publication GO. During this
+  correction another process pushed `main` to `ec0ef9b` and Vercel auto-deployed it at 16:19. It
+  includes the fixture-backed Practice prototype UI and the earlier A2, but not this hardening.
+- The corrective line exists only in clean `.worktrees/a2-hardening` on `fix/A2-oi-036` at
+  `8562991`. It adds
   opaque user-keyed Vercel Firewall SDK admission before the preserved local guard and requires a
   dedicated evaluation-only Gateway key plus opaque user attribution before any AI call.
 - Firewall fixed-window counters are per-region, not globally atomic. The key has one aggregate $1
@@ -48,7 +49,8 @@ updated: 2026-07-29
 2. Capture learner-safe comparison/correct, comparison/close, one AI result, spoof 400, signed-out
    401, limit 429 + `Retry-After`, Firewall event, Gateway generation/user attribution, and no writes.
 3. Keep OI-036/A2 active until that evidence passes. Then Mike may say `VERIFIED`; ask separately
-   for `GO`. Publish only the resolved corrective commit, never ambient shared `main`.
+   for `GO`. Because remote `main` moved, build a deliberate resolved publication commit in a clean
+   worktree after GO; do not push `8562991` as-is or silently absorb prototype scope.
 
 ## Scope stays fixed
 

@@ -63,6 +63,9 @@ updated: 2026-07-29
 - The deployed endpoint returns the expected safe signed-out 401, but OI-036's distributed control
   is not proven. No rollback, force-push, firewall change, or further main merge was attempted.
   OI-037 owns the cross-agent publication race; retain/harden-forward is the next handoff's working path.
+- The race recurred at 16:19: `main` moved to `ec0ef9b` through another process and Vercel
+  auto-deployed the fixture-backed Practice prototype UI. The isolated A2 corrective commit is not in
+  that deployment; no merge, push, rollback, or Production promotion was attempted here.
 
 ## Decisions
 - Normalized exact authored matches are the only deterministic `correct`; safe character-near substitutions are `close`; structural, numeric, negation, and other meaning-uncertain matches reach AI once.

@@ -31,8 +31,8 @@
   $1 monthly request-start budget. The account has attribution but no enforceable per-user budget.
 - A READY Preview exists without push. OI-036 awaits Mike's Preview-only Firewall publication and
   authenticated comparison/AI/429 plus dashboard receipts.
-- A concurrent process pushed shared `main` at A2 merge `0eaa286` before VERIFIED/GO; Production is
-  Ready and rejects signed-out requests. Mike asked whether to harden/redeploy; OI-037 owns process repair.
+- Another concurrent push moved `main`/Production to `ec0ef9b` with fixture-backed Practice UI while
+  this isolated correction ran; it does not contain `8562991`. OI-037 owns deliberate ancestry repair.
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
