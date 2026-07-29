@@ -19,6 +19,7 @@ type BrowserEvaluationRequest = {
   modality: 'translate' | 'reading' | 'conversation';
   direction: 'es-en' | 'en-es';
   userInput: string;
+  inputMode?: 'typed' | 'voice'; // added in A10; provenance only, never answer authority
 };
 ```
 
@@ -42,6 +43,19 @@ choice index starting with the session/persistence loop; it never calls AI. Flas
 AI judges the submitted answer; it does not generate scored source material at MVP. Curated set
 targets are authored/reviewed under ADR-0015. Every result
 uses the one GrammarTag/ErrorTag taxonomy from `@aidioma/lesson-schema`.
+
+## Voice and conversation boundary
+
+- A10 transcription fills the existing editable composer. It is not an evaluation; only Send
+  submits the visible transcript to this contract. `inputMode=voice` supports quality telemetry but
+  cannot select a provider, alter thresholds, or claim pronunciation evidence.
+- Authored spoken answers use this same gate order and persistence. A transcription/provider failure
+  returns retryable voice UI state and never creates a fabricated grade.
+- A12 constrained dialogue separates generated conversation from authority. Turns with an authored
+  target may call `EvaluationService`; otherwise `ConversationFeedbackService` returns structured,
+  non-credit coaching for the recap and cannot advance lesson/set progress.
+- A speech or dialogue model's own correction is never authoritative. Phoneme-level pronunciation
+  assessment is outside this contract (PM-026).
 
 ## Result
 

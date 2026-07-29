@@ -8,7 +8,7 @@ updated: 2026-07-29
 # Platform — web, native, and SDK boundaries
 
 > Current platform truth for client runtimes and third-party SDK roles. Provider/model choice stays
-> in ADR-0007; evaluation security stays in `evaluation.md`. Decision record: ADR-0014.
+> in ADR-0007; evaluation security stays in `evaluation.md`. Decisions: ADR-0014 and ADR-0016.
 
 ## MVP production stack
 
@@ -65,9 +65,14 @@ updated: 2026-07-29
 
 ## Specialized SDKs
 
-- **OpenAI Agents SDK / Realtime:** candidate only for promoted constrained-conversation or live
-  voice work. Keep it behind an AIdioma service boundary; it does not replace comparison-first
-  evaluation or the provider-neutral MVP path.
+- **Turn-based voice (A10):** use browser media capture and AI SDK/Gateway speech/transcription
+  calls behind `TranscriptionPort` and `SpeechPort`. Current model IDs are configuration. The
+  browser receives only learner-safe audio/results; provider credentials remain server-side.
+- **Live voice (A11+):** Gateway/OpenAI Realtime and ElevenLabs Speech Engine enter one controlled
+  bake-off. Introduce `LiveVoicePort` only for the winner and ship one provider at a time. Realtime
+  dialogue does not replace `EvaluationService` or become grading authority.
+- Browser-direct live sessions use a short-lived, server-minted token scoped to the authenticated
+  learner/session. No long-lived Gateway/OpenAI/ElevenLabs key enters client code or logs.
 - **Gradio:** not a production AIdioma web/mobile runtime. It may be used as an isolated internal
   Python model/pronunciation lab when a real Python or Hugging Face workload exists. A Gradio PWA,
   embed, share link, or auto-generated API must not become the learner app or grading authority
@@ -77,5 +82,6 @@ updated: 2026-07-29
 
 ## Related authorities
 
-- Web baseline: ADR-0002. Provider/model: ADR-0007. SDK decision: ADR-0014.
-- Trust/failure contract: `evaluation.md`. Native/offline/voice triggers: `Registers/post-mvp.md`.
+- Web baseline: ADR-0002. Provider/model: ADR-0007. SDK decisions: ADR-0014/ADR-0016.
+- Trust/failure contract: `evaluation.md`. Voice capability: `../Features/voice-practice.md`.
+- Native/offline/pronunciation triggers: `Registers/post-mvp.md`.

@@ -50,7 +50,7 @@
 ## Standing decisions (highlights)
 - A1-first · vocab 12–15 / sentences 18–20 · Completed/Mastered · Direction default Both.
 - Gateway + GPT-5 mini · no eval cache · streak yes / notifications no · 4-layer QA.
-- Platform: Next.js web MVP; Expo native later; Gradio internal-only; Realtime SDK only with voice scope.
+- Platform: Next.js web MVP; Expo native later; staged web voice is approved for A10–A13 (ADR-0016).
 - Mode-smart help · Ask tutor + Saved/Review · study cards · Mix + size-10 blend.
 - Live today’s accuracy ≠ next-day confirmed proficiency.
 - Quiz/MC → evaluations with modality `multipleChoice` (no AI).

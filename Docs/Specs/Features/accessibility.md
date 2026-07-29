@@ -20,9 +20,13 @@ AIdioma targets WCAG 2.2 AA for the production web app.
 - Motion respects `prefers-reduced-motion`; no learning-critical information depends on animation.
 - Light/dark themes maintain AA contrast, including sienna accents and word-diff marks.
 - Error recovery preserves learner input and moves focus to useful feedback/retry controls.
+- Voice controls expose keyboard-operable record/stop/retry/play/mute actions, visible recording and
+  permission state, captions/transcripts, and a typed fallback. No instruction, correction, or
+  progress signal exists only in audio; autoplay never starts a microphone without a user gesture.
 
 ## Gate
 
 A1 establishes automated lint/axe coverage. Each user-visible wave adds keyboard + screen-reader
 semantics to its browser smoke path. A7 launch audit includes phone/desktop zoom, contrast,
-reduced-motion, keyboard-only, and a manual screen-reader pass.
+reduced-motion, keyboard-only, and a manual screen-reader pass. A10 adds microphone denial, recording
+timeout, transcript edit/retry, audio-disabled, and screen-reader announcement paths to its proof.

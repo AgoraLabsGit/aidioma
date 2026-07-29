@@ -19,6 +19,7 @@ updated: 2026-07-29
 | `practice_sets` | Curated/private set metadata, capabilities, version, and lifecycle |
 | `practice_set_targets` | Immutable, versioned set targets and optional knowledge key |
 | `practice_sessions` | Authoritative session start/terminal outcome (ADR-0013) |
+| `practice_session_turns` | A12+ ordered learner/agent/feedback transcript for live sessions |
 | `evaluations` | One row per graded submission, linked to a session |
 | `user_item_stats` | Derived item rollup for blend/proficiency |
 | `user_practice_target_stats` | Derived set-target/knowledge-key rollup across sets |
@@ -35,8 +36,9 @@ updated: 2026-07-29
 | `lesson_items` | lessonId FK, kind, payload jsonb, grammarTags jsonb, difficulty nullable, contentVersion, deprecated boolean/default false |
 | `practice_sets` | slug, title, description, levelRange, facets, origin, visibility, ownerUserId nullable, supportedActivities, defaults, contentVersion, provenance, isActive |
 | `practice_set_targets` | practiceSetId, immutable targetKey, kind, payload, grammarFeatures, grammarTags, difficulty, knowledgeKey nullable, contentVersion, deprecated |
-| `practice_sessions` | userId, recipe (`continue\|blend\|review\|set`), focusLessonId nullable, focusPracticeSetId nullable, configuration jsonb nullable, plannedSize nullable, startedAt, completedAt nullable, endedAt nullable |
-| `evaluations` | userId, sessionId, sourceType (`lesson\|set`), lessonItemId nullable, setTargetId nullable, lessonId nullable, modality, direction, userInput, score, verdict, feedback, wordDiff, errorTags, evalSource, modelUsed nullable, contentVersion, normalizedInputHash |
+| `practice_sessions` | userId, recipe (`continue\|blend\|review\|set`, plus `conversation` in A12), focusLessonId nullable, focusPracticeSetId nullable, focusConversationItemId nullable in A12, configuration jsonb nullable, plannedSize nullable, startedAt, completedAt nullable, endedAt nullable |
+| `practice_session_turns` | sessionId, ordinal, role (`learner\|agent\|feedback`), text, evaluationId nullable, interrupted boolean, modelUsed nullable; A12 migration only |
+| `evaluations` | userId, sessionId, sourceType (`lesson\|set`), lessonItemId nullable, setTargetId nullable, lessonId nullable, modality, direction, inputMode nullable/default typed until A10 (`typed\|voice`), userInput, score, verdict, feedback, wordDiff, errorTags, evalSource, modelUsed nullable, contentVersion, normalizedInputHash |
 | `user_item_stats` | userId+itemId unique, attempts, bestScore, avgScore, lastAttemptAt, missedTags; nullable SRS fields reserved |
 | `user_practice_target_stats` | userId+statKey unique (`knowledgeKey` else target ID), attempts, bestScore, avgScore, lastAttemptAt, missedTags |
 | `user_lesson_progress` | userId+lessonId unique, status (`locked\|active\|completed\|mastered`), masteryScore, completedAt, masteredAt |
@@ -53,6 +55,10 @@ never persist provider secrets or hidden answer sets in client-visible session s
 - **No `evaluationCache` table** — ADR-0006; hashes/source on `evaluations` instead.
 - MC / Quiz attempts **persist as `evaluations`** with modality **`multipleChoice`** (A0-H lock; closes P-001 app-track note). Still index-graded / never calls AI.
 - Sessions are first-class and evaluations carry `sessionId` — ADR-0013. Streak uses completed session rows.
+- A10 voice remains the normal recipe/evaluation: only `inputMode` is additive. Transcription
+  provider/latency/cost stays in bounded operational telemetry; raw audio is not a database field.
+- A12 adds `practice_session_turns` only when continuous conversation needs ordered history/resume;
+  it is not pulled forward for turn-based A10. A linked evaluation remains the sole scored record.
 - Every evaluation identifies exactly one server-resolved source target: lesson or set (XOR). Set
   evaluations update set/target stats only and cannot update `user_lesson_progress`.
 - MC / modality / recipe phases+pool are first-class in SessionEngine; item kinds come from lesson schema (incl. study cards — ADR-0012), not extra tables.

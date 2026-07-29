@@ -43,7 +43,8 @@ Lesson Mix arc: **Learn → Quiz(MC) → Words → Sentences → Story**. Set se
 composer, evaluation feedback, and recap but show the set title and configuration rather than lesson
 position. Dual-duty input (answer or ask tutor). Side panel: Blend, Saved, activity filters,
 Direction, missed-this-session, end-session — **no** multi-lesson picker. Modes: Type
-(words/sentences) + flashcards; Voice grayed “soon.”
+(words/sentences) + flashcards; Voice remains grayed “soon” for MVP and is promoted through the
+staged [voice-practice contract](voice-practice.md) after launch.
 
 ### Home
 Continue (dominant) · stat tiles · **Review · N due** · Practice Sets entry · compact path

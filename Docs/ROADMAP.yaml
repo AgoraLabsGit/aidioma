@@ -305,6 +305,120 @@ waves:
         status: pending
         summary: "residue scan · fired deprecations · registers/specs reconcile"
 
+  - id: A10
+    lane: App
+    title: Voice core - speak an answer and hear the feed
+    status: pending
+    operator_sees: >
+      In an existing guided Practice item, a learner records one answer, reviews/edits the transcript
+      in the normal composer, sends it through the normal correction path, and plays natural Spanish
+      for the prompt, model answer, and feedback without losing the typed fallback.
+    depends_on: [A7]
+    slices:
+      - id: A10-1
+        title: Narrow transcription and speech ports with privacy/cost controls
+        status: pending
+        summary: >
+          Add server-only TranscriptionPort/SpeechPort adapters using current AI Gateway speech models;
+          authenticated bounded upload, short timeout, per-user limits, provider/cost/latency telemetry,
+          no raw-audio retention, feature flag, kill switch, and deterministic contract tests.
+      - id: A10-2
+        title: Turn-based microphone, editable transcript, and playback in Practice
+        status: pending
+        summary: >
+          Add record/stop/retry into the existing composer; preserve one local recording for retry;
+          require explicit Send; persist inputMode and correlate bounded transcription telemetry; add play/slow-play to safe
+          feed text; prove permission denial, typed fallback, phone/desktop, keyboard, and screen reader.
+      - id: A10-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "residue scan · raw-audio/privacy audit · cost limits · registers/specs reconcile"
+
+  - id: A11
+    lane: App
+    title: Voice provider bake-off - Gateway/OpenAI vs ElevenLabs
+    status: pending
+    operator_sees: >
+      A reproducible evidence pack with blind native-speaker ratings, transcript/error preservation,
+      latency, turn-taking failures, device results, and ten-minute cost for both candidates, ending
+      in one explicit production configuration rather than duplicate runtime integrations.
+    depends_on: [A10]
+    slices:
+      - id: A11-1
+        title: Freeze Spanish corpus, rubric, thresholds, and comparable harness
+        status: pending
+        summary: >
+          Build one internal harness around the production ports. Freeze consented/scripted A1/A2
+          utterances, accents/dialects, learner errors, noise/pause/interruption cases, devices,
+          regions, network profiles, prompts, voices, release thresholds, and cost calculation first.
+      - id: A11-2
+        title: Run blind comparison and record the production configuration ADR
+        status: pending
+        summary: >
+          Compare Gateway/OpenAI vs ElevenLabs per STT/TTS port, then gpt-realtime-2.1 vs Speech
+          Engine end-to-end. Publish aggregate evidence and native review; allow one implementation
+          per port and one live provider, with Gateway/OpenAI winning a quality tie.
+      - id: A11-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "delete losing prototype code/dependencies · retain evidence fixtures · reconcile ADR/specs"
+
+  - id: A12
+    lane: App
+    title: Guided live voice beta - one provider, constrained conversations
+    status: pending
+    operator_sees: >
+      A learner starts a maximum ten-minute hands-free scenario, pauses and interrupts naturally,
+      follows a visible transcript, chooses Flow or Coach correction, and receives a structured recap.
+    depends_on: [A11, "A11 production-configuration ADR accepted"]
+    slices:
+      - id: A12-1
+        title: Constrained conversation contract, turns, and feedback boundary
+        status: pending
+        summary: >
+          Snapshot authored scenario/persona/register/vocabulary/goals/correction mode; add ordered
+          transcript turns only now; separate generated dialogue from scored EvaluationService and
+          non-credit ConversationFeedbackService; define resume/end/delete behavior.
+      - id: A12-2
+        title: LiveVoicePort and continuous web session with the bake-off winner
+        status: pending
+        summary: >
+          Integrate one winning provider with short-lived tokens, turn detection, interruption,
+          transcript/audio alignment, mute/stop/reconnect, ten-minute and daily limits, observability,
+          feature flag, and typed escape hatch. Do not add runtime fallback or provider selection.
+      - id: A12-3
+        title: Flow/Coach correction UX and end recap beta
+        status: pending
+        summary: >
+          Flow defers coaching to recap; Coach pauses only for material errors and one repetition.
+          Show corrections, goals, top error tags, and next practice without awarding credit for
+          generated dialogue. Run native review and real Chrome/Safari/Android device proof.
+      - id: A12-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "privacy/cost/device audit · delete superseded voice paths · registers/specs reconcile"
+
+  - id: A13
+    lane: App
+    title: Voice quality and reliability expansion (evidence-triggered)
+    status: parked
+    operator_sees: >
+      Measured live-voice failures or learner needs are visibly improved without weakening transcript,
+      correction, latency, privacy, accessibility, or cost gates from A10-A12.
+    depends_on: [A12, "production evidence names the reliability/dialect/retention problem"]
+    slices:
+      - id: A13-1
+        title: Implement only the measured quality/reliability increment
+        status: parked
+        summary: >
+          Re-scope at wave open around evidence: device/region hardening, a licensed regional voice
+          after PM-005 promotion, richer recap/vocabulary capture, or provider fallback after measured
+          outages. Re-run the A11 corpus and prior gates. Pronunciation scoring remains PM-026.
+      - id: A13-H
+        title: Hygiene slice (mandatory)
+        status: parked
+        summary: "remove unused providers/voices · rights/privacy/cost audit · registers/specs reconcile"
+
 # ============================================================================================
 # LANE C - CONTENT   (working detail lives in /content; this is status + cross-links)
 # ============================================================================================
