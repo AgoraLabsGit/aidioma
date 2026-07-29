@@ -29,8 +29,8 @@
 - OI-036 adds opaque user-keyed regional Firewall admission before the preserved local guard, plus a
   mandatory evaluation-only key with an aggregate $1 monthly request-start budget. The account has
   attribution but no enforceable per-user budget.
-- Git-backed Preview `aidioma-50mstht32-agoralabs.vercel.app` is READY at `262ed5d`. OI-036 awaits
-  Mike's Preview-only Firewall publication and authenticated comparison/AI/429 plus dashboard receipts.
+- PR #1's current head is the sole release candidate; its Git-backed Preview must be read from the
+  current Vercel check. OI-036 awaits Preview Firewall publication and authenticated proof.
 - OI-037 owns the repeated direct-push race. This reconciliation combines the hardened A2 line with
   the revised Practice IA; publication must use this resolved line, not a divergent tip.
 - The revised fixture-backed Practice IA keeps lesson entry under Lessons and opens Practice on

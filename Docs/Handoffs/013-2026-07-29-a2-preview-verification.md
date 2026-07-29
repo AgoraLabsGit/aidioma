@@ -13,9 +13,9 @@ updated: 2026-07-29
 
 ## Position
 
-- PR #1 is the canonical release candidate at `262ed5d`; its Git-backed Preview is READY at
-  `https://aidioma-50mstht32-agoralabs.vercel.app`. It deliberately reconciles the revised Practice
-  IA, A2 Firewall/Gateway hardening, responsive auth/settings fixes, and current Docs truth.
+- PR #1's current head is the canonical release candidate. Read its SHA and immutable deployment URL
+  from the GitHub/Vercel checks at verification time; do not copy an earlier CLI or PR deployment.
+  It reconciles the revised Practice IA, A2 hardening, responsive auth/settings, and current Docs.
 - The candidate adds opaque user-keyed Vercel Firewall SDK admission before the preserved local
   guard and requires a dedicated evaluation-only Gateway key plus opaque attribution before AI.
 - Firewall fixed-window counters are per-region, not globally atomic. The key has one aggregate $1
@@ -23,9 +23,9 @@ updated: 2026-07-29
   request start, so crossing/in-flight calls may overshoot; the budget is not an absolute cap.
 - The account exposes Gateway user attribution but no enforceable per-user budget. No stronger
   per-user claim is allowed.
-- App CI, Content CI, and Vercel deployment checks pass on PR #1. The exact Preview returns the
-  expected signed-out 401 with `no-store` and `nosniff`. The matching Preview-only Firewall rule
-  `aidioma-evaluate-user` is staged as a draft, not published; Production Firewall is unchanged.
+- App CI, Content CI, and Vercel deployment checks must pass on PR #1's current head. Its exact
+  commit deployment must return the expected signed-out 401 with `no-store` and `nosniff`. The
+  Preview-only rule `aidioma-evaluate-user` is staged but unpublished; Production is unchanged.
 
 ## Evidence
 
