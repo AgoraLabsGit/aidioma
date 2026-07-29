@@ -2,7 +2,7 @@
 title: A1-2 — Shared lesson contract and content seed
 type: wave-slice
 status: proven
-updated: 2026-07-28
+updated: 2026-07-29
 ---
 
 # A1-2 — Shared lesson contract and content seed

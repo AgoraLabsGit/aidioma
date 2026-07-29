@@ -4,7 +4,7 @@
 # Wave OPEN = <=5-bullet plain-language briefing + operator approval.
 # Wave CLOSE = /close only (full gates + audit + recap + testing script + operator GO).
 version: 1
-updated: 2026-07-28
+updated: 2026-07-29
 
 mvp_finish_line: >
   The 12 A1 lessons are live and practiceable in a deployed app. A learner signs in, taps
@@ -22,14 +22,12 @@ mvp_finish_line: >
 #   Lane A (App)     - the greenfield Next.js app. Owner: App Design Coordinator.
 #   Lane C (Content) - lesson authoring. Owner: Lesson Plan agent. Content and working records
 #                      live in /content; schema rulings live in Docs/Registers/schema-proposals.md.
-# STANDING SEQUENCING (operator, 2026-07-23):
-#   1. Lane A opens with a mandatory DESIGN-CLOSE wave (A0). No app code until it closes.
-#   2. Lane C is PARKED at 3 pilot lessons. Un-pause trigger = operator's explicit go, given
-#      only AFTER A0 closes (A0 also rules on the schema proposals content needs to resume).
+# STANDING SEQUENCING (operator, 2026-07-23; triggers satisfied 2026-07-28):
+#   1. Lane A opened with mandatory DESIGN-CLOSE wave A0, now closed; A1 is active.
+#   2. Lane C received explicit GO after A0 and is active in C2.
 
 verify:
-  # Content lane has real, running root-workspace gates. App lane gates are set when the
-  # app is scaffolded in wave A1 - a gate that does not yet exist counts as not-run = FAIL.
+  # Both lanes have real, running root-workspace gates; not-run = FAIL.
   content:
     typecheck: "npm run content:typecheck"
     validate:  "npm run content:validate"
@@ -128,7 +126,7 @@ waves:
         summary: "Import @aidioma/lesson-schema as the shared contract (no redeclaration); content CI; idempotent `content:seed` upsert to Neon keyed by slug; Lesson 0 migration. Features 1, 13."
       - id: A1-H
         title: Hygiene slice (mandatory)
-        status: pending
+        status: built
         summary: "residue scan · fired deprecations · registers/specs reconcile"
 
   - id: A2

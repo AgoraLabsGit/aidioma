@@ -2,7 +2,7 @@
 title: Data model — greenfield tables
 type: area-spec
 status: active
-updated: 2026-07-28
+updated: 2026-07-29
 ---
 
 # Data model — greenfield tables
@@ -60,7 +60,17 @@ never persist provider secrets or hidden answer sets in client-visible session s
 - JSON lessons/items are canonical; database rows are idempotent serving copies keyed by immutable IDs.
 - Seed updates content/version/hash, never deletes an authored ID, and excludes `deprecated=true` items from new sessions.
 - Applied SQL files are journaled transactionally with checksums; editing or removing an applied migration fails closed.
+- Applied journal rows must be an exact name/checksum prefix of repository migrations; gaps and
+  unknown names fail closed before DDL runs.
 - Lesson ordinals are unique at transaction commit (deferred so valid swaps work), and a database trigger rejects moving an authored item ID between lessons.
+- Immutable SQL files are the sole DDL authority; Drizzle schema declarations are typed query maps,
+  not a `push`/generation source. The ordinal constraint is intentionally absent from Drizzle because
+  it cannot express `DEFERRABLE INITIALLY DEFERRED` safely.
+- One transaction-scoped advisory lock serializes journal planning plus every pending migration.
+  Every run, including a zero-pending run, asserts the exact live ordinal constraint before commit.
+- Write commands default to the dedicated Development database/role. Preview requires an explicit
+  target; Production additionally requires an exact opt-in acknowledgement. Every runner verifies
+  `current_database()` and `current_user` before taking its migration lock or seeding.
 - User-owned tables cascade from user deletion. Authored item deletion is forbidden; historical evaluations remain addressable.
 - Server resolves grading inputs from active versioned items; browser requests never supply expected answers.
 

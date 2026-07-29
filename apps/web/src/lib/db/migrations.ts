@@ -13,6 +13,13 @@ export interface AppliedMigration {
   checksum: string;
 }
 
+export interface LessonOrdinalConstraintRow {
+  constraintType: string;
+  columns: string[];
+  isDeferrable: boolean;
+  isInitiallyDeferred: boolean;
+}
+
 export async function loadMigrations(directoryUrl: URL): Promise<Migration[]> {
   const directory = fileURLToPath(directoryUrl);
   const names = (await readdir(directory))
@@ -43,17 +50,39 @@ export function pendingMigrations(
   }
 
   const available = new Map(migrations.map((migration) => [migration.name, migration]));
-  const completed = new Map(applied.map((migration) => [migration.name, migration.checksum]));
 
-  for (const migration of applied) {
-    const current = available.get(migration.name);
-    if (!current) {
-      throw new Error(`Applied migration is missing from the repository: ${migration.name}`);
+  for (const [index, recorded] of applied.entries()) {
+    if (!available.has(recorded.name)) {
+      throw new Error(`Applied migration is missing from the repository: ${recorded.name}`);
     }
-    if (current.checksum !== migration.checksum) {
-      throw new Error(`Applied migration was modified: ${migration.name}`);
+    const expected = migrations[index];
+    if (!expected || expected.name !== recorded.name) {
+      throw new Error(
+        `Applied migrations must be an ordered prefix; expected ${expected?.name ?? "no additional migration"} at position ${index + 1}, found ${recorded.name}.`,
+      );
+    }
+    if (expected.checksum !== recorded.checksum) {
+      throw new Error(`Applied migration was modified: ${recorded.name}`);
     }
   }
 
-  return migrations.filter((migration) => !completed.has(migration.name));
+  return migrations.slice(applied.length);
+}
+
+export function assertDeferredLessonOrdinalConstraint(
+  rows: readonly LessonOrdinalConstraintRow[],
+): void {
+  const constraint = rows[0];
+  if (
+    rows.length !== 1 ||
+    constraint.constraintType !== "u" ||
+    constraint.columns.length !== 1 ||
+    constraint.columns[0] !== "ordinal" ||
+    !constraint.isDeferrable ||
+    !constraint.isInitiallyDeferred
+  ) {
+    throw new Error(
+      "Database drift: lessons_ordinal_unique must be UNIQUE (ordinal) DEFERRABLE INITIALLY DEFERRED.",
+    );
+  }
 }

@@ -26,11 +26,11 @@ export const lessons = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
-  (table) => [
-    uniqueIndex("lessons_slug_unique").on(table.slug),
-    uniqueIndex("lessons_ordinal_unique").on(table.ordinal),
-  ],
+  (table) => [uniqueIndex("lessons_slug_unique").on(table.slug)],
 );
+
+// SQL migrations are authoritative for lessons_ordinal_unique. Drizzle cannot model its
+// DEFERRABLE INITIALLY DEFERRED semantics, so declaring it here would create unsafe drift.
 
 export const lessonItems = pgTable(
   "lesson_items",

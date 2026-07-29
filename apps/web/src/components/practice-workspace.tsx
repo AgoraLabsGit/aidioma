@@ -28,7 +28,7 @@ export function PracticeWorkspace() {
           <BookOpen aria-hidden="true" />
           <span>
             <strong>{`Lesson 1 · ${a1Lessons[0].title}`}</strong>
-            <small>Connects with canonical lesson data in A1-2</small>
+            <small>Canonical A1 content is seeded; session wiring arrives in A4</small>
           </span>
           <span className="status-tag">Soon</span>
         </Card>
@@ -42,8 +42,8 @@ export function PracticeWorkspace() {
           </div>
           <h1>Your first activity will appear here.</h1>
           <p>
-            The practice shell is ready; canonical lesson activities connect in
-            A1-2. No sample answer or progress has been invented.
+            The practice shell is ready; real lesson activities arrive with the A4 session flow.
+            No sample answer or progress has been invented.
           </p>
         </Card>
 

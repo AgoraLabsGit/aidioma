@@ -56,4 +56,5 @@ jobs:
       - run: npm run contract:smoke
       - run: npm run content:fixtures
       - run: npm run prototype:check
-      - run: npm run app:test -- --run src/lib/content/seed.test.ts src/lib/db/migrations.test.ts
+      - run: npm run app:typecheck
+      - run: npm run app:test

@@ -18,6 +18,13 @@ describe("canonical lesson seed transformation", () => {
     expect(first.every((lesson) => lesson.items.every((item) => item.lessonId === lesson.id))).toBe(
       true,
     );
+    expect(
+      first.every((lesson) =>
+        lesson.items.every(
+          (item) => !("grammarTags" in item.payload) && !("difficulty" in item.payload),
+        ),
+      ),
+    ).toBe(true);
   });
 
   it("is idempotent and does not delete rows omitted by a later corpus", async () => {
@@ -39,6 +46,11 @@ describe("canonical lesson seed transformation", () => {
     const omittedItem = itemOmitted.items.pop();
     const afterItemOmission = applySeed(twice, [itemOmitted]);
     expect(afterItemOmission.items.get(omittedItem!.id)).toEqual(twice.items.get(omittedItem!.id));
+    expect(
+      afterItemOmission.lessons
+        .get(corpus[0].slug)
+        ?.items.some((item) => item.id === omittedItem!.id),
+    ).toBe(true);
   });
 
   it("preserves deprecation and rejects moving an immutable item id", async () => {
@@ -49,6 +61,11 @@ describe("canonical lesson seed transformation", () => {
 
     const reseeded = applySeed(retiredState, [source]);
     expect(reseeded.items.get(retired.items[0].id)?.deprecated).toBe(true);
+    expect(
+      reseeded.lessons
+        .get(source.slug)
+        ?.items.find((item) => item.id === retired.items[0].id)?.deprecated,
+    ).toBe(true);
 
     const moved: SeedLesson = structuredClone(source);
     moved.id = "a1-99-impossible-move";
