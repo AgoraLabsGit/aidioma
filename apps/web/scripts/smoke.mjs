@@ -145,7 +145,20 @@ async function assertNoHorizontalOverflow(page, label) {
         const style = getComputedStyle(element);
         if (style.display === "none" || style.visibility === "hidden") return false;
         const bounds = element.getBoundingClientRect();
-        return bounds.left < -1 || bounds.right > viewportWidth + 1;
+        if (bounds.left >= -1 && bounds.right <= viewportWidth + 1) return false;
+
+        let ancestor = element.parentElement;
+        while (ancestor && ancestor !== document.body) {
+          const ancestorStyle = getComputedStyle(ancestor);
+          if (
+            ["auto", "scroll"].includes(ancestorStyle.overflowX) &&
+            ancestor.scrollWidth > ancestor.clientWidth
+          ) {
+            return false;
+          }
+          ancestor = ancestor.parentElement;
+        }
+        return true;
       })
       .slice(0, 5)
       .map((element) => `${element.tagName.toLowerCase()}.${element.className}`);
@@ -171,7 +184,7 @@ async function captureVisualMetrics(page, kind, routeId) {
       app: {
         home: ".continue-card",
         lessons: ".current-level > summary",
-        practice: ".practice-source-button",
+        practice: ".practice-shortcut-card",
         settings: ".settings-card",
       },
       prototype: {

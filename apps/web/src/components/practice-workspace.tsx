@@ -9,6 +9,7 @@ import {
   RotateCcw,
   Send,
   SlidersHorizontal,
+  Star,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -26,7 +27,8 @@ import {
 import { PracticeSetOptionsPanel } from "./practice-set-options-panel";
 import { Button, Card, IconButton } from "./primitives";
 
-type PrototypeView = "entry" | "catalog" | "session";
+type PrototypeView = "entry" | "personal" | "session" | "lesson-session";
+type PracticeDestination = "entry" | "personal";
 type CatalogFilter = "All" | PracticeSetFacet;
 type Configurations = Record<string, PracticeSetConfiguration>;
 
@@ -106,11 +108,66 @@ function FilterButton({
   );
 }
 
-export function PracticeWorkspace() {
-  const [view, setView] = useState<PrototypeView>("entry");
+function CollectionCard({
+  isSaved,
+  onOpenOptions,
+  onStart,
+  onToggleSaved,
+  set,
+}: {
+  isSaved: boolean;
+  onOpenOptions: () => void;
+  onStart: () => void;
+  onToggleSaved: () => void;
+  set: PracticeSetFixture;
+}) {
+  return (
+    <article className="practice-set-card">
+      <button
+        aria-label={`Start ${set.title}`}
+        className="practice-set-start"
+        onClick={onStart}
+        type="button"
+      >
+        <span className="set-level">{set.level}</span>
+        <strong>{set.title}</strong>
+        <span className="set-description">{set.description}</span>
+        <span className="facet-list">
+          {set.facets.map((facet) => (
+            <span key={facet}>{facet}</span>
+          ))}
+        </span>
+        <span className="set-card-footer">{set.targetCount} targets</span>
+      </button>
+      <div className="set-card-actions">
+        <IconButton
+          aria-label={isSaved ? `Remove ${set.title} from saved` : `Save ${set.title}`}
+          aria-pressed={isSaved}
+          className={`saved-toggle${isSaved ? " is-saved" : ""}`}
+          onClick={onToggleSaved}
+        >
+          <Star aria-hidden="true" />
+        </IconButton>
+        <IconButton
+          aria-label={`Customize ${set.title}`}
+          className="set-options-button"
+          onClick={onOpenOptions}
+        >
+          <SlidersHorizontal aria-hidden="true" />
+        </IconButton>
+      </div>
+    </article>
+  );
+}
+
+export function PracticeWorkspace({ initialLesson = false }: { initialLesson?: boolean }) {
+  const [view, setView] = useState<PrototypeView>(initialLesson ? "lesson-session" : "entry");
   const [practiceOptionsOpen, setPracticeOptionsOpen] = useState(false);
   const [catalogFilter, setCatalogFilter] = useState<CatalogFilter>("All");
   const [selectedSetId, setSelectedSetId] = useState(practiceSetFixtures[0].id);
+  const [savedSetIds, setSavedSetIds] = useState<string[]>([]);
+  const [sessionReturnView, setSessionReturnView] = useState<PracticeDestination>("entry");
+  const [optionsReturnView, setOptionsReturnView] = useState<PracticeDestination>("entry");
   const [configurations, setConfigurations] = useState<Configurations>(rememberedConfigurations);
   const [sessionSnapshot, setSessionSnapshot] = useState<{
     configuration: PracticeSetConfiguration;
@@ -132,6 +189,7 @@ export function PracticeWorkspace() {
     practiceSetFixtures.find((set) => set.id === selectedSetId) ?? practiceSetFixtures[0];
   const selectedConfiguration = configurations[selectedSet.id];
   const filteredSets = filterCollections(catalogFilter);
+  const savedSets = practiceSetFixtures.filter((set) => savedSetIds.includes(set.id));
 
   function updateConfiguration(patch: Partial<PracticeSetConfiguration>) {
     setConfigurations((current) => ({
@@ -140,14 +198,20 @@ export function PracticeWorkspace() {
     }));
   }
 
-  function openOptions(set: PracticeSetFixture) {
+  function openOptions(set: PracticeSetFixture, returnView: PracticeDestination) {
     setSelectedSetId(set.id);
+    setOptionsReturnView(returnView);
     setPracticeOptionsOpen(true);
   }
 
-  function startSession(set: PracticeSetFixture, configuration: PracticeSetConfiguration) {
+  function startSession(
+    set: PracticeSetFixture,
+    configuration: PracticeSetConfiguration,
+    returnView: PracticeDestination,
+  ) {
     setSelectedSetId(set.id);
     setSessionSnapshot({ configuration: { ...configuration }, setId: set.id });
+    setSessionReturnView(returnView);
     setTypedAnswer("");
     setFeedbackVisible(false);
     setFlashcardRevealed(false);
@@ -155,36 +219,44 @@ export function PracticeWorkspace() {
     setView("session");
   }
 
-  if (view === "entry") {
-    return (
-      <div className="practice-workspace">
-        <PrototypeHeader title="Practice" />
-        <nav aria-label="Choose a practice source" className="practice-feed practice-source-list">
-          <Button aria-disabled="true" className="practice-source-button" disabled variant="quiet">
-            <BookOpen aria-hidden="true" />
-            <span>Lessons</span>
-            <small aria-hidden="true">Coming soon</small>
-          </Button>
-          <Button className="practice-source-button" onClick={() => setView("catalog")} variant="quiet">
-            <Layers3 aria-hidden="true" />
-            <span>Collections</span>
-            <ChevronRight aria-hidden="true" />
-          </Button>
-          <Button aria-disabled="true" className="practice-source-button" disabled variant="quiet">
-            <SlidersHorizontal aria-hidden="true" />
-            <span>Your practice</span>
-            <small aria-hidden="true">Coming later</small>
-          </Button>
-        </nav>
-      </div>
+  function toggleSaved(setId: string) {
+    setSavedSetIds((current) =>
+      current.includes(setId) ? current.filter((id) => id !== setId) : [...current, setId],
     );
   }
 
-  if (view === "catalog") {
+  function startLessonPractice() {
+    setTypedAnswer("");
+    setFeedbackVisible(false);
+    setFlashcardRevealed(false);
+    setView("lesson-session");
+  }
+
+  if (view === "entry") {
     return (
       <div className="practice-workspace">
-        <PrototypeHeader backLabel="Back to Practice" onBack={() => setView("entry")} title="Collections" />
-        <div className="practice-feed prototype-feed">
+        <PrototypeHeader
+          title="Practice"
+        />
+        <div className="practice-feed prototype-feed practice-entry-feed">
+          <button className="practice-shortcut-card" onClick={startLessonPractice} type="button">
+            <BookOpen aria-hidden="true" />
+            <span className="practice-shortcut-copy">
+              <small>Current lesson</small>
+              <strong>Hola: greetings and introducing yourself</strong>
+              <span>A1 · Lesson 1</span>
+            </span>
+            <ChevronRight aria-hidden="true" />
+          </button>
+          <button className="practice-shortcut-card" onClick={() => setView("personal")} type="button">
+            <Star aria-hidden="true" />
+            <span className="practice-shortcut-copy">
+              <small>Your practice</small>
+              <strong>Saved practice</strong>
+              <span>Collections and your lists</span>
+            </span>
+            <ChevronRight aria-hidden="true" />
+          </button>
           <div aria-label="Filter collections" className="filter-strip">
             {(["All", ...practiceSetFacets] as CatalogFilter[]).map((filter) => (
               <FilterButton
@@ -196,39 +268,16 @@ export function PracticeWorkspace() {
               </FilterButton>
             ))}
           </div>
-
-          <p aria-live="polite" className="filter-result-count">
-            {filteredSets.length === 1 ? "1 collection" : `${filteredSets.length} collections`}
-            {catalogFilter === "All" ? "" : ` · ${catalogFilter}`}
-          </p>
-
           <div className="practice-set-grid">
             {filteredSets.map((set) => (
-              <article className="practice-set-card" key={set.id}>
-                <button
-                  aria-label={`Start ${set.title}`}
-                  className="practice-set-start"
-                  onClick={() => startSession(set, configurations[set.id])}
-                  type="button"
-                >
-                  <span className="set-level">{set.level}</span>
-                  <strong>{set.title}</strong>
-                  <span className="set-description">{set.description}</span>
-                  <span className="facet-list">
-                    {set.facets.map((facet) => (
-                      <span key={facet}>{facet}</span>
-                    ))}
-                  </span>
-                  <span className="set-card-footer">{set.targetCount} targets</span>
-                </button>
-                <IconButton
-                  aria-label={`Customize ${set.title}`}
-                  className="set-options-button"
-                  onClick={() => openOptions(set)}
-                >
-                  <SlidersHorizontal aria-hidden="true" />
-                </IconButton>
-              </article>
+              <CollectionCard
+                isSaved={savedSetIds.includes(set.id)}
+                key={set.id}
+                onOpenOptions={() => openOptions(set, "entry")}
+                onStart={() => startSession(set, configurations[set.id], "entry")}
+                onToggleSaved={() => toggleSaved(set.id)}
+                set={set}
+              />
             ))}
           </div>
         </div>
@@ -236,12 +285,129 @@ export function PracticeWorkspace() {
           <PracticeSetOptionsPanel
             configuration={selectedConfiguration}
             onClose={() => setPracticeOptionsOpen(false)}
-            onStart={() => startSession(selectedSet, selectedConfiguration)}
+            onStart={() => startSession(selectedSet, selectedConfiguration, optionsReturnView)}
             onUpdate={updateConfiguration}
             set={selectedSet}
             startLabel="Start practice"
           />
         ) : null}
+      </div>
+    );
+  }
+
+  if (view === "personal") {
+    return (
+      <div className="practice-workspace">
+        <PrototypeHeader backLabel="Back to Practice" onBack={() => setView("entry")} title="Your practice" />
+        <div aria-label="Saved practice" className="practice-feed prototype-feed">
+          {savedSets.length === 0 ? (
+            <Card className="saved-empty-state">
+              <h2>No saved practice</h2>
+              <Button onClick={() => setView("entry")} variant="quiet">
+                Browse collections
+              </Button>
+            </Card>
+          ) : (
+            <div className="practice-set-grid">
+              {savedSets.map((set) => (
+                <CollectionCard
+                  isSaved
+                  key={set.id}
+                  onOpenOptions={() => openOptions(set, "personal")}
+                  onStart={() => startSession(set, configurations[set.id], "personal")}
+                  onToggleSaved={() => toggleSaved(set.id)}
+                  set={set}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+        {practiceOptionsOpen ? (
+          <PracticeSetOptionsPanel
+            configuration={selectedConfiguration}
+            onClose={() => setPracticeOptionsOpen(false)}
+            onStart={() => startSession(selectedSet, selectedConfiguration, optionsReturnView)}
+            onUpdate={updateConfiguration}
+            set={selectedSet}
+            startLabel="Start practice"
+          />
+        ) : null}
+      </div>
+    );
+  }
+
+  if (view === "lesson-session") {
+    return (
+      <div className="practice-workspace">
+        <PrototypeHeader
+          backLabel="End preview and return to Practice"
+          onBack={() => setView("entry")}
+          title="Lesson 1"
+          trailing={<span className="session-count">1 / 10</span>}
+        />
+
+        <div className="practice-feed">
+          <Card className="explainer-row lesson-session-summary">
+            <BookOpen aria-hidden="true" />
+            <span>
+              <strong>Lesson mix</strong>
+              <small>Hola: greetings and introducing yourself</small>
+            </span>
+            <span className="status-tag">Preview</span>
+          </Card>
+
+          <Card className="activity-card prototype-type-card">
+            <div className="activity-label">
+              <span>Lesson mix · 1 of 10</span>
+              <span>EN → ES</span>
+            </div>
+            <p className="prompt-cue">Greet someone and introduce yourself.</p>
+            <h2>Hello, my name is Ana.</h2>
+          </Card>
+
+          {feedbackVisible ? (
+            <Card aria-live="polite" className="prototype-feedback-card" role="status">
+              <div className="feedback-heading">
+                <Check aria-hidden="true" />
+                <strong>Representative feedback state</strong>
+              </div>
+              <p>
+                Fixture answer: <strong>Hola, me llamo Ana.</strong>
+              </p>
+              <small>No answer was evaluated or saved in this prototype.</small>
+            </Card>
+          ) : null}
+
+          <Card className="prototype-boundary-note">
+            <strong>Design proof only</strong>
+            <span>This preview creates no session, evaluation, proficiency, or lesson-progress record.</span>
+          </Card>
+        </div>
+
+        <form
+          className="practice-composer prototype-composer"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (typedAnswer.trim()) setFeedbackVisible(true);
+          }}
+        >
+          <label className="visually-hidden" htmlFor="lesson-practice-answer">
+            Type a prototype answer
+          </label>
+          <input
+            id="lesson-practice-answer"
+            onChange={(event) => {
+              setTypedAnswer(event.target.value);
+              setFeedbackVisible(false);
+            }}
+            placeholder="Type a prototype answer"
+            type="text"
+            value={typedAnswer}
+          />
+          <IconButton aria-label="Preview feedback" disabled={!typedAnswer.trim()} type="submit">
+            <Send aria-hidden="true" />
+          </IconButton>
+        </form>
       </div>
     );
   }
@@ -260,13 +426,31 @@ export function PracticeWorkspace() {
   return (
     <div className="practice-workspace">
       <PrototypeHeader
-        backLabel="End preview and return to Collections"
-        onBack={() => setView("catalog")}
+        backLabel={`End preview and return to ${sessionReturnView === "personal" ? "Your practice" : "Practice"}`}
+        onBack={() => setView(sessionReturnView)}
         title={sessionSet.title}
         trailing={
           <>
             <span className="session-count">1 / {sessionConfiguration.size}</span>
-            <IconButton aria-label="Reconfigure session" onClick={() => setPracticeOptionsOpen(true)}>
+            <IconButton
+              aria-label={
+                savedSetIds.includes(sessionSet.id)
+                  ? `Remove ${sessionSet.title} from saved`
+                  : `Save ${sessionSet.title}`
+              }
+              aria-pressed={savedSetIds.includes(sessionSet.id)}
+              className={`saved-toggle${savedSetIds.includes(sessionSet.id) ? " is-saved" : ""}`}
+              onClick={() => toggleSaved(sessionSet.id)}
+            >
+              <Star aria-hidden="true" />
+            </IconButton>
+            <IconButton
+              aria-label="Reconfigure session"
+              onClick={() => {
+                setOptionsReturnView(sessionReturnView);
+                setPracticeOptionsOpen(true);
+              }}
+            >
               <SlidersHorizontal aria-hidden="true" />
             </IconButton>
           </>
@@ -367,14 +551,21 @@ export function PracticeWorkspace() {
           <Button onClick={() => setFlashcardRevealed(false)} variant="quiet">
             <RotateCcw aria-hidden="true" /> Reset card
           </Button>
-          <Button onClick={() => setPracticeOptionsOpen(true)}>Reconfigure</Button>
+          <Button
+            onClick={() => {
+              setOptionsReturnView(sessionReturnView);
+              setPracticeOptionsOpen(true);
+            }}
+          >
+            Reconfigure
+          </Button>
         </div>
       )}
       {practiceOptionsOpen ? (
         <PracticeSetOptionsPanel
           configuration={selectedConfiguration}
           onClose={() => setPracticeOptionsOpen(false)}
-          onStart={() => startSession(selectedSet, selectedConfiguration)}
+          onStart={() => startSession(selectedSet, selectedConfiguration, optionsReturnView)}
           onUpdate={updateConfiguration}
           set={selectedSet}
           startLabel="Start new practice"
