@@ -27,8 +27,8 @@ updated: 2026-07-29
 - Three isolated A2 auditors covered deterministic grading, endpoint security/trust boundaries, and Gateway/failure/cost behavior. Their successive delta audits ended with no code criticals or warnings.
 - A fresh high-effort whole-A2 review found fuzzy false-positive `correct` results and missing handler failure telemetry; both were regression-tested, fixed, and passed delta review.
 - Two external blockers are owned: OI-036 records the missing distributed serverless perimeter;
-  OI-037 records the concurrent push that exposed A2 before approval. Mike must choose rollback or
-  retain/harden before wave close; neither is misrepresented as a code-cleanliness failure.
+  OI-037 records the concurrent push that exposed A2 before approval. Mike asked whether to harden and
+  redeploy instead of rolling back; that is the inferred working path, not GO. Neither item is a code defect.
 - Authenticated actual-route proof remains the human `/close` step. Automation does not create, extract, or repurpose Clerk user credentials.
 
 ## Proof
@@ -51,7 +51,7 @@ updated: 2026-07-29
   `git ls-remote` confirms the commit, and Vercel created a Ready Production deployment.
 - The deployed endpoint returns the expected safe signed-out 401, but OI-036's distributed control
   is not proven. No rollback, force-push, firewall change, or further main merge was attempted.
-  OI-037 owns the cross-agent publication race; Mike must choose rollback versus retain/harden.
+  OI-037 owns the cross-agent publication race; retain/harden-forward is the next handoff's working path.
 
 ## Decisions
 - Normalized exact authored matches are the only deterministic `correct`; safe character-near substitutions are `close`; structural, numeric, negation, and other meaning-uncertain matches reach AI once.

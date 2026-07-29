@@ -31,9 +31,9 @@
   and the built Next route returns Clerk-signed-out 401 safely. Three audits, delta re-audits, and a
   high-effort whole-diff review are code-clean after fixes.
 - A2-H is proven: integrated-main gates pass at 18 files / 116 tests; residue, dependencies, specs,
-  and registers are reconciled. OI-036 blocks wave close/retention pending a distributed limit.
+  and registers are reconciled. OI-036 blocks wave close pending distributed cost/abuse controls.
 - A concurrent process pushed shared `main` at A2 merge `0eaa286` before VERIFIED/GO; Production is
-  Ready and safely rejects signed-out evaluation requests. OI-037 owns rollback-vs-retain/process repair.
+  Ready and rejects signed-out requests. Mike asked whether to harden/redeploy; OI-037 owns process repair.
 
 **Lane C — Content (ACTIVE: C2-1)**
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
@@ -42,7 +42,7 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Mike chooses rollback vs retain; if retained, resolve OI-036 before authenticated A2 verification.
+1. Harden A2 forward under OI-036, prove an authenticated Preview flow, then request VERIFIED and GO.
 2. Continue C2 with a1-05 through validator zero errors and independent L2 PASS.
 3. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
 4. Curated Practice Sets are MVP wave A6; fixture-backed UI prototyping may precede A6, while the
