@@ -16,9 +16,10 @@ describe("SettingsPanel", () => {
   it("offers one daily-goal slider and Auto, Light, and Dark theme choices", () => {
     render(<SettingsPanel />);
 
-    const slider = screen.getByRole("slider", { name: "Daily goal" });
+    const slider = screen.getByRole("slider", { name: "Daily Practice Goal" });
     expect(slider).toHaveValue("50");
     expect(screen.getByText("50 exercises")).toBeInTheDocument();
+    expect(screen.getByText("Daily Practice Goal")).toBeInTheDocument();
     expect(screen.getByText("Preview only", { exact: false })).toBeInTheDocument();
 
     fireEvent.change(slider, { target: { value: "75" } });
