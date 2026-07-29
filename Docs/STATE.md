@@ -24,12 +24,13 @@
 - A2-1 is proven locally: one authenticated, server-owned `/api/evaluate`; normalized exact answers
   grade free, safe character-near answers grade `close`, and meaning-uncertain/poor answers make one
   strict Gateway call. It is stateless; A3 still owns sessions, persistence, and derived stats.
-- A2 corrective gates pass: 19 files / 133 tests, lint, build, smoke, DB/Gateway proof, clean audits.
+- The reconciled PR #1 candidate passes App/Content CI, Vercel Preview, 19 files / 137 tests, lint,
+  build, smoke, Development DB/Gateway proof, and clean integration/security audits.
 - OI-036 adds opaque user-keyed regional Firewall admission before the preserved local guard, plus a
   mandatory evaluation-only key with an aggregate $1 monthly request-start budget. The account has
   attribution but no enforceable per-user budget.
-- A READY hardened Preview exists. OI-036 awaits Mike's Preview-only Firewall publication and
-  authenticated comparison/AI/429 plus dashboard receipts.
+- Git-backed Preview `aidioma-50mstht32-agoralabs.vercel.app` is READY at `262ed5d`. OI-036 awaits
+  Mike's Preview-only Firewall publication and authenticated comparison/AI/429 plus dashboard receipts.
 - OI-037 owns the repeated direct-push race. This reconciliation combines the hardened A2 line with
   the revised Practice IA; publication must use this resolved line, not a divergent tip.
 - The revised fixture-backed Practice IA keeps lesson entry under Lessons and opens Practice on

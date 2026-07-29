@@ -1,38 +1,35 @@
 ---
-title: Handoff — verify A2 hardened Preview
+title: Handoff — verify reconciled A2 release candidate
 type: handoff
 status: active
 updated: 2026-07-29
 ---
 
-# Handoff — verify A2 hardened Preview
+# Handoff — verify reconciled A2 release candidate
 
 **Role:** Mike completes the human Preview gate; agent records evidence and waits for VERIFIED
-**Hard rule:** no push, Production Firewall publication, or Production promotion before explicit
-`VERIFIED` and a later separate `GO`.
+**Hard rule:** the release-candidate branch may be pushed for PR/Preview proof. Never merge/push
+`main`, publish a Production Firewall rule, or promote Production before explicit `VERIFIED` and GO.
 
 ## Position
 
-- Retain/harden-forward remains the inferred working direction, not publication GO. During this
-  correction another process pushed `main` to `ec0ef9b` and Vercel auto-deployed it at 16:19. It
-  includes the fixture-backed Practice prototype UI and the earlier A2, but not this hardening.
-- The corrective line exists only in clean `.worktrees/a2-hardening` on `fix/A2-oi-036` at
-  `8562991`. It adds
-  opaque user-keyed Vercel Firewall SDK admission before the preserved local guard and requires a
-  dedicated evaluation-only Gateway key plus opaque user attribution before any AI call.
+- PR #1 is the canonical release candidate at `262ed5d`; its Git-backed Preview is READY at
+  `https://aidioma-50mstht32-agoralabs.vercel.app`. It deliberately reconciles the revised Practice
+  IA, A2 Firewall/Gateway hardening, responsive auth/settings fixes, and current Docs truth.
+- The candidate adds opaque user-keyed Vercel Firewall SDK admission before the preserved local
+  guard and requires a dedicated evaluation-only Gateway key plus opaque attribution before AI.
 - Firewall fixed-window counters are per-region, not globally atomic. The key has one aggregate $1
   monthly budget across Development/Preview/Production with 50/75/100% alerts. Gateway checks at
   request start, so crossing/in-flight calls may overshoot; the budget is not an absolute cap.
 - The account exposes Gateway user attribution but no enforceable per-user budget. No stronger
   per-user claim is allowed.
-- The final Preview is READY at `https://aidioma-9tt8r0ppp-agoralabs.vercel.app`; authenticated CLI
-  proof returns the expected signed-out 401 with `no-store` and `nosniff`. The matching Preview-only
-  Firewall rule `aidioma-evaluate-user` is staged as a draft, not published. Production Firewall
-  remains unchanged.
+- App CI, Content CI, and Vercel deployment checks pass on PR #1. The exact Preview returns the
+  expected signed-out 401 with `no-store` and `nosniff`. The matching Preview-only Firewall rule
+  `aidioma-evaluate-user` is staged as a draft, not published; Production Firewall is unchanged.
 
 ## Evidence
 
-- Final code gates: typecheck, zero-warning lint, 19 files / 133 tests, build, 16-state smoke.
+- Final candidate gates: typecheck, zero-warning lint, 19 files / 137 tests, build, 16-state smoke.
 - Development proof with the budgeted key:
   `PASS evaluate-proof development-db=verified comparison=graded gateway=graded persistence=none`;
   observed final AI generation was 540 input / 206 output / 746 total tokens.
@@ -48,9 +45,9 @@ updated: 2026-07-29
    and runs the exact endpoint script in the close recap.
 2. Capture learner-safe comparison/correct, comparison/close, one AI result, spoof 400, signed-out
    401, limit 429 + `Retry-After`, Firewall event, Gateway generation/user attribution, and no writes.
-3. Keep OI-036/A2 active until that evidence passes. Then Mike may say `VERIFIED`; ask separately
-   for `GO`. Because remote `main` moved, build a deliberate resolved publication commit in a clean
-   worktree after GO; do not push `8562991` as-is or silently absorb prototype scope.
+3. Keep OI-036/A2 active until that evidence passes. Then Mike may say `VERIFIED` and separately
+   `GO`. Fast-forward local and remote `main` to the exact verified candidate, verify its Production
+   deployment, then close OI-036/OI-037 and remove the candidate branch.
 
 ## Scope stays fixed
 
