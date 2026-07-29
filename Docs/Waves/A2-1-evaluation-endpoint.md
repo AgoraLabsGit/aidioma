@@ -12,7 +12,7 @@ updated: 2026-07-29
 - **Goal:** Deliver one authenticated `/api/evaluate` endpoint that resolves server-owned answers, grades deterministic matches locally, and calls Gateway AI once only for poor matches.
 - **Touches:** `apps/web` evaluation domain/service/API code and tests; AI SDK dependency metadata; evaluation/platform specs; A2 roadmap/state records.
 - **Out of scope:** evaluation/session persistence (A3), SessionEngine and real practice UI (A4), production Practice Sets (A6), content authoring, live-key promotion, and either parallel worktree.
-- **Verify plan:** Run every App gate; prove exact, near, poor/AI, provider-failure, invalid-input, answer-spoofing, and cross-user/session rejection paths through the real route; record compact evidence without secrets or private text.
+- **Verify plan:** Run every App gate; prove exact, near, poor/AI, provider-failure, invalid-input, answer-spoofing, unauthenticated, inactive/deprecated, and unsupported-source paths through the real route; record compact evidence without secrets or private text.
 
 ## Gates (stage 2 — record actual results)
 | Gate | Command | Result |
@@ -39,4 +39,5 @@ updated: 2026-07-29
 
 ## Decisions
 - A2 stops at grading. A3 owns all `practice_sessions`/`evaluations` persistence and derived stats.
+- A2 accepts authenticated lesson translation only. It does not accept an unverifiable practice-session ID; A3 adds that reference and ownership check with the real session table.
 - Default Gateway model remains `openai/gpt-5-mini`; `anthropic/claude-haiku-4.5` remains the same-interface bake-off alternative. Both IDs were present in the live Gateway catalog at wave open.
