@@ -2,7 +2,7 @@
 title: Platform — web, native, and SDK boundaries
 type: area-spec
 status: active
-updated: 2026-07-28
+updated: 2026-07-29
 ---
 
 # Platform — web, native, and SDK boundaries
@@ -22,7 +22,8 @@ updated: 2026-07-28
   zero-data public shell routes do not require credentials.
 - **Deployment baseline:** Vercel project `agoralabs/aidioma` tracks `AgoraLabsGit/aidioma`, uses
   `apps/web` as its Next.js root on Node 22.x, and has the free `aidioma-db` Neon resource connected
-  for development, preview, and production. Clerk production keys remain a separate operator setup.
+  for development, preview, and production. The Clerk key pair exists locally, but Vercel Clerk
+  configuration and explicit Neon preview/development isolation remain deployment prerequisites.
 - AI calls, database credentials, reviewed answer sets, thresholds, and `correctIndex` remain on the
   authenticated server. Web and future native clients consume learner-safe APIs only.
 
