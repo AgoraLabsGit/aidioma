@@ -7,6 +7,7 @@ import {
   EVALUATION_BODY_MAX_BYTES,
   createEvaluateHandler,
   type EvaluationAuthenticator,
+  type EvaluationHandlerLogger,
   type EvaluationServicePort,
   type EvaluationSourceResolver,
 } from "./evaluate-handler";
@@ -60,6 +61,8 @@ function dependencies(overrides: {
   resolveSource?: EvaluationSourceResolver;
   service?: EvaluationServicePort;
   admit?: EvaluationAdmitter;
+  logger?: EvaluationHandlerLogger;
+  now?: () => number;
 } = {}) {
   return {
     authenticate: overrides.authenticate ?? (async () => ({ userId: "user_private_123" })),
@@ -67,6 +70,8 @@ function dependencies(overrides: {
     admit:
       overrides.admit ??
       (() => ({ allowed: true as const, release: vi.fn() })),
+    logger: overrides.logger ?? vi.fn(),
+    now: overrides.now ?? (() => 1_000),
     service:
       overrides.service ??
       ({
@@ -104,8 +109,12 @@ describe("POST /api/evaluate handler", () => {
   });
 
   it("fails closed when authentication is unavailable", async () => {
+    const logger = vi.fn<EvaluationHandlerLogger>();
+    let now = 1_000;
     const response = await createEvaluateHandler(
       dependencies({
+        logger,
+        now: () => (now += 25),
         authenticate: async () => {
           throw new Error("secret auth detail");
         },
@@ -114,6 +123,15 @@ describe("POST /api/evaluate handler", () => {
 
     expect(response.status).toBe(503);
     expect(JSON.stringify(await response.json())).not.toContain("secret auth detail");
+    expect(logger).toHaveBeenCalledWith({
+      event: "evaluation.request_failed",
+      requestId: "req_test",
+      stage: "authentication",
+      failure: "authentication_unavailable",
+      status: 503,
+      latencyMs: 25,
+    });
+    expect(JSON.stringify(logger.mock.calls)).not.toContain("secret auth detail");
   });
 
   it("requires JSON and rejects malformed, blank, or answer-spoofing bodies", async () => {

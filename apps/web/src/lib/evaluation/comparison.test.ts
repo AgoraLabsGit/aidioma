@@ -304,13 +304,13 @@ describe("comparison gate", () => {
     });
   });
 
-  it("returns deterministic correct at the 0.90 boundary", () => {
+  it("never marks a non-exact character match correct", () => {
     const decision = compareAnswer("abcdefghix", ["abcdefghij"]);
     expect(decision.kind).toBe("graded");
     if (decision.kind !== "graded") return;
     expect(decision.similarity).toBe(0.9);
-    expect(decision.result.score).toBe(85);
-    expect(decision.result.verdict).toBe("correct");
+    expect(decision.result.score).toBe(76);
+    expect(decision.result.verdict).toBe("close");
   });
 
   it("returns deterministic close at the 0.70 boundary", () => {
@@ -390,6 +390,20 @@ describe("comparison gate", () => {
         "Quiero poco azúcar en mi café por favor",
       ]).kind,
     ).toBe("ai-required");
+  });
+
+  it.each([
+    ["Yo habla español", "Yo hablo español"],
+    ["Ella está cansado", "Ella está cansada"],
+    ["Él tiene perro", "Él tiene perros"],
+    ["Quiero una cosa grande", "Quiero una casa grande"],
+  ])("does not mark a one-character word change correct: %s", (userInput, expected) => {
+    const decision = compareAnswer(userInput, [expected]);
+
+    expect(decision.kind).toBe("graded");
+    if (decision.kind !== "graded") return;
+    expect(decision.result.verdict).toBe("close");
+    expect(decision.result.score).toBeLessThan(85);
   });
 
   it("reviews semantic edits after the learner-facing diff cap", () => {

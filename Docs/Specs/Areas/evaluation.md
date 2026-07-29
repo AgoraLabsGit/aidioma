@@ -33,7 +33,8 @@ choice index starting with the session/persistence loop; it never calls AI. Flas
 
 1. Normalize input and server-owned expected answers.
 2. Exact match → correct, `evalSource=comparison`.
-3. Risk-free typo-only near-match bands → correct/close with a bounded deterministic word diff.
+3. Character-near substitutions → deterministic `close` with a bounded word diff; comparison
+   returns `correct` only for a normalized exact authored match.
 4. Poor or meaning-uncertain match → one AI call through EvaluationService. A missing authored
    target is source-integrity failure for A2 lesson items, not permission to invent authority.
 5. Validate the structured result, then return learner-safe feedback. A3 persists it.

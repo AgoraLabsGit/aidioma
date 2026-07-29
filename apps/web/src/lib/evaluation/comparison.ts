@@ -14,7 +14,6 @@ import {
   type WordDiffEntry,
 } from "./contracts";
 
-const CORRECT_SIMILARITY = 0.9;
 const CLOSE_SIMILARITY = 0.7;
 
 const NEGATION_WORDS = new Set([
@@ -503,12 +502,8 @@ function diffNeedsSemanticReview(
   });
 }
 
-function correctScore(similarity: number): number {
-  return Math.min(99, 85 + Math.round(((similarity - CORRECT_SIMILARITY) / 0.1) * 14));
-}
-
 function closeScore(similarity: number): number {
-  return Math.min(84, 60 + Math.round(((similarity - CLOSE_SIMILARITY) / 0.2) * 24));
+  return Math.min(84, 60 + Math.round(((similarity - CLOSE_SIMILARITY) / 0.3) * 24));
 }
 
 export function compareAnswer(
@@ -572,22 +567,6 @@ export function compareAnswer(
     };
   }
 
-  if (bestSimilarity >= CORRECT_SIMILARITY) {
-    return {
-      kind: "graded",
-      matchedAnswer,
-      similarity: bestSimilarity,
-      result: {
-        score: correctScore(bestSimilarity),
-        verdict: "correct",
-        feedback: "Correct — check the highlighted spelling detail.",
-        wordDiff,
-        errorTags: [],
-        evalSource: "comparison",
-      },
-    };
-  }
-
   return {
     kind: "graded",
     matchedAnswer,
@@ -595,7 +574,7 @@ export function compareAnswer(
     result: {
       score: closeScore(bestSimilarity),
       verdict: "close",
-      feedback: "Almost — check the highlighted words.",
+      feedback: "Almost — check the highlighted spelling or word form.",
       wordDiff,
       errorTags: [],
       evalSource: "comparison",

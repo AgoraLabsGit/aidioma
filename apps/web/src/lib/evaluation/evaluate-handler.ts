@@ -25,6 +25,15 @@ export type EvaluationSourceResolver = (
   direction: "es-en" | "en-es",
 ) => Promise<ResolvedLessonSource>;
 export type EvaluationServicePort = Pick<EvaluationService, "evaluate">;
+export type EvaluationHandlerFailureEvent = {
+  event: "evaluation.request_failed";
+  requestId: string;
+  stage: "authentication" | "request" | "admission" | "source" | "service";
+  failure: string;
+  status: number;
+  latencyMs: number;
+};
+export type EvaluationHandlerLogger = (event: EvaluationHandlerFailureEvent) => void;
 
 type EvaluateHandlerDependencies = {
   authenticate: EvaluationAuthenticator;
@@ -32,6 +41,8 @@ type EvaluateHandlerDependencies = {
   resolveSource?: EvaluationSourceResolver;
   admit?: EvaluationAdmitter;
   requestId?: () => string;
+  logger?: EvaluationHandlerLogger;
+  now?: () => number;
 };
 
 class BodyTooLargeError extends Error {}
@@ -52,8 +63,13 @@ function errorResponse(
   status: number,
   code: string,
   message: string,
+  headers?: HeadersInit,
 ): Response {
-  return json({ requestId, error: { code, message } }, status);
+  return json({ requestId, error: { code, message } }, status, headers);
+}
+
+function defaultLogger(event: EvaluationHandlerFailureEvent): void {
+  console.warn(JSON.stringify(event));
 }
 
 async function readBoundedBody(request: Request): Promise<string> {
@@ -107,38 +123,62 @@ export function createEvaluateHandler({
   resolveSource = resolveLessonSource,
   admit = admitEvaluation,
   requestId: createRequestId = randomUUID,
+  logger = defaultLogger,
+  now = Date.now,
 }: EvaluateHandlerDependencies): (request: Request) => Promise<Response> {
   return async function handleEvaluate(request: Request): Promise<Response> {
     const requestId = createRequestId();
+    const startedAt = now();
+    const fail = (
+      status: number,
+      code: string,
+      message: string,
+      stage: EvaluationHandlerFailureEvent["stage"],
+      headers?: HeadersInit,
+    ): Response => {
+      try {
+        logger({
+          event: "evaluation.request_failed",
+          requestId,
+          stage,
+          failure: code,
+          status,
+          latencyMs: Math.max(0, now() - startedAt),
+        });
+      } catch {
+        // Observability must never change the endpoint failure response.
+      }
+      return errorResponse(requestId, status, code, message, headers);
+    };
     let principal: EvaluationPrincipal | null;
 
     try {
       principal = await authenticate();
     } catch {
-      return errorResponse(
-        requestId,
+      return fail(
         503,
         "authentication_unavailable",
         "Authentication is temporarily unavailable.",
+        "authentication",
       );
     }
 
     if (!principal) {
-      return errorResponse(
-        requestId,
+      return fail(
         401,
         "authentication_required",
         "Sign in before submitting an answer.",
+        "authentication",
       );
     }
 
     const mediaType = request.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase();
     if (mediaType !== "application/json") {
-      return errorResponse(
-        requestId,
+      return fail(
         415,
         "json_required",
         "Send the evaluation request as JSON.",
+        "request",
       );
     }
 
@@ -146,10 +186,10 @@ export function createEvaluateHandler({
     if (contentLength !== null) {
       const declaredBytes = Number(contentLength);
       if (!Number.isSafeInteger(declaredBytes) || declaredBytes < 0) {
-        return errorResponse(requestId, 400, "invalid_request", "The request is not valid.");
+        return fail(400, "invalid_request", "The request is not valid.", "request");
       }
       if (declaredBytes > EVALUATION_BODY_MAX_BYTES) {
-        return errorResponse(requestId, 413, "request_too_large", "The answer is too long.");
+        return fail(413, "request_too_large", "The answer is too long.", "request");
       }
     }
 
@@ -158,29 +198,29 @@ export function createEvaluateHandler({
       rawBody = await readBoundedBody(request);
     } catch (error) {
       if (error instanceof BodyTooLargeError) {
-        return errorResponse(requestId, 413, "request_too_large", "The answer is too long.");
+        return fail(413, "request_too_large", "The answer is too long.", "request");
       }
-      return errorResponse(requestId, 400, "invalid_request", "The request is not valid.");
+      return fail(400, "invalid_request", "The request is not valid.", "request");
     }
 
     let untrustedBody: unknown;
     try {
       untrustedBody = JSON.parse(rawBody) as unknown;
     } catch {
-      return errorResponse(requestId, 400, "invalid_request", "The request is not valid.");
+      return fail(400, "invalid_request", "The request is not valid.", "request");
     }
 
     const parsed = EvaluationRequestSchema.safeParse(untrustedBody);
     if (!parsed.success) {
-      return errorResponse(requestId, 400, "invalid_request", "The request is not valid.");
+      return fail(400, "invalid_request", "The request is not valid.", "request");
     }
 
     if (parsed.data.sourceType !== "lesson" || parsed.data.modality !== "translate") {
-      return errorResponse(
-        requestId,
+      return fail(
         422,
         "unsupported_evaluation",
         "That evaluation type is not available yet.",
+        "request",
       );
     }
 
@@ -190,16 +230,14 @@ export function createEvaluateHandler({
       .digest("hex");
     const admission = admit(userKey, requestFingerprint);
     if (!admission.allowed) {
-      return json(
-        {
-          requestId,
-          error: {
-            code: "evaluation_rate_limited",
-            message: "Too many evaluation requests. Try again shortly.",
-          },
-        },
+      return fail(
         429,
-        { "Retry-After": String(admission.retryAfterSeconds) },
+        "evaluation_rate_limited",
+        "Too many evaluation requests. Try again shortly.",
+        "admission",
+        {
+          "Retry-After": String(admission.retryAfterSeconds),
+        },
       );
     }
 
@@ -209,26 +247,26 @@ export function createEvaluateHandler({
         source = await resolveSource(parsed.data.itemRef, parsed.data.direction);
       } catch (error) {
         if (error instanceof EvaluationSourceNotFoundError) {
-          return errorResponse(
-            requestId,
+          return fail(
             404,
             "source_not_found",
             "That practice item is not available.",
+            "source",
           );
         }
         if (error instanceof EvaluationSourceIntegrityError) {
-          return errorResponse(
-            requestId,
+          return fail(
             503,
             "source_unavailable",
             "That practice item cannot be graded right now.",
+            "source",
           );
         }
-        return errorResponse(
-          requestId,
+        return fail(
           503,
           "evaluation_unavailable",
           "Evaluation is temporarily unavailable.",
+          "source",
         );
       }
 
@@ -242,7 +280,7 @@ export function createEvaluateHandler({
       const outcome: EvaluationServiceOutcome = await service.evaluate(serviceRequest);
 
       if (outcome.kind === "invalid") {
-        return errorResponse(requestId, 400, "invalid_request", "The request is not valid.");
+        return fail(400, "invalid_request", "The request is not valid.", "service");
       }
       if (outcome.kind === "ungraded") {
         return ungradedResponse(requestId, outcome);
@@ -250,11 +288,11 @@ export function createEvaluateHandler({
 
       return json({ requestId, ...outcome.result }, 200);
     } catch {
-      return errorResponse(
-        requestId,
+      return fail(
         503,
         "evaluation_unavailable",
         "Evaluation is temporarily unavailable.",
+        "service",
       );
     } finally {
       admission.release();
