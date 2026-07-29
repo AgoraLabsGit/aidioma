@@ -38,6 +38,7 @@ describe("GatewayAiVerdictGenerator", () => {
         score: 90,
         verdict: "correct",
         feedback: "That is a natural equivalent.",
+        wordDiff: [],
         errorTags: [],
       }),
     );
@@ -53,6 +54,7 @@ describe("GatewayAiVerdictGenerator", () => {
     const options = generate.mock.calls[0][0];
     expect(options.model).toBe(DEFAULT_AI_EVALUATION_MODEL);
     expect(options.maxRetries).toBe(0);
+    expect(options.reasoning).toBe("minimal");
     expect(options.timeout).toEqual({ totalMs: AI_EVALUATION_TIMEOUT_MS });
     expect(options.abortSignal).toBeUndefined();
     expect(options).not.toHaveProperty("tools");
@@ -96,6 +98,7 @@ describe("GatewayAiVerdictGenerator", () => {
         score: 65,
         verdict: "close",
         feedback: "The idea is clear, but revise the phrasing.",
+        wordDiff: [],
         errorTags: ["verb.ser"],
       }),
     );
@@ -139,6 +142,7 @@ describe("GatewayAiVerdictGenerator", () => {
         score: 90,
         verdict: "wrong",
         feedback: "Contradictory band.",
+        wordDiff: [],
         errorTags: [],
       }),
     );
@@ -160,6 +164,7 @@ describe("GatewayAiVerdictGenerator", () => {
         score: 50,
         verdict: "wrong",
         feedback: "Review the verb form.",
+        wordDiff: [],
         errorTags: ["verb.estar"],
       }),
     );

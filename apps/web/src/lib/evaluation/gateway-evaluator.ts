@@ -12,6 +12,7 @@ import {
 import {
   AiEvaluationResultSchema,
   type AiEvaluationResult,
+  type AiStructuredEvaluationResult,
   type EvaluationDirection,
   type EvaluationModality,
 } from "./contracts";
@@ -21,7 +22,7 @@ export const AI_EVALUATION_MODELS = [
   "anthropic/claude-haiku-4.5",
 ] as const;
 export const DEFAULT_AI_EVALUATION_MODEL = AI_EVALUATION_MODELS[0];
-export const AI_EVALUATION_TIMEOUT_MS = 8_000;
+export const AI_EVALUATION_TIMEOUT_MS = 12_000;
 
 export type AiEvaluationModel = (typeof AI_EVALUATION_MODELS)[number];
 
@@ -81,7 +82,8 @@ type GatewayGenerateOptions = {
   model: AiEvaluationModel;
   system: string;
   prompt: string;
-  output: ReturnType<typeof Output.object<AiEvaluationResult>>;
+  output: ReturnType<typeof Output.object<AiStructuredEvaluationResult>>;
+  reasoning: "minimal";
   maxRetries: 0;
   timeout: { totalMs: typeof AI_EVALUATION_TIMEOUT_MS };
   abortSignal?: AbortSignal;
@@ -212,16 +214,19 @@ function categorizeFailure(error: unknown, callerSignal?: AbortSignal): AiFailur
     if (error.name === "GatewayRateLimitError") return "rate-limit";
   }
 
+  const nested = nestedError(error);
+  if (nested !== undefined && nested !== error) {
+    const nestedCategory = categorizeFailure(nested, callerSignal);
+    if (nestedCategory !== "unknown") return nestedCategory;
+  }
+
   const code = statusCode(error);
   if (code === 401 || code === 403) return "authentication";
   if (code === 408 || code === 504) return "timeout";
   if (code === 429) return "rate-limit";
   if (code !== undefined) return "provider";
 
-  const nested = nestedError(error);
-  return nested !== undefined && nested !== error
-    ? categorizeFailure(nested, callerSignal)
-    : "unknown";
+  return "unknown";
 }
 
 function promptFor(request: AiVerdictRequest): string {
@@ -233,6 +238,22 @@ function promptFor(request: AiVerdictRequest): string {
     modality: request.modality,
     grammarTags: [...request.grammarTags],
   });
+}
+
+function normalizeAiResult(
+  result: ReturnType<typeof AiEvaluationResultSchema.parse>,
+): AiEvaluationResult {
+  const wordDiff = result.wordDiff.map(({ suggestion, ...entry }) => ({
+    ...entry,
+    ...(suggestion !== null && { suggestion }),
+  }));
+  return {
+    score: result.score,
+    verdict: result.verdict,
+    feedback: result.feedback,
+    ...(wordDiff.length > 0 && { wordDiff }),
+    errorTags: result.errorTags,
+  };
 }
 
 export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
@@ -275,6 +296,7 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
           name: "aidioma_evaluation_verdict",
           description: "A score, coherent verdict, concise feedback, optional word diff, and tags.",
         }),
+        reasoning: "minimal",
         maxRetries: 0,
         timeout: { totalMs: AI_EVALUATION_TIMEOUT_MS },
         abortSignal: request.signal,
@@ -313,7 +335,7 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
         };
       }
 
-      return { kind: "graded", result: parsed.data, metadata };
+      return { kind: "graded", result: normalizeAiResult(parsed.data), metadata };
     } catch (error) {
       return {
         kind: "ungraded",

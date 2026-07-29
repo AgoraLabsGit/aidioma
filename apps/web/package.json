@@ -19,6 +19,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "build": "next build",
+    "prove:evaluate": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx scripts/prove-evaluate.ts",
     "references": "node scripts/capture-prototype-references.mjs",
     "smoke": "node scripts/smoke.mjs",
     "smoke:install": "playwright install chromium"

@@ -63,8 +63,25 @@ function addScoreVerdictIssue(
   }
 }
 
+const AiWordDiffEntrySchema = z
+  .object({
+    text: z.string().min(1).max(200),
+    mark: z.enum(["correct", "close", "wrong", "missing", "extra"]),
+    suggestion: z.string().min(1).max(200).nullable(),
+  })
+  .strict();
+
+// OpenAI strict structured outputs require every property, including nested
+// properties, to appear in `required`. The adapter normalizes []/null back to
+// the optional learner-facing WordDiff shape after schema validation.
 export const AiEvaluationResultSchema = z
-  .object(gradedFields)
+  .object({
+    score: gradedFields.score,
+    verdict: gradedFields.verdict,
+    feedback: gradedFields.feedback,
+    wordDiff: z.array(AiWordDiffEntrySchema).max(100),
+    errorTags: gradedFields.errorTags,
+  })
   .strict()
   .superRefine(addScoreVerdictIssue);
 
@@ -82,5 +99,6 @@ export type EvaluationModality = z.infer<typeof EvaluationModalitySchema>;
 export type EvaluationRequest = z.infer<typeof EvaluationRequestSchema>;
 export type BrowserEvaluationRequest = EvaluationRequest;
 export type WordDiffEntry = z.infer<typeof WordDiffEntrySchema>;
-export type AiEvaluationResult = z.infer<typeof AiEvaluationResultSchema>;
+export type AiStructuredEvaluationResult = z.infer<typeof AiEvaluationResultSchema>;
+export type AiEvaluationResult = Omit<EvaluationResult, "evalSource" | "modelUsed">;
 export type EvaluationResult = z.infer<typeof EvaluationResultSchema>;
