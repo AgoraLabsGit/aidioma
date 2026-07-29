@@ -129,6 +129,27 @@ export function createEvaluateHandler({
   return async function handleEvaluate(request: Request): Promise<Response> {
     const requestId = createRequestId();
     const startedAt = now();
+    const recordFailure = (
+      status: number,
+      failure: string,
+      stage: EvaluationHandlerFailureEvent["stage"],
+    ): void => {
+      // Routine public 4xx input/auth failures are intentionally not emitted
+      // one-by-one; doing so would make logs an unauthenticated amplification path.
+      if (status < 500 && stage !== "admission" && stage !== "source") return;
+      try {
+        logger({
+          event: "evaluation.request_failed",
+          requestId,
+          stage,
+          failure,
+          status,
+          latencyMs: Math.max(0, now() - startedAt),
+        });
+      } catch {
+        // Observability must never change the endpoint failure response.
+      }
+    };
     const fail = (
       status: number,
       code: string,
@@ -136,18 +157,7 @@ export function createEvaluateHandler({
       stage: EvaluationHandlerFailureEvent["stage"],
       headers?: HeadersInit,
     ): Response => {
-      try {
-        logger({
-          event: "evaluation.request_failed",
-          requestId,
-          stage,
-          failure: code,
-          status,
-          latencyMs: Math.max(0, now() - startedAt),
-        });
-      } catch {
-        // Observability must never change the endpoint failure response.
-      }
+      recordFailure(status, code, stage);
       return errorResponse(requestId, status, code, message, headers);
     };
     let principal: EvaluationPrincipal | null;
@@ -283,6 +293,11 @@ export function createEvaluateHandler({
         return fail(400, "invalid_request", "The request is not valid.", "service");
       }
       if (outcome.kind === "ungraded") {
+        recordFailure(
+          outcome.failure === "rate-limit" ? 429 : 503,
+          `ai_${outcome.failure}`,
+          "service",
+        );
         return ungradedResponse(requestId, outcome);
       }
 

@@ -93,12 +93,14 @@ function dependencies(overrides: {
 describe("POST /api/evaluate handler", () => {
   it("requires authentication before reading or grading the request", async () => {
     const service = { evaluate: vi.fn() } satisfies EvaluationServicePort;
+    const logger = vi.fn<EvaluationHandlerLogger>();
     const response = await createEvaluateHandler(
-      dependencies({ authenticate: async () => null, service }),
+      dependencies({ authenticate: async () => null, service, logger }),
     )(request("not json"));
 
     expect(response.status).toBe(401);
     expect(service.evaluate).not.toHaveBeenCalled();
+    expect(logger).not.toHaveBeenCalled();
     expect(await response.json()).toEqual({
       requestId: "req_test",
       error: {
@@ -255,8 +257,10 @@ describe("POST /api/evaluate handler", () => {
   });
 
   it("returns retryable ungraded responses without fabricated grading fields", async () => {
+    const logger = vi.fn<EvaluationHandlerLogger>();
     const unavailable = await createEvaluateHandler(
       dependencies({
+        logger,
         service: {
           evaluate: async () => ({
             kind: "ungraded",
@@ -276,6 +280,14 @@ describe("POST /api/evaluate handler", () => {
     });
     expect(unavailableBody).not.toHaveProperty("score");
     expect(unavailableBody).not.toHaveProperty("verdict");
+    expect(logger).toHaveBeenCalledWith({
+      event: "evaluation.request_failed",
+      requestId: "req_test",
+      stage: "service",
+      failure: "ai_timeout",
+      status: 503,
+      latencyMs: 0,
+    });
 
     const limited = await createEvaluateHandler(
       dependencies({
