@@ -3,11 +3,11 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-29 (A1-H built and gated; independent delta audit next)
+**Updated:** 2026-07-29 (A1-H proven and locally merged; A1 operator verification next)
 
 ## Position
 
-**Lane A — App (ACTIVE: A1-H audit/close prep)**
+**Lane A — App (ACTIVE: A1 `/close` verification)**
 - **A0 Design Close CLOSED.** Operator gave design VERIFIED + close GO on 2026-07-28.
 - A0-1…A0-H proven: design, legacy review, Docs SSOT, archive, and directory cleanup complete.
 - A1-1R is proven: the four responsive screens now use the approved prototype shell, tokens, density, and navigation with truthful zero states.
@@ -22,6 +22,8 @@
 - SQL is the sole DDL authority; the runner enforces exact journal history, serializes migrations,
   and asserts deferred-ordinal drift. OI-028…OI-032 are closed; OI-026 remains deferred upstream.
 - The redundant root env is removed; `apps/web/.env.local` is authoritative at mode 0600.
+- A1-H is proven: cache-free App/Content gates pass at 11 files / 39 app tests; three initial
+  audits, high-effort review, and all delta re-audits are clean after dispositions.
 - Fresh public remote `AgoraLabsGit/aidioma` is live; proven `main` was pushed on 2026-07-28 for Vercel/Neon setup.
 - No Vercel deployment exists. This session has not pushed or deployed.
 
@@ -32,9 +34,9 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Finish the A1-H delta audit and local merge, then give Mike the A1 `/close` test script.
+1. Mike runs the A1 `/close` click script and replies `VERIFIED` or reports the exact mismatch.
 2. Continue C2 with a1-05 through validator zero errors and independent L2 PASS.
-3. After Mike verifies, push/deploy only on explicit GO; then run the public Clerk smoke.
+3. After Mike verifies, recheck OI-026; push/deploy only on explicit GO, then run public Clerk smoke.
 4. Recheck OI-026 and promote OI-034 before real users; keep both lanes isolated.
 
 ## Standing decisions (highlights)

@@ -1,7 +1,7 @@
 ---
 title: A1-H — Foundation hygiene and deployment isolation
 type: wave-slice
-status: active
+status: proven
 updated: 2026-07-29
 ---
 
@@ -77,6 +77,24 @@ below then ran sequentially; the operator-owned `next-env.d.ts` was backed up an
 - Prevention is procedural: never pass secret-bearing URLs through commands whose parse errors may
   echo their input; inspect only value-free identity/classification output. The write-target tests
   are separate protection against wrong-database mutation, not claimed as a regression for output.
+
+## A1 `/close` operator test
+1. Start the local app with `npm run app:dev`, then open `http://localhost:3000` in a desktop browser.
+2. On Home, expect `Hola.`, three zero stats, `Lesson 1 · Hola: greetings and introducing yourself`,
+   `Not started`, `Review · 0 due`, and `No weak areas yet`. No invented progress may appear.
+3. Click `Lessons`. Expect `A1 · Foundations`, `Lessons 1–12`, `You are here`, Lesson 1 current,
+   Lessons 2–12 locked, and A2 locked. Click `Start here` from Home and expect the same Lessons page.
+4. Click `Practice`. Expect `Your first activity will appear here.`, the disabled answer field,
+   and `Learn → Quiz → Words → Sentences → Story`; no fabricated answer or score appears.
+5. Click `Settings`. Move Daily goal and expect the number to change; reload and expect the preview
+   change to reset. Choose Dark, Light, then Auto and expect the page theme to follow each choice.
+6. Click `Sign in`. Expect Clerk under `Return to your Spanish.` Click `Start learning` separately
+   and expect Clerk under `Build Spanish that stays.` Complete a test sign-in/up if desired; expect
+   return to `/` and a user avatar replacing the two account buttons. Sign out and expect them back.
+7. Resize to a phone-width window. Expect bottom Home/Lessons/Practice/Settings tabs, readable cards,
+   no sideways page scroll, and the same active-route highlight. Check both Light and Dark once.
+8. Reply `VERIFIED` if every result matches, or report the numbered step and mismatch. `VERIFIED`
+   alone does not authorize publishing; pushing still requires a separate explicit `GO`.
 
 ## Decisions
 - The superseded remote-live handoff does not reopen Lane C work in this App-lane session.
