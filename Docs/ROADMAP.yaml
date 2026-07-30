@@ -29,18 +29,18 @@ mvp_finish_line: >
 #   Lane C (Content) - lesson authoring. Owner: Lesson Plan agent. Content and working records
 #                      live in /content; schema rulings live in Docs/Registers/schema-proposals.md.
 # STANDING SEQUENCING (operator, 2026-07-23; triggers satisfied 2026-07-28):
-#   1. Lane A opened with mandatory DESIGN-CLOSE wave A0, now closed; A1 is active.
+#   1. Lane A shipped A0–A2; A2R is next.
 #   2. Lane C received explicit GO after A0 and is active in C2.
 
 release_batch:
-  last_shipped_wave: A1
-  production_sha: ec0ef9b494484c662a6508f912b6a47c68696b8c
-  production_exception: "OI-037: live tree contains unverified A2/Practice precursor publication"
-  queued_waves: [A2]
+  last_shipped_wave: A2
+  production_sha: c3f50be2ad45f858398727c16bf0a1cb4fe37786
+  production_exception: null
+  queued_waves: []
   active_wave: null
-  branch: release/A2-2026-07-29
-  candidate: 9cdca857f626685bf07129c42e6ddf770d16a5e2
-  state: preview-proven
+  branch: null
+  candidate: null
+  state: idle
 
 verify:
   # Both lanes have real, running root-workspace gates; not-run = FAIL.
