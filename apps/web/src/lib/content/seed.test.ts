@@ -13,6 +13,7 @@ describe("canonical lesson seed transformation", () => {
       "a1-02-soy-asi",
       "a1-03-que-haces",
       "a1-04-donde-esta",
+      "a1-05-ser-y-estar",
     ]);
     expect(first.every((lesson) => /^[a-f0-9]{64}$/.test(lesson.contentHash))).toBe(true);
     expect(first.every((lesson) => lesson.items.every((item) => item.lessonId === lesson.id))).toBe(

@@ -49,6 +49,8 @@ updated: 2026-07-30
 - Whole-diff review found the validator omitted reference-card IDs/refs and the prototype exporter
   dropped vocab accept sets. Both were fixed; three regression checks raise fixtures to 21/21, the
   missing reference-card ID is snapshotted, generated vocab answers are complete, and delta review is clean.
+  First PR CI then exposed the App seed test's hard-coded four-lesson corpus; its expected list now
+  includes a1-05 and the full App test suite passes 140/140.
 
 ## Gates (stage 2 — record actual results)
 | Gate | Command | Result |

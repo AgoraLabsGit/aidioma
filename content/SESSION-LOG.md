@@ -150,4 +150,5 @@ Decisions and dispatch history for the Lesson Plan agent (coordinator). Newest e
   sets are complete. Focused delta review is CLEAN.
 - **Gate evidence on current `origin/main`:** typecheck PASS; five-lesson validator PASS with 0
   errors (only five documented a1-01 warnings); contract smoke 13/13; fixtures 21/21; prototype
-  export/check PASS; generated JavaScript syntax and `git diff --check` PASS.
+  export/check PASS; generated JavaScript syntax and `git diff --check` PASS. Initial PR CI exposed
+  the App seed test's hard-coded four-lesson list; adding a1-05 closed it and App tests pass 140/140.
