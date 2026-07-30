@@ -131,6 +131,10 @@ the exact tested batch → `main`; a non-deploying wave omits the Preview stage.
 - Environment ladder is fixed: localhost uses Development credentials/data; ordinary worker branches
   are local/CI-only; the one cumulative `release/**` branch uses Preview credentials/data; `main`,
   `aidioma.io`, and the production alias are Production only. CLI Preview URLs are diagnostic only.
+- GitHub accepts merge commits only. Vercel may skip only a standard two-parent `main` merge whose
+  first-parent diff changes neither `apps/web`, the shared lesson contract, nor root package manifests.
+  The repository-owned Ignored Build Step fails open to a build for squash/rebase commits, missing
+  history, or other ambiguity; documentation-only merges must not move Production aliases.
 - Worker `/close` authorizes its clean branch push/draft PR. Coordinator `/close` additionally
   authorizes the cumulative release Preview and named Preview-only configuration. Only `SHIP`
   authorizes `main` or Production configuration; neither authorizes force push or uncontained deletion.
