@@ -306,6 +306,7 @@ function lessonItemIds(l: LessonT): { id: string; contentVersion: number }[] {
   for (const seg of l.passage.segments) out.push({ id: seg.id, contentVersion: cv }); // P-002: immutable segment ids
   out.push({ id: l.conversation.id, contentVersion: cv });
   for (const q of l.quickChecks) out.push({ id: q.id, contentVersion: cv });
+  for (const r of l.referenceCards) out.push({ id: r.id, contentVersion: cv });
   return out;
 }
 
@@ -519,6 +520,7 @@ function runPerLessonChecks(l: LessonT, ctx: Ctx) {
   });
   for (const r of l.conversation.vocabRefs) checkRef(r, l.conversation.id);
   for (const q of l.quickChecks) for (const r of q.vocabRefs) checkRef(r, q.id);
+  for (const card of l.referenceCards) for (const r of card.vocabRefs) checkRef(r, card.id);
 
   /* ---- Check 5: every singleton vocab exercised; every setId group represented ---- */
   const exercised = new Set<string>();

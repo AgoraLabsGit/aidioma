@@ -1,0 +1,96 @@
+{
+  "lessonId": "a1-05-ser-y-estar",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "MAJOR",
+      "checklistPoint": 6,
+      "itemId": "a1-05.r.01",
+      "issue": "The reference card displays 0–30, but only eight numbers have graded VocabItems; the other 23 have no immutable item IDs or bidirectional accept sets. A ReferenceCard is ungraded, and the current Lesson.vocab maximum makes the required 31 number members plus the lesson's seven non-number items impossible.",
+      "proposedFix": "Resolve P-007 at the schema/style boundary, then give every number 0–30 its own graded member and accept set. The representative subset plus reference card is not fully compliant."
+    },
+    {
+      "severity": "MAJOR",
+      "checklistPoint": 5,
+      "itemId": "a1-05.s.02",
+      "issue": "English accept sets are systematically thin across s.02, s.04, s.06–s.09, s.11–s.12, and s.16–s.18: they generally accept only all-contracted and all-expanded clauses, not common mixed forms.",
+      "proposedFix": "Add the common mixed contraction variants listed in missingAlternates without padding marginal paraphrases."
+    },
+    {
+      "severity": "MAJOR",
+      "checklistPoint": 5,
+      "itemId": "a1-05.s.15",
+      "issue": "The accepted English `There are ten chairs and one table` removes the contrast encoded by pero, while accepted Spanish `Diez sillas hay, pero una mesa` is contextlessly marked and unnatural.",
+      "proposedFix": "Remove both entries and keep only neutral variants that preserve pero and ordinary existential order."
+    },
+    {
+      "severity": "MAJOR",
+      "checklistPoint": 10,
+      "itemId": "a1-05.s.02",
+      "issue": "s.02, s.04, s.06, s.07, s.11, and s.12 each contain two clauses but are difficulty 3, conflicting with the Style Guide's level-4 two-clause profile.",
+      "proposedFix": "Re-rate all six items consistently at difficulty 4."
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 2,
+      "itemId": "a1-05.p.01.06",
+      "issue": "`Hoy descanso en la casa` is not the neutral standalone rendering of its primary English `Today I rest at home`.",
+      "proposedFix": "Use `Hoy descanso en casa`, or retain the article and translate it as `in the house`."
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 2,
+      "itemId": "a1-05.q.01",
+      "issue": "`Hoy yo ___ cansado` marks the subject without a contrastive context.",
+      "proposedFix": "Use the neutral order `Yo ___ cansado hoy.`"
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 9,
+      "itemId": "a1-05.e.01",
+      "issue": "The explanation contains five distinct Spanish examples, exceeding the prescribed 2–3 examples.",
+      "proposedFix": "Keep at most three examples while preserving one explicit ser/estar contrast."
+    },
+    {
+      "severity": "MINOR",
+      "checklistPoint": 5,
+      "itemId": "a1-05.p.01.05",
+      "issue": "The age segment omits the common English forms `I am twenty years old` and `I'm 20 years old`.",
+      "proposedFix": "Add both accepted English variants."
+    }
+  ],
+  "missingAlternates": [
+    { "sentenceId": "a1-05.s.02", "alternate": "I am kind, but I'm nervous today." },
+    { "sentenceId": "a1-05.s.04", "alternate": "He is hardworking, but he's sick today." },
+    { "sentenceId": "a1-05.s.06", "alternate": "I am young, but I'm sad today." },
+    { "sentenceId": "a1-05.s.07", "alternate": "You are nervous, but you're kind." },
+    { "sentenceId": "a1-05.s.08", "alternate": "They are smart, but they're tired today." },
+    { "sentenceId": "a1-05.s.09", "alternate": "I am not sick today; I'm happy." },
+    { "sentenceId": "a1-05.s.11", "alternate": "I am twenty years old, and I'm happy today." },
+    { "sentenceId": "a1-05.s.12", "alternate": "I am fifteen years old, but I'm tired today." },
+    { "sentenceId": "a1-05.s.16", "alternate": "I am thirty years old, I'm kind, and I'm not sad today." },
+    { "sentenceId": "a1-05.s.17", "alternate": "She is smart, but today she's busy and nervous." },
+    { "sentenceId": "a1-05.s.18", "alternate": "We are hardworking, but today we're tired and we aren't resting." },
+    { "sentenceId": "a1-05.p.01.05", "alternate": "I am twenty years old." },
+    { "sentenceId": "a1-05.p.01.05", "alternate": "I'm 20 years old." }
+  ],
+  "stats": {
+    "validatorPassed": true,
+    "validatorErrors": 0,
+    "validatorWarnings": 0,
+    "sentencesReviewed": 18,
+    "vocabItemsReviewed": 15,
+    "sentenceAcceptedEsReviewed": 70,
+    "sentenceAcceptedEnReviewed": 33,
+    "hintsReviewed": 54,
+    "passageSegmentsReviewed": 6,
+    "passageEnglishAnswersReviewed": 12,
+    "quickChecksReviewed": 4,
+    "referenceCardsReviewed": 1,
+    "alternatesFound": 13,
+    "numberSetRequiredMembers": 31,
+    "numberSetGradedMembers": 8,
+    "numberSetMissingGradedMembers": 23,
+    "notes": "Independent L2 r1 at contentVersion 1 on the rebased current-main tree. FAIL: 0 critical, 4 major, 4 minor. Three major classes and all minors are locally fixable; complete typed/flashcard coverage of 0–30 remains blocked by the raw 15-item schema cap and is formally proposed as P-007. No audit-time file edits were made."
+  }
+}
