@@ -2,7 +2,7 @@
 title: Data model — greenfield tables
 type: area-spec
 status: active
-updated: 2026-07-29
+updated: 2026-07-30
 ---
 
 # Data model — greenfield tables
@@ -18,6 +18,7 @@ updated: 2026-07-29
 | `lesson_items` | One row per authored item; discriminated JSON payload |
 | `practice_sets` | Curated/private set metadata, capabilities, version, and lifecycle |
 | `practice_set_targets` | Immutable, versioned set targets and optional knowledge key |
+| `practice_set_generation_jobs` | A9 request/run/review lifecycle; Neon authority over Workflow runs |
 | `practice_sessions` | Authoritative session start/terminal outcome (ADR-0013) |
 | `practice_session_turns` | A12+ ordered learner/agent/feedback transcript for live sessions |
 | `evaluations` | One row per graded submission, linked to a session |
@@ -36,6 +37,7 @@ updated: 2026-07-29
 | `lesson_items` | lessonId FK, kind, payload jsonb, grammarTags jsonb, difficulty nullable, contentVersion, deprecated boolean/default false |
 | `practice_sets` | slug, title, description, levelRange, facets, origin, visibility, ownerUserId nullable, supportedActivities, defaults, contentVersion, provenance, isActive |
 | `practice_set_targets` | practiceSetId, immutable targetKey, kind, payload, grammarFeatures, grammarTags, difficulty, knowledgeKey nullable, contentVersion, deprecated |
+| `practice_set_generation_jobs` | userId, normalizedRequestHash, workflowRunId nullable, status (`queued\|running\|awaitingReview\|approved\|failed\|cancelled`), promptVersion, modelUsed nullable, candidateSetId nullable, validationEvidence, regenerationCount, failureClass nullable, startedAt, completedAt nullable, cancelledAt nullable |
 | `practice_sessions` | userId, recipe (`continue\|blend\|review\|set`, plus `conversation` in A12), focusLessonId nullable, focusPracticeSetId nullable, focusConversationItemId nullable in A12, configuration jsonb nullable, plannedSize nullable, startedAt, completedAt nullable, endedAt nullable |
 | `practice_session_turns` | sessionId, ordinal, role (`learner\|agent\|feedback`), text, evaluationId nullable, interrupted boolean, modelUsed nullable; A12 migration only |
 | `evaluations` | userId, sessionId, sourceType (`lesson\|set`), lessonItemId nullable, setTargetId nullable, lessonId nullable, modality, direction, inputMode nullable/default typed until A10 (`typed\|voice`), userInput, score, verdict, feedback, wordDiff, errorTags, evalSource, modelUsed nullable, contentVersion, normalizedInputHash |
@@ -61,6 +63,8 @@ never persist provider secrets or hidden answer sets in client-visible session s
   it is not pulled forward for turn-based A10. A linked evaluation remains the sole scored record.
 - Every evaluation identifies exactly one server-resolved source target: lesson or set (XOR). Set
   evaluations update set/target stats only and cannot update `user_lesson_progress`.
+- A9 generation jobs are canonical for ownership, product status, provenance, review, and deletion.
+  Workflow event history is operational evidence and must reconcile to the Neon row, never replace it.
 - MC / modality / recipe phases+pool are first-class in SessionEngine; item kinds come from lesson schema (incl. study cards — ADR-0012), not extra tables.
 - Drop legacy `sentences` / derived-analytics tables when migrating from V1 reference (Lesson 0 fixture if needed).
 - MVP saved affordances are vocab/sentence. The polymorphic shape may reserve passage/lesson without exposing those controls.

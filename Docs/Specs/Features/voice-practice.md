@@ -2,7 +2,7 @@
 title: Voice practice — staged speaking and live conversation
 type: feature-spec
 status: active
-updated: 2026-07-29
+updated: 2026-07-30
 ---
 
 # Voice practice — staged speaking and live conversation
@@ -51,6 +51,16 @@ Stages are independently releasable. A later stage may not delay or destabilize 
 Initial baseline: AI SDK/Gateway `transcribe` + `generateSpeech`, with current Gateway-supported
 OpenAI speech models behind the two ports. Model IDs are configuration, not feature contracts.
 
+The recorder state is `idle -> requesting -> recording -> stopped -> transcribing -> ready|error`.
+Keep one local `Blob`, choose a supported MediaRecorder MIME type at runtime, revoke every object URL,
+and cap the initial turn at 30 seconds / 4 MiB. The authenticated server verifies media type, bytes,
+decoded duration, and Spanish locale before a provider call. TTS requests identify server-resolved
+displayed content; they do not accept arbitrary client-supplied synthesis text.
+
+At A10 opening, verify the live Gateway catalog and installed SDK contract. If Gateway lacks the
+required current model/capability, ADR-0007 permits one direct server adapter behind the same port.
+Pin the proven provider/model/package configuration in wave evidence; do not use streaming STT in A10.
+
 ## A11 bake-off protocol
 
 Use anonymized, consented recordings plus scripted samples covering A1/A2 pace, English-accented
@@ -61,6 +71,8 @@ and interruption. Compare:
   and lesson state constant: Gateway/OpenAI baseline versus ElevenLabs Scribe/Flash.
 - **Live track:** compare `gpt-realtime-2.1` end-to-end with ElevenLabs Speech Engine using the same
   AIdioma dialogue instructions, tools, evaluator, and scenarios wherever the architectures permit.
+- For the OpenAI track, compare direct browser WebRTC/Agents SDK with any current Gateway realtime
+  transport. Select provider, transport, SDK version, voice, and VAD settings as one configuration.
 
 Freeze the corpus, network profiles, region, prompts, voice settings, and thresholds before running.
 Measure transcript intent and preservation of learner errors; blind native-speaker authenticity and
@@ -81,14 +93,19 @@ turn-based stack is allowed only when each non-Gateway port shows a material gat
   `EvaluationService`; open dialogue turns use non-credit `ConversationFeedbackService`.
 - The spoken reply and displayed transcript must derive from the same accepted text. If correction
   and dialogue generation disagree, structured feedback wins and the discrepancy is logged.
+- `LiveVoicePort` connects directly to the selected realtime provider. Workflow and Eve do not
+  enter the audio path; a later asynchronous recap would require its own bounded decision.
 
 ## Privacy, cost, and accessibility gates
 
 - Raw audio is transient and not stored by default; transcripts are user-visible and deletable.
+- Never log multipart bodies, audio bytes/object URLs, ephemeral tokens, or transcript text. Record
+  only bounded request IDs, opaque user IDs, media/duration buckets, latency, cost, and failure class.
 - Short-lived client tokens only; server-authenticated sessions, duration/payload/concurrency limits,
   spend telemetry, feature flag, kill switch, and per-user daily allowance are release gates.
 - Captions/transcripts, keyboard controls, permission/error status, mute/stop, reduced motion, and a
   typed fallback are mandatory. No learning information may exist only in audio.
+- Label synthesized playback and live voices as AI-generated; playback must never imply a human tutor.
 - STT-backed grammar feedback is not pronunciation assessment. Pronunciation scoring stays PM-026.
 
 ## Promotion gates
@@ -98,11 +115,5 @@ turn-based stack is allowed only when each non-Gateway port shows a material gat
   or custom-set generation despite its later numeric ID.
 - A12 opens only after A11 records one production configuration and A10 usage/retry data is acceptable.
 - A13 opens only for a measured reliability, dialect, retention, or feedback-quality need.
-
 ## Sources
-
-- [OpenAI voice architectures](https://developers.openai.com/api/docs/guides/voice-agents),
-  [Realtime VAD](https://developers.openai.com/api/docs/guides/realtime-vad), and
-  [`gpt-realtime-2.1`](https://developers.openai.com/api/docs/models/gpt-realtime-2.1).
-- [Vercel Gateway audio integration](https://vercel.com/changelog/realtime-voice-speech-and-transcription-now-supported-on-ai-gateway).
-- [ElevenLabs Speech Engine](https://elevenlabs.io/docs/overview/capabilities/speech-engine).
+- Dated capability, repository, corpus, contract, and test research: [implementation-readiness audit](../../Audits/2026-07-30-voice-implementation-readiness.md).

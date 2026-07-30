@@ -336,18 +336,24 @@ waves:
         title: Generate -> validate -> quality-check -> preview workflow
         status: pending
         summary: >
-          Normalize/cache requests; generate structured candidates; run schema, policy, answer,
-          level, duplicate, and independent quality gates; support preview/edit/regenerate.
+          Use current stable Workflow core per ADR-0017. Create the owner-scoped Neon job before
+          start; orchestrate normalize/cache, generation, schema/policy/answer/level/duplicate gates,
+          an independent quality check, and a typed review hook while AI/database/validation live in
+          idempotent steps. Bound retries, regeneration, time, and spend; prove duplicate starts,
+          retry/fatal handling, redeploy resume, owner-only review, learner-safe progress, and a real
+          Preview run. Close OI-038 and A9-1's portion of OI-039.
       - id: A9-2
         title: Private persistence, reuse, reporting, and lifecycle
         status: pending
         summary: >
-          Persist private versioned sets with model/prompt provenance; reuse exact candidates safely;
-          report/deactivate without dangling evaluations. Public promotion requires content review.
+          Complete OI-039: persist private versioned sets plus canonical job state and model/prompt
+          provenance; reuse exact candidates safely; reconcile Workflow runs; handle failed,
+          cancelled, abandoned, regenerated, deactivated, and user-deleted jobs without dangling
+          evaluations. Public promotion requires content review; Workflow history is never canonical.
       - id: A9-H
         title: Hygiene slice (mandatory)
         status: pending
-        summary: "residue scan · fired deprecations · registers/specs reconcile"
+        summary: "residue scan · retention/deletion + dependency review · run/job reconciliation · registers/specs"
 
   - id: A10
     lane: App
@@ -363,16 +369,19 @@ waves:
         title: Narrow transcription and speech ports with privacy/cost controls
         status: pending
         summary: >
-          Add server-only TranscriptionPort/SpeechPort adapters using current AI Gateway speech models;
-          authenticated bounded upload, short timeout, per-user limits, provider/cost/latency telemetry,
+          Revalidate the live Gateway/AI SDK capability matrix, then add one server-only adapter per
+          TranscriptionPort/SpeechPort. Prove authenticated 30-second/4-MiB upload and decoded-media
+          validation, server-resolved TTS text, timeout/abort, per-user limits, redacted telemetry,
           no raw-audio retention, feature flag, kill switch, and deterministic contract tests.
       - id: A10-2
         title: Turn-based microphone, editable transcript, and playback in Practice
         status: pending
         summary: >
           Add record/stop/retry into the existing composer; preserve one local recording for retry;
-          require explicit Send; persist inputMode and correlate bounded transcription telemetry; add play/slow-play to safe
-          feed text; prove permission denial, typed fallback, phone/desktop, keyboard, and screen reader.
+          implement the recorder state machine and object-URL cleanup; require explicit Send; persist
+          inputMode and correlate bounded transcription telemetry; add disclosed play/slow-play to safe
+          feed text; prove denial, cancellation, navigation, typed fallback, phone/desktop, keyboard,
+          screen reader, and supported MIME fallbacks.
       - id: A10-H
         title: Hygiene slice (mandatory)
         status: pending
@@ -394,14 +403,16 @@ waves:
         summary: >
           Build one internal harness around the production ports. Freeze consented/scripted A1/A2
           utterances, accents/dialects, learner errors, noise/pause/interruption cases, devices,
-          regions, network profiles, prompts, voices, release thresholds, and cost calculation first.
+          regions, network profiles, prompts, voices, release thresholds, cost calculation, and data
+          rights first. Include direct OpenAI WebRTC versus any current Gateway realtime transport.
       - id: A11-2
         title: Run blind comparison and record the production configuration ADR
         status: pending
         summary: >
           Compare Gateway/OpenAI vs ElevenLabs per STT/TTS port, then gpt-realtime-2.1 vs Speech
-          Engine end-to-end. Publish aggregate evidence and native review; allow one implementation
-          per port and one live provider, with Gateway/OpenAI winning a quality tie.
+          Engine end-to-end. Publish aggregate evidence and native review; record provider, model,
+          transport, SDK, voice, VAD, limits, cost, rollback, and evidence expiry in one ADR. Allow one
+          implementation per port and one live provider, with Gateway/OpenAI winning a quality tie.
       - id: A11-H
         title: Hygiene slice (mandatory)
         status: pending
@@ -422,14 +433,16 @@ waves:
         summary: >
           Snapshot authored scenario/persona/register/vocabulary/goals/correction mode; add ordered
           transcript turns only now; separate generated dialogue from scored EvaluationService and
-          non-credit ConversationFeedbackService; define resume/end/delete behavior.
+          non-credit ConversationFeedbackService; define resume/end/delete behavior. Disposition
+          OI-040 before choosing any durable text-agent runtime; realtime media stays provider-direct.
       - id: A12-2
         title: LiveVoicePort and continuous web session with the bake-off winner
         status: pending
         summary: >
           Integrate one winning provider with short-lived tokens, turn detection, interruption,
           transcript/audio alignment, mute/stop/reconnect, ten-minute and daily limits, observability,
-          feature flag, and typed escape hatch. Do not add runtime fallback or provider selection.
+          feature flag, kill switch, and typed escape hatch. Normalize provider events behind the port;
+          prove the A11-selected transport on supported browsers. Do not add fallback/provider choice.
       - id: A12-3
         title: Flow/Coach correction UX and end recap beta
         status: pending

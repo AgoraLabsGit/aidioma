@@ -2,7 +2,7 @@
 title: Practice Sets — curated and custom practice
 type: feature-spec
 status: active
-updated: 2026-07-29
+updated: 2026-07-30
 ---
 
 # Practice Sets — curated and custom practice
@@ -97,11 +97,16 @@ interaction.
 
 ## Custom generation gate (A9)
 
-Normalize request → check reusable private candidate → generate structured candidate → schema and
-policy validation → independent quality check → learner preview/edit/regenerate → save as private,
-versioned content. Record request, model, prompt version, time, provenance, and validation evidence.
-Generated content is never silently merged into lessons or made public; public promotion requires
-the authored-content review bar. Document/URL import remains PM-022.
+Per ADR-0017, stable Workflow core orchestrates normalize/cache → structured candidate → schema and
+policy validation → independent quality check → private draft → typed learner review → approve,
+edit, or bounded regenerate → private version. AI, database, and validation work executes in
+retryable, idempotent steps; the workflow function only coordinates them.
+
+Neon owns the user-scoped generation job, status, request, model, prompt version, provenance,
+validation evidence, draft, and final version. Workflow history is operational, never canonical.
+Every start/status/review/cancel operation checks Clerk ownership. Generated content is never
+silently merged into lessons or made public; promotion requires authored-content review. Document
+or URL import remains PM-022.
 
 ## Accessibility and change policy
 

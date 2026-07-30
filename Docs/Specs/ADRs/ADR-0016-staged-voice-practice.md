@@ -2,7 +2,7 @@
 title: ADR-0016 — Stage voice from guided turns to live conversation
 type: adr
 status: accepted
-updated: 2026-07-29
+updated: 2026-07-30
 ---
 
 # ADR-0016 — Stage voice from guided turns to live conversation
@@ -50,3 +50,16 @@ Separating conversation from correction preserves the structured, server-owned t
 
 ADR-0007 (Gateway/provider routing), ADR-0013 (persisted sessions), and ADR-0014 (web-first SDK
 boundaries). Detailed capability truth lives in `Specs/Features/voice-practice.md`.
+
+## Implementation clarification — 2026-07-30
+
+- A10 uses bounded request/response transcription and speech generation behind the ports. Streaming
+  transcription, browser speech recognition, VAD, and continuous media remain outside that wave.
+- Gateway preference is capability-dependent. At wave open, verify the live catalog; if Gateway
+  lacks the required current model/capability, one direct server adapter may implement the same port
+  under ADR-0007. Provider/model/package identifiers are pinned in wave evidence, not this ADR.
+- A11 selects transport with provider. For browser OpenAI Realtime, compare the recommended direct
+  WebRTC/Agents SDK path with any then-current Gateway realtime path; an experimental convenience
+  hook does not override supported-device latency, interruption, security, or accessibility proof.
+- A12 normalizes session state and events behind `LiveVoicePort`; neither provider events nor the
+  dialogue transcript become grading authority. No candidate SDK enters production before A11.

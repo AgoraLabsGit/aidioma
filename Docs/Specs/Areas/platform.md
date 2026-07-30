@@ -103,11 +103,12 @@ updated: 2026-07-30
   Python model/pronunciation lab when a real Python or Hugging Face workload exists. A Gradio PWA,
   embed, share link, or auto-generated API must not become the learner app or grading authority
   without a new architecture decision and the normal auth/security gates.
-- Do not add agent/RAG frameworks for the single-call MVP evaluator. Adopt another SDK only for a
-  concrete capability that the current service contract cannot provide more simply.
+- **Durable workflows/agents:** stable Workflow SDK core is reserved for A9 generation
+  orchestration; Neon remains job/content authority. It does not enter evaluation, SessionEngine,
+  turn-based voice, or realtime media. Eve remains deferred until OI-040's trigger.
 
 ## Related authorities
 
-- Web baseline: ADR-0002. Provider/model: ADR-0007. SDK decisions: ADR-0014/ADR-0016.
+- Web baseline: ADR-0002. Provider/model: ADR-0007. SDK decisions: ADR-0014/ADR-0016/ADR-0017.
 - Trust/failure contract: `evaluation.md`. Voice capability: `../Features/voice-practice.md`.
 - Native/offline/pronunciation triggers: `Registers/post-mvp.md`.
