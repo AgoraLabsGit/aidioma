@@ -31,12 +31,12 @@ coordinate through files (this repo's `Docs/` + `content/`), never assume shared
 ## How work runs
 - The machine is `Docs/PROCESS.md`. Commands: /run · /fix · /feature · /close · /status; `SHIP`
   is the single Production approval for the exact cumulative Preview batch.
-- The primary worktree is coordinator-only. Workers use ephemeral isolated branches/worktrees
-  (`slice/<id>`, `fix/<id>`, or `work/<session>/<task>`) from the current release SHA, with one
-  declared non-overlapping file/area owner. Workers commit/push a draft-PR handoff but never merge
-  or edit shared control files; one coordinator integrates. After containment in the pushed release
-  branch, clean worker worktrees are removed while their refs remain through `SHIP`. Coordinator
-  `/close` publishes the cumulative Preview; only `SHIP` publishes it onto `main`/Production.
+- `origin/main` is the sole durable integrated history and must be clean at rest. The primary
+  worktree is coordinator-only; workers use ephemeral branches/worktrees with one declared,
+  non-overlapping file/area owner. Workers never merge or edit shared control files. The coordinator
+  integrates exact SHAs, immediately removes contained worker worktrees, and deletes merged refs.
+  Completed documentation merges promptly; deployable code uses Preview and only `SHIP` reaches
+  `main`/Production.
 - Deterministic gates (from ROADMAP `verify:` — per lane) run BEFORE any agent judgment, every
   slice. A gate that didn't run counts as failed. Both lanes now have live commands.
 - Every slice ends with an isolated read-only audit sized to risk (additive → 1 light check;

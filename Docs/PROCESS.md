@@ -4,6 +4,7 @@
 > A deployable App wave has two operator controls: approve its plan, then optionally `SHIP` a tested
 > cumulative Preview batch. `/close` itself authorizes Preview publication; Production never follows
 > automatically. Non-deploying waves close without joining a Preview batch.
+> Completed documentation/process work merges to `main` promptly; it never waits behind unrelated code.
 > Hard cap 150 lines. Any process change is an edit to THIS file, never a new convention doc.
 
 ## Two lanes
@@ -14,16 +15,18 @@ scaffolds in wave A1). A slice belongs to exactly one lane and runs the lifecycl
 
 ## Parallel-agent operating model
 
-- The primary worktree is coordinator-only. Each worker gets an ephemeral secondary worktree and
-  ordinary branch from the exact current release SHA (or `origin/main` when no batch is open).
+- `origin/main` is the sole durable integrated history. At rest, local `main` matches it in one clean
+  primary coordinator worktree; every agent branch/worktree is temporary.
+- Each worker gets an ephemeral secondary worktree and ordinary branch from the exact current
+  integration SHA (`origin/main`, or the one active release SHA for dependent App work).
 - Before spawning work, record one owner and the intended files/areas in the task packet. Parallel
   scopes must not overlap; dependent or shared-file work is sequenced after the earlier SHA lands.
 - Workers own implementation plus their wave/handoff evidence. The coordinator alone edits
   `STATE.md`, `ROADMAP.yaml`, `PROCESS.md`, release branches, and cross-wave integration records.
 - Workers commit and push without merging. The coordinator integrates exact reviewed SHAs in
   dependency order, reruns the combined gates, and publishes the one cumulative Preview.
-- Once a worker HEAD is clean, pushed, and contained in the fetched remote release branch, the
-  coordinator may remove its worktree. Keep the branch/PR as a recovery receipt until `SHIP`.
+- Once a worker HEAD is clean, pushed, and contained in the fetched integration target, remove its
+  worktree. Delete its branch after `main` contains it; keep only refs required by an active release PR.
 - No agent shares another agent's dev server. Use the owning worktree and a unique port; shared
   Preview/Production configuration remains coordinator-only.
 
@@ -57,6 +60,8 @@ scaffolds in wave A1). A slice belongs to exactly one lane and runs the lifecycl
 PLAN (operator approves a <=5-bullet briefing) → slices → **HYGIENE SLICE** → **/close** →
 for a deployable App wave: cumulative release Preview → more closed waves if desired → 🧑 `SHIP`
 the exact tested batch → `main`; a non-deploying wave omits the Preview stage.
+- Completed docs/process/planning merge to `main` after their checks unless they describe unshipped
+  behavior; those inseparable docs travel with the corresponding code Preview.
 - Every wave has >=1 slice the operator can SEE working (`operator_sees` in ROADMAP). For a
   design wave, "see" = the finished decision record / spec they approve.
 - Mid-wave ideas NEVER join the active wave — they become `Registers/open-items.md` rows
@@ -90,17 +95,18 @@ the exact tested batch → `main`; a non-deploying wave omits the Preview stage.
    failed proof leaves the wave active. A pass marks it `closed` and appends it to `queued_waves`.
 7. Give the operator the exact SHA, contained waves, immutable Preview URL, plain-language recap,
    and written test script. Development may continue; `SHIP` is not required after every wave.
-8. Fetch the remote release branch and run the pre-SHIP worktree cleanup audit. Remove clean,
-   contained secondary worktrees immediately; retain their branches/PRs through `SHIP`.
+8. Fetch the integration target and run the pre-SHIP worktree cleanup audit. Remove clean, contained
+   secondary worktrees immediately; retain only the remote ref required by the active release PR.
 
 ## Phase 2: batch release (SHIP)
 1. `SHIP` means the operator tested the exact current cumulative Preview and authorizes every wave
    in ROADMAP `release_batch.queued_waves` for Production. A moved SHA requires a new Preview/test.
 2. Apply only the reviewed Production configuration in the batch runsheet, merge/push that exact
    tree to `main` once, and verify Production behavior, aliases, bounded logs, data, and receipts.
+   If the provider requires an owner-only publish, stage it first and present one exact command.
 3. Update `last_shipped_wave`/`production_sha`, clear the batch queue and any resolved Production
    exception, close release-only rows, and run the strict branch cleanup audit against `origin/main`.
-   Close superseded PRs; keep one clean primary `main`; delete only refs marked safely contained.
+   Close superseded PRs; keep one clean primary `main`; delete all merged task/release refs.
 4. Batch freely unless a roadmap dependency explicitly requires Production proof, a migration or
    external change cannot be rehearsed safely in Preview, or the operator wants to release sooner.
 
