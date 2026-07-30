@@ -1,11 +1,12 @@
 # ROADMAP — the single plan SSOT. Status here wins over every other document.
 # status: pending | active | built | proven | closed | parked
+# `closed` means development-complete; `release_batch` separately says what is live in Production.
 # Every wave: sized to ONE agent session; >=1 slice the operator can SEE working (operator_sees).
 # Wave OPEN = <=5-bullet plain-language briefing + operator approval.
-# Wave CLOSE = /close (full gates + audit + recap + runsheet) → PREVIEW GO → Preview →
-# VERIFIED → Production GO → main; non-deploying waves omit Preview.
+# Wave CLOSE = /close (full gates + audit + cumulative Preview proof). Closed waves may queue.
+# SHIP = operator-tested exact batch → Production/main. Non-deploying waves omit Preview.
 version: 1
-updated: 2026-07-29
+updated: 2026-07-30
 
 mvp_finish_line: >
   The 12 A1 lessons are live and practiceable in a deployed app. A learner signs in, taps
@@ -21,14 +22,25 @@ mvp_finish_line: >
 
 # --- TWO LANES ------------------------------------------------------------------------------
 # This project runs two parallel lanes under this one roadmap. Only ONE wave per lane is active
-# at a time. A deployable App wave has four explicit operator gates (approve plan / PREVIEW GO /
-# VERIFIED pass / Production GO); non-deploying waves omit PREVIEW GO. Lanes coordinate through files.
+# at a time. A deployable App wave needs plan approval; coordinator /close publishes its cumulative
+# Preview. SHIP is optional per wave and releases every queued wave in the exact tested batch.
+# Non-deploying waves omit Preview. Lanes coordinate through files.
 #   Lane A (App)     - the greenfield Next.js app. Owner: App Design Coordinator.
 #   Lane C (Content) - lesson authoring. Owner: Lesson Plan agent. Content and working records
 #                      live in /content; schema rulings live in Docs/Registers/schema-proposals.md.
 # STANDING SEQUENCING (operator, 2026-07-23; triggers satisfied 2026-07-28):
 #   1. Lane A opened with mandatory DESIGN-CLOSE wave A0, now closed; A1 is active.
 #   2. Lane C received explicit GO after A0 and is active in C2.
+
+release_batch:
+  last_shipped_wave: A1
+  production_sha: ec0ef9b494484c662a6508f912b6a47c68696b8c
+  production_exception: "OI-037: live tree contains unverified A2/Practice precursor publication"
+  queued_waves: []
+  active_wave: A2
+  branch: release/A2-2026-07-29
+  candidate: 9ef2f5ea13ba1aa84546e30db587bed999796207
+  state: preview-blocked
 
 verify:
   # Both lanes have real, running root-workspace gates; not-run = FAIL.
@@ -150,7 +162,7 @@ waves:
       - id: A2-H
         title: Hygiene slice (mandatory)
         status: proven
-        summary: "Residue/spec/register reconciliation proven; corrective security/cost audits clean. Close waits for authenticated Preview proof, VERIFIED + Production GO, then Production-conditioned Firewall publication and proof."
+        summary: "Residue/spec/register reconciliation proven; corrective security/cost audits clean. /close waits for authenticated replacement Preview proof; a later batch SHIP publishes and proves the Production-conditioned Firewall rule."
 
   - id: A2R
     lane: App

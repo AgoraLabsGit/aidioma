@@ -102,9 +102,9 @@ explanation after the choice; typed modes use mode-smart help from the module sp
   Production, with 50/75/100% alerts. Gateway checks it at request start: the crossing/in-flight
   request can complete and overshoot, while later calls reject. It is a soft cap, not an absolute
   global ceiling. HTTP 402 budget exhaustion is recorded separately and returned as learner-safe,
-  non-retryable ungraded state. The Preview Firewall rule is acceptance proof only. After VERIFIED
-  plus Production GO, a Production-conditioned equivalent must be active before the released
-  endpoint is accepted; OI-036 closes only after Production 429/event and budget receipts pass.
+  non-retryable ungraded state. The Preview Firewall rule is acceptance proof only. On `SHIP`, a
+  Production-conditioned equivalent must be active before the released endpoint is accepted;
+  OI-036 closes only after Production 429/event and budget receipts pass.
 - Record latency, path (comparison/AI), provider/model, failure class, bounded HTTP status, and
   token/cost metadata; never log provider bodies/codes, secrets, or private conversation history.
 

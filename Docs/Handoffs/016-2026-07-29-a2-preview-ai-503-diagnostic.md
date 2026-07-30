@@ -2,19 +2,20 @@
 title: Handoff — A2 Preview AI 503 diagnostic candidate
 type: handoff
 status: active
-updated: 2026-07-29
+updated: 2026-07-30
 ---
 
 # Handoff — A2 Preview AI 503 diagnostic candidate
 
 **Role:** sole A2 release coordinator; do not advance A3 or Production Practice Sets
-**Next command:** review BUG-001 and ask Mike for replacement `PREVIEW GO`
-**Fresh-session prompt:** `Continue AIdioma from Handoff 016 as sole A2 release coordinator; finish /fix BUG-001.`
+**Next command:** coordinator `/close` for the replacement Preview; `/close` is the Preview authorization
+**Fresh-session prompt:** `Continue AIdioma from Handoff 016 as sole A2 release coordinator; run /close and finish BUG-001 proof.`
 
 ## Exact position
 
-- Isolated worktree `.worktrees/a2-preview-ai-503`, branch `fix/BUG-001-preview-ai-503`, based on
-  release SHA `9ef2f5e`. Resolve the committed candidate dynamically with `git rev-parse HEAD`.
+- Current continuation is `.worktrees/process-two-phase-close` on `work/process-two-phase-close`.
+  It contains diagnostic commit `3033c62` plus the 2026-07-30 two-phase close update; resolve its
+  exact HEAD dynamically. The original clean fix worktree/branch remains at `3033c62`.
 - PR #2 and canonical Preview still point to `9ef2f5e`; no corrective commit has been pushed or
   deployed. The Preview-only 30/60 Firewall rule is active. Production is unchanged.
 - BUG-001, A2, and OI-036 remain open. The rate-limit burst and remaining external receipts stopped
@@ -36,11 +37,12 @@ updated: 2026-07-29
 
 ## Next gated actions
 
-1. On replacement PREVIEW GO, integrate the exact fix commit into `release/A2-2026-07-29`, rerun
+1. On coordinator `/close`, integrate the exact fix commit into `release/A2-2026-07-29`, rerun
    preflight, push the release branch, and wait for all checks on the new immutable Git Preview.
 2. Run only the authenticated AI case first. If it still returns `503`, read `providerStatus` from
    the matching safe `evaluation.completed` log and correct the proven configuration/request fault.
 3. Only after AI returns `200` run comparison/spoof, 30/60 Firewall burst, Gateway/budget, and
    read-only DB receipts. Any mismatch leaves Production unchanged and BUG-001 open.
-4. Mike's `VERIFIED` and a separate Production GO are still required. Do not modify Production
-   configuration or merge `main` before both gates.
+4. When every Preview receipt passes, close A2 and queue it in ROADMAP `release_batch`. Mike may
+   continue later waves without releasing; only `SHIP` authorizes the exact tested cumulative batch,
+   its reviewed Production configuration, and the `main` merge.

@@ -1,8 +1,9 @@
 # PROCESS — the machine
 
-> How every unit of work runs. Five commands drive it; everything between is automatic.
-> A deployable App wave has four explicit gates: approve the plan · PREVIEW GO · VERIFIED pass ·
-> Production GO. Non-deploying waves omit PREVIEW GO; no gate is inferred from another.
+> How every unit of work runs. Five work commands plus `SHIP`; everything between is automatic.
+> A deployable App wave has two operator controls: approve its plan, then optionally `SHIP` a tested
+> cumulative Preview batch. `/close` itself authorizes Preview publication; Production never follows
+> automatically. Non-deploying waves close without joining a Preview batch.
 > Hard cap 150 lines. Any process change is an edit to THIS file, never a new convention doc.
 
 ## Two lanes
@@ -15,7 +16,8 @@ scaffolds in wave A1). A slice belongs to exactly one lane and runs the lifecycl
 - **/run** — pick the next runnable slice from ROADMAP.yaml and drive it through the lifecycle.
 - **/fix** — corrective loop: register row → failing regression test → fix → gates → record.
 - **/feature** — idea → (research) → spec → operator approval → slices added to ROADMAP.yaml.
-- **/close** — wave close: hygiene + full suite + review + recap + runsheet + GO push.
+- **/close** — full wave close; deployable App waves join and publish the cumulative Preview batch.
+- **SHIP** — verify and publish the exact cumulative Preview batch to Production.
 - **/status** — read-only position report. Never does work.
 
 ## The slice lifecycle (🧑 = operator; everything else is automatic)
@@ -38,8 +40,8 @@ scaffolds in wave A1). A slice belongs to exactly one lane and runs the lifecycl
 
 ## The wave lifecycle
 PLAN (operator approves a <=5-bullet briefing) → slices → **HYGIENE SLICE** → **/close** →
-for a deployable App wave: 🧑 PREVIEW GO → release Preview → 🧑 VERIFIED → 🧑 Production GO →
-`main`; a non-deploying wave omits the Preview stage.
+for a deployable App wave: cumulative release Preview → more closed waves if desired → 🧑 `SHIP`
+the exact tested batch → `main`; a non-deploying wave omits the Preview stage.
 - Every wave has >=1 slice the operator can SEE working (`operator_sees` in ROADMAP). For a
   design wave, "see" = the finished decision record / spec they approve.
 - Mid-wave ideas NEVER join the active wave — they become `Registers/open-items.md` rows
@@ -59,20 +61,30 @@ for a deployable App wave: 🧑 PREVIEW GO → release Preview → 🧑 VERIFIED
    escaped stage 7.
 4. A wave **cannot close** with a fired trigger unexecuted or a scan finding unowned.
 
-## Wave close (/close) — the full quality pass
+## Phase 1: wave close (/close) — quality pass + cumulative Preview
 1. Hygiene slice complete (above).
 2. **Full gate suite, cache-free** — a gate that didn't RUN counts as FAILED. Record the new
    test-count baselines in the wave record.
 3. **/code-review at high effort on the whole wave diff** (main vs the last pushed state).
 4. Docs reconcile: ROADMAP statuses · STATE rewritten · specs current · registers clean.
-5. One coordinator builds `release/<wave>-<date>` from current `origin/main` and approved worker
-   SHAs. Batch and gate locally; push once only after explicit PREVIEW GO. Vercel creates the
-   canonical Preview from that exact commit; App CI and required external proofs must pass there.
-6. Give the operator a plain-language recap and written Preview testing script with exact URL,
-   clicks, and expected results. That script IS the 🧑 VERIFIED pass.
-7. Merge/push `main` ONLY on explicit GO after VERIFIED. Verify the Production deployment for the
-   same tree, run a bounded post-deploy sanity check, then remove only branches/worktrees proven
-   contained in `origin/main`.
+5. One coordinator creates the ROADMAP-named `release/**` batch from current `origin/main`, or
+   continues its exact remote HEAD when a batch is already open. New App work bases on that batch,
+   so closed-but-unshipped waves remain in the dependency chain.
+6. `/close` authorizes pushing/updating that release branch and reviewed Preview-only configuration.
+   Vercel creates the canonical Preview; App CI and required real-path proofs must pass there. A
+   failed proof leaves the wave active. A pass marks it `closed` and appends it to `queued_waves`.
+7. Give the operator the exact SHA, contained waves, immutable Preview URL, plain-language recap,
+   and written test script. Development may continue; `SHIP` is not required after every wave.
+
+## Phase 2: batch release (SHIP)
+1. `SHIP` means the operator tested the exact current cumulative Preview and authorizes every wave
+   in ROADMAP `release_batch.queued_waves` for Production. A moved SHA requires a new Preview/test.
+2. Apply only the reviewed Production configuration in the batch runsheet, merge/push that exact
+   tree to `main` once, and verify Production behavior, aliases, bounded logs, data, and receipts.
+3. Update `last_shipped_wave`/`production_sha`, clear the batch queue and any resolved Production
+   exception, close release-only rows, and remove only work proven contained in `origin/main`.
+4. Batch freely unless a roadmap dependency explicitly requires Production proof, a migration or
+   external change cannot be rehearsed safely in Preview, or the operator wants to release sooner.
 
 ## Strategic application reviews
 - **A2R:** baseline architecture, security, integration, and UI review before persistence work begins.
@@ -90,12 +102,11 @@ for a deployable App wave: 🧑 PREVIEW GO → release Preview → 🧑 VERIFIED
 - Sub-agent tiering: strongest model for coordination and audits/judgment; mid-tier for
   building; small models for mechanical scans and scripted sweeps.
 - After 3 consecutive failures on the same step, stop and ask the operator rather than looping.
-- Environment ladder is fixed: localhost uses Development credentials/data; non-main Git branches
-  are local/CI-only unless named `release/**`; release branches use Vercel Preview credentials/data;
-  `main`, `aidioma.io`, and the project production alias are Production only. CLI Preview URLs are
-  diagnostics, never the canonical acceptance target.
-- Invoking `/close` authorizes a clean ordinary worker-branch push and draft PR. It never authorizes
-  a release/Preview push, `main` push, live-infrastructure mutation, force push, or deletion of
-  uncontained work. Those gates remain explicit in the `/close` command.
+- Environment ladder is fixed: localhost uses Development credentials/data; ordinary worker branches
+  are local/CI-only; the one cumulative `release/**` branch uses Preview credentials/data; `main`,
+  `aidioma.io`, and the production alias are Production only. CLI Preview URLs are diagnostic only.
+- Worker `/close` authorizes its clean branch push/draft PR. Coordinator `/close` additionally
+  authorizes the cumulative release Preview and named Preview-only configuration. Only `SHIP`
+  authorizes `main` or Production configuration; neither authorizes force push or uncontained deletion.
 - Every repo-owned long-lived dev/preview server is stopped before final `/close` preflight; the
   preflight reports and fails on residue instead of killing an ambiguous process automatically.

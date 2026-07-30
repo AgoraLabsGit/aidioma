@@ -55,21 +55,21 @@ updated: 2026-07-29
 - **Localhost = build loop.** Run deterministic gates and UI work locally with Development-scoped
   Clerk/Neon/Gateway credentials. Localhost is never evidence that Vercel auth, Firewall, routing,
   environment scoping, or Production aliases work.
-- **Git Preview = acceptance.** Vercel auto-deploys only `release/**` and `main`; ordinary worker
-  branches remain local/CI-only so parallel sessions do not create Preview builds. Push a gated
-  release candidate only after PREVIEW GO and use its PR deployment. The commit-specific URL is the
-  immutable evidence target; the branch URL is only a moving convenience alias. Preview uses only
-  Preview-scoped credentials and the Preview database.
-- **Production = released behavior.** `main` is Vercel's sole Production branch; `aidioma.io`,
-  `aidioma-agoralabs.vercel.app`, and the `git-main` alias are post-GO verification targets, never
-  pre-merge test environments. A push to `main` is a Production release action.
+- **Git Preview = cumulative acceptance.** Vercel auto-deploys only `release/**` and `main`; ordinary
+  worker branches remain local/CI-only. Coordinator `/close` creates or advances the one ROADMAP-named
+  release batch and proves its PR deployment. Closed App waves may accumulate there before `SHIP`.
+  The commit-specific URL is the immutable evidence target; Preview uses only Preview credentials/data.
+- **Production = shipped behavior.** `main` is Vercel's sole Production branch; `aidioma.io`,
+  `aidioma-agoralabs.vercel.app`, and the `git-main` alias are post-`SHIP` verification targets,
+  never pre-merge test environments. A push to `main` is a Production release action.
 - Ad-hoc `vercel deploy` Preview URLs are limited to deployment diagnosis. They do not replace the
   Git Preview because they lack the canonical branch/commit review trail and share one moving CLI alias.
 - A custom `staging` environment is deferred until the shared Preview environment becomes a real
   constraint: long-running migration rehearsal, external webhook allowlisting, or parallel QA.
 - App CI must pass typecheck, lint, tests, build, and smoke on the PR. External proof then covers
   authenticated routes, Preview database isolation, Gateway/Firewall receipts, and absence of
-  unintended writes. Only the exact verified commit may merge to `main`.
+  unintended writes. `SHIP` covers only the exact human-tested cumulative Preview commit; any later
+  change requires a new Preview before it may merge to `main`.
 
 ## Shared application boundary
 

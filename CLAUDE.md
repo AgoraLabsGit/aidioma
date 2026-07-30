@@ -29,10 +29,12 @@ coordinate through files (this repo's `Docs/` + `content/`), never assume shared
   additive-only); rulings are logged in `Docs/Registers/schema-proposals.md`.
 
 ## How work runs
-- The machine is `Docs/PROCESS.md`. Commands: /run · /fix · /feature · /close · /status.
+- The machine is `Docs/PROCESS.md`. Commands: /run · /fix · /feature · /close · /status; `SHIP`
+  is the single Production approval for the exact cumulative Preview batch.
 - Work on isolated branches/worktrees (`slice/<id>`, `fix/<id>`, or `work/<session>/<task>`).
-  Every session ends with `/close`: workers commit/push a draft-PR handoff but never merge;
-  one coordinator integrates. Preview needs PREVIEW GO; `main` needs VERIFIED then separate GO.
+  Every session ends with `/close`: workers commit/push a draft-PR handoff but never merge; one
+  coordinator integrates. Coordinator `/close` publishes the cumulative Preview and may close
+  several waves into it; only `SHIP` authorizes that exact tested batch onto `main`/Production.
 - Deterministic gates (from ROADMAP `verify:` — per lane) run BEFORE any agent judgment, every
   slice. A gate that didn't run counts as failed. Both lanes now have live commands.
 - Every slice ends with an isolated read-only audit sized to risk (additive → 1 light check;

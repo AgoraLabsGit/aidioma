@@ -43,8 +43,8 @@ updated: 2026-07-29
   an account policy receipt and rejection proof. Ambient OIDC/legacy fallback is regression-tested off.
 - Final gates pass at 19 files / 138 tests, build, smoke, Development DB/Gateway proof, and clean
   independent security/cost delta audits. Earlier diagnostic Preview evidence is not the canonical
-  Git acceptance target. OI-036 stays open through authenticated Preview receipts, VERIFIED +
-  Production GO, Production-conditioned WAF publication, and released-environment receipts.
+  Git acceptance target. OI-036 stays open through authenticated Preview receipts and, when the
+  batch is shipped, Production-conditioned WAF publication plus released-environment receipts.
 
 ## Proof
 - Real Development DB + live Gateway: `PASS evaluate-proof development-db=verified comparison=graded gateway=graded persistence=none` (540 input / 218 output / 758 total tokens on the final run).
@@ -87,8 +87,8 @@ updated: 2026-07-29
   pass the AI request before the burst, DB, Gateway, budget, and Production gates resume.
 
 ## Human Preview verification runsheet
-1. Coordinator records candidate SHA, release PR, and immutable Git Preview URL; every CI/deployment
-   check must name that SHA. Mike gives PREVIEW GO before the release push.
+1. Coordinator `/close` records candidate SHA, release PR, and immutable Git Preview URL; every
+   CI/deployment check must name that SHA. `/close` itself authorizes the release Preview update.
 2. Confirm the SDK Preview prerequisites above. Mike reviews and publishes only the staged Preview
    rule, then records its active rule ID, 30/60 configuration, and Preview condition.
 3. Open the immutable Preview, sign in with the test Clerk account, open DevTools Console, and run:
@@ -119,8 +119,9 @@ SELECT to_regclass('public.practice_sessions') AS practice_sessions_table,
  (SELECT count(*) FROM lesson_items) AS lesson_item_count,
  (SELECT md5(string_agg(row_to_json(i)::text, '|' ORDER BY i.id)) FROM lesson_items i) AS lesson_item_hash;
 ```
-6. Any mismatch means stop and leave Production unchanged. If all pass, Mike says `VERIFIED`;
-   Production rule publication and the `main` push still require a separate explicit GO.
+6. Any mismatch means stop and leave A2 active and Production unchanged. If all pass, close A2 into
+   the cumulative Preview batch. Production rule publication and `main` still require `SHIP`; Mike
+   may first close additional waves into the same batch and test the final cumulative Preview once.
 
 ## Concurrent publication incident
 - After A2-1 was merged locally, another process pushed shared `main` at `0eaa286` without this
@@ -135,5 +136,5 @@ SELECT to_regclass('public.practice_sessions') AS practice_sessions_table,
 
 ## Decisions
 - Normalized exact authored matches are the only deterministic `correct`; safe character-near substitutions are `close`; structural, numeric, negation, and other meaning-uncertain matches reach AI once.
-- A2 remains stateless. This agent made no push or production-config mutation; all further remote
-  action still requires Mike's direction, and normal publication requires VERIFIED plus separate GO.
+- A2 remains stateless. Coordinator `/close` may update only the cumulative Preview; Production
+  configuration and `main` remain unchanged until Mike says `SHIP` for the exact tested batch.

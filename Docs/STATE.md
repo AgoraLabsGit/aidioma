@@ -3,7 +3,7 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-29 (A1 CLOSED; A2 ACTIVE; Preview AI fix in progress)
+**Updated:** 2026-07-30 (two-phase batched close adopted; A2 Preview fix in progress)
 
 ## Position
 
@@ -21,8 +21,6 @@
 - A2-1 is proven locally: one authenticated, server-owned `/api/evaluate`; normalized exact answers
   grade free, safe character-near answers grade `close`, and meaning-uncertain/poor answers make one
   strict Gateway call. It is stateless; A3 still owns sessions, persistence, and derived stats.
-- The isolated A2 close rerun passes App typecheck, zero-warning lint, 19 files / 138 tests, build,
-  16-state smoke, signed-out route proof, dependency/residue checks, and independent audits.
 - OI-036 adds opaque user-keyed regional Firewall admission before the preserved local guard, plus a
   mandatory evaluation-only key with an aggregate $1 monthly request-start budget. Reporting and
   quota lookup share the opaque ID; account policy and rejection proof remain external close gates.
@@ -30,8 +28,8 @@
 - Authenticated comparison/spoof passed, but AI returned `503` before a Gateway event. BUG-001 owns it;
   the active key is nearly unused, excluding budget exhaustion.
 - Diagnostic candidate logs bounded HTTP status; full gates pass at 19 files / 140 tests and audit is clean.
-- OI-037 owns the repeated direct-push race. This reconciliation combines the hardened A2 line with
-  the revised Practice IA; publication must use this resolved line, not a divergent tip.
+- `/close` now builds a cumulative Preview and `SHIP` releases its queued waves. A1 is the last
+  formal ship; OI-037 owns the live unverified A2/Practice precursor. A2 is not yet queued.
 - The revised fixture-backed Practice IA keeps lesson entry under Lessons and opens Practice on
   Collections with Saved as a local filter. Real sessions remain A4/A5; Production Sets remain A6.
 
@@ -42,9 +40,9 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Resume from Handoff 016; review BUG-001 and request PREVIEW GO for the replacement candidate.
+1. Resume from Handoff 016 and run coordinator `/close` for the replacement Preview candidate.
 2. Re-run authenticated AI proof first; only after it passes run the Firewall burst and remaining
-   receipts. After VERIFIED/GO, publish and prove the Production rule and main.
+   receipts, close A2 into the Preview batch, and continue unless Mike chooses `SHIP`.
 3. After A2 closes, run A2R's application audit and founder UI review before A3; continue C2 with a1-05.
 4. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
 
@@ -57,4 +55,5 @@
 - Quiz/MC → evaluations with modality `multipleChoice` (no AI).
 - Responsive web (phone + desktop); no native stores in MVP. Worker branches are local/CI-only;
   `release/**` alone creates Preview deployments and `main` alone creates Production deployments.
+- `/close` publishes the cumulative Preview; `SHIP` alone authorizes that exact tested batch to Production.
 - P-004 dialect shape only · Practice Sets are MVP (ADR-0015/A6) · wordfreq informs original selection only.

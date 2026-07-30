@@ -17,8 +17,9 @@ description: Build the next runnable roadmap slice through the full lifecycle (g
    Ask the operator only if scope is new or changed from the roadmap entry; otherwise proceed.
    For a **design-only slice** (e.g. A0), the "build" is the decision/spec itself — surface each
    open decision as ONE plain yes/no block, record the ruling, don't batch them.
-4. **Build (stage 1):** branch `slice/<id>`. Follow existing project patterns. Delegate heavy
-   implementation to sub-agents with compact briefs; you triage and integrate.
+4. **Build (stage 1):** branch `slice/<id>`. If ROADMAP has an open App `release_batch`, base new
+   App work on its exact candidate; otherwise base it on `origin/main`. Follow existing project
+   patterns. Delegate heavy implementation to sub-agents with compact briefs; you triage and integrate.
 5. **Gates (stage 2):** run every command in the lane's ROADMAP `verify:` set — typecheck 0,
    lint 0-new, tests green vs the recorded baseline, build 0, smoke. All green or return to
    stage 1. Record results in the wave file. (Design slices: peer-review read for internal
@@ -35,5 +36,6 @@ description: Build the next runnable roadmap slice through the full lifecycle (g
 10. **Clean + record (stages 7–8):** delete superseded code or file a DEP row; flip ROADMAP
     status to `proven`; rewrite STATE; update touched specs; close the wave file.
 11. **Report** in plain language: what got built, what the operator can see, what's next. End every
-    agent session with `/close`, including paused work. If this was the wave's last content slice,
-    say coordinator `/close` can assemble the release candidate.
+    agent session with `/close`, including paused work. If this was the wave's last slice, say
+    coordinator `/close` can add it to the cumulative Preview batch; `SHIP` is optional until a
+    later wave explicitly requires Production proof or the operator wants to release the batch.
