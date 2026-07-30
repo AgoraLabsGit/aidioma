@@ -36,7 +36,8 @@ coordinate through files (this repo's `Docs/` + `content/`), never assume shared
   non-overlapping file/area owner. Workers never merge or edit shared control files. The coordinator
   integrates exact SHAs, immediately removes contained worker worktrees, and deletes merged refs.
   Completed documentation merges promptly; deployable code uses Preview and only `SHIP` reaches
-  `main`/Production.
+  `main`/Production. Protected `main` requires the distinct App/Content CI jobs on every PR and
+  blocks force-push/deletion without requiring a second reviewer.
 - Deterministic gates (from ROADMAP `verify:` — per lane) run BEFORE any agent judgment, every
   slice. A gate that didn't run counts as failed. Both lanes now have live commands.
 - Every slice ends with an isolated read-only audit sized to risk (additive → 1 light check;

@@ -25,6 +25,8 @@ scaffolds in wave A1). A slice belongs to exactly one lane and runs the lifecycl
   `STATE.md`, `ROADMAP.yaml`, `PROCESS.md`, release branches, and cross-wave integration records.
 - Workers commit and push without merging. The coordinator integrates exact reviewed SHAs in
   dependency order, reruns the combined gates, and publishes the one cumulative Preview.
+- GitHub protects `main`: PRs are mandatory, App CI and Content CI run on every PR, force pushes and
+  deletion are blocked, and no extra approving reviewer is required for the solo-founder workflow.
 - Once a worker HEAD is clean, pushed, and contained in the fetched integration target, remove its
   worktree. Delete its branch after `main` contains it; keep only refs required by an active release PR.
 - No agent shares another agent's dev server. Use the owning worktree and a unique port; shared
