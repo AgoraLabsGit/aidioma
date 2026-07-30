@@ -2,7 +2,7 @@
 title: Evaluation — secure comparison-first grading
 type: area-spec
 status: active
-updated: 2026-07-29
+updated: 2026-07-30
 ---
 
 # Evaluation — secure comparison-first grading
@@ -19,6 +19,7 @@ type BrowserEvaluationRequest = {
   modality: 'translate' | 'reading' | 'conversation';
   direction: 'es-en' | 'en-es';
   userInput: string;
+  inputMode?: 'typed' | 'voice'; // added in A10; provenance only, never answer authority
 };
 ```
 
@@ -42,6 +43,19 @@ choice index starting with the session/persistence loop; it never calls AI. Flas
 AI judges the submitted answer; it does not generate scored source material at MVP. Curated set
 targets are authored/reviewed under ADR-0015. Every result
 uses the one GrammarTag/ErrorTag taxonomy from `@aidioma/lesson-schema`.
+
+## Voice and conversation boundary
+
+- A10 transcription fills the existing editable composer. It is not an evaluation; only Send
+  submits the visible transcript to this contract. `inputMode=voice` supports quality telemetry but
+  cannot select a provider, alter thresholds, or claim pronunciation evidence.
+- Authored spoken answers use this same gate order and persistence. A transcription/provider failure
+  returns retryable voice UI state and never creates a fabricated grade.
+- A12 constrained dialogue separates generated conversation from authority. Turns with an authored
+  target may call `EvaluationService`; otherwise `ConversationFeedbackService` returns structured,
+  non-credit coaching for the recap and cannot advance lesson/set progress.
+- A speech or dialogue model's own correction is never authoritative. Phoneme-level pronunciation
+  assessment is outside this contract (PM-026).
 
 ## Result
 
@@ -72,14 +86,29 @@ explanation after the choice; typed modes use mode-smart help from the module sp
 
 - Invalid request/auth/item → explicit 4xx; never grade. Unknown request fields are rejected so a
   browser cannot smuggle answers, thresholds, tags, model choices, or `correctIndex` across the boundary.
-- AI timeout/provider/schema failure after comparison misses → retryable **ungraded** response;
-  preserve input for retry and do not fabricate a score, verdict, tags, or feedback.
+- AI timeout/transient-provider/schema failure after comparison misses → retryable **ungraded**;
+  deterministic upstream 4xx is non-retryable except 408/429. Preserve input and never fabricate
+  a score, verdict, tags, or feedback.
 - Comparison success stands even if the AI provider is unavailable.
-- The app applies a bounded per-user, per-instance request/concurrency/duplicate-work guard. A
-  distributed Gateway user quota or staged WAF rule is still required before production promotion;
-  an in-memory serverless guard is defense in depth, not the perimeter control.
-- Record latency, path (comparison/AI), provider/model, failure class, and token/cost metadata;
-  never log secrets or full private conversation history by default.
+- After authentication and request validation, the app checks the Vercel Firewall SDK with the
+  server-derived `usr_` hash, then applies the separate local per-instance burst/concurrency/
+  duplicate-work guard before source resolution or AI. The Firewall fixed-window counter is
+  per-region, not globally atomic; the local guard remains defense in depth.
+- AI grading requires the dedicated evaluation Gateway key and sends the server-derived opaque ID
+  as `providerOptions.gateway.user` for reporting and any account-supported per-user policy. The
+  current Gateway rejects `quotaEntityId` as an invalid provider option, so it must not be sent.
+  Missing/invalid perimeter configuration, key, or ID fails closed without an AI call. Per-user
+  Gateway denial is claimed only after an account policy and a rejected over-quota Preview request
+  are both evidenced.
+- The evaluation key has one aggregate $1 monthly budget across Development, Preview, and
+  Production, with 50/75/100% alerts. Gateway checks it at request start: the crossing/in-flight
+  request can complete and overshoot, while later calls reject. It is a soft cap, not an absolute
+  global ceiling. HTTP 402 budget exhaustion is recorded separately and returned as learner-safe,
+  non-retryable ungraded state. The Preview Firewall rule is acceptance proof only. On `SHIP`, a
+  Production-conditioned equivalent must be active before the released endpoint is accepted;
+  OI-036 closes only after Production 429/event and budget receipts pass.
+- Record latency, path (comparison/AI), provider/model, failure class, bounded HTTP status, and
+  token/cost metadata; never log provider bodies/codes, secrets, or private conversation history.
 
 ## Persistence
 

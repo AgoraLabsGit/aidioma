@@ -1,5 +1,9 @@
 # PROCESS KIT — portable dev-process bootstrap (exported from Praxis, 2026-07-21)
 
+> Historical bootstrap template only. It records the process originally imported into AIdioma and
+> is not current operating authority. Use `Docs/PROCESS.md` and `.claude/skills/*/SKILL.md`; AIdioma's
+> live release flow is `/close` to a cumulative Preview batch, then optional `SHIP` to Production.
+
 > **Operator: how to use this file.** Copy it into the ROOT of the new project's repo. Then tell
 > the agent there: *"Read PROCESS-KIT.md and set up the dev process it describes."* The agent
 > builds everything below, interviews you once to seed the roadmap, and from then on the whole

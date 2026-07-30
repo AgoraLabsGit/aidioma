@@ -18,8 +18,10 @@ const request: AiVerdictRequest = {
   direction: "en-es",
   modality: "translate",
   grammarTags: ["verb.ser"],
-  userTrackingId: "learner:opaque_123",
+  userTrackingId: "usr_0123456789abcdef0123456789abcdef",
 };
+
+const gatewayApiKey = "test_evaluation_gateway_key";
 
 function successResult(output: unknown) {
   return {
@@ -33,7 +35,7 @@ function successResult(output: unknown) {
 }
 
 describe("GatewayAiVerdictGenerator", () => {
-  it("makes one schema-bound Gateway request with only server-resolved prompt fields", async () => {
+  it("makes one schema-bound Gateway request with supported opaque reporting fields", async () => {
     const generate = vi.fn<GatewayGenerateText>().mockResolvedValue(
       successResult({
         score: 90,
@@ -45,6 +47,7 @@ describe("GatewayAiVerdictGenerator", () => {
     );
     let now = 1_000;
     const generator = new GatewayAiVerdictGenerator({
+      gatewayApiKey,
       generate,
       now: () => (now += 25),
     });
@@ -61,9 +64,10 @@ describe("GatewayAiVerdictGenerator", () => {
     expect(options.abortSignal).toBeUndefined();
     expect(options).not.toHaveProperty("tools");
     expect(options.providerOptions.gateway).not.toHaveProperty("models");
+    expect(options.providerOptions.gateway).not.toHaveProperty("quotaEntityId");
     expect(options.providerOptions.gateway).toEqual({
-      tags: ["feature:evaluation", "prompt:v1"],
-      user: "learner:opaque_123",
+      tags: ["scope:evaluation-only", "feature:evaluation", "prompt:v1"],
+      user: "usr_0123456789abcdef0123456789abcdef",
     });
     expect(JSON.parse(options.prompt)).toEqual({
       sourceText: request.sourceText,
@@ -107,6 +111,7 @@ describe("GatewayAiVerdictGenerator", () => {
     const controller = new AbortController();
     const generator = new GatewayAiVerdictGenerator({
       model: "anthropic/claude-haiku-4.5",
+      gatewayApiKey,
       generate,
     });
 
@@ -123,6 +128,7 @@ describe("GatewayAiVerdictGenerator", () => {
     const generate = vi.fn<GatewayGenerateText>();
     const generator = new GatewayAiVerdictGenerator({
       model: "attacker/expensive-model",
+      gatewayApiKey,
       generate,
     });
 
@@ -148,7 +154,7 @@ describe("GatewayAiVerdictGenerator", () => {
         errorTags: [],
       }),
     );
-    const generator = new GatewayAiVerdictGenerator({ generate });
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
 
     const outcome = await generator.evaluate(request);
 
@@ -170,7 +176,7 @@ describe("GatewayAiVerdictGenerator", () => {
         errorTags: ["verb.estar"],
       }),
     );
-    const generator = new GatewayAiVerdictGenerator({ generate });
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
 
     const outcome = await generator.evaluate(request);
 
@@ -191,7 +197,7 @@ describe("GatewayAiVerdictGenerator", () => {
   ] as const)("categorizes %s without leaking the error", async (name, failure) => {
     const error = Object.assign(new Error("sensitive upstream detail"), { name });
     const generate = vi.fn<GatewayGenerateText>().mockRejectedValue(error);
-    const generator = new GatewayAiVerdictGenerator({ generate });
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
 
     const outcome = await generator.evaluate(request);
 
@@ -199,21 +205,142 @@ describe("GatewayAiVerdictGenerator", () => {
     expect(JSON.stringify(outcome)).not.toContain("sensitive upstream detail");
   });
 
-  it("classifies caller cancellation separately and drops unsafe tracking identifiers", async () => {
+  it("classifies an exhausted Gateway key budget as non-retryable", async () => {
+    const error = Object.assign(new Error("sensitive budget detail"), {
+      name: "GatewayRateLimitError",
+      statusCode: 402,
+    });
+    const generate = vi.fn<GatewayGenerateText>().mockRejectedValue(error);
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
+
+    const outcome = await generator.evaluate(request);
+
+    expect(outcome).toMatchObject({
+      kind: "ungraded",
+      retryable: false,
+      failure: "budget",
+    });
+    expect(JSON.stringify(outcome)).not.toContain("sensitive budget detail");
+  });
+
+  it("retains only safe upstream diagnostics for a provider rejection", async () => {
+    const error = Object.assign(new Error("sensitive provider detail"), {
+      name: "APICallError",
+      statusCode: 400,
+      responseBody: JSON.stringify({
+        error: {
+          code: "invalid_gateway_request",
+          message: "sensitive response detail",
+        },
+      }),
+    });
+    const generate = vi.fn<GatewayGenerateText>().mockRejectedValue(error);
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
+
+    const outcome = await generator.evaluate(request);
+
+    expect(outcome).toMatchObject({
+      kind: "ungraded",
+      retryable: false,
+      failure: "provider",
+      metadata: {
+        providerStatus: 400,
+      },
+    });
+    expect(JSON.stringify(outcome)).not.toContain("sensitive provider detail");
+    expect(JSON.stringify(outcome)).not.toContain("sensitive response detail");
+    expect(JSON.stringify(outcome)).not.toContain("invalid_gateway_request");
+  });
+
+  it("bounds safe status traversal for cyclic provider errors", async () => {
+    const error = Object.assign(new Error("sensitive cyclic detail"), {
+      name: "UnexpectedFailure",
+    });
+    const second = Object.assign(new Error("second sensitive cyclic detail"), {
+      name: "UnexpectedFailure",
+      cause: error,
+    });
+    Object.assign(error, { cause: second });
+    const generate = vi.fn<GatewayGenerateText>().mockRejectedValue(error);
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
+
+    const outcome = await generator.evaluate(request);
+
+    expect(outcome).toMatchObject({
+      kind: "ungraded",
+      retryable: true,
+      failure: "unknown",
+    });
+    expect(JSON.stringify(outcome)).not.toContain("sensitive cyclic detail");
+    expect(JSON.stringify(outcome)).not.toContain("second sensitive cyclic detail");
+  });
+
+  it("classifies caller cancellation separately", async () => {
     const controller = new AbortController();
     controller.abort();
     const generate = vi.fn<GatewayGenerateText>().mockRejectedValue(
       new DOMException("cancelled", "AbortError"),
     );
-    const generator = new GatewayAiVerdictGenerator({ generate });
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
 
     const outcome = await generator.evaluate({
       ...request,
-      userTrackingId: "raw email@example.com",
       signal: controller.signal,
     });
 
-    expect(generate.mock.calls[0][0].providerOptions.gateway).not.toHaveProperty("user");
+    expect(generate.mock.calls[0]?.[0].providerOptions.gateway.user).toBe(
+      request.userTrackingId,
+    );
     expect(outcome).toMatchObject({ failure: "aborted", retryable: true });
+  });
+
+  it("fails closed before generation without a safe opaque user identifier", async () => {
+    const generate = vi.fn<GatewayGenerateText>();
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
+
+    const outcome = await generator.evaluate({
+      ...request,
+      userTrackingId: "user_private_123",
+    });
+
+    expect(generate).not.toHaveBeenCalled();
+    expect(outcome).toMatchObject({
+      kind: "ungraded",
+      retryable: true,
+      failure: "configuration",
+    });
+  });
+
+  it("fails closed before generation without the evaluation-only Gateway credential", async () => {
+    const generate = vi.fn<GatewayGenerateText>();
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey: "   ", generate });
+
+    const outcome = await generator.evaluate(request);
+
+    expect(generate).not.toHaveBeenCalled();
+    expect(outcome).toMatchObject({
+      kind: "ungraded",
+      retryable: true,
+      failure: "configuration",
+    });
+    expect(JSON.stringify(outcome)).not.toContain("gatewayApiKey");
+  });
+
+  it("does not fall back to the legacy or ambient Gateway credential", async () => {
+    vi.stubEnv("EVALUATION_AI_GATEWAY_API_KEY", "");
+    vi.stubEnv("AI_GATEWAY_API_KEY", "legacy_key_must_not_be_used");
+    vi.stubEnv("VERCEL_OIDC_TOKEN", "ambient_oidc_must_not_be_used");
+    const generate = vi.fn<GatewayGenerateText>();
+    const generator = new GatewayAiVerdictGenerator({ generate });
+
+    const outcome = await generator.evaluate(request);
+
+    expect(generate).not.toHaveBeenCalled();
+    expect(outcome).toMatchObject({
+      kind: "ungraded",
+      retryable: true,
+      failure: "configuration",
+    });
+    vi.unstubAllEnvs();
   });
 });

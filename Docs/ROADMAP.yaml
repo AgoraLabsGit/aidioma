@@ -1,10 +1,12 @@
 # ROADMAP — the single plan SSOT. Status here wins over every other document.
 # status: pending | active | built | proven | closed | parked
+# `closed` means development-complete; `release_batch` separately says what is live in Production.
 # Every wave: sized to ONE agent session; >=1 slice the operator can SEE working (operator_sees).
 # Wave OPEN = <=5-bullet plain-language briefing + operator approval.
-# Wave CLOSE = /close only (full gates + audit + recap + testing script + operator GO).
+# Wave CLOSE = /close (full gates + audit + cumulative Preview proof). Closed waves may queue.
+# SHIP = operator-tested exact batch → Production/main. Non-deploying waves omit Preview.
 version: 1
-updated: 2026-07-29
+updated: 2026-07-30
 
 mvp_finish_line: >
   The 12 A1 lessons are live and practiceable in a deployed app. A learner signs in, taps
@@ -20,14 +22,25 @@ mvp_finish_line: >
 
 # --- TWO LANES ------------------------------------------------------------------------------
 # This project runs two parallel lanes under this one roadmap. Only ONE wave per lane is active
-# at a time; the operator touches each wave exactly three times (approve plan / VERIFIED pass /
-# GO the push). Lanes coordinate through files, never chat.
+# at a time. A deployable App wave needs plan approval; coordinator /close publishes its cumulative
+# Preview. SHIP is optional per wave and releases every queued wave in the exact tested batch.
+# Non-deploying waves omit Preview. Lanes coordinate through files.
 #   Lane A (App)     - the greenfield Next.js app. Owner: App Design Coordinator.
 #   Lane C (Content) - lesson authoring. Owner: Lesson Plan agent. Content and working records
 #                      live in /content; schema rulings live in Docs/Registers/schema-proposals.md.
 # STANDING SEQUENCING (operator, 2026-07-23; triggers satisfied 2026-07-28):
 #   1. Lane A opened with mandatory DESIGN-CLOSE wave A0, now closed; A1 is active.
 #   2. Lane C received explicit GO after A0 and is active in C2.
+
+release_batch:
+  last_shipped_wave: A1
+  production_sha: ec0ef9b494484c662a6508f912b6a47c68696b8c
+  production_exception: "OI-037: live tree contains unverified A2/Practice precursor publication"
+  queued_waves: [A2]
+  active_wave: null
+  branch: release/A2-2026-07-29
+  candidate: 9cdca857f626685bf07129c42e6ddf770d16a5e2
+  state: preview-proven
 
 verify:
   # Both lanes have real, running root-workspace gates; not-run = FAIL.
@@ -138,25 +151,56 @@ waves:
   - id: A2
     lane: App
     title: Backend consolidation - one /api/evaluate (consensus W2)
-    status: active
+    status: closed
     operator_sees: "A single grading endpoint returning a real verdict on a typed answer (comparison-first, AI only on a poor match)."
     depends_on: [A1, "A0-2 (provider/model)"]
     slices:
       - id: A2-1
         title: One /api/evaluate behind a Gateway abstraction
         status: proven
-        summary: "Consolidate to one evaluation service (~4,900 -> ~500 lines): delete claude-service + universal service; Gateway abstraction; non-fatal key/health failure; comparison-first then AI. Feature 4."
+        summary: "One stateless comparison-first evaluator; one bounded AI call only on poor/uncertain matches; user-keyed regional Firewall SDK plus local guard; dedicated budgeted Gateway key. Authenticated Preview comparison/AI/rate-limit proof passed. Feature 4."
       - id: A2-H
         title: Hygiene slice (mandatory)
-        status: active
-        summary: "delete the superseded services in-slice or file DEP rows with triggers"
+        status: proven
+        summary: "Residue/spec/register reconciliation proven; corrective security/cost audits clean. Replacement Preview proof passed at 9cdca85; a later batch SHIP publishes and proves the Production-conditioned Firewall rule."
+
+  - id: A2R
+    lane: App
+    title: Application baseline and founder UI review
+    status: pending
+    operator_sees: >
+      A plain-language application health scorecard plus a phone/desktop UI review packet that
+      records the approved changes before persistence and the real session UI are built.
+    depends_on: [A2]
+    unblocks: "A3 persistence on an audited foundation"
+    slices:
+      - id: A2R-1
+        title: Cross-cutting architecture, security, integration, and smoke audit
+        status: pending
+        summary: >
+          Audit trust and data seams, composability and code organization, Clerk, Neon, AI Gateway,
+          Firewall, Vercel/CI, failure behavior, and dependency posture. Run the full App suite plus
+          browser -> API -> data smoke on real non-production services. Register and prioritize every
+          finding; route fixes through /fix. Do not implement A3 persistence or A6 Practice Sets.
+      - id: A2R-2
+        title: Founder-led UI/UX review and approved change packet
+        status: pending
+        summary: >
+          Review every current route with Mike on phone and desktop in light and dark modes; capture
+          desired visual, navigation, density, responsive, and accessibility changes. Reconcile the
+          module/accessibility specs and assign approved implementation to A3, A4, or a later wave
+          without building production sessions or Practice Sets in this review slice.
+      - id: A2R-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "reconcile findings/registers/specs · remove review artifacts · confirm every approved change has one owner"
 
   - id: A3
     lane: App
     title: Persistence loop (consensus W3)
     status: pending
     operator_sees: "A typed answer producing a real `evaluations` row, with item/lesson stats visibly updating."
-    depends_on: [A2]
+    depends_on: [A2R]
     slices:
       - id: A3-1
         title: Clerk -> users upsert; evaluations written; stats derived
@@ -185,7 +229,7 @@ waves:
       - id: A4-H
         title: Hygiene slice (mandatory)
         status: pending
-        summary: "delete dead pages/tokens in-slice or DEP rows; reconcile"
+        summary: "delete dead pages/tokens in-slice or DEP rows; repeat the SessionEngine/evaluation/persistence/UI seam review; reconcile"
 
   - id: A5
     lane: App
@@ -227,11 +271,11 @@ waves:
         title: Set catalog, detail, and capability-aware configuration UI
         status: pending
         summary: >
-          Build the approved flat Practice IA: equal Current lesson and Your practice shortcuts,
-          Collections directly on Practice, and a Saved default within Your practice. Keep Popular
-          deferred; do not restore a set-detail/Quick-practice interstitial. Add capability-aware
-          configuration, presets, and responsive/accessibility proof. Type + Flashcards only at
-          launch; unsupported activities are truthful.
+          Build the approved separated IA: Home continues the path, Lessons owns lesson entry, and
+          Practice opens directly on Collections with Saved as a catalog filter. Keep Popular and a
+          broader Your practice destination deferred; do not restore a set-detail/Quick-practice
+          interstitial. Add capability-aware configuration, presets, and responsive/accessibility
+          proof. Type + Flashcards only at launch; unsupported activities are truthful.
       - id: A6-3
         title: Set recipe, evaluation/persistence, and separate set progress
         status: pending
@@ -257,7 +301,7 @@ waves:
       - id: A7-2
         title: Launch quality gate + full audit
         status: pending
-        summary: "Content QA of 12 lessons and launch Practice Sets landed; full cache-free gate suite; high-effort review of the whole MVP; ship readiness."
+        summary: "Content QA of 12 lessons and launch Practice Sets landed; full cache-free gate suite; repeat the security/architecture/integration audit and browser-to-data smoke across the whole MVP; ship readiness."
       - id: A7-H
         title: Hygiene slice (mandatory)
         status: pending
@@ -292,18 +336,145 @@ waves:
         title: Generate -> validate -> quality-check -> preview workflow
         status: pending
         summary: >
-          Normalize/cache requests; generate structured candidates; run schema, policy, answer,
-          level, duplicate, and independent quality gates; support preview/edit/regenerate.
+          Use current stable Workflow core per ADR-0017. Create the owner-scoped Neon job before
+          start; orchestrate normalize/cache, generation, schema/policy/answer/level/duplicate gates,
+          an independent quality check, and a typed review hook while AI/database/validation live in
+          idempotent steps. Bound retries, regeneration, time, and spend; prove duplicate starts,
+          retry/fatal handling, redeploy resume, owner-only review, learner-safe progress, and a real
+          Preview run. Close OI-038 and A9-1's portion of OI-039.
       - id: A9-2
         title: Private persistence, reuse, reporting, and lifecycle
         status: pending
         summary: >
-          Persist private versioned sets with model/prompt provenance; reuse exact candidates safely;
-          report/deactivate without dangling evaluations. Public promotion requires content review.
+          Complete OI-039: persist private versioned sets plus canonical job state and model/prompt
+          provenance; reuse exact candidates safely; reconcile Workflow runs; handle failed,
+          cancelled, abandoned, regenerated, deactivated, and user-deleted jobs without dangling
+          evaluations. Public promotion requires content review; Workflow history is never canonical.
       - id: A9-H
         title: Hygiene slice (mandatory)
         status: pending
-        summary: "residue scan · fired deprecations · registers/specs reconcile"
+        summary: "residue scan · retention/deletion + dependency review · run/job reconciliation · registers/specs"
+
+  - id: A10
+    lane: App
+    title: Voice core - speak an answer and hear the feed
+    status: pending
+    operator_sees: >
+      In an existing guided Practice item, a learner records one answer, reviews/edits the transcript
+      in the normal composer, sends it through the normal correction path, and plays natural Spanish
+      for the prompt, model answer, and feedback without losing the typed fallback.
+    depends_on: [A7]
+    slices:
+      - id: A10-1
+        title: Narrow transcription and speech ports with privacy/cost controls
+        status: pending
+        summary: >
+          Revalidate the live Gateway/AI SDK capability matrix, then add one server-only adapter per
+          TranscriptionPort/SpeechPort. Prove authenticated 30-second/4-MiB upload and decoded-media
+          validation, server-resolved TTS text, timeout/abort, per-user limits, redacted telemetry,
+          no raw-audio retention, feature flag, kill switch, and deterministic contract tests.
+      - id: A10-2
+        title: Turn-based microphone, editable transcript, and playback in Practice
+        status: pending
+        summary: >
+          Add record/stop/retry into the existing composer; preserve one local recording for retry;
+          implement the recorder state machine and object-URL cleanup; require explicit Send; persist
+          inputMode and correlate bounded transcription telemetry; add disclosed play/slow-play to safe
+          feed text; prove denial, cancellation, navigation, typed fallback, phone/desktop, keyboard,
+          screen reader, and supported MIME fallbacks.
+      - id: A10-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "residue scan · raw-audio/privacy audit · cost limits · registers/specs reconcile"
+
+  - id: A11
+    lane: App
+    title: Voice provider bake-off - Gateway/OpenAI vs ElevenLabs
+    status: pending
+    operator_sees: >
+      A reproducible evidence pack with blind native-speaker ratings, transcript/error preservation,
+      latency, turn-taking failures, device results, and ten-minute cost for both candidates, ending
+      in one explicit production configuration rather than duplicate runtime integrations.
+    depends_on: [A10]
+    slices:
+      - id: A11-1
+        title: Freeze Spanish corpus, rubric, thresholds, and comparable harness
+        status: pending
+        summary: >
+          Build one internal harness around the production ports. Freeze consented/scripted A1/A2
+          utterances, accents/dialects, learner errors, noise/pause/interruption cases, devices,
+          regions, network profiles, prompts, voices, release thresholds, cost calculation, and data
+          rights first. Include direct OpenAI WebRTC versus any current Gateway realtime transport.
+      - id: A11-2
+        title: Run blind comparison and record the production configuration ADR
+        status: pending
+        summary: >
+          Compare Gateway/OpenAI vs ElevenLabs per STT/TTS port, then gpt-realtime-2.1 vs Speech
+          Engine end-to-end. Publish aggregate evidence and native review; record provider, model,
+          transport, SDK, voice, VAD, limits, cost, rollback, and evidence expiry in one ADR. Allow one
+          implementation per port and one live provider, with Gateway/OpenAI winning a quality tie.
+      - id: A11-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "delete losing prototype code/dependencies · retain evidence fixtures · reconcile ADR/specs"
+
+  - id: A12
+    lane: App
+    title: Guided live voice beta - one provider, constrained conversations
+    status: pending
+    operator_sees: >
+      A learner starts a maximum ten-minute hands-free scenario, pauses and interrupts naturally,
+      follows a visible transcript, chooses Flow or Coach correction, and receives a structured recap.
+    depends_on: [A11, "A11 production-configuration ADR accepted"]
+    slices:
+      - id: A12-1
+        title: Constrained conversation contract, turns, and feedback boundary
+        status: pending
+        summary: >
+          Snapshot authored scenario/persona/register/vocabulary/goals/correction mode; add ordered
+          transcript turns only now; separate generated dialogue from scored EvaluationService and
+          non-credit ConversationFeedbackService; define resume/end/delete behavior. Disposition
+          OI-040 before choosing any durable text-agent runtime; realtime media stays provider-direct.
+      - id: A12-2
+        title: LiveVoicePort and continuous web session with the bake-off winner
+        status: pending
+        summary: >
+          Integrate one winning provider with short-lived tokens, turn detection, interruption,
+          transcript/audio alignment, mute/stop/reconnect, ten-minute and daily limits, observability,
+          feature flag, kill switch, and typed escape hatch. Normalize provider events behind the port;
+          prove the A11-selected transport on supported browsers. Do not add fallback/provider choice.
+      - id: A12-3
+        title: Flow/Coach correction UX and end recap beta
+        status: pending
+        summary: >
+          Flow defers coaching to recap; Coach pauses only for material errors and one repetition.
+          Show corrections, goals, top error tags, and next practice without awarding credit for
+          generated dialogue. Run native review and real Chrome/Safari/Android device proof.
+      - id: A12-H
+        title: Hygiene slice (mandatory)
+        status: pending
+        summary: "privacy/cost/device audit · delete superseded voice paths · registers/specs reconcile"
+
+  - id: A13
+    lane: App
+    title: Voice quality and reliability expansion (evidence-triggered)
+    status: parked
+    operator_sees: >
+      Measured live-voice failures or learner needs are visibly improved without weakening transcript,
+      correction, latency, privacy, accessibility, or cost gates from A10-A12.
+    depends_on: [A12, "production evidence names the reliability/dialect/retention problem"]
+    slices:
+      - id: A13-1
+        title: Implement only the measured quality/reliability increment
+        status: parked
+        summary: >
+          Re-scope at wave open around evidence: device/region hardening, a licensed regional voice
+          after PM-005 promotion, richer recap/vocabulary capture, or provider fallback after measured
+          outages. Re-run the A11 corpus and prior gates. Pronunciation scoring remains PM-026.
+      - id: A13-H
+        title: Hygiene slice (mandatory)
+        status: parked
+        summary: "remove unused providers/voices · rights/privacy/cost audit · registers/specs reconcile"
 
 # ============================================================================================
 # LANE C - CONTENT   (working detail lives in /content; this is status + cross-links)

@@ -15,18 +15,19 @@ operating rules live in `CLAUDE.md`; the full machine is `Docs/PROCESS.md`. The 
 
 - **`Docs/ROADMAP.yaml`** is the plan. Work runs in **waves** made of **slices**, across **two
   parallel lanes**: **Lane A (the app)** and **Lane C (lesson content)**.
-- Four commands drive everything:
+- Five commands drive work, plus one Production approval:
   - **`/feature <idea>`** — researches (if needed), writes a spec, plans it into the roadmap.
   - **`/run`** — builds the next runnable roadmap slice through the full lifecycle
     (build → deterministic gates → isolated audit → code review → prove-on-screen → record).
   - **`/fix <bug or tweak>`** — small corrective loop with a regression test and a register row.
-  - **`/close`** — ends a wave: residue scan, fired deprecations executed, full test suite,
-    code review of the wave diff, plain-language recap + a written click-by-click testing
-    script for the operator, then push on the operator's GO.
+  - **`/close`** — ends a wave: full quality pass, then automatically adds a deployable App wave
+    to one cumulative Git-backed Preview batch. Non-deploying waves close without a Preview.
+  - **`SHIP`** — after you test the exact cumulative Preview, releases every queued wave in that
+    batch to Production. You can close several waves before choosing to SHIP.
 - **`Docs/STATE.md`** always says where the project is (<=60 lines, rewritten in place).
 - Defects, follow-ups, and dying code live as rows in `Docs/Registers/` — never in prose.
-- Nothing is "done" until it's proven with real data on a real screen, and nothing is ever
-  pushed without the operator's explicit GO.
+- Nothing is development-complete until it is proven with real data on a real screen. `/close`
+  authorizes Preview publication; Production remains blocked until the operator says `SHIP`.
 
 ## Where things live
 

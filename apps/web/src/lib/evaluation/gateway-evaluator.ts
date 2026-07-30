@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { GrammarTag } from "@aidioma/lesson-schema";
+import { createGateway } from "@ai-sdk/gateway";
 import {
   APICallError,
   NoObjectGeneratedError,
@@ -42,6 +43,7 @@ export type AiVerdictRequest = {
 export type AiFailureCategory =
   | "aborted"
   | "authentication"
+  | "budget"
   | "configuration"
   | "provider"
   | "rate-limit"
@@ -54,6 +56,7 @@ export type AiVerdictMetadata = {
   requestedModel?: AiEvaluationModel;
   responseModel?: string;
   generationId?: string;
+  providerStatus?: number;
   latencyMs: number;
   usage?: {
     inputTokens?: number;
@@ -70,7 +73,7 @@ export type AiVerdictGeneration =
     }
   | {
       kind: "ungraded";
-      retryable: true;
+      retryable: boolean;
       failure: AiFailureCategory;
       metadata: AiVerdictMetadata;
     };
@@ -114,21 +117,29 @@ export type GatewayGenerateText = (
   options: GatewayGenerateOptions,
 ) => Promise<GatewayGenerateResult>;
 
-const sdkGenerateText: GatewayGenerateText = async (options) => {
-  const result = await generateText(options);
-  return {
-    output: result.output,
-    usage: result.usage,
-    finalStep: {
-      response: { modelId: result.finalStep.response.modelId },
-      providerMetadata: result.finalStep.providerMetadata,
-    },
+function createSdkGenerateText(apiKey: string): GatewayGenerateText {
+  const evaluationGateway = createGateway({ apiKey });
+  return async (options) => {
+    const result = await generateText({
+      ...options,
+      model: evaluationGateway(options.model),
+    });
+    return {
+      output: result.output,
+      usage: result.usage,
+      finalStep: {
+        response: { modelId: result.finalStep.response.modelId },
+        providerMetadata: result.finalStep.providerMetadata,
+      },
+    };
   };
-};
+}
 
 type GatewayAiVerdictGeneratorOptions = {
   /** Server configuration only; callers cannot select a model per request. */
   model?: string;
+  /** Evaluation-only credential whose Gateway budget governs every AI grading call. */
+  gatewayApiKey?: string;
   generate?: GatewayGenerateText;
   now?: () => number;
 };
@@ -149,8 +160,13 @@ function configuredModel(value: string | undefined): AiEvaluationModel | undefin
   return isAllowedModel(candidate) ? candidate : undefined;
 }
 
+function configuredApiKey(value: string | undefined): string | undefined {
+  const candidate = value?.trim();
+  return candidate ? candidate : undefined;
+}
+
 function safeTrackingId(value: string | undefined): string | undefined {
-  if (value === undefined || !/^[A-Za-z0-9:_-]{1,128}$/u.test(value)) {
+  if (value === undefined || !/^usr_[a-f0-9]{32}$/u.test(value)) {
     return undefined;
   }
   return value;
@@ -188,6 +204,21 @@ function statusCode(error: unknown): number | undefined {
   return undefined;
 }
 
+function safeProviderStatus(error: unknown): number | undefined {
+  const seen = new Set<unknown>();
+  let current: unknown = error;
+  for (let depth = 0; depth < 8 && current !== undefined; depth += 1) {
+    if (seen.has(current)) return undefined;
+    seen.add(current);
+    const direct = statusCode(current);
+    if (direct !== undefined && Number.isInteger(direct) && direct >= 400 && direct <= 599) {
+      return direct;
+    }
+    current = nestedError(current);
+  }
+  return undefined;
+}
+
 function nestedError(error: unknown): unknown {
   if (RetryError.isInstance(error)) return error.lastError;
   if (typeof error === "object" && error !== null && "cause" in error) {
@@ -196,9 +227,17 @@ function nestedError(error: unknown): unknown {
   return undefined;
 }
 
-function categorizeFailure(error: unknown, callerSignal?: AbortSignal): AiFailureCategory {
+function categorizeFailure(
+  error: unknown,
+  callerSignal?: AbortSignal,
+  seen: Set<unknown> = new Set(),
+  depth = 0,
+): AiFailureCategory {
   if (callerSignal?.aborted) return "aborted";
+  if (depth >= 8 || seen.has(error)) return "unknown";
+  seen.add(error);
   if (NoObjectGeneratedError.isInstance(error)) return "schema";
+  if (statusCode(error) === 402) return "budget";
 
   if (error instanceof Error || error instanceof DOMException) {
     if (error.name === "TimeoutError" || error.name === "GatewayTimeoutError") {
@@ -218,7 +257,7 @@ function categorizeFailure(error: unknown, callerSignal?: AbortSignal): AiFailur
 
   const nested = nestedError(error);
   if (nested !== undefined && nested !== error) {
-    const nestedCategory = categorizeFailure(nested, callerSignal);
+    const nestedCategory = categorizeFailure(nested, callerSignal, seen, depth + 1);
     if (nestedCategory !== "unknown") return nestedCategory;
   }
 
@@ -260,12 +299,18 @@ function normalizeAiResult(
 
 export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
   readonly #modelValue: string | undefined;
-  readonly #generate: GatewayGenerateText;
+  readonly #gatewayApiKey: string | undefined;
+  readonly #generate: GatewayGenerateText | undefined;
   readonly #now: () => number;
 
   constructor(options: GatewayAiVerdictGeneratorOptions = {}) {
     this.#modelValue = options.model ?? process.env.EVALUATION_AI_MODEL;
-    this.#generate = options.generate ?? sdkGenerateText;
+    this.#gatewayApiKey = configuredApiKey(
+      options.gatewayApiKey ?? process.env.EVALUATION_AI_GATEWAY_API_KEY,
+    );
+    this.#generate =
+      options.generate ??
+      (this.#gatewayApiKey ? createSdkGenerateText(this.#gatewayApiKey) : undefined);
     this.#now = options.now ?? Date.now;
   }
 
@@ -278,7 +323,8 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
       latencyMs: Math.max(0, this.#now() - startedAt),
     });
 
-    if (!model) {
+    const user = safeTrackingId(request.userTrackingId);
+    if (!model || !this.#gatewayApiKey || !this.#generate || !user) {
       return {
         kind: "ungraded",
         retryable: true,
@@ -288,7 +334,6 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
     }
 
     try {
-      const user = safeTrackingId(request.userTrackingId);
       const generated = await this.#generate({
         model,
         system: SYSTEM_PROMPT,
@@ -305,8 +350,8 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
         abortSignal: request.signal,
         providerOptions: {
           gateway: {
-            tags: ["feature:evaluation", "prompt:v1"],
-            ...(user && { user }),
+            tags: ["scope:evaluation-only", "feature:evaluation", "prompt:v1"],
+            user,
           },
         },
       });
@@ -340,11 +385,20 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
 
       return { kind: "graded", result: normalizeAiResult(parsed.data), metadata };
     } catch (error) {
+      const failure = categorizeFailure(error, request.signal);
+      const providerStatus = safeProviderStatus(error);
+      const retryable =
+        failure !== "budget" &&
+        !(providerStatus !== undefined && providerStatus >= 400 && providerStatus < 500 &&
+          providerStatus !== 408 && providerStatus !== 429);
       return {
         kind: "ungraded",
-        retryable: true,
-        failure: categorizeFailure(error, request.signal),
-        metadata: baseMetadata(),
+        retryable,
+        failure,
+        metadata: {
+          ...baseMetadata(),
+          ...(providerStatus !== undefined && { providerStatus }),
+        },
       };
     }
   }

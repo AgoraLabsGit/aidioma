@@ -10,6 +10,11 @@ import type {
   EvaluationServiceRequest,
 } from "./evaluation-service";
 import {
+  EVALUATION_FIREWALL_RETRY_AFTER_SECONDS,
+  admitEvaluationAtPerimeter,
+  type EvaluationPerimeterAdmitter,
+} from "./firewall-admission";
+import {
   EvaluationSourceIntegrityError,
   EvaluationSourceNotFoundError,
   resolveLessonSource,
@@ -39,6 +44,7 @@ type EvaluateHandlerDependencies = {
   authenticate: EvaluationAuthenticator;
   service: EvaluationServicePort;
   resolveSource?: EvaluationSourceResolver;
+  admitAtPerimeter?: EvaluationPerimeterAdmitter;
   admit?: EvaluationAdmitter;
   requestId?: () => string;
   logger?: EvaluationHandlerLogger;
@@ -107,13 +113,16 @@ function ungradedResponse(
     {
       requestId,
       status: "ungraded",
-      retryable: true,
+      retryable: outcome.retryable,
       reason:
         outcome.failure === "rate-limit"
           ? "evaluation_rate_limited"
           : "evaluation_temporarily_unavailable",
     },
     status,
+    status === 429
+      ? { "Retry-After": String(EVALUATION_FIREWALL_RETRY_AFTER_SECONDS) }
+      : undefined,
   );
 }
 
@@ -121,6 +130,7 @@ export function createEvaluateHandler({
   authenticate,
   service,
   resolveSource = resolveLessonSource,
+  admitAtPerimeter = admitEvaluationAtPerimeter,
   admit = admitEvaluation,
   requestId: createRequestId = randomUUID,
   logger = defaultLogger,
@@ -238,6 +248,40 @@ export function createEvaluateHandler({
     const requestFingerprint = createHash("sha256")
       .update(JSON.stringify(parsed.data))
       .digest("hex");
+
+    let perimeterAdmission;
+    try {
+      perimeterAdmission = await admitAtPerimeter(userKey, request.headers);
+    } catch {
+      perimeterAdmission = {
+        allowed: false as const,
+        kind: "unavailable" as const,
+        failure: "sdk-error" as const,
+      };
+    }
+    if (!perimeterAdmission.allowed) {
+      if (perimeterAdmission.kind === "rate-limited") {
+        return fail(
+          429,
+          "evaluation_rate_limited",
+          "Too many evaluation requests. Try again shortly.",
+          "admission",
+          { "Retry-After": String(perimeterAdmission.retryAfterSeconds) },
+        );
+      }
+      recordFailure(503, `firewall_${perimeterAdmission.failure}`, "admission");
+      return json(
+        {
+          requestId,
+          status: "ungraded",
+          retryable: true,
+          reason: "evaluation_temporarily_unavailable",
+        },
+        503,
+        { "Retry-After": String(EVALUATION_FIREWALL_RETRY_AFTER_SECONDS) },
+      );
+    }
+
     const admission = admit(userKey, requestFingerprint);
     if (!admission.allowed) {
       return fail(

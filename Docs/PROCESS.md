@@ -1,7 +1,10 @@
 # PROCESS — the machine
 
-> How every unit of work runs. Four commands drive it; everything between is automatic.
-> The operator touches a wave exactly three times: approve the plan · VERIFIED pass · GO the push.
+> How every unit of work runs. Five work commands plus `SHIP`; everything between is automatic.
+> A deployable App wave has two operator controls: approve its plan, then optionally `SHIP` a tested
+> cumulative Preview batch. `/close` itself authorizes Preview publication; Production never follows
+> automatically. Non-deploying waves close without joining a Preview batch.
+> Completed documentation/process work merges to `main` promptly; it never waits behind unrelated code.
 > Hard cap 150 lines. Any process change is an edit to THIS file, never a new convention doc.
 
 ## Two lanes
@@ -10,11 +13,31 @@ Only ONE wave per lane is active at a time. Lanes coordinate through files, neve
 has its own `verify:` gate set (Content's are real and running; App's are set when the app
 scaffolds in wave A1). A slice belongs to exactly one lane and runs the lifecycle below.
 
+## Parallel-agent operating model
+
+- `origin/main` is the sole durable integrated history. At rest, local `main` matches it in one clean
+  primary coordinator worktree; every agent branch/worktree is temporary.
+- Each worker gets an ephemeral secondary worktree and ordinary branch from the exact current
+  integration SHA (`origin/main`, or the one active release SHA for dependent App work).
+- Before spawning work, record one owner and the intended files/areas in the task packet. Parallel
+  scopes must not overlap; dependent or shared-file work is sequenced after the earlier SHA lands.
+- Workers own implementation plus their wave/handoff evidence. The coordinator alone edits
+  `STATE.md`, `ROADMAP.yaml`, `PROCESS.md`, release branches, and cross-wave integration records.
+- Workers commit and push without merging. The coordinator integrates exact reviewed SHAs in
+  dependency order, reruns the combined gates, and publishes the one cumulative Preview.
+- GitHub protects `main`: PRs are mandatory, App CI and Content CI run on every PR, force pushes and
+  deletion are blocked, and no extra approving reviewer is required for the solo-founder workflow.
+- Once a worker HEAD is clean, pushed, and contained in the fetched integration target, remove its
+  worktree. Delete its branch after `main` contains it; keep only refs required by an active release PR.
+- No agent shares another agent's dev server. Use the owning worktree and a unique port; shared
+  Preview/Production configuration remains coordinator-only.
+
 ## The commands
 - **/run** — pick the next runnable slice from ROADMAP.yaml and drive it through the lifecycle.
 - **/fix** — corrective loop: register row → failing regression test → fix → gates → record.
 - **/feature** — idea → (research) → spec → operator approval → slices added to ROADMAP.yaml.
-- **/close** — wave close: hygiene + full suite + review + recap + runsheet + GO push.
+- **/close** — full wave close; deployable App waves join and publish the cumulative Preview batch.
+- **SHIP** — verify and publish the exact cumulative Preview batch to Production.
 - **/status** — read-only position report. Never does work.
 
 ## The slice lifecycle (🧑 = operator; everything else is automatic)
@@ -26,8 +49,8 @@ scaffolds in wave A1). A slice belongs to exactly one lane and runs the lifecycl
 | 2 | GATE | Deterministic checks BEFORE any judgment, from ROADMAP `verify:` (the lane's set): typecheck 0 · lint 0-new · tests green vs the recorded baseline · build 0 · smoke | all green or back to 1 |
 | 3 | AUDIT | Isolated read-only audit sub-agent(s), sized to risk — additive/read-only change → 1 light auditor · mutating/schema/security-touching → fuller audit (2–3). The auditor gets ONLY the diff + the criteria, no history. Triage findings yourself; fix criticals; then a **delta re-audit** of just the fixes | 0 critical; every warning fixed or dispositioned in the wave file |
 | 4 | REVIEW | `/code-review` on the slice diff (medium effort). Findings triaged like audit findings | criticals fixed; rest → register rows |
-| 5 | MERGE | Merge the slice branch to main locally. **Never push** — pushing happens only at /close on 🧑 GO | — |
-| 6 | PROVE | Real data through the user's actual path: UI slices = a headless browser script printing compact PASS/FAIL + a screenshot saved to the wave record (never interactive browser-driving through the agent); backend/content slices = a real end-to-end run/validate. **Not proven = not done** | proof artifact recorded in the wave file |
+| 5 | HANDOFF | Keep the slice on its isolated branch. Worker `/close` commits/pushes one draft-PR handoff; it never merges or edits coordinator-owned control files. One release coordinator integrates approved SHAs | clean branch + exact SHA |
+| 6 | PROVE | Real data through the user's actual path: local headless proof for deterministic UI; the exact Git-backed Vercel Preview for auth, data, Gateway, Firewall, and deployment behavior. Backend/content slices use a real end-to-end run/validate. **Not proven = not done** | proof artifact recorded in the wave file |
 | 7 | CLEAN | Code this slice replaced is DELETED in-slice, **or** gets a deprecations-register row with a named trigger. No third option | register or diff shows it |
 | 8 | RECORD | Wave file closed · ROADMAP status flipped · STATE rewritten · every touched Spec updated to the new truth. **A slice that changed structure or behavior cannot close on stale specs** | all four done |
 
@@ -36,14 +59,18 @@ scaffolds in wave A1). A slice belongs to exactly one lane and runs the lifecycl
 > decision is recorded and cross-referenced. The lifecycle shape is otherwise identical.
 
 ## The wave lifecycle
-PLAN (operator approves a <=5-bullet briefing) → slices run the lifecycle above →
-**HYGIENE SLICE** (mandatory, below) → **/close** → 🧑 VERIFIED pass → push on 🧑 GO.
+PLAN (operator approves a <=5-bullet briefing) → slices → **HYGIENE SLICE** → **/close** →
+for a deployable App wave: cumulative release Preview → more closed waves if desired → 🧑 `SHIP`
+the exact tested batch → `main`; a non-deploying wave omits the Preview stage.
+- Completed docs/process/planning merge to `main` after their checks unless they describe unshipped
+  behavior; those inseparable docs travel with the corresponding code Preview.
 - Every wave has >=1 slice the operator can SEE working (`operator_sees` in ROADMAP). For a
   design wave, "see" = the finished decision record / spec they approve.
 - Mid-wave ideas NEVER join the active wave — they become `Registers/open-items.md` rows
   (feature freeze). /feature turns them into future roadmap slices later.
-- A session ending mid-wave writes `Handoffs/NNN-<date>-<slug>.md`: in-flight work, exact next
-  actions, anything owed. At a wave boundary, STATE + the wave records ARE the handoff.
+- Every session ends with `/close`. A session ending mid-wave writes
+  `Handoffs/NNN-<date>-<slug>.md`: branch/SHA, in-flight work, checks, exact next actions, and
+  anything owed. At a wave boundary, STATE + the wave records ARE the handoff.
 
 ## The hygiene slice (every wave ends with one, no exceptions)
 1. **Residue scan:** dead code nothing imports · one concept stored in two places · docs whose
@@ -56,16 +83,40 @@ PLAN (operator approves a <=5-bullet briefing) → slices run the lifecycle abov
    escaped stage 7.
 4. A wave **cannot close** with a fired trigger unexecuted or a scan finding unowned.
 
-## Wave close (/close) — the full quality pass
+## Phase 1: wave close (/close) — quality pass + cumulative Preview
 1. Hygiene slice complete (above).
 2. **Full gate suite, cache-free** — a gate that didn't RUN counts as FAILED. Record the new
    test-count baselines in the wave record.
 3. **/code-review at high effort on the whole wave diff** (main vs the last pushed state).
 4. Docs reconcile: ROADMAP statuses · STATE rewritten · specs current · registers clean.
-5. **Operator deliverables, in plain language:** (a) a "what got done" recap mirroring the
-   wave-open briefing, and (b) a **written human-testing script** — exact clicks, expected
-   results — for every finished user-visible slice. That script IS the 🧑 VERIFIED pass.
-6. Push ONLY on the operator's explicit GO after their VERIFIED pass.
+5. One coordinator creates the ROADMAP-named `release/**` batch from current `origin/main`, or
+   continues its exact remote HEAD when a batch is already open. New App work bases on that batch,
+   so closed-but-unshipped waves remain in the dependency chain.
+6. `/close` authorizes pushing/updating that release branch and reviewed Preview-only configuration.
+   Vercel creates the canonical Preview; App CI and required real-path proofs must pass there. A
+   failed proof leaves the wave active. A pass marks it `closed` and appends it to `queued_waves`.
+7. Give the operator the exact SHA, contained waves, immutable Preview URL, plain-language recap,
+   and written test script. Development may continue; `SHIP` is not required after every wave.
+8. Fetch the integration target and run the pre-SHIP worktree cleanup audit. Remove clean, contained
+   secondary worktrees immediately; retain only the remote ref required by the active release PR.
+
+## Phase 2: batch release (SHIP)
+1. `SHIP` means the operator tested the exact current cumulative Preview and authorizes every wave
+   in ROADMAP `release_batch.queued_waves` for Production. A moved SHA requires a new Preview/test.
+2. Apply only the reviewed Production configuration in the batch runsheet, merge/push that exact
+   tree to `main` once, and verify Production behavior, aliases, bounded logs, data, and receipts.
+   If the provider requires an owner-only publish, stage it first and present one exact command.
+3. Update `last_shipped_wave`/`production_sha`, clear the batch queue and any resolved Production
+   exception, close release-only rows, and run the strict branch cleanup audit against `origin/main`.
+   Close superseded PRs; keep one clean primary `main`; delete all merged task/release refs.
+4. Batch freely unless a roadmap dependency explicitly requires Production proof, a migration or
+   external change cannot be rehearsed safely in Preview, or the operator wants to release sooner.
+
+## Strategic application reviews
+- **A2R:** baseline architecture, security, integration, and UI review before persistence work begins.
+- **A4-H:** repeat the cross-component seam review after the real SessionEngine and UI exist.
+- **A7-2:** repeat the whole-app audit and browser-to-data smoke before MVP launch.
+- Founder UI review decisions update the specs and roadmap before their implementation wave opens.
 
 ## Standing rules
 - Deterministic checks always run before agent judgment (cheaper, and they don't lie).
@@ -77,3 +128,11 @@ PLAN (operator approves a <=5-bullet briefing) → slices run the lifecycle abov
 - Sub-agent tiering: strongest model for coordination and audits/judgment; mid-tier for
   building; small models for mechanical scans and scripted sweeps.
 - After 3 consecutive failures on the same step, stop and ask the operator rather than looping.
+- Environment ladder is fixed: localhost uses Development credentials/data; ordinary worker branches
+  are local/CI-only; the one cumulative `release/**` branch uses Preview credentials/data; `main`,
+  `aidioma.io`, and the production alias are Production only. CLI Preview URLs are diagnostic only.
+- Worker `/close` authorizes its clean branch push/draft PR. Coordinator `/close` additionally
+  authorizes the cumulative release Preview and named Preview-only configuration. Only `SHIP`
+  authorizes `main` or Production configuration; neither authorizes force push or uncontained deletion.
+- Every repo-owned long-lived dev/preview server is stopped before final `/close` preflight; the
+  preflight reports and fails on residue instead of killing an ambiguous process automatically.

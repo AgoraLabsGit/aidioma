@@ -170,6 +170,36 @@ async function assertNoHorizontalOverflow(page, label) {
   }
 }
 
+async function assertAuthProviderFits(page, label) {
+  const result = await page.evaluate(() => {
+    const panel = document.querySelector(".auth-panel");
+    if (!(panel instanceof HTMLElement)) return null;
+
+    const providerFixture = document.createElement("div");
+    providerFixture.style.width = "400px";
+    providerFixture.dataset.authProviderFixture = "true";
+    panel.append(providerFixture);
+
+    const panelBounds = panel.getBoundingClientRect();
+    const fixtureBounds = providerFixture.getBoundingClientRect();
+    const columns = getComputedStyle(document.querySelector(".auth-page")).gridTemplateColumns;
+    providerFixture.remove();
+
+    return {
+      columns,
+      fixtureWidth: Math.round(fixtureBounds.width),
+      panelWidth: Math.round(panelBounds.width),
+      clipped:
+        fixtureBounds.left < panelBounds.left - 1 || fixtureBounds.right > panelBounds.right + 1,
+    };
+  });
+
+  if (!result || result.clipped) {
+    throw new Error(`${label} clips a 400px auth provider inside its panel.`);
+  }
+  return result;
+}
+
 async function captureVisualMetrics(page, kind, routeId) {
   return page.evaluate(({ targetKind, targetRoute }) => {
     const root = getComputedStyle(document.documentElement);
@@ -184,7 +214,7 @@ async function captureVisualMetrics(page, kind, routeId) {
       app: {
         home: ".continue-card",
         lessons: ".current-level > summary",
-        practice: ".practice-shortcut-card",
+        practice: ".practice-set-card",
         settings: ".settings-card",
       },
       prototype: {
@@ -219,7 +249,7 @@ async function captureVisualMetrics(page, kind, routeId) {
   }, { targetKind: kind, targetRoute: routeId });
 }
 
-function assertVisualContract(appMetrics, prototypeMetrics, label) {
+function assertVisualContract(appMetrics, prototypeMetrics, label, routeId) {
   const normalizeColor = (value) =>
     /^#[0-9a-f]{3}$/i.test(value)
       ? `#${value
@@ -237,7 +267,10 @@ function assertVisualContract(appMetrics, prototypeMetrics, label) {
     }
   }
 
-  for (const name of ["canvasWidth", "cardWidth", "railWidth"]) {
+  const geometryNames = routeId === "practice"
+    ? ["canvasWidth", "railWidth"]
+    : ["canvasWidth", "cardWidth", "railWidth"];
+  for (const name of geometryNames) {
     if (Math.abs(appMetrics.geometry[name] - prototypeMetrics.geometry[name]) > 1) {
       throw new Error(
         `${label} ${name} differs: app ${appMetrics.geometry[name]}, prototype ${prototypeMetrics.geometry[name]}.`,
@@ -405,7 +438,7 @@ async function run() {
             captureVisualMetrics(appPage, "app", route.id),
           ]);
           const visualLabel = `${route.id}-${viewport.id}-${theme}`;
-          assertVisualContract(appMetrics, prototypeMetrics, visualLabel);
+          assertVisualContract(appMetrics, prototypeMetrics, visualLabel, route.id);
           visualEvidence.push({
             app: appMetrics,
             prototype: prototypeMetrics,
@@ -420,17 +453,35 @@ async function run() {
       }
     }
 
-    const authPage = await browser.newPage({ viewport: { width: 390, height: 844 } });
-    await authPage.goto(`${baseUrl}/sign-in`, { waitUntil: "networkidle" });
-    await authPage
-      .getByRole("heading", { name: "Authentication is ready to connect" })
-      .waitFor();
-    await assertAccessible(authPage, "Keyless sign-in page");
-    await authPage.close();
+    for (const viewport of [
+      { id: "phone", width: 390, height: 844 },
+      { id: "narrow-desktop", width: 900, height: 900 },
+      { id: "desktop", width: 1200, height: 900 },
+    ]) {
+      const authPage = await browser.newPage({ viewport });
+      await authPage.goto(`${baseUrl}/sign-in`, { waitUntil: "networkidle" });
+      await authPage
+        .getByRole("heading", { name: "Authentication is ready to connect" })
+        .waitFor();
+      await assertAccessible(authPage, `Keyless sign-in page (${viewport.id})`);
+      await assertNoHorizontalOverflow(authPage, `Sign-in page (${viewport.id})`);
+      const authLayout =
+        viewport.width >= 680
+          ? await assertAuthProviderFits(authPage, `Sign-in page (${viewport.id})`)
+          : null;
+      const usesTwoColumns = authLayout?.columns.split(" ").length === 2;
+      if (viewport.width < 1000 && usesTwoColumns) {
+        throw new Error(`Sign-in page (${viewport.id}) enters two columns too early.`);
+      }
+      if (viewport.width >= 1000 && !usesTwoColumns) {
+        throw new Error(`Sign-in page (${viewport.id}) does not use two columns.`);
+      }
+      await authPage.close();
+    }
 
     await writeFile(visualContractPath, `${JSON.stringify(visualEvidence, null, 2)}\n`);
     console.log(
-      "SMOKE PASS: 16 screen states; prototype token/geometry parity; route-aware navigation; theme control; axe; keyboard focus; reduced motion; 200% text; no horizontal overflow; keyless auth.",
+      "SMOKE PASS: 16 screen states; prototype token/shell geometry parity; route-aware navigation; theme control; axe; keyboard focus; reduced motion; 200% text; no horizontal overflow; responsive keyless auth.",
     );
     console.log(`Screenshots: ${appScreenshotsDirectory}`);
     console.log(`Visual contract: ${visualContractPath}`);

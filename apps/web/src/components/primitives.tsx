@@ -156,7 +156,7 @@ export function FormField({
   label,
 }: {
   children: ReactNode;
-  description: string;
+  description?: string;
   descriptionId?: string;
   label: string;
 }) {
@@ -164,9 +164,11 @@ export function FormField({
     <div className="form-field">
       <div className="form-copy">
         <span className="form-label">{label}</span>
-        <span className="form-description" id={descriptionId}>
-          {description}
-        </span>
+        {description ? (
+          <span className="form-description" id={descriptionId}>
+            {description}
+          </span>
+        ) : null}
       </div>
       {children}
     </div>

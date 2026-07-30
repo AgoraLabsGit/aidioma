@@ -131,7 +131,7 @@ async function screenshot(page, name) {
   await page.screenshot({ path: path.join(screenshotsDirectory, `${name}.png`) });
 }
 
-async function assertKeyboardPracticeShortcuts(page) {
+async function assertKeyboardCatalogControls(page) {
   await page.keyboard.press("Tab");
   if ((await page.locator(":focus").getAttribute("class")) !== "skip-link") {
     throw new Error("Skip link is not the first keyboard focus target.");
@@ -144,16 +144,16 @@ async function assertKeyboardPracticeShortcuts(page) {
     const style = getComputedStyle(element);
     return { style: style.outlineStyle, width: style.outlineWidth };
   });
-  if (!focusedText.toLowerCase().includes("current lesson")) {
-    throw new Error(`Keyboard focus reached ${focusedText || "an unnamed control"} instead of Current lesson.`);
+  if (focusedText !== "All") {
+    throw new Error(`Keyboard focus reached ${focusedText || "an unnamed control"} instead of the All filter.`);
   }
   if (outline.style === "none" || outline.width === "0px") {
-    throw new Error("Current lesson does not have a visible keyboard focus indicator.");
+    throw new Error("The All filter does not have a visible keyboard focus indicator.");
   }
   await page.keyboard.press("Tab");
-  const personal = page.locator(":focus");
-  if (!(await personal.innerText()).trim().toLowerCase().includes("your practice")) {
-    throw new Error("Your practice is not the second Practice shortcut in keyboard order.");
+  const saved = page.locator(":focus");
+  if ((await saved.innerText()).trim() !== "Saved") {
+    throw new Error("Saved is not the second catalog filter in keyboard order.");
   }
 }
 
@@ -238,22 +238,27 @@ async function run() {
           localStorage.removeItem("aidioma-practice-set-prototype-configurations:v1");
         }, theme);
         const page = await context.newPage();
-        await page.goto(`${baseUrl}/practice`, { waitUntil: "networkidle" });
-        await page.getByRole("heading", { name: "Practice", exact: true }).waitFor();
-        await assertAccessible(page, `entry ${label}`);
-        await assertNoHorizontalOverflow(page, `entry ${label}`);
-
-        if (viewport.id === "phone" && theme === "light") {
-          await assertKeyboardPracticeShortcuts(page);
-        }
-
-        await page.getByRole("button", { name: /Current lesson/i }).click();
+        await page.goto(`${baseUrl}/lessons/1`, { waitUntil: "networkidle" });
         await page.getByRole("heading", { name: "Lesson 1", exact: true }).waitFor();
         await screenshot(page, `lesson-mix-${label}`);
         screenshotCount += 1;
         await assertAccessible(page, `lesson mix ${label}`);
         await assertNoHorizontalOverflow(page, `lesson mix ${label}`);
-        await page.getByRole("button", { name: "End preview and return to Practice", exact: true }).click();
+        const lessonsNavigation = page.getByRole("link", { name: "Lessons", exact: true }).first();
+        if ((await lessonsNavigation.getAttribute("aria-current")) !== "page") {
+          throw new Error(`Lessons navigation is not current on the lesson preview in ${label}.`);
+        }
+        await page.getByRole("link", { name: "End preview and return to Lessons", exact: true }).click();
+        await page.getByRole("heading", { name: "Lessons", exact: true }).waitFor();
+
+        await page.goto(`${baseUrl}/practice`, { waitUntil: "networkidle" });
+        await page.getByRole("heading", { name: "Practice", exact: true }).waitFor();
+        await assertAccessible(page, `catalog ${label}`);
+        await assertNoHorizontalOverflow(page, `catalog ${label}`);
+
+        if (viewport.id === "phone" && theme === "light") {
+          await assertKeyboardCatalogControls(page);
+        }
 
         await screenshot(page, `catalog-${label}`);
         screenshotCount += 1;
@@ -262,17 +267,16 @@ async function run() {
         await assertReducedMotion(page, `catalog ${label}`);
 
         await page.getByRole("button", { name: "Save Essential Verbs", exact: true }).click();
-        await page.getByRole("button", { name: /Your practice/i }).click();
-        await page.getByRole("heading", { name: "Your practice", exact: true }).waitFor();
+        await page.getByRole("button", { name: "Saved", exact: true }).click();
+        await page.getByRole("button", { name: "Start Essential Verbs", exact: true }).waitFor();
         await screenshot(page, `saved-${label}`);
         screenshotCount += 1;
         await assertAccessible(page, `saved ${label}`);
         await assertNoHorizontalOverflow(page, `saved ${label}`);
         await page.getByRole("button", { name: "Start Essential Verbs", exact: true }).click();
         await page
-          .getByRole("button", { name: "End preview and return to Your practice", exact: true })
+          .getByRole("button", { name: "End preview and return to Practice", exact: true })
           .click();
-        await page.getByRole("button", { name: "Back to Practice", exact: true }).click();
 
         await page.getByRole("button", { name: "Start Essential Verbs", exact: true }).click();
         await page.getByLabel("Type a prototype answer", { exact: true }).fill("soy");
@@ -337,7 +341,7 @@ async function run() {
     }
 
     console.log(
-      `PRACTICE SETS SMOKE PASS: Practice with equal shortcuts, direct Lesson Mix, inline Collections, session-local Saved practice, direct session, and options; capability rules; axe; keyboard; visible focus; reduced motion; 200% text; no horizontal overflow; ${screenshotCount} screenshots.`,
+      `PRACTICE SETS SMOKE PASS: Practice opens directly on Collections with a Saved filter; Lessons owns the preserved Lesson Mix route; direct session and options; capability rules; axe; keyboard; visible focus; reduced motion; 200% text; no horizontal overflow; ${screenshotCount} screenshots.`,
     );
     console.log(`Screenshots: ${screenshotsDirectory}`);
   } finally {

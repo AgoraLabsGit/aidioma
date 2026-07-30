@@ -17,8 +17,9 @@ description: Build the next runnable roadmap slice through the full lifecycle (g
    Ask the operator only if scope is new or changed from the roadmap entry; otherwise proceed.
    For a **design-only slice** (e.g. A0), the "build" is the decision/spec itself — surface each
    open decision as ONE plain yes/no block, record the ruling, don't batch them.
-4. **Build (stage 1):** branch `slice/<id>`. Follow existing project patterns. Delegate heavy
-   implementation to sub-agents with compact briefs; you triage and integrate.
+4. **Build (stage 1):** branch `slice/<id>`. If ROADMAP has an open App `release_batch`, base new
+   App work on its exact candidate; otherwise base it on `origin/main`. Follow existing project
+   patterns. Delegate heavy implementation to sub-agents with compact briefs; you triage and integrate.
 5. **Gates (stage 2):** run every command in the lane's ROADMAP `verify:` set — typecheck 0,
    lint 0-new, tests green vs the recorded baseline, build 0, smoke. All green or return to
    stage 1. Record results in the wave file. (Design slices: peer-review read for internal
@@ -26,11 +27,15 @@ description: Build the next runnable roadmap slice through the full lifecycle (g
 6. **Audit (stage 3):** spawn isolated read-only auditor(s) sized to risk with ONLY the diff +
    criteria. Triage; fix criticals + warnings; delta re-audit the fixes. Record in the wave file.
 7. **Review (stage 4):** run /code-review (medium) on the slice diff; triage the same way.
-8. **Merge (stage 5):** merge to main locally. NEVER push.
+8. **Handoff (stage 5):** keep the completed work on its isolated branch. Do not merge into
+   `main` or another worker branch; `/close` commits/pushes the worker branch and the sole release
+   coordinator integrates it.
 9. **Prove (stage 6):** exercise the real user path — headless PASS/FAIL script + screenshot
    for UI; real end-to-end run/validate for backend/content. Record the proof. Not proven = not
    done. (Design slices: the recorded, cross-referenced decision IS the proof.)
 10. **Clean + record (stages 7–8):** delete superseded code or file a DEP row; flip ROADMAP
     status to `proven`; rewrite STATE; update touched specs; close the wave file.
-11. **Report** in plain language: what got built, what the operator can see, what's next. If
-    this was the wave's last content slice, say the wave is ready for `/close`.
+11. **Report** in plain language: what got built, what the operator can see, what's next. End every
+    agent session with `/close`, including paused work. If this was the wave's last slice, say
+    coordinator `/close` can add it to the cumulative Preview batch; `SHIP` is optional until a
+    later wave explicitly requires Production proof or the operator wants to release the batch.

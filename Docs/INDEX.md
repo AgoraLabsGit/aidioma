@@ -28,6 +28,7 @@ have one named home outside Docs and are linked here; archived design is evidenc
 |---|---|
 | App experience and settled UI | [Specs/Features/module-spec.md](Specs/Features/module-spec.md) |
 | Practice Set catalog, settings, capabilities, and custom-generation boundary | [Specs/Features/practice-sets.md](Specs/Features/practice-sets.md) |
+| Voice stages, UX, quality gates, and provider bake-off | [Specs/Features/voice-practice.md](Specs/Features/voice-practice.md) |
 | Production platform and SDK boundaries | [Specs/Areas/platform.md](Specs/Areas/platform.md) |
 | Evaluation boundary and result contract | [Specs/Areas/evaluation.md](Specs/Areas/evaluation.md) |
 | Persistence model | [Specs/Areas/data-model.md](Specs/Areas/data-model.md) |

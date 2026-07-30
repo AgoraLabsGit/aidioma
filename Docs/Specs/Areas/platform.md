@@ -2,13 +2,13 @@
 title: Platform — web, native, and SDK boundaries
 type: area-spec
 status: active
-updated: 2026-07-29
+updated: 2026-07-30
 ---
 
 # Platform — web, native, and SDK boundaries
 
 > Current platform truth for client runtimes and third-party SDK roles. Provider/model choice stays
-> in ADR-0007; evaluation security stays in `evaluation.md`. Decision record: ADR-0014.
+> in ADR-0007; evaluation security stays in `evaluation.md`. Decisions: ADR-0014 and ADR-0016.
 
 ## MVP production stack
 
@@ -17,8 +17,12 @@ updated: 2026-07-29
 - **AI:** Vercel AI SDK 7 + AI Gateway, server-side, behind `EvaluationService`. Plain
   `provider/model` IDs route through Gateway; grading uses non-streaming `generateText` with
   `Output.object` validation, minimal reasoning, zero SDK retries, an 800-token output ceiling, and
-  a 12-second total timeout. Vercel OIDC is the deployed default; `AI_GATEWAY_API_KEY` is the
-  local/CI alternative. A direct provider SDK is only a fallback adapter when Gateway lacks a
+  a 12-second total timeout. Evaluation calls require `EVALUATION_AI_GATEWAY_API_KEY`; ambient
+  Vercel OIDC and legacy `AI_GATEWAY_API_KEY` are intentionally not fallbacks, so the dedicated
+  key's aggregate budget governs every AI grading call. The opaque ID is sent as Gateway `user` for
+  reporting and any account-supported per-user policy; the currently rejected `quotaEntityId`
+  option is not sent. Actual per-user denial still requires a configured, proven account policy.
+  A direct provider SDK is only a fallback adapter when Gateway lacks a
   required model/capability; it must not bypass the service contract.
 - **Auth:** Clerk's Next.js SDK. **Data:** Neon Postgres through the server-only Neon serverless
   driver + Drizzle ORM boundary frozen in A1-1. Connection construction is lazy so builds and
@@ -34,11 +38,39 @@ updated: 2026-07-29
   Credential tests prove both non-production roles are denied Production and each other; the
   Neon-managed production owner retains one-way administrative reach. Only Production receives user
   data. Branch-per-preview may replace the shared Preview database later.
+- The same evaluation-only Gateway key is currently present in all three Vercel scopes, so its $1
+  monthly budget and spend are aggregate. Budget checks occur at request start and may overshoot on
+  a crossing/in-flight call; this is not an absolute cap. Firewall SDK admission uses an opaque
+  user key, with per-region rather than globally atomic counters, before the separate local guard.
+  Preview and Production require environment-conditioned Firewall publication and receipts; Preview
+  proof alone does not authorize or prove the Production rule; a Preview-only condition may simply
+  not count a Production request, so code fail-closed behavior is not a substitute for that rule.
 - All six documented Clerk names are configured locally and in all three Vercel environments;
   values stay untracked. The current matching pair is test-class for prelaunch verification and must
   be promoted to live-class before real users (OI-034).
 - AI calls, database credentials, reviewed answer sets, thresholds, and `correctIndex` remain on the
   authenticated server. Web and future native clients consume learner-safe APIs only.
+
+## Development, Preview, and Production
+
+- **Localhost = build loop.** Run deterministic gates and UI work locally with Development-scoped
+  Clerk/Neon/Gateway credentials. Localhost is never evidence that Vercel auth, Firewall, routing,
+  environment scoping, or Production aliases work.
+- **Git Preview = cumulative acceptance.** Vercel auto-deploys only `release/**` and `main`; ordinary
+  worker branches remain local/CI-only. Coordinator `/close` creates or advances the one ROADMAP-named
+  release batch and proves its PR deployment. Closed App waves may accumulate there before `SHIP`.
+  The commit-specific URL is the immutable evidence target; Preview uses only Preview credentials/data.
+- **Production = shipped behavior.** `main` is Vercel's sole Production branch; `aidioma.io`,
+  `aidioma-agoralabs.vercel.app`, and the `git-main` alias are post-`SHIP` verification targets,
+  never pre-merge test environments. A push to `main` is a Production release action.
+- Ad-hoc `vercel deploy` Preview URLs are limited to deployment diagnosis. They do not replace the
+  Git Preview because they lack the canonical branch/commit review trail and share one moving CLI alias.
+- A custom `staging` environment is deferred until the shared Preview environment becomes a real
+  constraint: long-running migration rehearsal, external webhook allowlisting, or parallel QA.
+- App CI must pass typecheck, lint, tests, build, and smoke on the PR. External proof then covers
+  authenticated routes, Preview database isolation, Gateway/Firewall receipts, and absence of
+  unintended writes. `SHIP` covers only the exact human-tested cumulative Preview commit; any later
+  change requires a new Preview before it may merge to `main`.
 
 ## Shared application boundary
 
@@ -59,17 +91,24 @@ updated: 2026-07-29
 
 ## Specialized SDKs
 
-- **OpenAI Agents SDK / Realtime:** candidate only for promoted constrained-conversation or live
-  voice work. Keep it behind an AIdioma service boundary; it does not replace comparison-first
-  evaluation or the provider-neutral MVP path.
+- **Turn-based voice (A10):** use browser media capture and AI SDK/Gateway speech/transcription
+  calls behind `TranscriptionPort` and `SpeechPort`. Current model IDs are configuration. The
+  browser receives only learner-safe audio/results; provider credentials remain server-side.
+- **Live voice (A11+):** Gateway/OpenAI Realtime and ElevenLabs Speech Engine enter one controlled
+  bake-off. Introduce `LiveVoicePort` only for the winner and ship one provider at a time. Realtime
+  dialogue does not replace `EvaluationService` or become grading authority.
+- Browser-direct live sessions use a short-lived, server-minted token scoped to the authenticated
+  learner/session. No long-lived Gateway/OpenAI/ElevenLabs key enters client code or logs.
 - **Gradio:** not a production AIdioma web/mobile runtime. It may be used as an isolated internal
   Python model/pronunciation lab when a real Python or Hugging Face workload exists. A Gradio PWA,
   embed, share link, or auto-generated API must not become the learner app or grading authority
   without a new architecture decision and the normal auth/security gates.
-- Do not add agent/RAG frameworks for the single-call MVP evaluator. Adopt another SDK only for a
-  concrete capability that the current service contract cannot provide more simply.
+- **Durable workflows/agents:** stable Workflow SDK core is reserved for A9 generation
+  orchestration; Neon remains job/content authority. It does not enter evaluation, SessionEngine,
+  turn-based voice, or realtime media. Eve remains deferred until OI-040's trigger.
 
 ## Related authorities
 
-- Web baseline: ADR-0002. Provider/model: ADR-0007. SDK decision: ADR-0014.
-- Trust/failure contract: `evaluation.md`. Native/offline/voice triggers: `Registers/post-mvp.md`.
+- Web baseline: ADR-0002. Provider/model: ADR-0007. SDK decisions: ADR-0014/ADR-0016/ADR-0017.
+- Trust/failure contract: `evaluation.md`. Voice capability: `../Features/voice-practice.md`.
+- Native/offline/pronunciation triggers: `Registers/post-mvp.md`.

@@ -23,6 +23,16 @@ updated: 2026-07-29
 No multi-lesson picker UI and no ratio sliders (OI-002 / module-spec). The Set recipe is not a
 lesson picker and never changes lesson progress. Custom-generated sets reuse it after A9 gating.
 
+## Voice staging
+
+- A10 spoken input and audio playback are presentation/input modes on the four existing recipes,
+  not another recipe or progress path. Transcription fills the same composer and evaluation request.
+- A12 may add **Conversation** only after the A11 provider decision: one authored scenario/persona,
+  register, vocabulary, goals, correction mode, and maximum duration snapshotted into the session.
+- Generated dialogue turns do not advance lesson/set progress. Only an explicit server-resolved
+  authored target can create a scored evaluation; other turns feed a non-credit end recap.
+- Resume preserves accepted transcript turns, never a live microphone connection or raw audio.
+
 ## Set recipe
 
 Resolve the active set version server-side, intersect requested activity/direction/size/difficulty

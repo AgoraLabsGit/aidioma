@@ -2,7 +2,7 @@
 title: Practice Sets — curated and custom practice
 type: feature-spec
 status: active
-updated: 2026-07-29
+updated: 2026-07-30
 ---
 
 # Practice Sets — curated and custom practice
@@ -19,18 +19,17 @@ custom-topic generation follows in A9 and must use the generation gate below.
 
 ## Catalog and facets
 
-Practice opens on the curated collection catalog. Equal **Current lesson** and **Your practice**
-shortcuts sit above it: the first starts the learner's active lesson mix and the second opens the
-personal subpage. The main Lessons navigation is the curriculum browser and also opens the current
-lesson mix. Your practice will contain saved language and private lists/topics when those
-capabilities ship.
+Practice opens directly on the curated collection catalog. It does not repeat lesson entry or add a
+destination-choice screen: Home continues the learner's path, Lessons owns the curriculum browser
+and lesson entry, and Practice owns focused collection drills. The current Lesson row opens the
+preserved lesson-mix preview under `/lessons/1`; its real recipe, session record, evaluation, and
+lesson-progress behavior remain the A4 SessionEngine implementation.
 
-The prototype sends Lessons directly to the current lesson-mix preview. Its real recipe, session
-record, evaluation, and lesson-progress behavior remain the A4 SessionEngine implementation.
-
-Saved is the default view inside **Your practice**, not a fourth top-level Practice destination.
-Learners can save any practice source with the same bookmark control; the saved view groups those
-references without copying or changing the underlying lesson, collection, or private content.
+Saved is an ownership filter in the catalog alongside All and the content facets, not a separate
+Your practice page. Learners can save any practice source with the same bookmark control; the Saved
+filter groups those references without copying or changing the underlying collection. If saved
+practice later expands into cross-source review queues, private lists, or recommendations, that
+broader destination must earn its own page rather than being prebuilt into the prototype.
 
 Collections use **Vocabulary, Verbs, Phrases, Topics, and Situations** as overlapping facets, not
 one exclusive enum: a restaurant collection may be mixed content, topic `food`, and situation
@@ -72,7 +71,8 @@ singular) are unavailable, not accepted and repaired later.
 
 ## MVP delivery
 
-- Current-lesson shortcut, inline collection catalog/category filtering, direct start, and options.
+- Direct collection catalog, category/Saved filtering, direct start, and options; lesson entry stays
+  under Lessons.
 - A small original, reviewed launch pack spanning the five catalog facets; frequency informs
   selection but no third-party ranked table is copied wholesale.
 - Type + Flashcards, Both by default, size 10 by default, with direction/size and applicable
@@ -97,11 +97,16 @@ interaction.
 
 ## Custom generation gate (A9)
 
-Normalize request → check reusable private candidate → generate structured candidate → schema and
-policy validation → independent quality check → learner preview/edit/regenerate → save as private,
-versioned content. Record request, model, prompt version, time, provenance, and validation evidence.
-Generated content is never silently merged into lessons or made public; public promotion requires
-the authored-content review bar. Document/URL import remains PM-022.
+Per ADR-0017, stable Workflow core orchestrates normalize/cache → structured candidate → schema and
+policy validation → independent quality check → private draft → typed learner review → approve,
+edit, or bounded regenerate → private version. AI, database, and validation work executes in
+retryable, idempotent steps; the workflow function only coordinates them.
+
+Neon owns the user-scoped generation job, status, request, model, prompt version, provenance,
+validation evidence, draft, and final version. Workflow history is operational, never canonical.
+Every start/status/review/cancel operation checks Clerk ownership. Generated content is never
+silently merged into lessons or made public; promotion requires authored-content review. Document
+or URL import remains PM-022.
 
 ## Accessibility and change policy
 

@@ -9,7 +9,7 @@ export function DailyGoalSlider() {
     <div className="goal-slider">
       <output htmlFor="daily-goal">{goal} exercises</output>
       <input
-        aria-label="Daily goal"
+        aria-label="Daily Practice Goal"
         aria-describedby="daily-goal-description"
         id="daily-goal"
         max="150"

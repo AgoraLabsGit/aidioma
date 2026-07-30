@@ -14,7 +14,7 @@ export type EvaluationServiceOutcome =
   | { kind: "invalid"; reason: "empty" | "too-long" }
   | {
       kind: "ungraded";
-      retryable: true;
+      retryable: boolean;
       failure: AiFailureCategory;
     };
 
@@ -28,6 +28,7 @@ export type EvaluationLogEvent = {
   model?: string;
   provider?: "gateway";
   generationId?: string;
+  providerStatus?: number;
   usage?: AiVerdictMetadata["usage"];
 };
 
@@ -122,11 +123,12 @@ export class EvaluationService {
         model: generation.metadata.responseModel ?? generation.metadata.requestedModel,
         provider: generation.metadata.provider,
         generationId: generation.metadata.generationId,
+        providerStatus: generation.metadata.providerStatus,
         usage: generation.metadata.usage,
       });
       return {
         kind: "ungraded",
-        retryable: true,
+        retryable: generation.retryable,
         failure: generation.failure,
       };
     }

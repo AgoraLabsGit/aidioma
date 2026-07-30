@@ -14,14 +14,14 @@ export function SettingsPanel() {
         <SectionHeading>
           <span id="practice-settings-heading">Practice</span>
         </SectionHeading>
-        <Card className="settings-card">
-          <FormField
-            description="Preview only — changes reset when you leave until profile persistence connects."
-            descriptionId="daily-goal-description"
-            label="Daily goal"
-          >
-            <DailyGoalSlider />
-          </FormField>
+        <Card className="settings-card settings-goal-card">
+          <div className="settings-goal-heading">
+            <span className="form-label">Daily Practice Goal</span>
+            <span className="form-description" id="daily-goal-description">
+              Preview only — changes reset when you leave.
+            </span>
+          </div>
+          <DailyGoalSlider />
         </Card>
       </section>
 
@@ -30,10 +30,7 @@ export function SettingsPanel() {
           <span id="appearance-settings-heading">Appearance</span>
         </SectionHeading>
         <Card className="settings-card">
-          <FormField
-            description="Auto follows your system setting."
-            label="Theme"
-          >
+          <FormField label="Theme">
             <ThemeControl />
           </FormField>
         </Card>
@@ -44,10 +41,7 @@ export function SettingsPanel() {
           <span id="account-settings-heading">Account</span>
         </SectionHeading>
         <Card className="settings-card">
-          <FormField
-            description="Sign in to keep your path and settings together."
-            label="Learner profile"
-          >
+          <FormField label="Learner profile">
             <AuthControls />
           </FormField>
         </Card>
@@ -58,10 +52,7 @@ export function SettingsPanel() {
           <span id="data-settings-heading">Data</span>
         </SectionHeading>
         <Card className="settings-card">
-          <FormField
-            description="Reset becomes available after learner data persistence lands."
-            label="Reset learning data"
-          >
+          <FormField label="Reset learning data">
             <Button disabled variant="danger">
               Reset
             </Button>
