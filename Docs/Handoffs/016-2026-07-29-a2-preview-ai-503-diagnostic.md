@@ -1,11 +1,13 @@
 ---
 title: Handoff — A2 Preview AI 503 diagnostic candidate
 type: handoff
-status: active
+status: superseded
 updated: 2026-07-30
 ---
 
 # Handoff — A2 Preview AI 503 diagnostic candidate
+
+> Superseded by Handoff 017, which retains this diagnostic path and adds the consolidated cleanup plan.
 
 **Role:** sole A2 release coordinator; do not advance A3 or Production Practice Sets
 **Next command:** coordinator `/close` for the replacement Preview; `/close` is the Preview authorization

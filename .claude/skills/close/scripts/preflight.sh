@@ -2,12 +2,14 @@
 set -euo pipefail
 
 fetch=0
+cleanup_audit=0
 base_ref="origin/main"
 target_ref="HEAD"
 
 while (($#)); do
   case "$1" in
     --fetch) fetch=1 ;;
+    --cleanup-audit) cleanup_audit=1 ;;
     --base)
       shift
       base_ref="${1:?--base requires a ref}"
@@ -17,7 +19,7 @@ while (($#)); do
       target_ref="${1:?--target requires a ref}"
       ;;
     *)
-      echo "usage: $0 [--fetch] [--base REF] [--target REF]" >&2
+      echo "usage: $0 [--fetch] [--cleanup-audit] [--base REF] [--target REF]" >&2
       exit 2
       ;;
   esac
@@ -107,3 +109,63 @@ done < <(git for-each-ref --format='%(refname:short)' refs/heads | LC_ALL=C sort
 echo
 echo "REMOTE BRANCHES"
 git for-each-ref --format='%(refname:short) %(objectname)' refs/remotes/origin | LC_ALL=C sort
+
+if ((cleanup_audit)); then
+  echo
+  echo "POST-SHIP CLEANUP AUDIT VS TARGET"
+  cleanup_blockers=0
+  primary_worktree="$(git worktree list --porcelain | sed -n 's/^worktree //p' | sed -n '1p')"
+
+  while IFS= read -r worktree_path; do
+    worktree_branch="$(git -C "$worktree_path" symbolic-ref --quiet --short HEAD || true)"
+    [[ -n "$worktree_branch" ]] || worktree_branch="DETACHED"
+    worktree_sha="$(git -C "$worktree_path" rev-parse HEAD)"
+    dirty_count="$(git -C "$worktree_path" status --porcelain=v1 | wc -l | tr -d ' ')"
+    if [[ "$dirty_count" != "0" ]]; then
+      verdict="BLOCK_DIRTY"
+      cleanup_blockers=$((cleanup_blockers + 1))
+    elif ! git merge-base --is-ancestor "$worktree_sha" "$target_ref"; then
+      verdict="BLOCK_UNCONTAINED"
+      cleanup_blockers=$((cleanup_blockers + 1))
+    elif [[ "$worktree_path" == "$primary_worktree" ]]; then
+      verdict="KEEP_PRIMARY_SWITCH_TO_MAIN"
+    else
+      verdict="SAFE_REMOVE_AFTER_SHIP"
+    fi
+    printf 'worktree %-58s | %-34s | %s\n' "$worktree_path" "$worktree_branch" "$verdict"
+  done < <(git worktree list --porcelain | sed -n 's/^worktree //p')
+
+  while IFS= read -r local_branch; do
+    if [[ "$local_branch" == "main" ]]; then
+      if git merge-base --is-ancestor "$local_branch" "$target_ref"; then
+        verdict="KEEP_SYNC_TO_ORIGIN_MAIN"
+      else
+        verdict="BLOCK_MAIN_DIVERGED"
+        cleanup_blockers=$((cleanup_blockers + 1))
+      fi
+    elif git merge-base --is-ancestor "$local_branch" "$target_ref"; then
+      verdict="SAFE_DELETE_AFTER_WORKTREE_REMOVAL"
+    else
+      verdict="BLOCK_UNCONTAINED"
+      cleanup_blockers=$((cleanup_blockers + 1))
+    fi
+    printf 'local    %-58s | %s\n' "$local_branch" "$verdict"
+  done < <(git for-each-ref --format='%(refname:short)' refs/heads | LC_ALL=C sort)
+
+  while IFS= read -r remote_branch; do
+    [[ "$remote_branch" == "origin/HEAD" || "$remote_branch" == "origin/main" ]] && continue
+    if git merge-base --is-ancestor "$remote_branch" "$target_ref"; then
+      verdict="SAFE_DELETE_AFTER_PR_CLOSE"
+    else
+      verdict="BLOCK_UNCONTAINED"
+      cleanup_blockers=$((cleanup_blockers + 1))
+    fi
+    printf 'remote   %-58s | %s\n' "$remote_branch" "$verdict"
+  done < <(git for-each-ref --format='%(refname:short)' refs/remotes/origin | LC_ALL=C sort)
+
+  if ((cleanup_blockers)); then
+    echo "FAIL cleanup_blockers=$cleanup_blockers"
+    exit 1
+  fi
+  echo "PASS cleanup_blockers=0"
+fi

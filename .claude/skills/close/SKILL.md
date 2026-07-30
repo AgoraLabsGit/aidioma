@@ -74,9 +74,13 @@ description: Close any AIdioma agent session safely and manage the two-phase rel
    exact candidate to `main` once. Verify Production deployment, aliases, bounded logs, data behavior,
    and required infrastructure receipts. Never substitute a later commit after `SHIP`.
 4. Update `last_shipped_wave` and `production_sha`, clear `queued_waves`/any Production exception,
-   and close release-only register rows. Then triage
-   every worktree and delete only branches/worktrees proven contained in `origin/main`; prune and rerun
-   preflight. A failed Production proof leaves an owned incident and stops further publication.
+   and close release-only register rows. Run
+   `.claude/skills/close/scripts/preflight.sh --fetch --target origin/main --cleanup-audit`; any
+   dirty or uncontained ref blocks deletion.
+5. Close superseded PRs, keep/sync local `main` to verified `origin/main`, remove only secondary
+   worktrees marked `SAFE_REMOVE_AFTER_SHIP`, then delete their contained local/remote branches.
+   Prune and rerun the cleanup audit; finish with one clean primary worktree on `main` and no open
+   superseded PR. A failed Production proof or containment check stops cleanup and owns an incident.
 
 ## Required final report
 

@@ -29,7 +29,7 @@
   the active key is nearly unused, excluding budget exhaustion.
 - Diagnostic candidate logs bounded HTTP status; full gates pass at 19 files / 140 tests and audit is clean.
 - `/close` now builds a cumulative Preview and `SHIP` releases its queued waves. A1 is the last
-  formal ship; OI-037 owns the live unverified A2/Practice precursor. A2 is not yet queued.
+  formal ship; Handoff 017/OI-037 own the unverified precursor and exact post-SHIP cleanup.
 - The revised fixture-backed Practice IA keeps lesson entry under Lessons and opens Practice on
   Collections with Saved as a local filter. Real sessions remain A4/A5; Production Sets remain A6.
 
@@ -40,7 +40,7 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Resume from Handoff 016 and run coordinator `/close` for the replacement Preview candidate.
+1. Resume from Handoff 017 and run coordinator `/close` for the replacement Preview candidate.
 2. Re-run authenticated AI proof first; only after it passes run the Firewall burst and remaining
    receipts, close A2 into the Preview batch, and continue unless Mike chooses `SHIP`.
 3. After A2 closes, run A2R's application audit and founder UI review before A3; continue C2 with a1-05.

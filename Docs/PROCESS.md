@@ -82,7 +82,8 @@ the exact tested batch → `main`; a non-deploying wave omits the Preview stage.
 2. Apply only the reviewed Production configuration in the batch runsheet, merge/push that exact
    tree to `main` once, and verify Production behavior, aliases, bounded logs, data, and receipts.
 3. Update `last_shipped_wave`/`production_sha`, clear the batch queue and any resolved Production
-   exception, close release-only rows, and remove only work proven contained in `origin/main`.
+   exception, close release-only rows, and run the strict cleanup audit against `origin/main`.
+   Close superseded PRs; keep one clean primary `main`; remove only work marked safely contained.
 4. Batch freely unless a roadmap dependency explicitly requires Production proof, a migration or
    external change cannot be rehearsed safely in Preview, or the operator wants to release sooner.
 
