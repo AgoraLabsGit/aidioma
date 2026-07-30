@@ -2,7 +2,7 @@
 title: Platform — web, native, and SDK boundaries
 type: area-spec
 status: active
-updated: 2026-07-29
+updated: 2026-07-30
 ---
 
 # Platform — web, native, and SDK boundaries
@@ -19,9 +19,10 @@ updated: 2026-07-29
   `Output.object` validation, minimal reasoning, zero SDK retries, an 800-token output ceiling, and
   a 12-second total timeout. Evaluation calls require `EVALUATION_AI_GATEWAY_API_KEY`; ambient
   Vercel OIDC and legacy `AI_GATEWAY_API_KEY` are intentionally not fallbacks, so the dedicated
-  key's aggregate budget governs every AI grading call. The same opaque ID is sent as reporting
-  `user` and quota-enforcement `quotaEntityId`; actual per-user denial still requires a configured,
-  proven account policy. A direct provider SDK is only a fallback adapter when Gateway lacks a
+  key's aggregate budget governs every AI grading call. The opaque ID is sent as Gateway `user` for
+  reporting and any account-supported per-user policy; the currently rejected `quotaEntityId`
+  option is not sent. Actual per-user denial still requires a configured, proven account policy.
+  A direct provider SDK is only a fallback adapter when Gateway lacks a
   required model/capability; it must not bypass the service contract.
 - **Auth:** Clerk's Next.js SDK. **Data:** Neon Postgres through the server-only Neon serverless
   driver + Drizzle ORM boundary frozen in A1-1. Connection construction is lazy so builds and

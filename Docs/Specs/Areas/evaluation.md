@@ -2,7 +2,7 @@
 title: Evaluation — secure comparison-first grading
 type: area-spec
 status: active
-updated: 2026-07-29
+updated: 2026-07-30
 ---
 
 # Evaluation — secure comparison-first grading
@@ -94,10 +94,12 @@ explanation after the choice; typed modes use mode-smart help from the module sp
   server-derived `usr_` hash, then applies the separate local per-instance burst/concurrency/
   duplicate-work guard before source resolution or AI. The Firewall fixed-window counter is
   per-region, not globally atomic; the local guard remains defense in depth.
-- AI grading requires the dedicated evaluation Gateway key and the same opaque ID in both
-  `providerOptions.gateway.user` (reporting) and `quotaEntityId` (quota lookup). Missing/invalid
-  perimeter configuration, key, or ID fails closed without an AI call. Per-user denial is claimed
-  only after an account quota policy and a rejected over-quota Preview request are both evidenced.
+- AI grading requires the dedicated evaluation Gateway key and sends the server-derived opaque ID
+  as `providerOptions.gateway.user` for reporting and any account-supported per-user policy. The
+  current Gateway rejects `quotaEntityId` as an invalid provider option, so it must not be sent.
+  Missing/invalid perimeter configuration, key, or ID fails closed without an AI call. Per-user
+  Gateway denial is claimed only after an account policy and a rejected over-quota Preview request
+  are both evidenced.
 - The evaluation key has one aggregate $1 monthly budget across Development, Preview, and
   Production, with 50/75/100% alerts. Gateway checks it at request start: the crossing/in-flight
   request can complete and overshoot, while later calls reject. It is a soft cap, not an absolute

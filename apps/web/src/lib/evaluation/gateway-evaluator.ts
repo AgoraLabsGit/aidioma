@@ -95,7 +95,6 @@ type GatewayGenerateOptions = {
   providerOptions: {
     gateway: {
       tags: string[];
-      quotaEntityId?: string;
       user?: string;
     };
   };
@@ -352,7 +351,6 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
         providerOptions: {
           gateway: {
             tags: ["scope:evaluation-only", "feature:evaluation", "prompt:v1"],
-            quotaEntityId: user,
             user,
           },
         },

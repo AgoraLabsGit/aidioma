@@ -2,7 +2,7 @@
 title: A2-H — Evaluation hygiene and close readiness
 type: wave-slice
 status: proven
-updated: 2026-07-29
+updated: 2026-07-30
 ---
 
 # A2-H — Evaluation hygiene and close readiness
@@ -38,9 +38,10 @@ updated: 2026-07-29
 - Clean isolated branch `fix/A2-oi-036` adds the user-keyed Firewall SDK layer before the preserved
   local guard. Missing, blocked, malformed, or thrown Firewall checks fail closed before source/AI;
   regional counters are not represented as global or atomic.
-- AI grading now requires the evaluation-only Gateway key and exact opaque `usr_` reporting/quota ID.
+- AI grading now requires the evaluation-only Gateway key and exact opaque `usr_` reporting ID.
   Its aggregate $1 monthly budget has request-start soft-cap semantics; per-user denial still needs
-  an account policy receipt and rejection proof. Ambient OIDC/legacy fallback is regression-tested off.
+  an account policy receipt and rejection proof. The unsupported `quotaEntityId` option is omitted;
+  ambient OIDC/legacy fallback is regression-tested off.
 - Final gates pass at 19 files / 138 tests, build, smoke, Development DB/Gateway proof, and clean
   independent security/cost delta audits. Earlier diagnostic Preview evidence is not the canonical
   Git acceptance target. OI-036 stays open through authenticated Preview receipts and, when the
@@ -108,7 +109,7 @@ burst.map(x=>[x.status,x.retryAfter]); // final request includes 429 and "60"
 5. Coordinator records before/after read-only Preview DB receipts: `to_regclass` confirms future
    `practice_sessions`/`evaluations` tables remain absent, and row counts/checksums for `lessons` and
    `lesson_items` remain identical. Mike captures the Firewall event and one Gateway generation with
-   evaluation tags, opaque reporting/quota ID, deployed key name/scope, and the same key's $1 monthly
+   evaluation tags, opaque reporting ID, deployed key name/scope, and the same key's $1 monthly
    budget. Record whether this account exposes a per-user quota policy; without a separately approved,
    bounded over-quota rejection proof, make no per-user Gateway denial claim.
 ```sql

@@ -35,7 +35,7 @@ function successResult(output: unknown) {
 }
 
 describe("GatewayAiVerdictGenerator", () => {
-  it("makes one schema-bound Gateway request with only server-resolved prompt fields", async () => {
+  it("makes one schema-bound Gateway request with supported opaque reporting fields", async () => {
     const generate = vi.fn<GatewayGenerateText>().mockResolvedValue(
       successResult({
         score: 90,
@@ -64,10 +64,10 @@ describe("GatewayAiVerdictGenerator", () => {
     expect(options.abortSignal).toBeUndefined();
     expect(options).not.toHaveProperty("tools");
     expect(options.providerOptions.gateway).not.toHaveProperty("models");
+    expect(options.providerOptions.gateway).not.toHaveProperty("quotaEntityId");
     expect(options.providerOptions.gateway).toEqual({
       tags: ["scope:evaluation-only", "feature:evaluation", "prompt:v1"],
       user: "usr_0123456789abcdef0123456789abcdef",
-      quotaEntityId: "usr_0123456789abcdef0123456789abcdef",
     });
     expect(JSON.parse(options.prompt)).toEqual({
       sourceText: request.sourceText,

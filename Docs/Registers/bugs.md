@@ -5,7 +5,7 @@
 
 | ID | ↻ | Bug | Root cause / anchor | Status |
 |---|---|---|---|---|
-| BUG-001 | 1 | **Authenticated A2 Preview AI grading returns `503` while comparison grading succeeds** | Preview request `f3965a82-1813-4b75-9af7-aa9da37e15db` reached the AI path but failed before any AI Gateway request event was registered. The evaluation key is active and nearly unused; current safe telemetry collapses the upstream status/detail into `provider`, blocking exact diagnosis. | investigating |
+| BUG-001 | 1 | **Authenticated A2 Preview AI grading returns `503` while comparison grading succeeds** | Replacement request `87195cd5-34ca-412f-970c-d4a723b750dd` exposed Gateway HTTP 400. Minimal live probes proved `quotaEntityId` alone is rejected as `invalid gateway provider options`, while the same structured call with supported opaque `user` + tags grades successfully. The regression test now forbids the rejected option; replacement Preview proof remains. | fixing |
 
 ## Closed
 (move rows here when fixed — keep the full row as the audit trail)
