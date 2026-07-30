@@ -30,8 +30,8 @@ updated: 2026-07-30
 - **Deployment baseline:** Vercel project `agoralabs/aidioma` tracks `AgoraLabsGit/aidioma`, uses
   `apps/web` as its Next.js root on Node 22.x, and has the free `aidioma-db` Neon resource connected.
   Production is public at `https://aidioma-agoralabs.vercel.app`; Vercel Authentication protects
-  Preview deployments only. The generated production deployment and six app/auth routes passed
-  browser proof on 2026-07-29.
+  Preview deployments only. A2 shipped through protected PR #2 at `c3f50be` on 2026-07-30; the exact
+  deployment, aliases, public routes, signed-out API contract, and bounded error logs passed.
   Production, Preview, and Development use distinct databases and owners (`neondb` /
   `neondb_owner`, `aidioma_preview` / `aidioma_preview_owner`, and `aidioma_development` /
   `aidioma_development_owner`). Vercel scopes use their corresponding dedicated credentials.
@@ -42,9 +42,9 @@ updated: 2026-07-30
   monthly budget and spend are aggregate. Budget checks occur at request start and may overshoot on
   a crossing/in-flight call; this is not an absolute cap. Firewall SDK admission uses an opaque
   user key, with per-region rather than globally atomic counters, before the separate local guard.
-  Preview and Production require environment-conditioned Firewall publication and receipts; Preview
-  proof alone does not authorize or prove the Production rule; a Preview-only condition may simply
-  not count a Production request, so code fail-closed behavior is not a substitute for that rule.
+  Preview and Production each have a live environment-conditioned `aidioma-evaluate-user` rule at
+  30 requests / 60 seconds, with no pending draft. Preview authenticated proof covered comparison,
+  AI, spoof rejection, and 30-success/one-429 behavior before the matching Production rule shipped.
 - All six documented Clerk names are configured locally and in all three Vercel environments;
   values stay untracked. The current matching pair is test-class for prelaunch verification and must
   be promoted to live-class before real users (OI-034).
@@ -63,6 +63,9 @@ updated: 2026-07-30
 - **Production = shipped behavior.** `main` is Vercel's sole Production branch; `aidioma.io`,
   `aidioma-agoralabs.vercel.app`, and the `git-main` alias are post-`SHIP` verification targets,
   never pre-merge test environments. A push to `main` is a Production release action.
+- GitHub protects `main`: PRs and up-to-date `app-validate` plus `content-validate` checks are
+  required; administrators are included; force-push and deletion are blocked; approving reviews
+  remain zero for the solo-founder workflow.
 - Ad-hoc `vercel deploy` Preview URLs are limited to deployment diagnosis. They do not replace the
   Git Preview because they lack the canonical branch/commit review trail and share one moving CLI alias.
 - A custom `staging` environment is deferred until the shared Preview environment becomes a real
