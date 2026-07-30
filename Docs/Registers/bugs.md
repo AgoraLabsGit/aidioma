@@ -5,7 +5,9 @@
 
 | ID | ↻ | Bug | Root cause / anchor | Status |
 |---|---|---|---|---|
-| BUG-001 | 1 | **Authenticated A2 Preview AI grading returns `503` while comparison grading succeeds** | Replacement request `87195cd5-34ca-412f-970c-d4a723b750dd` exposed Gateway HTTP 400. Minimal live probes proved `quotaEntityId` alone is rejected as `invalid gateway provider options`, while the same structured call with supported opaque `user` + tags grades successfully. The regression test now forbids the rejected option; replacement Preview proof remains. | fixing |
 
 ## Closed
 (move rows here when fixed — keep the full row as the audit trail)
+| ID | ↻ | Bug | Root cause / anchor | Status |
+|---|---|---|---|---|
+| BUG-001 | 1 | **Authenticated A2 Preview AI grading returned `503` while comparison grading succeeded** | Request `87195cd5-34ca-412f-970c-d4a723b750dd` exposed Gateway HTTP 400. Minimal live probes proved `quotaEntityId` alone was rejected as `invalid gateway provider options`, while supported opaque `user` + tags graded successfully. Commit `9cdca85` removes the option and regression-forbids it; authenticated replacement Preview AI returned 200 with Gateway generation receipts. | closed |

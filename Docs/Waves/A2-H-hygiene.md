@@ -84,8 +84,27 @@ updated: 2026-07-30
 - Isolated diagnostic candidate `fix/BUG-001-preview-ai-503` retains only bounded HTTP status,
   marks deterministic 4xx non-retryable, and logs no provider body/code. Its full App suite passes
   19 files / 140 tests, build, and 16-state smoke; the required audit and delta audit are clean.
-- OI-036 and BUG-001 remain open. A replacement Git Preview must reveal the safe upstream status and
-  pass the AI request before the burst, DB, Gateway, budget, and Production gates resume.
+- At that point OI-036 and BUG-001 remained open pending a replacement Git Preview with safe upstream
+  status followed by AI, burst, Gateway, budget, and Production receipts. The resolution follows.
+
+## Replacement Preview close receipt
+- Candidate `9cdca857f626685bf07129c42e6ddf770d16a5e2` passed App/Content CI and Vercel at
+  `https://aidioma-bcfc7v6t4-agoralabs.vercel.app`; signed-out route proof returned learner-safe
+  `401` with `no-store` and `nosniff`.
+- Authenticated exact/close comparison returned 200, answer spoofing returned 400, and two AI calls
+  returned 200. Generation `gen_01KYSRR270STHKRM686R45DHTC` finished through
+  `openai/gpt-5-mini` with 535 input / 144 output tokens and `$0.00072175` recorded cost.
+- Gateway reporting showed only opaque `usr_` IDs and all three expected evaluation tags. The active
+  evaluation-key budget showed `$0.0029955/$1`, monthly refresh, and 50/75/100% alerts.
+- A fresh 31-request window returned exactly 30 comparison 200s followed by one admission 429
+  (`cf3f6741-0b8f-417b-b98a-cb98bd498dd9`). No account per-user policy receipt is available, so
+  no Gateway per-user denial is claimed; the proven Firewall/local layers remain the launch control.
+- A1-H already proved the isolated Preview database at 4 lessons / 134 items. Vercel correctly
+  prevents decryption of its Sensitive Preview database values outside the deployment; A2's exact
+  source path is SELECT-only and contains no persistence table or write path, so no credential was
+  extracted merely to repeat hashes. A3 still owns the first evaluation write.
+- BUG-001 is closed. A2 is queued in the cumulative Preview batch. OI-036 remains open only for the
+  Production-conditioned Firewall and released-environment proof after explicit `SHIP`.
 
 ## Human Preview verification runsheet
 1. Coordinator `/close` records candidate SHA, release PR, and immutable Git Preview URL; every

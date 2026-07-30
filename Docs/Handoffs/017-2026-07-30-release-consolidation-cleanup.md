@@ -1,11 +1,13 @@
 ---
 title: Handoff — cumulative release consolidation and cleanup
 type: handoff
-status: active
+status: superseded
 updated: 2026-07-30
 ---
 
 # Handoff — cumulative release consolidation and cleanup
+
+> Superseded by Handoff 018 after A2 passed replacement Preview proof and entered the batch.
 
 **Role:** sole App release coordinator; preserve every worktree until containment is proven
 **Next command:** coordinator `/close` to update the A2 cumulative Preview

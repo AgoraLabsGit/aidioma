@@ -3,11 +3,11 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-30 (two-phase batched close adopted; A2 Preview fix in progress)
+**Updated:** 2026-07-30 (A2 closed into cumulative Preview batch)
 
 ## Position
 
-**Lane A — App (A2 ACTIVE: all slices proven; close controls pending)**
+**Lane A — App (A2 CLOSED/QUEUED; A2R NEXT)**
 - A1-2 is proven: the web app imports the shared contract; Content CI is live; checksum-journaled
   SQL and the idempotent seed loaded 4 canonical lessons / 134 items into real Neon with zero-change reruns.
 - Neon Production, Preview, and Development now have distinct databases, owners, and Vercel
@@ -21,15 +21,16 @@
 - A2-1 is proven locally: one authenticated, server-owned `/api/evaluate`; normalized exact answers
   grade free, safe character-near answers grade `close`, and meaning-uncertain/poor answers make one
   strict Gateway call. It is stateless; A3 still owns sessions, persistence, and derived stats.
-- OI-036 adds opaque user-keyed regional Firewall admission before the preserved local guard, plus a
-  mandatory evaluation-only key with an aggregate $1 monthly request-start budget. Reporting and
-  quota lookup share the opaque ID; account policy and rejection proof remain external close gates.
-- PR #2 deployed close SHA `9ef2f5e`; CI/Vercel passed. Preview Firewall is active at 30/60; Production is unchanged.
-- Authenticated comparison/spoof passed, but AI returned `503` before a Gateway event. BUG-001 owns it;
-  the active key is nearly unused, excluding budget exhaustion.
-- Diagnostic candidate logs bounded HTTP status; full gates pass at 19 files / 140 tests and audit is clean.
-- `/close` now builds a cumulative Preview and `SHIP` releases its queued waves. A1 is the last
-  formal ship; Handoff 017/OI-037 own the unverified precursor and exact post-SHIP cleanup.
+- OI-036 adds opaque user-keyed regional Firewall admission before the local guard, plus a dedicated
+  $1-budgeted Gateway key and opaque reporting `user`; no unproven per-user Gateway denial is claimed.
+- PR #2 candidate `9cdca85` passed App/Content CI and Vercel at immutable Preview
+  `https://aidioma-bcfc7v6t4-agoralabs.vercel.app`.
+- Authenticated exact/close comparison, answer-spoof rejection, AI grading, and a 30-success/one-429
+  burst passed. The Gateway generation, opaque reporting IDs/tags, and active $1 evaluation-key
+  budget were evidenced; unsupported `quotaEntityId` was the fixed BUG-001 root cause.
+- A2 is closed and queued, not shipped. OI-036 remains open only for the Production-conditioned
+  Firewall proof at `SHIP`; no per-user Gateway denial is claimed without an account policy.
+- `/close` builds a cumulative Preview; `SHIP` releases it. A1 is the last formal ship; Handoff 018/OI-037 own cleanup.
 - The revised fixture-backed Practice IA keeps lesson entry under Lessons and opens Practice on
   Collections with Saved as a local filter. Real sessions remain A4/A5; Production Sets remain A6.
 
@@ -40,10 +41,10 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Resume from Handoff 017 and run coordinator `/close` for the replacement Preview candidate.
-2. Re-run authenticated AI proof first; only after it passes run the Firewall burst and remaining
-   receipts, close A2 into the Preview batch, and continue unless Mike chooses `SHIP`.
-3. After A2 closes, run A2R's application audit and founder UI review before A3; continue C2 with a1-05.
+1. Resume from Handoff 018. Run `/run` to open A2R's application audit/founder UI review, or `SHIP`
+   if Mike wants to publish A2 and consolidate to one clean `main` first.
+2. Keep every existing worktree/branch until a successful `SHIP` makes it contained in `origin/main`.
+3. Continue C2 with a1-05 independently.
 4. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
 
 ## Standing decisions (highlights)
