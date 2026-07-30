@@ -8,13 +8,17 @@ description: Close any AIdioma agent session safely and manage the two-phase rel
 ## Safety contract
 
 - Treat GitHub PRs and commit SHAs as the handoff queue; never use shared chat memory as state.
-- One worktree owns one branch. Never let two sessions edit or merge the same branch.
+- One active agent owns one worktree, branch, and declared file/area scope. Never let two sessions
+  edit or merge the same branch; serialize overlapping scopes instead of resolving avoidable conflicts.
 - Worker sessions never merge into `main` or a release candidate. One coordinator at a time owns
-  integration, Preview publication, Production publication, and branch deletion.
+  the primary worktree, shared control files (`STATE`, `ROADMAP`, `PROCESS`), integration, Preview
+  publication, Production publication, and branch deletion.
 - Worker `/close` authorizes committing/pushing only the current ordinary work branch. Coordinator
   `/close` authorizes updating the named cumulative `release/**` branch and its Git-backed Preview,
   including reviewed Preview-only configuration named in the wave record. Neither authorizes
-  `main`, Production configuration, force push, or destructive cleanup.
+  `main`, Production configuration, force push, or branch deletion. After integration, coordinator
+  `/close` may retire a clean secondary worktree only when its exact HEAD is pushed and contained in
+  the fetched remote release branch; retain its branch/PR through `SHIP`.
 - `SHIP` means the operator verified the exact current batch Preview and authorizes that whole batch
   for Production. It does not cover a later commit, unrelated infrastructure, new spending, or an
   unreviewed/destructive operation.
@@ -47,7 +51,9 @@ description: Close any AIdioma agent session safely and manage the two-phase rel
 4. Re-run preflight. The worktree must be clean and the commit must contain the intended diff.
 5. Push the ordinary branch without force. For App work, target the open ROADMAP release branch when
    one exists; otherwise target `main`. Open/update one **draft** PR and record the exact HEAD, checks,
-   remaining proof, and coordinator action in the PR/handoff. Then stop.
+   remaining proof, declared file/area scope, and coordinator action in the PR/handoff. Workers do
+   not reconcile coordinator-owned shared control files directly. Then stop; only the coordinator
+   retires the worktree after integration.
 
 ## 2B. Coordinator `/close` — add a wave to the Preview batch
 
@@ -63,6 +69,10 @@ description: Close any AIdioma agent session safely and manage the two-phase rel
 4. On passing proof, mark the wave `closed` for roadmap/dependency purposes and append it to ROADMAP
    `release_batch.queued_waves`. Report the exact SHA, Preview URL, contained waves, and test script.
    The operator may continue development and add later waves without shipping this batch.
+5. Fetch the remote release branch and run
+   `.claude/skills/close/scripts/preflight.sh --target origin/<release-branch> --worktree-cleanup-audit`.
+   Remove only clean secondary worktrees marked `SAFE_REMOVE_AFTER_CLOSE`. Keep their local/remote
+   branches and PRs until `SHIP`; worktree retirement is workspace hygiene, not publication.
 
 ## 2C. Coordinator `SHIP` — publish the exact cumulative batch
 
@@ -77,8 +87,8 @@ description: Close any AIdioma agent session safely and manage the two-phase rel
    and close release-only register rows. Run
    `.claude/skills/close/scripts/preflight.sh --fetch --target origin/main --cleanup-audit`; any
    dirty or uncontained ref blocks deletion.
-5. Close superseded PRs, keep/sync local `main` to verified `origin/main`, remove only secondary
-   worktrees marked `SAFE_REMOVE_AFTER_SHIP`, then delete their contained local/remote branches.
+5. Close superseded PRs, keep/sync local `main` to verified `origin/main`, remove any remaining
+   secondary worktrees marked `SAFE_REMOVE_AFTER_SHIP`, then delete contained local/remote branches.
    Prune and rerun the cleanup audit; finish with one clean primary worktree on `main` and no open
    superseded PR. A failed Production proof or containment check stops cleanup and owns an incident.
 

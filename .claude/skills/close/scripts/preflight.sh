@@ -3,6 +3,7 @@ set -euo pipefail
 
 fetch=0
 cleanup_audit=0
+worktree_cleanup_audit=0
 base_ref="origin/main"
 target_ref="HEAD"
 
@@ -10,6 +11,7 @@ while (($#)); do
   case "$1" in
     --fetch) fetch=1 ;;
     --cleanup-audit) cleanup_audit=1 ;;
+    --worktree-cleanup-audit) worktree_cleanup_audit=1 ;;
     --base)
       shift
       base_ref="${1:?--base requires a ref}"
@@ -19,7 +21,7 @@ while (($#)); do
       target_ref="${1:?--target requires a ref}"
       ;;
     *)
-      echo "usage: $0 [--fetch] [--cleanup-audit] [--base REF] [--target REF]" >&2
+      echo "usage: $0 [--fetch] [--worktree-cleanup-audit] [--cleanup-audit] [--base REF] [--target REF]" >&2
       exit 2
       ;;
   esac
@@ -109,6 +111,38 @@ done < <(git for-each-ref --format='%(refname:short)' refs/heads | LC_ALL=C sort
 echo
 echo "REMOTE BRANCHES"
 git for-each-ref --format='%(refname:short) %(objectname)' refs/remotes/origin | LC_ALL=C sort
+
+if ((worktree_cleanup_audit)); then
+  echo
+  echo "PRE-SHIP WORKTREE CLEANUP AUDIT VS TARGET"
+  worktree_cleanup_blockers=0
+  primary_worktree="$(git worktree list --porcelain | sed -n 's/^worktree //p' | sed -n '1p')"
+
+  while IFS= read -r worktree_path; do
+    worktree_branch="$(git -C "$worktree_path" symbolic-ref --quiet --short HEAD || true)"
+    [[ -n "$worktree_branch" ]] || worktree_branch="DETACHED"
+    worktree_sha="$(git -C "$worktree_path" rev-parse HEAD)"
+    dirty_count="$(git -C "$worktree_path" status --porcelain=v1 | wc -l | tr -d ' ')"
+    if [[ "$worktree_path" == "$primary_worktree" ]]; then
+      verdict="KEEP_PRIMARY"
+    elif [[ "$dirty_count" != "0" ]]; then
+      verdict="BLOCK_DIRTY"
+      worktree_cleanup_blockers=$((worktree_cleanup_blockers + 1))
+    elif ! git merge-base --is-ancestor "$worktree_sha" "$target_ref"; then
+      verdict="BLOCK_UNCONTAINED"
+      worktree_cleanup_blockers=$((worktree_cleanup_blockers + 1))
+    else
+      verdict="SAFE_REMOVE_AFTER_CLOSE"
+    fi
+    printf 'worktree %-58s | %-34s | %s\n' "$worktree_path" "$worktree_branch" "$verdict"
+  done < <(git worktree list --porcelain | sed -n 's/^worktree //p')
+
+  if ((worktree_cleanup_blockers)); then
+    echo "FAIL worktree_cleanup_blockers=$worktree_cleanup_blockers"
+    exit 1
+  fi
+  echo "PASS worktree_cleanup_blockers=0"
+fi
 
 if ((cleanup_audit)); then
   echo

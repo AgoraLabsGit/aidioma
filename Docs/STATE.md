@@ -43,7 +43,7 @@
 ## Next
 1. Resume from Handoff 018. Run `/run` to open A2R's application audit/founder UI review, or `SHIP`
    if Mike wants to publish A2 and consolidate to one clean `main` first.
-2. Keep every existing worktree/branch until a successful `SHIP` makes it contained in `origin/main`.
+2. Retire clean release-contained worker worktrees; retain branch/PR refs until `SHIP` reaches `origin/main`.
 3. Continue C2 with a1-05 independently.
 4. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
 

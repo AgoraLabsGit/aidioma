@@ -20,8 +20,8 @@ coordinate through files (this repo's `Docs/` + `content/`), never assume shared
 
 ## Two lanes (see ROADMAP.yaml)
 - **Lane A (App)** — greenfield Next.js (Vercel + Neon + Clerk). V1/V2 are read-only reference.
-  A0/A1 are closed; **A2 evaluation** has both slices proven, with an unapproved concurrent
-  publication retained under the inferred harden-forward direction; distributed abuse/cost proof blocks close.
+  A0/A1 are shipped; **A2 evaluation** is closed in the cumulative Preview batch and A2R is next.
+  Production-specific abuse proof waits for `SHIP`.
 - **Lane C (Content)** — lesson authoring; working records in `/content`. **C2 is active**:
   a1-04 is L2-passed and a1-05 is next.
 - Only one wave per lane is active at a time. The lanes coordinate via files.
@@ -31,10 +31,12 @@ coordinate through files (this repo's `Docs/` + `content/`), never assume shared
 ## How work runs
 - The machine is `Docs/PROCESS.md`. Commands: /run · /fix · /feature · /close · /status; `SHIP`
   is the single Production approval for the exact cumulative Preview batch.
-- Work on isolated branches/worktrees (`slice/<id>`, `fix/<id>`, or `work/<session>/<task>`).
-  Every session ends with `/close`: workers commit/push a draft-PR handoff but never merge; one
-  coordinator integrates. Coordinator `/close` publishes the cumulative Preview and may close
-  several waves into it; only `SHIP` authorizes that exact tested batch onto `main`/Production.
+- The primary worktree is coordinator-only. Workers use ephemeral isolated branches/worktrees
+  (`slice/<id>`, `fix/<id>`, or `work/<session>/<task>`) from the current release SHA, with one
+  declared non-overlapping file/area owner. Workers commit/push a draft-PR handoff but never merge
+  or edit shared control files; one coordinator integrates. After containment in the pushed release
+  branch, clean worker worktrees are removed while their refs remain through `SHIP`. Coordinator
+  `/close` publishes the cumulative Preview; only `SHIP` publishes it onto `main`/Production.
 - Deterministic gates (from ROADMAP `verify:` — per lane) run BEFORE any agent judgment, every
   slice. A gate that didn't run counts as failed. Both lanes now have live commands.
 - Every slice ends with an isolated read-only audit sized to risk (additive → 1 light check;
@@ -60,6 +62,8 @@ coordinate through files (this repo's `Docs/` + `content/`), never assume shared
 - Delegate heavy implementation/diagnosis to sub-agents; keep the main thread for triage +
   decisions. Model-tier every spawn: top tier = coordination/audit judgment · mid = builders ·
   small = mechanical scans. Sub-agents return compact structured reports, never transcripts.
+- Assign non-overlapping file/area scopes before spawning. If two tasks need the same authority or
+  implementation seam, sequence them through the coordinator instead of asking agents to merge.
 - Content-lane sub-agents use the model/routing policy in the current content handoff, one agent
   per lesson, outputs under `content/`, and return short distilled summaries.
 - Hand off EARLY at a clean boundary (write a Handoff file) rather than riding context to the

@@ -12,6 +12,21 @@ Only ONE wave per lane is active at a time. Lanes coordinate through files, neve
 has its own `verify:` gate set (Content's are real and running; App's are set when the app
 scaffolds in wave A1). A slice belongs to exactly one lane and runs the lifecycle below.
 
+## Parallel-agent operating model
+
+- The primary worktree is coordinator-only. Each worker gets an ephemeral secondary worktree and
+  ordinary branch from the exact current release SHA (or `origin/main` when no batch is open).
+- Before spawning work, record one owner and the intended files/areas in the task packet. Parallel
+  scopes must not overlap; dependent or shared-file work is sequenced after the earlier SHA lands.
+- Workers own implementation plus their wave/handoff evidence. The coordinator alone edits
+  `STATE.md`, `ROADMAP.yaml`, `PROCESS.md`, release branches, and cross-wave integration records.
+- Workers commit and push without merging. The coordinator integrates exact reviewed SHAs in
+  dependency order, reruns the combined gates, and publishes the one cumulative Preview.
+- Once a worker HEAD is clean, pushed, and contained in the fetched remote release branch, the
+  coordinator may remove its worktree. Keep the branch/PR as a recovery receipt until `SHIP`.
+- No agent shares another agent's dev server. Use the owning worktree and a unique port; shared
+  Preview/Production configuration remains coordinator-only.
+
 ## The commands
 - **/run** — pick the next runnable slice from ROADMAP.yaml and drive it through the lifecycle.
 - **/fix** — corrective loop: register row → failing regression test → fix → gates → record.
@@ -29,7 +44,7 @@ scaffolds in wave A1). A slice belongs to exactly one lane and runs the lifecycl
 | 2 | GATE | Deterministic checks BEFORE any judgment, from ROADMAP `verify:` (the lane's set): typecheck 0 · lint 0-new · tests green vs the recorded baseline · build 0 · smoke | all green or back to 1 |
 | 3 | AUDIT | Isolated read-only audit sub-agent(s), sized to risk — additive/read-only change → 1 light auditor · mutating/schema/security-touching → fuller audit (2–3). The auditor gets ONLY the diff + the criteria, no history. Triage findings yourself; fix criticals; then a **delta re-audit** of just the fixes | 0 critical; every warning fixed or dispositioned in the wave file |
 | 4 | REVIEW | `/code-review` on the slice diff (medium effort). Findings triaged like audit findings | criticals fixed; rest → register rows |
-| 5 | HANDOFF | Keep the slice on its isolated branch. Worker `/close` commits/pushes one draft-PR handoff; it never merges. One release coordinator integrates approved SHAs | clean branch + exact SHA |
+| 5 | HANDOFF | Keep the slice on its isolated branch. Worker `/close` commits/pushes one draft-PR handoff; it never merges or edits coordinator-owned control files. One release coordinator integrates approved SHAs | clean branch + exact SHA |
 | 6 | PROVE | Real data through the user's actual path: local headless proof for deterministic UI; the exact Git-backed Vercel Preview for auth, data, Gateway, Firewall, and deployment behavior. Backend/content slices use a real end-to-end run/validate. **Not proven = not done** | proof artifact recorded in the wave file |
 | 7 | CLEAN | Code this slice replaced is DELETED in-slice, **or** gets a deprecations-register row with a named trigger. No third option | register or diff shows it |
 | 8 | RECORD | Wave file closed · ROADMAP status flipped · STATE rewritten · every touched Spec updated to the new truth. **A slice that changed structure or behavior cannot close on stale specs** | all four done |
@@ -75,6 +90,8 @@ the exact tested batch → `main`; a non-deploying wave omits the Preview stage.
    failed proof leaves the wave active. A pass marks it `closed` and appends it to `queued_waves`.
 7. Give the operator the exact SHA, contained waves, immutable Preview URL, plain-language recap,
    and written test script. Development may continue; `SHIP` is not required after every wave.
+8. Fetch the remote release branch and run the pre-SHIP worktree cleanup audit. Remove clean,
+   contained secondary worktrees immediately; retain their branches/PRs through `SHIP`.
 
 ## Phase 2: batch release (SHIP)
 1. `SHIP` means the operator tested the exact current cumulative Preview and authorizes every wave
@@ -82,8 +99,8 @@ the exact tested batch → `main`; a non-deploying wave omits the Preview stage.
 2. Apply only the reviewed Production configuration in the batch runsheet, merge/push that exact
    tree to `main` once, and verify Production behavior, aliases, bounded logs, data, and receipts.
 3. Update `last_shipped_wave`/`production_sha`, clear the batch queue and any resolved Production
-   exception, close release-only rows, and run the strict cleanup audit against `origin/main`.
-   Close superseded PRs; keep one clean primary `main`; remove only work marked safely contained.
+   exception, close release-only rows, and run the strict branch cleanup audit against `origin/main`.
+   Close superseded PRs; keep one clean primary `main`; delete only refs marked safely contained.
 4. Batch freely unless a roadmap dependency explicitly requires Production proof, a migration or
    external change cannot be rehearsed safely in Preview, or the operator wants to release sooner.
 
