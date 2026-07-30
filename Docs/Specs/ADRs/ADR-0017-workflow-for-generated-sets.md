@@ -48,4 +48,3 @@ reviewed at this date does not match AIdioma's AI SDK major version.
 - [Eve and Workflow fit review](../../Audits/2026-07-30-eve-workflow-fit.md)
 - [Practice Sets specification](../Features/practice-sets.md)
 - [Platform specification](../Areas/platform.md)
-

@@ -1,8 +1,8 @@
 # AUDIT — voice implementation readiness
 
-Date: 2026-07-30  
+Date: 2026-07-30
 Scope: ADR-0016, the voice feature spec, ROADMAP A10–A13, the supplied repository shortlist,
-`qkral/zingu`, and current OpenAI / Vercel / ElevenLabs capabilities.  
+`qkral/zingu`, and current OpenAI / Vercel / ElevenLabs capabilities.
 Status: design evidence only; A2 remains active and this audit does not open A10.
 
 ## Outcome

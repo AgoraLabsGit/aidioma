@@ -72,4 +72,3 @@ owner-checked review hook → approve, edit, or bounded regenerate → finalize 
 - [Vercel workflow examples](https://github.com/vercel/workflow-examples)
 - [AI SDK workflow patterns](https://github.com/vercel/workflow-examples/tree/main/ai-sdk-workflow-patterns)
 - [ADR-0017](../Specs/ADRs/ADR-0017-workflow-for-generated-sets.md)
-
