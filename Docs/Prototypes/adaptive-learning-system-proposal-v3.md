@@ -1,12 +1,14 @@
 ---
 title: Adaptive learning system — proposal V3
 type: design-proposal
-status: review-candidate
+status: panel-approved-gated-charter
 updated: 2026-07-31
 supersedes: adaptive-learning-system-proposal-v2.md
 ---
 
 # Adaptive learning system — proposal V3
+
+Panel record: [Adaptive learning system V3 — independent panel review](./adaptive-learning-system-panel-review-v3.md)
 
 > **Non-authoritative design proposal.** This document does not change AIdioma's current Specs,
 > ADRs, schemas, roadmap, lessons, P-007, dependencies, or application behavior. It incorporates the
