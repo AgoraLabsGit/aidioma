@@ -1,7 +1,7 @@
 ---
 title: Adaptive learning system — proposal V3
 type: design-proposal
-status: panel-approved-gated-charter
+status: changes-requested-after-adversarial-review
 updated: 2026-07-31
 supersedes: adaptive-learning-system-proposal-v2.md
 ---
@@ -9,6 +9,8 @@ supersedes: adaptive-learning-system-proposal-v2.md
 # Adaptive learning system — proposal V3
 
 Panel record: [Adaptive learning system V3 — independent panel review](./adaptive-learning-system-panel-review-v3.md)
+
+Latest audit: [Adaptive learning system V3.1 — adversarial KPI and simplification review](./adaptive-learning-system-adversarial-panel-review-v3-1.md)
 
 Review provenance: the recorded panel ruling covers the system design through commit `34e4f75`.
 The reviewer charter below is a later synthesis of goals, capabilities, measures, assumptions, and
