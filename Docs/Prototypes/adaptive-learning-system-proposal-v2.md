@@ -11,7 +11,8 @@ supersedes: adaptive-learning-system-proposal.md
 > **Non-authoritative design proposal.** This document does not change AIdioma's current Specs,
 > ADRs, schemas, roadmap, lessons, P-007, or application behavior. It consolidates the first
 > proposal and its [independent panel review](adaptive-learning-system-panel-review.md) into a clean
-> model for founder review and a small shadow pilot.
+> model for founder review and a small shadow pilot. Its own findings and final approval as a gated
+> charter are recorded in the [second panel review](adaptive-learning-system-panel-review-v2.md).
 
 ## 1. The design in one sentence
 
