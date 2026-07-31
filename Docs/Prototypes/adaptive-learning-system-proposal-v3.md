@@ -410,7 +410,8 @@ AIdioma is Vercel-hosted but not Workflow-driven in the live learner loop.
 Workflow functions coordinate serializable IDs and decisions only. AI calls, DB writes, source
 retrieval, validation, dedupe, and artifact creation run in bounded idempotent step functions. Typed
 review hooks pause/resume orchestration, but every start/status/review/cancel path checks Clerk
-ownership against the Neon job.
+ownership against the Neon job when learner/editor-facing. Internal Workflow routes use separately
+proven trusted Vercel identity and still reconcile to the Neon job.
 
 ADR-0017 currently authorizes Workflow only for A9 private generated Practice Sets. V3 standardizes
 source packs, schemas, critic rubrics, audit, and review contracts across all content production, but
@@ -543,7 +544,8 @@ The audit retains:
 - sanitized structured brief version/reference, allowlisted claim/topic/preferences, risk tier,
   dialect/register, source-pack versions;
 - generator, critic, adjudicator model/provider and prompt/rubric versions;
-- structured outputs, validation results, findings, disagreements, corrections, overrides;
+- structured validation/review summaries and artifact references—not candidate text—plus findings,
+  disagreements, corrections, overrides;
 - keyed purpose/version HMAC only when private-input equality is necessary; ordinary hashes for
   non-private canonical artifacts; parent/candidate/final content identity;
 - token/call/cost/latency and retry/failure classification;
@@ -782,7 +784,9 @@ reuse, storage growth, and deletion proof.
 - separate critic contract, model benchmark/routing, deterministic and qualified review gates;
 - Evidence Bank schema, initial approved source pack, dialect and license policies;
 - dedicated Gateway budget/admission, retries, hooks, ownership, audit, quarantine, correction;
-- current stable Workflow/Next/AI SDK/Node compatibility proven in Preview before dependency adoption.
+- current stable Workflow/Next/AI SDK/Node compatibility proven in Preview before dependency adoption;
+- applicable Pilot F seeded-critical-escape and false-pass thresholds passed before first private R0
+  auto-release.
 
 ### Gate F-shared — canonical/shared automation; separate future decision
 
@@ -890,7 +894,8 @@ V3 preserves V2's reviewed claims, evidence, session, pilot, privacy, P-007, and
 It adds:
 
 - a one-way layered system and explicit composability/change-isolation contract;
-- common item/container/session/evaluator/evidence ports with specialized payloads;
+- common item/container/session/evaluator/evidence responsibility contracts, with explicit ports only
+  at proven volatile seams and specialized payloads preserved;
 - runtime allocation across browser, Next.js, Neon, AI Gateway, Firewall, Workflow, and repository;
 - shared content-factory contracts, with Workflow limited to the ADR-0017 private path until a later
   measured need and new ADR—not live study;
