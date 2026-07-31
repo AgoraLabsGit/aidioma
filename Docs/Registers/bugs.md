@@ -5,6 +5,7 @@
 
 | ID | ↻ | Bug | Root cause / anchor | Status |
 |---|---|---|---|---|
+| BUG-002 | 1 | **A documentation-only `main` merge created a new Production deployment without `SHIP`** | Vercel treated every `main` commit as deployable because `apps/web/vercel.json` had no Ignored Build Step. PR #3 moved `main` to `3da1ae7`; deployment `dpl_5vpB9P6bkzKz2g6JxYf211QcNuBz` reassigned Production aliases although the app inputs matched shipped `c3f50be`. `fix/BUG-002` adds a merge-safe deployable-input classifier; closure still requires a shipped candidate followed by a docs-only merge proving only an expected canceled ignored-build record, with no successful Production deployment or alias movement. | open |
 
 ## Closed
 (move rows here when fixed — keep the full row as the audit trail)
