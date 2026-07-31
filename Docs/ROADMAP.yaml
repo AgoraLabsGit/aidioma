@@ -36,11 +36,11 @@ release_batch:
   last_shipped_wave: A2
   production_sha: c3f50be2ad45f858398727c16bf0a1cb4fe37786
   production_exception: null
-  queued_waves: []
+  queued_waves: [BUG-002]
   active_wave: null
-  branch: null
-  candidate: null
-  state: idle
+  branch: release/BUG-002-2026-07-31
+  candidate: b35f6db52693f9ab98afb12ca8aff4a2a9417e0f
+  state: preview-proven
 
 verify:
   # Both lanes have real, running root-workspace gates; not-run = FAIL.

@@ -3,11 +3,11 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-30 (A2 shipped; protected clean main restored)
+**Updated:** 2026-07-31 (BUG-002 Preview proven; lesson-design review gate active)
 
 ## Position
 
-**Lane A — App (A2 SHIPPED; A2R NEXT)**
+**Lane A — App (A2 SHIPPED; BUG-002 PREVIEW-PROVEN; A2R REVIEW-PAUSED)**
 - A1-2 is proven: the web app imports the shared contract; Content CI is live; checksum-journaled
   SQL and the idempotent seed loaded 4 canonical lessons / 134 items into real Neon with zero-change reruns.
 - Neon Production, Preview, and Development now have distinct databases, owners, and Vercel
@@ -19,18 +19,17 @@
 - Production is live at `https://aidioma-agoralabs.vercel.app`; A2 shipped through PR #2 at
   `c3f50be`, with routes, signed-out API safety, aliases, deployment, and bounded error logs verified.
 - Vercel protects Preview only; Production is public. No Production seed or learner-data write ran.
-- A2-1 is proven locally: one authenticated, server-owned `/api/evaluate`; normalized exact answers
-  grade free, safe character-near answers grade `close`, and meaning-uncertain/poor answers make one
-  strict Gateway call. It is stateless; A3 still owns sessions, persistence, and derived stats.
+- A2 provides one authenticated, server-owned `/api/evaluate`: comparison grades free, poor/uncertain
+  matches make one strict Gateway call, and A3 still owns sessions, persistence, and derived stats.
 - OI-036 adds opaque user-keyed regional Firewall admission before the local guard, plus a dedicated
   $1-budgeted Gateway key and opaque reporting `user`; no unproven per-user Gateway denial is claimed.
-- App candidate `9cdca85` passed App/Content CI and Vercel at immutable Preview
-  `https://aidioma-bcfc7v6t4-agoralabs.vercel.app`.
-- Authenticated exact/close comparison, answer-spoof rejection, AI grading, and a 30-success/one-429
-  burst passed. The Gateway generation, opaque reporting IDs/tags, and active $1 evaluation-key
-  budget were evidenced; unsupported `quotaEntityId` was the fixed BUG-001 root cause.
 - A2 is shipped. Preview and Production each have a live 30/60-second environment-conditioned
   Firewall rule; no per-user Gateway denial is claimed without an account policy.
+- BUG-002 candidate `b35f6db` is Preview-proven through draft PR #7: App/Content CI, immutable
+  Vercel Preview, live home 200, and signed-out API 401 passed. Production still requires `SHIP`.
+- BUG-002 remains open until that guard ships and PR #4's docs-only merge proves an ignored canceled
+  build with no successful Production deployment or alias movement.
+- Preserve audit PR #4; pause A2R-2 and lesson/session UI decisions through the P-007 review.
 - `main` requires PRs plus App/Content CI and blocks force-push/deletion. Completed agent worktrees
   and refs were removed; the dirty C2 worktree remains intentionally active and isolated.
 - The revised fixture-backed Practice IA keeps lesson entry under Lessons and opens Practice on
@@ -40,12 +39,13 @@
 - C1 proven. Operator gave the formal C2 GO on 2026-07-28; OI-023 is closed.
 - OI-025 is proven and closed: P-003 accept sets + `setId` validation + Both-direction guidance, with clean audit/re-audit.
 - a1-04 is merged and L2-PASS (r3): 13 active vocab, 18 active sentences, version 2, all gates green.
-- Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
+- Continue a1-05 through L2 QA; do not approve P-007 or start a1-06 before the lesson-design review.
 
 ## Next
-1. Resume from Handoff 019 and run `/run` to open A2R's application audit/founder UI review.
-2. Continue the isolated C2 a1-05 work independently; reconcile it from current `origin/main` before close.
-3. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
+1. Review A1-01…A1-05; agree the blueprint and rule on P-007 without implementation.
+2. `SHIP` BUG-002 only if Mike approves exact PR #7; then merge PR #4 and prove the ignored docs-only build.
+3. Resume A2R-2 and a1-06 only after the review decisions are recorded.
+4. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
 
 ## Standing decisions (highlights)
 - A1-first · vocab 12–15 / sentences 18–20 · Completed/Mastered · Direction default Both.
