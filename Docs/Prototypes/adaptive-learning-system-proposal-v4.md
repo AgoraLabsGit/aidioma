@@ -1,13 +1,15 @@
 ---
 title: Adaptive learning system — proposal V4
 type: design-proposal
-status: review-candidate
+status: panel-approved-sequenced-validation-charter
 updated: 2026-07-31
 supersedes: adaptive-learning-system-proposal-v3.md
 based-on-review: adaptive-learning-system-adversarial-panel-review-v3-1.md
 ---
 
 # Adaptive learning system — proposal V4
+
+Panel record: [Adaptive learning system V4 — adversarial stopping review](./adaptive-learning-system-panel-review-v4.md)
 
 > **Non-authoritative design proposal.** V4 does not change current Specs, ADRs, schemas, roadmap,
 > lessons, P-007, dependencies, or application behavior. It narrows V3 into an evidence-first product
