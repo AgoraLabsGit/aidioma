@@ -10,11 +10,142 @@ supersedes: adaptive-learning-system-proposal-v2.md
 
 Panel record: [Adaptive learning system V3 — independent panel review](./adaptive-learning-system-panel-review-v3.md)
 
+Review provenance: the recorded panel ruling covers the system design through commit `34e4f75`.
+The reviewer charter below is a later synthesis of goals, capabilities, measures, assumptions, and
+questions already distributed through that design; the next audit should explicitly confirm it
+before treating any newly inferred tradeoff as settled.
+
 > **Non-authoritative design proposal.** This document does not change AIdioma's current Specs,
 > ADRs, schemas, roadmap, lessons, P-007, dependencies, or application behavior. It incorporates the
 > accepted V2 learning model plus explicit runtime allocation, composability/change-isolation rules,
 > a durable multi-stage content factory, and a canonical Evidence Bank. Adoption requires founder
 > decisions followed by authority-changing work.
+
+## Reviewer charter
+
+This section is the common brief for every design review, audit, ADR, implementation packet, and
+pilot derived from V3. Reviewers should evaluate the proposal against these priorities rather than
+silently substituting engagement, content volume, model novelty, or architectural sophistication as
+the goal. The capabilities below describe the intended product system, not one release commitment.
+
+### What AIdioma is optimizing for
+
+The design's north star is **verified durable learning gain per active study minute**: improvement
+on delayed, unseen, appropriately leveled checks, not the number of screens completed or answers
+submitted. Optimization follows this order:
+
+1. **Hard guardrails:** linguistic correctness, sound assessment, learner safety, privacy, rights,
+   accessibility, dialect fairness, and recoverability must not be traded for growth or speed.
+2. **Durable learning:** retention and transfer of useful Spanish with low false-Confirmed risk.
+3. **Individual fit and agency:** the right reviewed challenge, direction, support, and session size,
+   with understandable recommendations and an uncapped sequence of bounded practice blocks.
+4. **Trustworthy breadth:** enough varied, composable practice to avoid content starvation without
+   rewarding novelty for its own sake.
+5. **Simple, reliable operation:** minimal complexity for the required learning outcome, clear
+   authority, deterministic behavior where practical, and clean correction/replay paths.
+6. **Sustainable content economics:** reuse reviewed material before generation; spend model,
+   reviewer, storage, and runtime capacity where it changes quality or learner outcomes.
+
+When goals conflict, the earlier item wins unless a founder-approved authority explicitly records a
+different tradeoff. Session count, streaks, time in app, raw mastery counts, generated-item volume,
+and model agreement are diagnostic metrics—not success by themselves.
+
+### Broad product capabilities
+
+| Capability | Intended learner or product outcome |
+|---|---|
+| Canonical knowledge and content layer | Reviewed atomic claims, objectives, answers, sources, variants, and versioned practice items can be reused safely across experiences. |
+| Lessons | Curated introductions with bounded objectives, teaching, required practice, and named proof conditions. |
+| Collections | Ongoing topic/level/grammar/communicative practice over shared claims and reviewed item pools. |
+| User-created collections | Learners organize reviewed items without forking knowledge identity or inflating evidence authority. |
+| Private generated collections | A learner can request more practice; reviewed material is reused first and tightly bounded generated material remains private and visibly lower-authority. |
+| Reviewed shared practice supply | Editorial or generated items that clear the shared-publication gates can expand the reusable library; deduplication, lifecycle, quality, and storage controls bound growth. |
+| Dynamic sessions | Direction, support, challenge, purpose, modality, and block size respond to the learner while target knowledge and selection reasons remain visible. |
+| Typed, choice, flashcard, reading, and later conversation practice | Specialized components share scheduling and observation contracts without pretending their outcomes are interchangeable. |
+| Evaluation and correction | Versioned evaluators produce structured observations; bad grading/content can be reported, invalidated, corrected, and replayed. |
+| User Knowledge Profile | Rebuildable claim/facet state predicts what needs review without becoming a permanent universal mastery score. |
+| Recommendation and progression | Lessons, collections, and sessions use the profile to propose the next valuable activity while preserving learner choice. |
+| Evidence Bank and content factory | Source-scoped assertions, licensing, generation, independent model critique, qualified review, audit, quarantine, and publication form one governed supply chain. |
+| Editorial and operational controls | Humans can inspect provenance, compare versions, approve by role, monitor quality/cost, roll back, and trace affected content and learner state. |
+
+The first implementation does not need every capability. Gates below determine order; capability
+boundaries exist so later components can join without rewriting unrelated profile, progress,
+generation, or provider logic.
+
+### What success looks like
+
+Success must be measured at five levels. Each production KPI must name its definition, cohort,
+measurement window, baseline, threshold, owner, and failure action before it can authorize a gate.
+Until then, the following are **KPI families and pilot hypotheses**, not fabricated targets.
+
+| Level | Primary success measures | Required guardrails |
+|---|---|---|
+| Learning outcome | delayed unseen gain per active study minute; retention at declared intervals; transfer to meaningfully changed items/contexts | false-Confirmed rate; unsupported or over-credited claims; accommodation, dialect, and subgroup gaps |
+| Profile and adaptation | calibration of predicted future performance; cross-source predictive lift over a non-personalized baseline; appropriate challenge/support; useful next-session choices | no silent target changes; no content starvation; override/Too easy/Too hard patterns; recommendation concentration and diversity |
+| Content quality | critical/major escape and false-pass rates; critic precision/recall; qualified reviewer agreement/override; accepted-answer false rejection; source and license coverage; correction time | zero tolerance for observed or seeded critical escapes at Pilot F; quarantine/report rate; dialect/cultural/source conflicts |
+| Product experience | successful first practice; bounded-session completion; Keep practicing fulfillment; return for Due work; clarity/trust and accessibility acceptance | abandonment after confusion; repeated hints/reveals; unresolved reports; manipulative engagement patterns |
+| Reliability and economics | event idempotency and replay agreement; p95 learner-path latency/error rate; generation success/retry; cost per accepted item and qualified learning block; reuse; review backlog; storage/deletion proof | duplicate charges/events, stale jobs, budget breaches, privacy leakage, unreconciled state, rollback failure |
+
+Pilot A must establish that events/profile state are reliable and predict something real. Pilot B must
+test whether adaptation improves the learning north star against an appropriate baseline. Pilot F
+must establish content-factory defect detection and economics before generated-quality claims or
+release. A KPI improvement does not count if a hard guardrail fails.
+
+### Core working assumptions
+
+These are testable premises, not settled facts:
+
+| Assumption | How it is challenged |
+|---|---|
+| Atomic claims plus facet-specific observations are useful enough to predict later performance. | Pilot A mapping reliability, replay, calibration, and cross-source prediction. |
+| Delayed, varied, unassisted checks are a better retention signal than same-session success. | Pilot A/B outcome analysis and false-Confirmed review. |
+| Bounded sessions plus an explicit Keep practicing action can provide both cognitive focus and effectively uncapped practice. | Product behavior, abandonment, content-starvation, and learner-control measures. |
+| Lessons and collections can share claims/items while retaining different learner promises and progression rules. | Gate 0-C worked blueprint plus collection fixtures. |
+| Text recognition/production is a sufficient first profile boundary for the adult A1 pilot. | Pilot evidence; speaking, listening, connected reading, and communicative constructs remain separate until validated. |
+| Reviewed sources, deterministic validation, a second model, and qualified humans can produce acceptably safe content at sustainable cost. | Pilot F by payload, risk, dialect, provider, reviewer capacity, cost, and escape rate. |
+| Reusing reviewed content before generation will usually be cheaper and safer while still providing enough variety. | Reuse, unmet-request, repetition, generation, storage, and outcome data. |
+| Postgres/Neon plus version-controlled manifests are sufficient before graph/vector/cache infrastructure. | Measured query, latency, scale, and operational evidence. |
+| Workflow is useful for durable private generation but is unnecessary in the live learning loop. | Gate F-private runtime proof; broader use requires separately measured need and a new ADR. |
+| The initial product can be adult, text-first, and non-voice without invalidating later expansion. | Explicit age/voice/product decisions and later construct-specific pilots. |
+
+### Open questions
+
+The detailed decision register is in [Founder decisions still required](#14-founder-decisions-still-required).
+The questions most capable of changing architecture or learning validity are:
+
+- What exact lesson anatomy/schema version should A1-06 and later lessons use?
+- What completes a lesson, what confirms a claim, and what terminology should learners see?
+- Which dialect, bilingual-answer, source, license, and reviewer-qualification policies are binding?
+- What numerical Pilot A, B, and F thresholds define go, revise, stop, or rollback?
+- When, if ever, may private generated material or conversation/connected-task evidence affect shared
+  claim authority and progression?
+- Can qualified review capacity and content reuse meet acceptable latency and unit economics?
+- What age range, voice strategy, retention policy, and child-profiling gates apply?
+- What measured need would justify canonical/shared Workflow automation?
+
+An unresolved question must remain visible in the relevant gate. Implementations may not silently
+choose an answer merely because a schema, framework, or model makes one convenient.
+
+### Non-goals, invariants, and review method
+
+V3 is not trying to maximize engagement, generate the largest content library, automate away
+qualified review, make every activity award curriculum credit, build a universal language ontology,
+or introduce speculative infrastructure. It does not authorize implementation.
+
+Every reviewer should:
+
+1. distinguish current authority, proposed design decision, working assumption, and open question;
+2. state which optimization priority, KPI family, hard guardrail, or gate a finding affects;
+3. give a concrete failure scenario and evidence, not only a preference;
+4. identify cross-component and migration consequences;
+5. recommend the smallest coherent correction and the evidence needed to close it;
+6. mark blockers, material findings, and optional improvements separately;
+7. verify that no local optimization worsens learning validity, privacy, rights, accessibility,
+   correction/replay, or total operational complexity.
+
+Current Specs/ADRs govern present behavior. Founder decisions resolve product tradeoffs; new runtime
+authority requires the appropriate ADR/roadmap change; content publication requires the qualified
+roles defined below. Evidence—not reviewer or model consensus alone—changes a hypothesis or gate.
 
 ## 1. Executive design
 
@@ -908,4 +1039,4 @@ It adds:
 - complete generation audit, quarantine, correction, rollback, cost, and review-capacity controls;
 - Gate F-private, future Gate F-shared, and Pilot F so automation/quality cannot arrive by implication.
 
-V3 remains a design/review candidate, not an implementation authority.
+V3 remains a non-authoritative, gated design charter—not implementation authority.
