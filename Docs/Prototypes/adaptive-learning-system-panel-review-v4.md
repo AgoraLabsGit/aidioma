@@ -1,12 +1,19 @@
 ---
 title: Adaptive learning system V4 — adversarial stopping review
 type: design-review
-status: closed
-updated: 2026-07-31
+status: stopping-ruling-withdrawn-historical-review
+updated: 2026-08-01
 reviewed-commit: 3b8f03a
 ---
 
 # Adaptive learning system V4 — adversarial stopping review
+
+> **Status notice (2026-08-01):** The unanimous stopping ruling below is withdrawn as product-design
+> authority. It reviewed coherence inside V4's inherited frame and failed to detect two foundational
+> learner-experience errors: session/block conflation and collection/serving-scope conflation. Retain
+> this report as historical evidence about the criteria it actually reviewed. Restart from
+> [Handoff 023](../Handoffs/023-2026-08-01-learner-journey-design-reset.md); the process findings are
+> recorded in the [design-review retrospective](./adaptive-learning-system-design-review-retrospective.md).
 
 > Three independent auditors running GPT-5.6 Sol with high reasoning reviewed the immutable V4
 > proposal at `3b8f03a`, current Specs/ADRs/ROADMAP/runtime schema, and the prior adversarial record.

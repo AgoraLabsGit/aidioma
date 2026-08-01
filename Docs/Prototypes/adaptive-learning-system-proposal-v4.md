@@ -1,8 +1,8 @@
 ---
 title: Adaptive learning system — proposal V4
 type: design-proposal
-status: panel-approved-sequenced-validation-charter
-updated: 2026-07-31
+status: product-design-approval-withdrawn-technical-reference
+updated: 2026-08-01
 supersedes: adaptive-learning-system-proposal-v3.md
 based-on-review: adaptive-learning-system-adversarial-panel-review-v3-1.md
 ---
@@ -10,6 +10,14 @@ based-on-review: adaptive-learning-system-adversarial-panel-review-v3-1.md
 # Adaptive learning system — proposal V4
 
 Panel record: [Adaptive learning system V4 — adversarial stopping review](./adaptive-learning-system-panel-review-v4.md)
+
+> **Status notice (2026-08-01):** V4's product-design approval and “stop revising” conclusion are
+> withdrawn. Founder review found that it conflated a learner's continuous study session with an
+> internal planning block and conflated a topical collection with one grammatical serving scope.
+> Preserve this document as technical-risk and validation research only. Restart from
+> [Handoff 023](../Handoffs/023-2026-08-01-learner-journey-design-reset.md); read the
+> [retrospective](./adaptive-learning-system-design-review-retrospective.md) only after the first
+> independent learner-journey walkthrough.
 
 > **Non-authoritative design proposal.** V4 does not change current Specs, ADRs, schemas, roadmap,
 > lessons, P-007, dependencies, or application behavior. It narrows V3 into an evidence-first product
