@@ -1,7 +1,11 @@
+// @vitest-environment node
+
 import { describe, expect, it } from "vitest";
 
+import { verifyPromotionPair } from "./candidate-validation";
 import { practiceSetFixtures } from "./prototype-fixtures";
-import restaurantPlaceholder from "./prototype-content/restaurant-prompts.json";
+import restaurantPromotedJson from "./prototype-content/restaurant-prompts.json";
+import restaurantReviewJson from "./prototype-content/restaurant-prompts.review.json";
 import {
   assertReplaceablePromotionPlaceholder,
   loadPromotedPrototypePrompts,
@@ -10,6 +14,13 @@ import {
 } from "./promoted-practice-prompts";
 
 const hash = "a".repeat(64);
+const restaurantPlaceholder = {
+  schemaVersion: 1 as const,
+  state: "placeholder" as const,
+  prototypeOnly: true as const,
+  collectionId: "intermediate-restaurant",
+  prompts: [],
+};
 
 function generatedPrompt(index: number) {
   const suffix = String(index).padStart(3, "0");
@@ -45,7 +56,7 @@ function promotedArtifact(prompts: ReturnType<typeof generatedPrompt>[]) {
 }
 
 describe("promoted Practice prompt loader", () => {
-  it("loads the tracked client-safe empty Restaurant placeholder", () => {
+  it("retains synthetic empty-placeholder replacement behavior", () => {
     const loaded = loadPromotedPrototypePrompts(restaurantPlaceholder);
     expect(loaded).toEqual({
       schemaVersion: 1,
@@ -63,13 +74,48 @@ describe("promoted Practice prompt loader", () => {
     ).toThrow();
   });
 
-  it("produces exactly 50 globally distinct Restaurant prompt IDs once populated", () => {
+  it("loads 46 tracked client-safe promoted prompts into 50 globally distinct Restaurant units", () => {
+    const tracked = loadPromotedPrototypePrompts(restaurantPromotedJson);
+    expect(tracked.state).toBe("promoted");
+    expect(tracked.prompts).toHaveLength(46);
+    expect(Object.keys(tracked).sort()).toEqual([
+      "collectionId",
+      "promotedContentHash",
+      "prompts",
+      "prototypeOnly",
+      "reviewedContentHash",
+      "schemaVersion",
+      "sourceCandidateHash",
+      "sourceRunId",
+      "state",
+    ]);
+    expect(JSON.stringify(tracked)).not.toMatch(/reviewer|critic|model|credential/iu);
+
     const restaurant = practiceSetFixtures.find((set) => set.id === "intermediate-restaurant");
-    expect(restaurant?.prompts).toHaveLength(4);
+    expect(restaurant?.prompts).toHaveLength(50);
+    expect(new Set(restaurant?.prompts.map((prompt) => prompt.id))).toHaveProperty("size", 50);
+    const allPromptIds = practiceSetFixtures.flatMap((set) =>
+      set.prompts.map((prompt) => prompt.id),
+    );
+    expect(new Set(allPromptIds).size).toBe(allPromptIds.length);
+  });
+
+  it("verifies the tracked promoted content against its passing critic sidecar", () => {
+    const pair = verifyPromotionPair(restaurantPromotedJson, restaurantReviewJson);
+    expect(pair.sidecar.critic).toMatchObject({
+      verdict: "pass",
+      candidateHash: pair.promoted.sourceCandidateHash,
+      reviewedContentHash: pair.promoted.reviewedContentHash,
+    });
+    expect(pair.sidecar.promotedContentHash).toBe(pair.promoted.promotedContentHash);
+  });
+
+  it("merges a synthetic populated artifact to exactly 50 prompts", () => {
+    const existing = Array.from({ length: 4 }, (_, index) => generatedPrompt(index + 101));
     const artifact = loadPromotedPrototypePrompts(promotedArtifact(
       Array.from({ length: 46 }, (_, index) => generatedPrompt(index + 1)),
     ));
-    const merged = mergePromotedPracticePrompts(restaurant?.prompts ?? [], artifact, 50);
+    const merged = mergePromotedPracticePrompts(existing, artifact, 50);
     expect(merged).toHaveLength(50);
     expect(new Set(merged.map((prompt) => prompt.id)).size).toBe(50);
     expect(() =>
@@ -80,6 +126,10 @@ describe("promoted Practice prompt loader", () => {
   it("rejects duplicate IDs and an incorrect populated total", () => {
     const prompts = [generatedPrompt(1), generatedPrompt(1)];
     expect(() => loadPromotedPrototypePrompts(promotedArtifact(prompts))).toThrow();
+    const artifact = loadPromotedPrototypePrompts(promotedArtifact([generatedPrompt(1)]));
+    expect(() => mergePromotedPracticePrompts([generatedPrompt(101)], artifact, 50)).toThrow(
+      /must contain 50/u,
+    );
   });
 
   it("rejects manual promoted-content drift against the embedded review hash", () => {
