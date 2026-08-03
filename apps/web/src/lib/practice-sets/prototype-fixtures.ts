@@ -26,7 +26,6 @@ export const practiceSetFacets = [
 export type PracticeSetFacet = (typeof practiceSetFacets)[number];
 export type PracticeActivity = "type" | "flashcards";
 export type PracticeDirection = "en-es" | "es-en" | "both";
-export type PracticeDifficulty = "guided" | "standard" | "stretch";
 export type PracticeFocus =
   | "recommended"
   | "completed-past"
@@ -38,7 +37,6 @@ export type { PracticePrompt, PrototypeLearnerStage } from "./practice-prompt-co
 
 export type PracticeSetConfiguration = {
   activity: PracticeActivity;
-  difficulty: PracticeDifficulty;
   direction: PracticeDirection;
   focus: PracticeFocus;
   shuffle: boolean;
@@ -73,7 +71,6 @@ export type PracticeSetFixture = {
 
 const defaultConfiguration: PracticeSetConfiguration = {
   activity: "type",
-  difficulty: "standard",
   direction: "both",
   focus: "recommended",
   shuffle: true,
@@ -441,12 +438,6 @@ export const practiceActivityLabels: Record<PracticeActivity, string> = {
   flashcards: "Flashcards",
 };
 
-export const practiceDifficultyLabels: Record<PracticeDifficulty, string> = {
-  guided: "More support",
-  standard: "Standard",
-  stretch: "Less support",
-};
-
 export const prototypeLearnerStageLabels: Record<PrototypeLearnerStage, string> = {
   foundation: "Foundation",
   intermediate: "Intermediate",
@@ -461,7 +452,6 @@ export function describePracticeConfiguration(
     practiceActivityLabels[configuration.activity],
     practiceDirectionLabels[configuration.direction],
     focus?.label ?? "Recommended mix",
-    practiceDifficultyLabels[configuration.difficulty],
   ].join(" · ");
 }
 
@@ -480,9 +470,6 @@ export function describePracticeOverrides(
   if (configuration.focus !== set.defaultConfiguration.focus) {
     const focus = set.focuses.find((option) => option.id === configuration.focus);
     if (focus) overrides.push(focus.label);
-  }
-  if (configuration.difficulty !== set.defaultConfiguration.difficulty) {
-    overrides.push(practiceDifficultyLabels[configuration.difficulty]);
   }
   if (configuration.shuffle !== set.defaultConfiguration.shuffle) {
     overrides.push(configuration.shuffle ? "Varied order" : "Fixed order");

@@ -29,7 +29,6 @@ function configuration(
 ): PracticeSetConfiguration {
   return {
     activity: "type",
-    difficulty: "standard",
     direction: "both",
     focus: "recommended",
     shuffle: true,

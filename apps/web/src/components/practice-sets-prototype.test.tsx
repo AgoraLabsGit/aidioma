@@ -325,7 +325,7 @@ describe("Intermediate learning pilot", () => {
     await answerCurrentPrompt("Ayer pedí sopa, pero me trajeron una ensalada.");
 
     fireEvent.click(screen.getByRole("button", { name: "Adjust practice settings" }));
-    fireEvent.click(await screen.findByRole("button", { name: "Apply settings" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Start new session" }));
     await act(async () => {
       resolveEvaluation?.(
         gradedResponse(
@@ -410,6 +410,154 @@ describe("Intermediate learning pilot", () => {
     startRestaurantPractice();
 
     expect(currentPromptText(container)).toBe(firstSessionPrompt);
+  });
+
+  it.each(["Close", "Escape"])(
+    "%s discards draft settings without writing local storage",
+    async (dismissal) => {
+      const storageSetSpy = vi.spyOn(Storage.prototype, "setItem");
+      renderPracticeWorkspace();
+      fireEvent.click(screen.getByRole("button", { name: "Adjust Restaurant Spanish settings" }));
+      const dialog = await screen.findByRole("dialog", { name: "Practice settings" });
+
+      fireEvent.click(screen.getByRole("button", { name: /Time phrases/ }));
+      expect(screen.getByRole("button", { name: /Time phrases/ })).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
+      if (dismissal === "Close") {
+        fireEvent.click(screen.getByRole("button", { name: "Close practice settings" }));
+      } else {
+        fireEvent(dialog, new Event("cancel", { bubbles: true, cancelable: true }));
+      }
+
+      expect(screen.queryByRole("dialog", { name: "Practice settings" })).not.toBeInTheDocument();
+      expect(storageSetSpy).not.toHaveBeenCalled();
+      fireEvent.click(screen.getByRole("button", { name: "Adjust Restaurant Spanish settings" }));
+      expect(await screen.findByRole("button", { name: /Recommended mix/ })).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
+      expect(screen.getByRole("button", { name: /Time phrases/ })).toHaveAttribute(
+        "aria-pressed",
+        "false",
+      );
+      storageSetSpy.mockRestore();
+    },
+  );
+
+  it("commits and persists options only when practice starts", async () => {
+    const storageSetSpy = vi.spyOn(Storage.prototype, "setItem");
+    renderPracticeWorkspace();
+    fireEvent.click(screen.getByRole("button", { name: "Adjust Restaurant Spanish settings" }));
+    fireEvent.click(await screen.findByRole("button", { name: /Time phrases/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Start practice" }));
+
+    expect(storageSetSpy).toHaveBeenCalledTimes(1);
+    const stored = JSON.parse(String(storageSetSpy.mock.calls[0]?.[1])) as Record<
+      string,
+      Record<string, unknown>
+    >;
+    expect(stored["intermediate-restaurant"]).toMatchObject({
+      activity: "type",
+      direction: "both",
+      focus: "time-phrases",
+      shuffle: true,
+    });
+    expect(stored["intermediate-restaurant"]).not.toHaveProperty("difficulty");
+    storageSetSpy.mockRestore();
+  });
+
+  it("starts in-session changes as a fully reset, freshly ordered session", async () => {
+    const createSessionSeed = vi.fn(() => 42);
+    const { container } = render(<PracticeWorkspace createSessionSeed={createSessionSeed} />);
+    startRestaurantPractice();
+    const firstPrompt = currentPromptText(container);
+    await answerCurrentPrompt("Ayer pedí sopa, pero me trajeron una ensalada.");
+    await screen.findByRole("status", { name: "Feedback: Correct" });
+
+    fireEvent.click(screen.getByRole("button", { name: "Adjust practice settings" }));
+    expect(await screen.findByRole("button", { name: "Start new session" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "EN → ES" }));
+    expect(screen.getByLabelText("Completed practice cards: 1")).toBeInTheDocument();
+    expect(screen.getByLabelText("Session score: 100% correct")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Start new session" }));
+
+    expect(createSessionSeed).toHaveBeenCalledTimes(2);
+    expect(currentPromptText(container)).not.toBe(firstPrompt);
+    expect(screen.getByLabelText("Completed practice cards: 0")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Session score: 100% correct")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Your answer")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Type your answer")).toHaveValue("");
+  });
+
+  it("falls back safely when remembered settings are corrupt", async () => {
+    window.localStorage.setItem(
+      "aidioma-intermediate-pilot-configurations:v2",
+      JSON.stringify({
+        "intermediate-restaurant": {
+          activity: "story",
+          direction: { unexpected: true },
+          focus: "unknown-focus",
+          shuffle: "yes",
+        },
+      }),
+    );
+    renderPracticeWorkspace();
+    fireEvent.click(screen.getByRole("button", { name: "Adjust Restaurant Spanish settings" }));
+
+    expect(await screen.findByRole("button", { name: "Type" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "Both" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: /Recommended mix/ })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("checkbox", { name: /Vary the order/ })).toBeChecked();
+  });
+
+  it("migrates old support settings without retaining their difficulty field", async () => {
+    window.localStorage.setItem(
+      "aidioma-intermediate-pilot-configurations:v1",
+      JSON.stringify({
+        "intermediate-restaurant": {
+          activity: "type",
+          difficulty: "guided",
+          direction: "en-es",
+          focus: "time-phrases",
+          shuffle: false,
+        },
+      }),
+    );
+    renderPracticeWorkspace();
+    fireEvent.click(screen.getByRole("button", { name: "Adjust Restaurant Spanish settings" }));
+
+    expect(await screen.findByRole("button", { name: "EN → ES" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: /Time phrases/ })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.queryByRole("group", { name: "Support" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Start practice" }));
+
+    const stored = JSON.parse(
+      window.localStorage.getItem("aidioma-intermediate-pilot-configurations:v2") ?? "{}",
+    ) as Record<string, Record<string, unknown>>;
+    expect(stored["intermediate-restaurant"]).not.toHaveProperty("difficulty");
+    expect(
+      window.localStorage.getItem("aidioma-intermediate-pilot-configurations:v1"),
+    ).toBeNull();
+    expect(screen.getByLabelText("Active practice settings")).toHaveTextContent(
+      "EN → ES only · Time phrases · Fixed order",
+    );
   });
 
   it("offers optional focus controls without exposing unavailable work", async () => {

@@ -11,6 +11,7 @@ import {
   Star,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { z } from "zod";
 
 import type { WordDiffEntry } from "@/lib/evaluation/contracts";
 import {
@@ -55,8 +56,30 @@ type PracticeEvaluationFailure = {
   message: string;
   retryable: boolean;
 };
-const storageKey = "aidioma-intermediate-pilot-configurations:v1";
+const storageKey = "aidioma-intermediate-pilot-configurations:v2";
+const legacyStorageKey = "aidioma-intermediate-pilot-configurations:v1";
 const learnerStage = "intermediate" as const;
+const storedConfigurationShape = {
+  activity: z.enum(["type", "flashcards"]),
+  direction: z.enum(["en-es", "es-en", "both"]),
+  focus: z.enum([
+    "recommended",
+    "completed-past",
+    "time-phrases",
+    "spatial-language",
+    "haber",
+    "connectors",
+  ]),
+  shuffle: z.boolean(),
+} as const;
+const StoredConfigurationSchema = z.object(storedConfigurationShape).strict();
+const LegacyStoredConfigurationSchema = z
+  .object({
+    ...storedConfigurationShape,
+    difficulty: z.enum(["guided", "standard", "stretch"]),
+  })
+  .strict();
+const StoredConfigurationsSchema = z.record(z.unknown());
 
 function defaultConfigurations(): Configurations {
   return Object.fromEntries(
@@ -69,10 +92,58 @@ function rememberedConfigurations(): Configurations {
   if (typeof window === "undefined") return defaults;
 
   try {
-    const stored = window.localStorage.getItem(storageKey);
-    return stored ? { ...defaults, ...(JSON.parse(stored) as Configurations) } : defaults;
+    const currentStored = window.localStorage.getItem(storageKey);
+    const stored = currentStored ?? window.localStorage.getItem(legacyStorageKey);
+    const allowLegacyDifficulty = currentStored === null;
+    if (!stored) return defaults;
+
+    const parsedStored = StoredConfigurationsSchema.safeParse(JSON.parse(stored) as unknown);
+    if (!parsedStored.success) return defaults;
+
+    return Object.fromEntries(
+      practiceSetFixtures.map((set) => {
+        const value = parsedStored.data[set.id];
+        const current = StoredConfigurationSchema.safeParse(value);
+        const legacy = current.success || !allowLegacyDifficulty
+          ? null
+          : LegacyStoredConfigurationSchema.safeParse(value);
+        const configuration = current.success
+          ? current.data
+          : legacy?.success
+            ? {
+                activity: legacy.data.activity,
+                direction: legacy.data.direction,
+                focus: legacy.data.focus,
+                shuffle: legacy.data.shuffle,
+              }
+            : null;
+        const activityAvailable = set.activities.some(
+          (activity) =>
+            activity.status === "available" && activity.id === configuration?.activity,
+        );
+        const focusAvailable = set.focuses.some(
+          (focus) => focus.id === configuration?.focus,
+        );
+
+        return [
+          set.id,
+          configuration && activityAvailable && focusAvailable
+            ? configuration
+            : { ...set.defaultConfiguration },
+        ];
+      }),
+    );
   } catch {
     return defaults;
+  }
+}
+
+function persistConfigurations(configurations: Configurations) {
+  try {
+    window.localStorage.setItem(storageKey, JSON.stringify(configurations));
+    window.localStorage.removeItem(legacyStorageKey);
+  } catch {
+    // Remembering these display preferences is optional.
   }
 }
 
@@ -334,6 +405,8 @@ export function PracticeWorkspace({
     Record<string, CollectionSessionSummary>
   >({});
   const [configurations, setConfigurations] = useState<Configurations>(rememberedConfigurations);
+  const [draftConfiguration, setDraftConfiguration] =
+    useState<PracticeSetConfiguration | null>(null);
   const [sessionSnapshot, setSessionSnapshot] = useState<{
     avoidFirstPromptId?: string;
     configuration: PracticeSetConfiguration;
@@ -354,14 +427,6 @@ export function PracticeWorkspace({
   const evaluationControllerRef = useRef<AbortController | null>(null);
   const feedEndRef = useRef<HTMLDivElement>(null);
   const lastSessionFirstPromptIdsRef = useRef<Record<string, string>>({});
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(storageKey, JSON.stringify(configurations));
-    } catch {
-      // Remembering these display preferences is optional.
-    }
-  }, [configurations]);
 
   useEffect(
     () => () => {
@@ -389,16 +454,31 @@ export function PracticeWorkspace({
   const selectedConfiguration = configurations[selectedSet.id];
   const filteredSets = filterCollections(catalogFilter, savedSetIds);
 
-  function updateConfiguration(patch: Partial<PracticeSetConfiguration>) {
-    setConfigurations((current) => ({
-      ...current,
-      [selectedSet.id]: { ...current[selectedSet.id], ...patch },
-    }));
+  function updateDraftConfiguration(patch: Partial<PracticeSetConfiguration>) {
+    setDraftConfiguration((current) => (current ? { ...current, ...patch } : current));
   }
 
-  function openOptions(set: PracticeSetFixture) {
+  function openOptions(
+    set: PracticeSetFixture,
+    configuration = configurations[set.id],
+  ) {
     setSelectedSetId(set.id);
+    setDraftConfiguration({ ...configuration });
     setPracticeOptionsOpen(true);
+  }
+
+  function closeOptions() {
+    setDraftConfiguration(null);
+    setPracticeOptionsOpen(false);
+  }
+
+  function commitConfiguration(setId: string, configuration: PracticeSetConfiguration) {
+    const nextConfigurations = {
+      ...configurations,
+      [setId]: { ...configuration },
+    };
+    setConfigurations(nextConfigurations);
+    persistConfigurations(nextConfigurations);
   }
 
   function invalidateEvaluation() {
@@ -434,21 +514,15 @@ export function PracticeWorkspace({
     setPendingAnswer(null);
     setEvaluationFailure(null);
     setFlashcardRevealed(false);
+    setDraftConfiguration(null);
     setPracticeOptionsOpen(false);
     setView("session");
   }
 
-  function applyPracticeSettings() {
-    invalidateEvaluation();
-    setSessionSnapshot((current) => ({
-      avoidFirstPromptId: current?.avoidFirstPromptId,
-      configuration: { ...configurations[selectedSet.id] },
-      orderSeed: current?.orderSeed ?? createSessionSeed(),
-      setId: selectedSet.id,
-    }));
-    setPendingAnswer(null);
-    setEvaluationFailure(null);
-    setPracticeOptionsOpen(false);
+  function commitAndStartPractice(set: PracticeSetFixture) {
+    if (!draftConfiguration) return;
+    commitConfiguration(set.id, draftConfiguration);
+    startPractice(set, draftConfiguration);
   }
 
   function toggleSaved(setId: string) {
@@ -459,6 +533,7 @@ export function PracticeWorkspace({
 
   function returnToCatalog() {
     invalidateEvaluation();
+    setDraftConfiguration(null);
     setPracticeOptionsOpen(false);
     setSessionSnapshot(null);
     setView("catalog");
@@ -517,11 +592,11 @@ export function PracticeWorkspace({
         </div>
         {practiceOptionsOpen ? (
           <PracticeSetOptionsPanel
-            configuration={selectedConfiguration}
+            configuration={draftConfiguration ?? selectedConfiguration}
             learnerStage={learnerStage}
-            onClose={() => setPracticeOptionsOpen(false)}
-            onStart={() => startPractice(selectedSet, selectedConfiguration)}
-            onUpdate={updateConfiguration}
+            onClose={closeOptions}
+            onStart={() => commitAndStartPractice(selectedSet)}
+            onUpdate={updateDraftConfiguration}
             set={selectedSet}
             startLabel="Start practice"
           />
@@ -702,7 +777,7 @@ export function PracticeWorkspace({
             </IconButton>
             <IconButton
               aria-label="Adjust practice settings"
-              onClick={() => setPracticeOptionsOpen(true)}
+              onClick={() => openOptions(sessionSet, sessionConfiguration)}
             >
               <SlidersHorizontal aria-hidden="true" />
             </IconButton>
@@ -829,13 +904,13 @@ export function PracticeWorkspace({
       )}
       {practiceOptionsOpen ? (
         <PracticeSetOptionsPanel
-          configuration={selectedConfiguration}
+          configuration={draftConfiguration ?? sessionConfiguration}
           learnerStage={learnerStage}
-          onClose={() => setPracticeOptionsOpen(false)}
-          onStart={applyPracticeSettings}
-          onUpdate={updateConfiguration}
+          onClose={closeOptions}
+          onStart={() => commitAndStartPractice(sessionSet)}
+          onUpdate={updateDraftConfiguration}
           set={sessionSet}
-          startLabel="Apply settings"
+          startLabel="Start new session"
         />
       ) : null}
     </div>
