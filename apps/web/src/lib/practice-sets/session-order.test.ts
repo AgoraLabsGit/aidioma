@@ -11,6 +11,8 @@ function prompt(id: string): PracticePrompt {
     id,
     level: "intermediate",
     focus: ["time-phrases"],
+    difficulty: 3,
+    grammarTags: ["adverb"],
     capability: `Practice ${id}`,
     cue: `Use ${id}`,
     english: `${id} in English`,

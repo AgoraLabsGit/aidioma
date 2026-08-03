@@ -6,6 +6,7 @@ import {
   PracticeEvaluationRequestSchema,
   PracticeEvaluationResponseSchema,
 } from "@/lib/practice-sets/evaluation-contract";
+import { acceptedPracticeAnswerTexts } from "@/lib/practice-sets/practice-prompt-contract";
 import { practiceSetFixtures } from "@/lib/practice-sets/prototype-fixtures";
 
 export const runtime = "nodejs";
@@ -58,8 +59,8 @@ export async function POST(request: Request): Promise<Response> {
     },
     source: {
       sourceText,
-      authoritativeAnswers: answerGroup.target,
-      grammarTags: [],
+      authoritativeAnswers: acceptedPracticeAnswerTexts(modelAnswer, answerGroup.target),
+      grammarTags: prompt.grammarTags,
       assessmentGoal: `${prompt.capability}. ${prompt.cue}`,
     },
     userTrackingId: localEvaluationUser,

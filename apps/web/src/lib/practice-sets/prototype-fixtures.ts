@@ -1,3 +1,14 @@
+import {
+  PracticePromptSchema,
+  type PracticePrompt,
+  type PrototypeLearnerStage,
+} from "./practice-prompt-contract";
+import restaurantPromptsJson from "./prototype-content/restaurant-prompts.json";
+import {
+  loadPromotedPrototypePrompts,
+  mergePromotedPracticePrompts,
+} from "./promoted-practice-prompts";
+
 /**
  * PROTOTYPE ONLY. These local records exercise the intermediate learning design.
  * They are original sample content, not reviewed launch content, and must not be
@@ -23,7 +34,7 @@ export type PracticeFocus =
   | "spatial-language"
   | "haber"
   | "connectors";
-export type PrototypeLearnerStage = "foundation" | "intermediate";
+export type { PracticePrompt, PrototypeLearnerStage } from "./practice-prompt-contract";
 
 export type PracticeSetConfiguration = {
   activity: PracticeActivity;
@@ -44,25 +55,6 @@ export type PracticeFocusOption = {
   description: string;
   id: PracticeFocus;
   label: string;
-};
-
-type AnswerGroup = {
-  communicative: string[];
-  target: string[];
-};
-
-export type PracticePrompt = {
-  answers: {
-    english: AnswerGroup;
-    spanish: AnswerGroup;
-  };
-  capability: string;
-  cue: string;
-  english: string;
-  focus: Exclude<PracticeFocus, "recommended">[];
-  id: string;
-  level: PrototypeLearnerStage;
-  spanish: string;
 };
 
 export type PracticeSetFixture = {
@@ -137,6 +129,8 @@ export const practiceSetFixtures: PracticeSetFixture[] = [
         id: "restaurant-foundation-bill",
         level: "foundation",
         focus: ["time-phrases"],
+        difficulty: 1,
+        grammarTags: ["formula.courtesy"],
         capability: "Ask for the bill politely",
         cue: "You are ready to leave. Ask the server for the bill politely.",
         english: "The bill, please.",
@@ -156,6 +150,8 @@ export const practiceSetFixtures: PracticeSetFixture[] = [
         id: "restaurant-past-mistake",
         level: "intermediate",
         focus: ["completed-past"],
+        difficulty: 3,
+        grammarTags: ["preterite.irregular", "pronoun.io"],
         capability: "Recount a completed restaurant mistake",
         cue: "Tell the server what happened earlier. Make the completed past event explicit.",
         english: "Yesterday I ordered soup, but they brought me a salad.",
@@ -179,6 +175,8 @@ export const practiceSetFixtures: PracticeSetFixture[] = [
         id: "restaurant-recent-bill",
         level: "intermediate",
         focus: ["time-phrases"],
+        difficulty: 3,
+        grammarTags: ["periphrasis.aspectual", "formula.courtesy"],
         capability: "Express a recent action with acabar de",
         cue: "Say that you have just finished, then ask for the bill.",
         english: "I just finished. The bill, please.",
@@ -198,6 +196,8 @@ export const practiceSetFixtures: PracticeSetFixture[] = [
         id: "restaurant-connected-review",
         level: "intermediate",
         focus: ["completed-past", "connectors"],
+        difficulty: 4,
+        grammarTags: ["connector.discourse", "preterite.irregular"],
         capability: "Connect contrasting details in a past account",
         cue: "Give a balanced account of the meal using a connector for contrast.",
         english: "Although the food was good, the service was slow.",
@@ -252,6 +252,8 @@ export const practiceSetFixtures: PracticeSetFixture[] = [
         id: "around-turn-right",
         level: "foundation",
         focus: ["spatial-language"],
+        difficulty: 2,
+        grammarTags: ["imperative", "expression.place"],
         capability: "Give a simple direction",
         cue: "Direct someone at the next block.",
         english: "Turn right at the next block.",
@@ -265,6 +267,8 @@ export const practiceSetFixtures: PracticeSetFixture[] = [
         id: "around-walked-toward",
         level: "intermediate",
         focus: ["spatial-language", "completed-past"],
+        difficulty: 3,
+        grammarTags: ["preterite.regular", "expression.place"],
         capability: "Combine movement and a completed event",
         cue: "Explain the direction you walked and where you stopped.",
         english: "I walked toward the station and stopped across from the bank.",
@@ -308,6 +312,8 @@ export const practiceSetFixtures: PracticeSetFixture[] = [
         id: "time-used-to",
         level: "intermediate",
         focus: ["time-phrases"],
+        difficulty: 3,
+        grammarTags: ["adverb", "periphrasis.modal-inf"],
         capability: "Express a customary action with soler",
         cue: "Describe something you usually do on Sundays.",
         english: "I usually cook on Sundays.",
@@ -324,6 +330,8 @@ export const practiceSetFixtures: PracticeSetFixture[] = [
         id: "time-about-to",
         level: "intermediate",
         focus: ["time-phrases"],
+        difficulty: 3,
+        grammarTags: ["periphrasis.aspectual"],
         capability: "Express an imminent action",
         cue: "Say that you are about to leave.",
         english: "I am about to leave.",
@@ -371,6 +379,8 @@ export const practiceSetFixtures: PracticeSetFixture[] = [
         id: "stories-no-trains",
         level: "intermediate",
         focus: ["haber", "connectors"],
+        difficulty: 4,
+        grammarTags: ["imperfect", "connector"],
         capability: "Explain a situation and its result",
         cue: "Explain why you arrived late using an existential form and a result connector.",
         english: "There were no trains, so I arrived late.",
@@ -384,6 +394,8 @@ export const practiceSetFixtures: PracticeSetFixture[] = [
         id: "stories-event",
         level: "intermediate",
         focus: ["haber", "completed-past"],
+        difficulty: 3,
+        grammarTags: ["preterite.irregular", "verb.hay"],
         capability: "Use hubo for a bounded event",
         cue: "Report a completed event that occurred yesterday.",
         english: "There was an accident yesterday.",
@@ -395,7 +407,28 @@ export const practiceSetFixtures: PracticeSetFixture[] = [
       },
     ],
   },
-];
+] satisfies PracticeSetFixture[];
+
+const restaurantPromotion = loadPromotedPrototypePrompts(restaurantPromptsJson);
+const restaurantFixture = practiceSetFixtures.find(
+  (set) => set.id === "intermediate-restaurant",
+);
+if (!restaurantFixture || restaurantPromotion.collectionId !== restaurantFixture.id) {
+  throw new Error("Restaurant prototype promotion does not match its collection");
+}
+restaurantFixture.prompts = mergePromotedPracticePrompts(
+  restaurantFixture.prompts,
+  restaurantPromotion,
+  50,
+);
+
+for (const set of practiceSetFixtures) {
+  set.prompts.forEach((prompt) => PracticePromptSchema.parse(prompt));
+}
+const allPromptIds = practiceSetFixtures.flatMap((set) => set.prompts.map((prompt) => prompt.id));
+if (new Set(allPromptIds).size !== allPromptIds.length) {
+  throw new Error("Prototype prompt IDs must be globally unique");
+}
 
 export const practiceDirectionLabels: Record<PracticeDirection, string> = {
   "en-es": "EN → ES",
