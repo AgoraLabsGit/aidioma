@@ -34,10 +34,10 @@ mvp_finish_line: >
 
 release_batch:
   last_shipped_wave: A2
-  production_sha: c3f50be2ad45f858398727c16bf0a1cb4fe37786
-  production_exception: null
+  production_sha: 3da1ae7d2e5f4f68a7fd27cb3c563f3c143f9652
+  production_exception: "BUG-002: docs-only PR #3 redeployed the unchanged app tree without SHIP"
   queued_waves: []
-  active_wave: null
+  active_wave: A2R
   branch: null
   candidate: null
   state: idle
@@ -167,7 +167,7 @@ waves:
   - id: A2R
     lane: App
     title: Application baseline and founder UI review
-    status: pending
+    status: active
     operator_sees: >
       A plain-language application health scorecard plus a phone/desktop UI review packet that
       records the approved changes before persistence and the real session UI are built.
@@ -176,7 +176,7 @@ waves:
     slices:
       - id: A2R-1
         title: Cross-cutting architecture, security, integration, and smoke audit
-        status: pending
+        status: active
         summary: >
           Audit trust and data seams, composability and code organization, Clerk, Neon, AI Gateway,
           Firewall, Vercel/CI, failure behavior, and dependency posture. Run the full App suite plus

@@ -3,11 +3,11 @@
 > Rewritten in place every time it changes. Never appended. Hard cap 60 lines.
 > If this file disagrees with ROADMAP.yaml, ROADMAP.yaml wins.
 
-**Updated:** 2026-07-30 (A2 shipped; protected clean main restored)
+**Updated:** 2026-07-30 (A2 shipped; A2R-1 baseline application audit active)
 
 ## Position
 
-**Lane A — App (A2 SHIPPED; A2R NEXT)**
+**Lane A — App (A2 SHIPPED; A2R-1 ACTIVE)**
 - A1-2 is proven: the web app imports the shared contract; Content CI is live; checksum-journaled
   SQL and the idempotent seed loaded 4 canonical lessons / 134 items into real Neon with zero-change reruns.
 - Neon Production, Preview, and Development now have distinct databases, owners, and Vercel
@@ -31,8 +31,8 @@
   budget were evidenced; unsupported `quotaEntityId` was the fixed BUG-001 root cause.
 - A2 is shipped. Preview and Production each have a live 30/60-second environment-conditioned
   Firewall rule; no per-user Gateway denial is claimed without an account policy.
-- `main` requires PRs plus App/Content CI and blocks force-push/deletion. Completed agent worktrees
-  and refs were removed; the dirty C2 worktree remains intentionally active and isolated.
+- `main` remains PR/check protected, but docs-only PR #3 redeployed the byte-identical app tree at
+  `3da1ae7` without `SHIP`; BUG-002 owns the explicit Production exception.
 - The revised fixture-backed Practice IA keeps lesson entry under Lessons and opens Practice on
   Collections with Saved as a local filter. Real sessions remain A4/A5; Production Sets remain A6.
 
@@ -43,9 +43,10 @@
 - Continue a1-05…a1-12 one lesson at a time through independent L2 QA.
 
 ## Next
-1. Resume from Handoff 019 and run `/run` to open A2R's application audit/founder UI review.
-2. Continue the isolated C2 a1-05 work independently; reconcile it from current `origin/main` before close.
-3. Promote OI-034 before real users and recheck OI-026 on patched upstream releases.
+1. Complete OI-044's fresh authenticated immutable-Preview proof; A2R-1 remains active until it passes.
+2. Route the A2R corrective queue through `/fix`; OI-041/OI-045 block A3's first write.
+3. Open A2R-2's founder UI review in a separate session, then run A2R-H.
+4. Continue C2 with a1-05 independently; promote OI-034 before real users and recheck OI-026 upstream.
 
 ## Standing decisions (highlights)
 - A1-first · vocab 12–15 / sentences 18–20 · Completed/Mastered · Direction default Both.
@@ -53,8 +54,7 @@
 - Platform: Next.js web MVP; Expo native later; staged web voice is approved for A10–A13 (ADR-0016).
 - Mode-smart help · Ask tutor + Saved/Review · study cards · Mix + size-10 blend.
 - Live today’s accuracy ≠ next-day confirmed proficiency.
-- Quiz/MC → evaluations with modality `multipleChoice` (no AI).
 - Responsive web (phone + desktop); no native stores in MVP. Agent worktrees/branches are ephemeral;
   one coordinator integrates, and protected `origin/main` is the sole durable history.
-- Completed docs merge promptly; `/close` publishes deployable Preview batches and `SHIP` alone reaches Production.
+- Intended rule: docs merge promptly and only `SHIP` reaches Production; BUG-002 owns the current violation.
 - P-004 dialect shape only · Practice Sets are MVP (ADR-0015/A6) · wordfreq informs original selection only.

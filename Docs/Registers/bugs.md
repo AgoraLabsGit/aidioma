@@ -5,6 +5,7 @@
 
 | ID | ↻ | Bug | Root cause / anchor | Status |
 |---|---|---|---|---|
+| BUG-002 | 1 | **A documentation-only `main` merge created a new Production deployment without `SHIP`** | `apps/web/vercel.json` enables every `main` deployment while PROCESS permits docs to merge promptly and says only `SHIP` authorizes Production. PR #3 moved `main` to `3da1ae7`; Vercel created deployment `dpl_5vpB9P6bkzKz2g6JxYf211QcNuBz` and reassigned Production aliases even though the deployable app tree matched shipped `c3f50be`. Fix through `/fix`: prove an unaffected-build skip or define and receipt an explicitly authorized docs-only rebuild path. | open |
 
 ## Closed
 (move rows here when fixed — keep the full row as the audit trail)
