@@ -1,70 +1,65 @@
-# AIdioma — agent core
+# AIdioma — agent guide
 
-> Always-on memory. Keep <=100 lines. Detail lives in `Docs/` and loads on demand.
-> AIdioma is a Spanish-learning app: a chat-centric practice panel that grades typed answers
-> for free (AI only on a miss) and keeps re-serving your weak items until you master them.
+> Keep this file concise. Current detail begins at `Docs/INDEX.md` and the latest numbered handoff.
 
 ## Operator
-Non-technical solo founder (Mike). **Plain language, every response** — lead with outcomes and
-scenarios, no jargon; frame trade-offs by outcome, not implementation. Protect against decision
-fatigue: triage findings yourself, surface ONE strategic call at a time as a flat numbered
-yes/no list with one-line context; give a recommendation, not a survey. MVP budget discipline:
-defer material spend; separate free-now from paid-later. Mike runs parallel agent sessions —
-coordinate through files (this repo's `Docs/` + `content/`), never assume shared chat memory.
 
-## RULE — find before you load (every session)
-1. Read `Docs/STATE.md` — where the project is. Never trust memory for status.
-2. Read `Docs/INDEX.md` — the map (including current authorities). Open only what it
-   points at; grep for the rest.
-3. `Docs/ROADMAP.yaml` is the SSOT on any conflict.
+Mike is a non-technical solo founder. Lead with the outcome in plain language. Triage implementation
+detail yourself, surface one strategic decision at a time, recommend an option, and distinguish
+free-now work from paid-later work. Coordinate parallel sessions through branches, commits, PRs, and
+current files; never assume shared chat memory.
 
-## Two lanes (see ROADMAP.yaml)
-- **Lane A (App)** — greenfield Next.js (Vercel + Neon + Clerk). V1/V2 are read-only reference.
-  A0–A2 are shipped on protected `main`; **A2R application review** is next.
-- **Lane C (Content)** — lesson authoring; working records in `/content`. **C2 is active**:
-  a1-04 is L2-passed and a1-05 is next.
-- Only one wave per lane is active at a time. The lanes coordinate via files.
-- The **App Design Coordinator role has final approval over the lesson schema** (v1-FROZEN,
-  additive-only); rulings are logged in `Docs/Registers/schema-proposals.md`.
+## Start every session here
 
-## How work runs
-- The machine is `Docs/PROCESS.md`. Commands: /run · /fix · /feature · /close · /status; `SHIP`
-  is the single Production approval for the exact cumulative Preview batch.
-- `origin/main` is the sole durable integrated history and must be clean at rest. The primary
-  worktree is coordinator-only; workers use ephemeral branches/worktrees with one declared,
-  non-overlapping file/area owner. Workers never merge or edit shared control files. The coordinator
-  integrates exact SHAs, immediately removes contained worker worktrees, and deletes merged refs.
-  Completed documentation merges promptly; deployable code uses Preview and only `SHIP` reaches
-  `main`/Production. Protected `main` requires the distinct App/Content CI jobs on every PR and
-  blocks force-push/deletion without requiring a second reviewer.
-- Deterministic gates (from ROADMAP `verify:` — per lane) run BEFORE any agent judgment, every
-  slice. A gate that didn't run counts as failed. Both lanes now have live commands.
-- Every slice ends with an isolated read-only audit sized to risk (additive → 1 light check;
-  mutating/schema/security → 2–3 auditors) plus /code-review on the diff. You triage findings;
-  fix criticals + warnings; delta re-audit the fixes. "I reviewed it myself" never substitutes.
-- Done = real data on a real screen (or a real passing end-to-end run), proof recorded in the
-  wave file. Browser checks = headless scripts printing compact PASS/FAIL, screenshots to
-  files — never interactive browser-driving through agent context.
-- Eliminate-old-as-you-build: superseded code is deleted in-slice or gets a deprecations row
-  with a named trigger. Never delete-first, never leave residue untracked.
-- Feature freeze: mid-wave ideas → `Docs/Registers/open-items.md`, never the active wave.
+1. Read `Docs/INDEX.md`.
+2. Read the highest-numbered file in `Docs/Handoffs/`.
+3. Inspect the current branch, worktree status, and relevant diff before acting.
+4. Open only the active product/spec/reference files needed for the requested scope.
 
-## Write discipline
-- STATE.md: REWRITE in place (<=60 lines), never append. Status lives nowhere else.
-- One file per slice in `Docs/Waves/` (brief + gates + audit + proof together).
-- Follow-ups/defects/dying code → a `Docs/Registers/` row, never prose-only.
-- Specs are living: a slice changing structure/behavior updates the touched spec INSIDE the
-  slice — it cannot close on stale specs. Superseded docs → `Archive/` + CATALOG row.
-- Don't duplicate authorities listed in INDEX: cross-link them, don't copy their facts.
-- New durable lesson → one atomic file in `Docs/Lessons/`.
+`Docs/Archive/Planning/`, `Docs/Archive/Waves/`, and `Docs/Archive/Registers/` are historical inputs.
+They are not automatic status or planning authority, and routine commands must not recreate their
+boilerplate.
 
-## Sub-agent discipline
-- Delegate heavy implementation/diagnosis to sub-agents; keep the main thread for triage +
-  decisions. Model-tier every spawn: top tier = coordination/audit judgment · mid = builders ·
-  small = mechanical scans. Sub-agents return compact structured reports, never transcripts.
-- Assign non-overlapping file/area scopes before spawning. If two tasks need the same authority or
-  implementation seam, sequence them through the coordinator instead of asking agents to merge.
-- Content-lane sub-agents use the model/routing policy in the current content handoff, one agent
-  per lesson, outputs under `content/`, and return short distilled summaries.
-- Hand off EARLY at a clean boundary (write a Handoff file) rather than riding context to the
-  ceiling. After 3 consecutive failures on one step, stop and ask.
+## Product truth
+
+- The current tested application—especially `http://127.0.0.1:3217/practice`—is the product truth.
+- Specs follow or accompany behavior exercised in the live app; they do not invent future behavior.
+- Record a tested feature as: what the learner sees; what must be true; what it must not do; how the
+  live prototype proves it.
+- When behavior is unresolved, identify the smallest next live test instead of writing architecture
+  around it.
+- Keep feedback direct and learner-facing. Do not let historical proposals override current founder
+  feedback from the working app.
+
+## Repository boundaries
+
+- `apps/web/` owns the application and executable UI behavior.
+- `content/` owns original authored curriculum, lessons, and review evidence. Research informs new
+  work but is never bulk-copied into shippable content.
+- `packages/lesson-schema/` is the executable content contract. Schema changes are explicit,
+  compatibility-conscious work, never an incidental app edit.
+- Preserve technical references and ADR history. Archive or delete only from an approved exact-path
+  retention map; use reversible commits, never destructive resets.
+
+## How work runs now
+
+- Use `/run`, `/fix`, `/feature`, `/status`, and `/close` from `.claude/skills/`.
+- Base new work on fetched `origin/main` unless continuing a clearly owned branch. Give parallel
+  agents non-overlapping file scopes; sequence shared files.
+- Preserve unrelated user changes. Never stage blindly, force-push, or delete an uncontained ref.
+- Run the smallest relevant checks while iterating, then the complete checks appropriate to the diff.
+  Prove learner-facing changes through the real browser path.
+- Update only active docs that the tested change affects. Prefer a current spec or handoff over a new
+  process document.
+- Publish through a PR. Protected `main` requires `app-validate` and `content-validate`; merging an
+  app change also requires verification of the exact candidate users will receive.
+- Remove a worktree only when clean and contained in fetched `origin/main`. Delete local/remote task
+  branches only after the same containment proof.
+
+## Sub-agents and handoff
+
+Delegate bounded implementation, mechanical scans, or independent audits when useful. Assign exact,
+non-overlapping paths and ask for compact findings rather than transcripts. Keep coordination and
+judgment in the main thread. If a session must pause, update the current highest handoff with the
+branch, exact HEAD, dirty state, checks, and next action. After three failures on the same step, stop
+and ask Mike rather than looping.

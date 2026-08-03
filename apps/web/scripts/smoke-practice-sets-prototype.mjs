@@ -318,7 +318,15 @@ async function run() {
         if (await page.getByRole("button", { name: "Next practice", exact: true }).count()) {
           throw new Error(`A Next practice gate is still visible in ${label}.`);
         }
-        await page.getByRole("heading", { name: "Acabo de terminar. La cuenta, por favor.", exact: true }).waitFor();
+        const servedPromptHeadings = await page
+          .locator(".prompt-message h2")
+          .evaluateAll((headings) => headings.map((heading) => heading.textContent?.trim()));
+        if (
+          servedPromptHeadings.length < 2 ||
+          servedPromptHeadings.at(-1) === servedPromptHeadings[0]
+        ) {
+          throw new Error(`Continuous practice did not append a fresh prompt in ${label}.`);
+        }
         await page.getByLabel("Type your answer", { exact: true }).waitFor();
         await page
           .getByRole("button", { name: "End practice and review this session", exact: true })

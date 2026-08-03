@@ -205,7 +205,7 @@ describe("Intermediate learning pilot", () => {
     fireEvent.click(screen.getByRole("button", { name: "Browse collections" }));
 
     expect(screen.getByLabelText("Latest session score: 100% correct")).toHaveTextContent(
-      "100% latest",
+      /^100% latest$/,
     );
   });
 

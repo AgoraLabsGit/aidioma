@@ -10,7 +10,7 @@ const prototypeUrl = pathToFileURL(
 ).href;
 const outputDirectory = path.join(
   appDirectory,
-  "artifacts/a1-1r/prototype",
+  "artifacts/prototype-references",
 );
 
 const screens = [

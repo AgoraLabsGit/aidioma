@@ -1,5 +1,10 @@
 # PROCESS — the machine
 
+> **Technical reference after the 2026-08-03 Docs reset.** This records the former wave/slice
+> operating model and remains useful for repository hygiene and validation patterns. It is not the
+> current plan or product authority. `ROADMAP.yaml`, `STATE.md`, Waves, and operational registers
+> named below now live under `Docs/Archive/`; start from `Docs/INDEX.md` and the current handoff.
+
 > How every unit of work runs. Five work commands plus `SHIP`; everything between is automatic.
 > A deployable App wave has two operator controls: approve its plan, then optionally `SHIP` a tested
 > cumulative Preview batch. `/close` itself authorizes Preview publication; Production never follows

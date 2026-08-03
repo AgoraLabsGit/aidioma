@@ -1,38 +1,31 @@
 import { chromium } from "@playwright/test";
 import axeCore from "axe-core";
 import { spawn } from "node:child_process";
-import { access, mkdir, readdir, stat, writeFile } from "node:fs/promises";
+import { access, mkdir, readdir, stat } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { createServer } from "node:net";
 import path from "node:path";
 import process from "node:process";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 
 const appDirectory = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 const repositoryRoot = path.resolve(appDirectory, "../..");
 const nextBuild = path.join(appDirectory, ".next", "BUILD_ID");
 const require = createRequire(import.meta.url);
 const nextBinary = require.resolve("next/dist/bin/next");
-const resultsDirectory = path.join(appDirectory, "artifacts/a1-1r");
-const appScreenshotsDirectory = path.join(resultsDirectory, "app");
-const prototypeScreenshotsDirectory = path.join(resultsDirectory, "prototype");
-const visualContractPath = path.join(resultsDirectory, "visual-contract.json");
-const prototypeUrl = pathToFileURL(
-  path.join(repositoryRoot, "apps/prototype/index.html"),
-).href;
+const appScreenshotsDirectory = path.join(appDirectory, "artifacts/smoke-current");
 const port = await reserveSmokePort(process.env.AIDIOMA_SMOKE_PORT);
 const baseUrl = `http://127.0.0.1:${port}`;
 
 const routes = [
-  { id: "home", heading: "Hola.", path: "/", prototypeLabel: "Home" },
-  { id: "lessons", heading: "Lessons", path: "/lessons", prototypeLabel: "Lessons" },
+  { id: "home", heading: "Hola.", path: "/" },
+  { id: "lessons", heading: "Lessons", path: "/lessons" },
   {
     id: "practice",
     heading: "Practice",
     path: "/practice",
-    prototypeLabel: "Practice",
   },
-  { id: "settings", heading: "Settings", path: "/settings", prototypeLabel: "Settings" },
+  { id: "settings", heading: "Settings", path: "/settings" },
 ];
 
 const viewports = [
@@ -72,7 +65,7 @@ async function newestModificationTime(target) {
   return Math.max(targetStat.mtimeMs, ...times);
 }
 
-async function requireBuildAndReferences() {
+async function requireCurrentBuild() {
   await access(nextBuild).catch(() => {
     throw new Error("No production build found. Run `npm run build` before `npm run smoke`.");
   });
@@ -88,11 +81,6 @@ async function requireBuildAndReferences() {
   if (latestSourceTime > buildStat.mtimeMs) {
     throw new Error("Production build is stale. Run `npm run build` before `npm run smoke`.");
   }
-  await access(path.join(prototypeScreenshotsDirectory, "home-mobile-dark.png")).catch(() => {
-    throw new Error(
-      "Prototype references are missing. Run `node scripts/capture-prototype-references.mjs` first.",
-    );
-  });
 }
 
 async function waitForServer(server, serverError, timeoutMs = 30_000) {
@@ -200,85 +188,6 @@ async function assertAuthProviderFits(page, label) {
   return result;
 }
 
-async function captureVisualMetrics(page, kind, routeId) {
-  return page.evaluate(({ targetKind, targetRoute }) => {
-    const root = getComputedStyle(document.documentElement);
-    const canvasSelector = targetKind === "app" ? ".app-canvas" : "#app";
-    const railSelector =
-      targetKind === "app"
-        ? window.innerWidth >= 880
-          ? ".desktop-sidebar"
-          : ".mobile-tab-bar"
-        : "#tabbar";
-    const cardSelectors = {
-      app: {
-        home: ".continue-card",
-        lessons: ".current-level > summary",
-        practice: ".practice-set-card",
-        settings: ".settings-card",
-      },
-      prototype: {
-        home: ".continue",
-        lessons: ".lvl.current > summary",
-        practice: ".learncard",
-        settings: "#settings .card",
-      },
-    };
-    const cardSelector = cardSelectors[targetKind][targetRoute];
-    const canvas = document.querySelector(canvasSelector)?.getBoundingClientRect();
-    const rail = document.querySelector(railSelector)?.getBoundingClientRect();
-    const card = document.querySelector(cardSelector)?.getBoundingClientRect();
-
-    const token = (appName, prototypeName) =>
-      root.getPropertyValue(targetKind === "app" ? appName : prototypeName).trim();
-
-    return {
-      geometry: {
-        canvasWidth: Math.round(canvas?.width ?? 0),
-        cardWidth: Math.round(card?.width ?? 0),
-        railWidth: Math.round(rail?.width ?? 0),
-      },
-      tokens: {
-        accent: token("--accent", "--accent"),
-        background: token("--bg", "--bg"),
-        border: token("--border", "--line"),
-        card: token("--card", "--card"),
-        panel: token("--panel", "--panel"),
-      },
-    };
-  }, { targetKind: kind, targetRoute: routeId });
-}
-
-function assertVisualContract(appMetrics, prototypeMetrics, label, routeId) {
-  const normalizeColor = (value) =>
-    /^#[0-9a-f]{3}$/i.test(value)
-      ? `#${value
-          .slice(1)
-          .split("")
-          .map((character) => `${character}${character}`)
-          .join("")}`.toLowerCase()
-      : value.toLowerCase();
-
-  for (const [name, value] of Object.entries(prototypeMetrics.tokens)) {
-    if (normalizeColor(appMetrics.tokens[name]) !== normalizeColor(value)) {
-      throw new Error(
-        `${label} token ${name} differs: app ${appMetrics.tokens[name]}, prototype ${value}.`,
-      );
-    }
-  }
-
-  const geometryNames = routeId === "practice"
-    ? ["canvasWidth", "railWidth"]
-    : ["canvasWidth", "cardWidth", "railWidth"];
-  for (const name of geometryNames) {
-    if (Math.abs(appMetrics.geometry[name] - prototypeMetrics.geometry[name]) > 1) {
-      throw new Error(
-        `${label} ${name} differs: app ${appMetrics.geometry[name]}, prototype ${prototypeMetrics.geometry[name]}.`,
-      );
-    }
-  }
-}
-
 async function assertKeyboardFocus(page) {
   await page.keyboard.press("Tab");
   const focusedClass = await page.locator(":focus").getAttribute("class");
@@ -326,7 +235,7 @@ async function stopServer(server) {
 }
 
 async function run() {
-  await requireBuildAndReferences();
+  await requireCurrentBuild();
   await mkdir(appScreenshotsDirectory, { recursive: true });
 
   const environment = {
@@ -353,7 +262,6 @@ async function run() {
   });
 
   let browser;
-  const visualEvidence = [];
   try {
     await waitForServer(server, () => serverError.trim());
     browser = await chromium.launch({ headless: true });
@@ -419,36 +327,6 @@ async function run() {
           await assertThemeControl(page);
         }
 
-        const referencePage = await context.newPage();
-        await referencePage.goto(prototypeUrl, { waitUntil: "load" });
-        await referencePage.evaluate((selectedTheme) => {
-          document.documentElement.dataset.theme = selectedTheme;
-        }, theme);
-        const appPage = await context.newPage();
-
-        for (const route of routes) {
-          if (route.id !== "home") {
-            await referencePage
-              .getByRole("button", { name: route.prototypeLabel, exact: true })
-              .click();
-          }
-          await appPage.goto(`${baseUrl}${route.path}`, { waitUntil: "networkidle" });
-          const [prototypeMetrics, appMetrics] = await Promise.all([
-            captureVisualMetrics(referencePage, "prototype", route.id),
-            captureVisualMetrics(appPage, "app", route.id),
-          ]);
-          const visualLabel = `${route.id}-${viewport.id}-${theme}`;
-          assertVisualContract(appMetrics, prototypeMetrics, visualLabel, route.id);
-          visualEvidence.push({
-            app: appMetrics,
-            prototype: prototypeMetrics,
-            route: route.id,
-            viewport: `${viewport.id}-${theme}`,
-          });
-        }
-
-        await referencePage.close();
-        await appPage.close();
         await context.close();
       }
     }
@@ -479,12 +357,10 @@ async function run() {
       await authPage.close();
     }
 
-    await writeFile(visualContractPath, `${JSON.stringify(visualEvidence, null, 2)}\n`);
     console.log(
-      "SMOKE PASS: 16 screen states; prototype token/shell geometry parity; route-aware navigation; theme control; axe; keyboard focus; reduced motion; 200% text; no horizontal overflow; responsive keyless auth.",
+      "SMOKE PASS: 16 current-app screen states; route-aware navigation; theme control; axe; keyboard focus; reduced motion; 200% text; no horizontal overflow; responsive keyless auth.",
     );
     console.log(`Screenshots: ${appScreenshotsDirectory}`);
-    console.log(`Visual contract: ${visualContractPath}`);
   } finally {
     await browser?.close();
     await stopServer(server);

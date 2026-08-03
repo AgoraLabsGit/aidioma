@@ -1,41 +1,23 @@
 ---
 name: run
-description: Build the next runnable roadmap slice through the full lifecycle (gates, audit, review, prove, record). Use when the operator says /run or asks to continue the roadmap.
+description: Continue the current AIdioma work from the latest handoff, grounded in the live app. Use when the operator says /run or asks to continue building.
 ---
 
-# /run — advance the roadmap
+# /run — continue current work
 
-1. **Boot:** read `Docs/STATE.md`, `Docs/ROADMAP.yaml`, and `Docs/Registers/*.md`. Identify the
-   active wave in each lane (App / Content) and the next runnable slice (first `pending`/`active`
-   slice with no unmet dependency, in the lane the operator is advancing — default to the App
-   lane's active wave unless told otherwise). Skip `parked` slices. If a Handoff newer than STATE
-   exists, honor it.
-2. **Wave open (if no wave is active):** give the operator a <=5-bullet plain-language briefing
-   of the next wave and get approval before any code. Sweep the registers: every row naming
-   this wave is claimed by a slice or explicitly re-homed.
-3. **Slice spec (stage 0):** draft `Docs/Waves/<id>-<slug>.md` from TEMPLATE (set the Lane).
-   Ask the operator only if scope is new or changed from the roadmap entry; otherwise proceed.
-   For a **design-only slice** (e.g. A0), the "build" is the decision/spec itself — surface each
-   open decision as ONE plain yes/no block, record the ruling, don't batch them.
-4. **Build (stage 1):** branch `slice/<id>`. If ROADMAP has an open App `release_batch`, base new
-   App work on its exact candidate; otherwise base it on `origin/main`. Follow existing project
-   patterns. Delegate heavy implementation to sub-agents with compact briefs; you triage and integrate.
-5. **Gates (stage 2):** run every command in the lane's ROADMAP `verify:` set — typecheck 0,
-   lint 0-new, tests green vs the recorded baseline, build 0, smoke. All green or return to
-   stage 1. Record results in the wave file. (Design slices: peer-review read for internal
-   consistency + no conflict with accepted Docs specs/ADRs.)
-6. **Audit (stage 3):** spawn isolated read-only auditor(s) sized to risk with ONLY the diff +
-   criteria. Triage; fix criticals + warnings; delta re-audit the fixes. Record in the wave file.
-7. **Review (stage 4):** run /code-review (medium) on the slice diff; triage the same way.
-8. **Handoff (stage 5):** keep the completed work on its isolated branch. Do not merge into
-   `main` or another worker branch; `/close` commits/pushes the worker branch and the sole release
-   coordinator integrates it.
-9. **Prove (stage 6):** exercise the real user path — headless PASS/FAIL script + screenshot
-   for UI; real end-to-end run/validate for backend/content. Record the proof. Not proven = not
-   done. (Design slices: the recorded, cross-referenced decision IS the proof.)
-10. **Clean + record (stages 7–8):** delete superseded code or file a DEP row; flip ROADMAP
-    status to `proven`; rewrite STATE; update touched specs; close the wave file.
-11. **Report** in plain language: what got built, what the operator can see, what's next. End every
-    agent session with `/close`, including paused work. If this was the wave's last slice, say
-    coordinator `/close` can add it to the cumulative Preview batch; `SHIP` is optional until a
-    later wave explicitly requires Production proof or the operator wants to release the batch.
+1. Read `Docs/INDEX.md`, then the highest-numbered `Docs/Handoffs/*.md`. Inspect the current branch,
+   worktree status, and relevant diff. Historical STATE/ROADMAP/Waves/register files may provide
+   context but are not the automatic work queue; do not create or update them as routine ceremony.
+2. State the current learner-facing outcome and the smallest useful next step. If intent is genuinely
+   ambiguous, ask one focused question; otherwise continue.
+3. Confirm the existing behavior in the live app before changing it. For Practice work, start at
+   `http://127.0.0.1:3217/practice`. Treat tested behavior and fresh founder feedback as product truth.
+4. Work on a short-lived branch from fetched `origin/main`, or continue the clearly owned current
+   branch. Preserve unrelated changes and give sub-agents non-overlapping path scopes.
+5. Implement the smallest coherent change. Keep `content/` authorship and
+   `packages/lesson-schema/` contract changes separate and deliberate.
+6. Run narrow tests while iterating, then the relevant typecheck, lint, tests, build, content checks,
+   and browser proof for the final diff. Fix or clearly disposition findings.
+7. Update only active specs or the current handoff, and only with behavior proven in the app. Use:
+   what the learner sees; what must be true; what it must not do; how the live prototype proves it.
+8. Report the outcome, evidence, remaining uncertainty, and whether `/close` can publish the branch.
