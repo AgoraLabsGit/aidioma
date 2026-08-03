@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "briefId": "restaurant-spanish-50-v1",
+  "collectionId": "intermediate-restaurant",
+  "promptIdPrefix": "restaurant",
+  "promptVersion": "v1",
+  "targetTotal": 50,
+  "batchSize": 8,
+  "allowedFocus": ["completed-past", "time-phrases", "connectors"],
+  "allowedGrammarTags": [
+    "formula.courtesy",
+    "article",
+    "pronoun.do",
+    "pronoun.io",
+    "pronoun.do-io.combined",
+    "imperative",
+    "imperative.negative",
+    "preterite.regular",
+    "preterite.irregular",
+    "imperfect",
+    "perfect",
+    "periphrasis.aspectual",
+    "connector",
+    "connector.discourse",
+    "negation",
+    "question.formation",
+    "comparative"
+  ],
+  "allowedGrammarTagsByLevel": {
+    "foundation": [
+      "formula.courtesy",
+      "article",
+      "pronoun.do",
+      "pronoun.io",
+      "imperative",
+      "imperative.negative",
+      "connector",
+      "negation",
+      "question.formation",
+      "comparative"
+    ],
+    "intermediate": [
+      "formula.courtesy",
+      "article",
+      "pronoun.do",
+      "pronoun.io",
+      "pronoun.do-io.combined",
+      "imperative",
+      "imperative.negative",
+      "preterite.regular",
+      "preterite.irregular",
+      "imperfect",
+      "perfect",
+      "periphrasis.aspectual",
+      "connector",
+      "connector.discourse",
+      "negation",
+      "question.formation",
+      "comparative"
+    ]
+  },
+  "levelQuotas": {
+    "foundation": { "minimum": 25, "maximum": 25 },
+    "intermediate": { "minimum": 25, "maximum": 25 }
+  },
+  "difficultyQuotas": {
+    "1": { "minimum": 5, "maximum": 5 },
+    "2": { "minimum": 10, "maximum": 10 },
+    "3": { "minimum": 20, "maximum": 20 },
+    "4": { "minimum": 12, "maximum": 12 },
+    "5": { "minimum": 3, "maximum": 3 }
+  },
+  "focusMinimums": {
+    "completed-past": 18,
+    "time-phrases": 12,
+    "connectors": 12
+  },
+  "coverageGroups": [
+    { "key": "arrival-seating", "label": "Arrival and seating", "minimum": 5, "guidance": "Greet staff, request or change a table, mention reservations, and handle waiting." },
+    { "key": "ordering", "label": "Ordering", "minimum": 9, "guidance": "Order drinks and food, ask useful menu questions, and sequence an order naturally." },
+    { "key": "preferences-modifications", "label": "Preferences and modifications", "minimum": 6, "guidance": "Express preferences, allergies, omissions, substitutions, and preparation requests politely." },
+    { "key": "service-problems", "label": "Service problems", "minimum": 8, "guidance": "Identify mistakes, delays, temperature problems, missing items, and practical corrections." },
+    { "key": "payment", "label": "Payment", "minimum": 6, "guidance": "Ask for the bill, split or combine payment, clarify charges, and discuss payment methods." },
+    { "key": "past-visits", "label": "Past visits", "minimum": 6, "guidance": "Recount completed restaurant events and contrast details from a previous visit." },
+    { "key": "complaints-resolution", "label": "Complaints and resolution", "minimum": 6, "guidance": "Connect a concern to a polite request, consequence, compromise, or resolution." }
+  ],
+  "bannedSpanishTerms": [
+    "vos",
+    "vosotros",
+    "vosotras",
+    "sois",
+    "estáis",
+    "tenéis",
+    "queréis",
+    "vale",
+    "coger"
+  ],
+  "registerGuidance": "Use broadly understandable neutral Latin American Spanish. Prefer usted with staff when a subject is explicit, but allow natural subject omission. Keep service interactions polite without making every prompt overly formal.",
+  "contentGuidance": [
+    "Create distinct underlying communicative units; direction and activity variants do not count as new units.",
+    "Keep foundation prompts short and immediately useful; intermediate prompts may connect events, reasons, contrasts, or consequences.",
+    "Use original restaurant situations and avoid brand names, copied menus, prices tied to a real business, or cultural stereotypes.",
+    "Use only GrammarTag values allowed by the executable contract and match them to the actual evidence requested.",
+    "Do not claim that candidates are reviewed curriculum or production content."
+  ]
+}

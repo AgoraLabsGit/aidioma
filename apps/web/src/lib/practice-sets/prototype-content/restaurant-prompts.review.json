@@ -1,0 +1,1900 @@
+{
+  "schemaVersion": 1,
+  "prototypeOnly": true,
+  "collectionId": "intermediate-restaurant",
+  "sourceRunId": "run-2026-08-03t20-25-10-234z",
+  "sourceCandidateHash": "81a209f1b9731b918fed882f2039a8df2d8e2debcca820862d345889762fee00",
+  "reviewedContentHash": "656b27814cdbdb24d41bedf7b4e30e0486ad02ffd2df3cf96bd941d0068497ac",
+  "promotedContentHash": "cf286c8f1ea83111798b58e4b38531542aab838eaec649bb1221283dad65197d",
+  "review": {
+    "schemaVersion": 1,
+    "prototypeOnly": true,
+    "candidateHash": "81a209f1b9731b918fed882f2039a8df2d8e2debcca820862d345889762fee00",
+    "reviewer": "AIdioma operator content review",
+    "reviewedAt": "2026-08-03T20:55:00.000Z",
+    "acknowledgedWarnings": [],
+    "decisions": [
+      {
+        "candidateId": "restaurant-arrival-reservation-time-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "arrival-seating"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-arrival-reservation-time-v1",
+          "level": "foundation",
+          "focus": [
+            "time-phrases"
+          ],
+          "capability": "State a reservation time when arriving",
+          "cue": "Say this to the host when you arrive.",
+          "english": "We have a reservation at seven.",
+          "spanish": "Tenemos una reserva a las siete.",
+          "answers": {
+            "english": {
+              "target": [
+                "Our reservation is for seven."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "La reserva es para las siete."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 1,
+          "grammarTags": [
+            "article"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-order-water-first-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "ordering"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-order-water-first-v1",
+          "level": "foundation",
+          "focus": [
+            "connectors"
+          ],
+          "capability": "Sequence a polite drink request",
+          "cue": "Ask the server for water before placing the rest of your order.",
+          "english": "First, could you bring us water, please?",
+          "spanish": "Primero, ¿podría traernos agua, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "First, would you bring us some water, please?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Primero, ¿nos podría traer agua, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 2,
+          "grammarTags": [
+            "formula.courtesy",
+            "pronoun.io",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-no-onions-allergy-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "preferences-modifications"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-no-onions-allergy-v1",
+          "level": "foundation",
+          "focus": [
+            "connectors"
+          ],
+          "capability": "Politely request an omission and give a reason",
+          "cue": "Tell the server not to add onions to your salad.",
+          "english": "Please don't add onions to my salad because I have an onion allergy.",
+          "spanish": "Por favor, no agregue cebolla a mi ensalada porque tengo alergia a la cebolla.",
+          "answers": {
+            "english": {
+              "target": [
+                "Please do not add onions to my salad because I have an onion allergy."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Por favor, no ponga cebolla en mi ensalada porque tengo alergia a la cebolla."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 4,
+          "grammarTags": [
+            "formula.courtesy",
+            "imperative.negative",
+            "connector"
+          ]
+        },
+        "note": "Raised the two-clause formal negative-imperative allergy prompt to difficulty 4. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-payment-separate-or-one-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "payment"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-payment-separate-or-one-v1",
+          "level": "foundation",
+          "focus": [
+            "connectors"
+          ],
+          "capability": "Ask about separate payment options",
+          "cue": "Ask the server how your group can pay.",
+          "english": "Can we pay separately, or does it have to be one payment?",
+          "spanish": "¿Podemos pagar por separado o tiene que ser un solo pago?",
+          "answers": {
+            "english": {
+              "target": [
+                "Can we pay separately, or does it have to be a single payment?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "¿Podemos pagar por separado o debemos hacer un solo pago?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "question.formation",
+            "connector"
+          ]
+        },
+        "note": "Reframed the question around the restaurant payment constraint rather than a server preference. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-ordered-appetizers-main-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "ordering"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-ordered-appetizers-main-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "time-phrases",
+            "connectors"
+          ],
+          "capability": "Explain what has already been ordered before choosing more food",
+          "cue": "Tell the server that your group has ordered appetizers but still needs to choose main dishes.",
+          "english": "We already ordered the appetizers, but we still need to choose our main dishes.",
+          "spanish": "Ya pedimos las entradas, pero todavía necesitamos elegir los platos fuertes.",
+          "answers": {
+            "english": {
+              "target": [
+                "We've already ordered the appetizers, but we still have to choose our main courses."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Ya pedimos las entradas, pero aún tenemos que elegir los platos fuertes."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "preterite.regular",
+            "connector"
+          ]
+        },
+        "note": "Restored preterite.regular because pedimos has regular surface morphology. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-cold-soup-heat-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "service-problems"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-cold-soup-heat-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "connectors"
+          ],
+          "capability": "Report a cold dish and request a practical correction",
+          "cue": "Tell the server about your soup and ask for help.",
+          "english": "The soup arrived cold, so could you heat it up, please?",
+          "spanish": "La sopa llegó fría, así que ¿podría calentarla, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "The soup was cold when it arrived, so could you warm it up, please?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "La sopa llegó fría, así que ¿la podría calentar, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "formula.courtesy",
+            "pronoun.do",
+            "preterite.regular",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-past-terrace-inside-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "past-visits"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-past-terrace-inside-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "time-phrases",
+            "connectors"
+          ],
+          "capability": "Contrast an ongoing past condition with a completed seating decision",
+          "cue": "Describe what happened during your previous visit.",
+          "english": "Last time, the terrace was full, so we sat inside.",
+          "spanish": "La última vez, la terraza estaba llena, así que nos sentamos adentro.",
+          "answers": {
+            "english": {
+              "target": [
+                "Last time, the terrace was full, so we sat indoors."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "La vez pasada, la terraza estaba llena, así que nos sentamos adentro."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "imperfect",
+            "preterite.regular",
+            "connector"
+          ]
+        },
+        "note": "Set difficulty 3 for this short two-clause past contrast as part of truth-based quota rebalancing. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-wrong-dessert-replace-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "complaints-resolution"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-wrong-dessert-replace-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "connectors"
+          ],
+          "capability": "Connect a completed service mistake to a polite replacement request",
+          "cue": "Explain that the dessert was incorrect and request a replacement.",
+          "english": "You brought us the wrong dessert, so could you replace it for us, please?",
+          "spanish": "Nos trajo el postre equivocado, así que ¿podría cambiárnoslo, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "You brought us the wrong dessert, so could you change it for us, please?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Nos trajo el postre equivocado, así que ¿nos lo podría cambiar, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 4,
+          "grammarTags": [
+            "formula.courtesy",
+            "pronoun.io",
+            "pronoun.do-io.combined",
+            "preterite.irregular",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-table-two-eight-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "arrival-seating"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-table-two-eight-v1",
+          "level": "foundation",
+          "focus": [
+            "time-phrases"
+          ],
+          "capability": "Ask whether a table is available for a specific party size and time",
+          "cue": "Ask the host about table availability.",
+          "english": "Do you have a table for two at eight?",
+          "spanish": "¿Tiene una mesa para dos a las ocho?",
+          "answers": {
+            "english": {
+              "target": [
+                "Is there a table for two at eight?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "¿Hay una mesa para dos a las ocho?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 1,
+          "grammarTags": [
+            "article",
+            "question.formation"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-soup-then-tacos-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "ordering"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-soup-then-tacos-v1",
+          "level": "foundation",
+          "focus": [
+            "connectors"
+          ],
+          "capability": "Sequence two food orders politely",
+          "cue": "Place an order in the desired sequence.",
+          "english": "First, could we order the soup and then the tacos?",
+          "spanish": "Primero, ¿podríamos pedir la sopa y después los tacos?",
+          "answers": {
+            "english": {
+              "target": [
+                "Could we order the soup first and the tacos afterward?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "¿Podríamos pedir primero la sopa y después los tacos?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 2,
+          "grammarTags": [
+            "formula.courtesy",
+            "article",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-lunch-chicken-no-sauce-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "preferences-modifications"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-lunch-chicken-no-sauce-v1",
+          "level": "foundation",
+          "focus": [
+            "time-phrases"
+          ],
+          "capability": "Request a dish without an ingredient for a meal",
+          "cue": "Order lunch with a simple omission.",
+          "english": "For lunch, I want the chicken without sauce, please.",
+          "spanish": "Para el almuerzo, quiero el pollo sin salsa, por favor.",
+          "answers": {
+            "english": {
+              "target": [
+                "At lunch, I want the chicken without sauce, please."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Para almorzar, quiero el pollo sin salsa, por favor."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 2,
+          "grammarTags": [
+            "formula.courtesy",
+            "article"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-bread-now-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "service-problems"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-bread-now-v1",
+          "level": "foundation",
+          "focus": [
+            "time-phrases"
+          ],
+          "capability": "Politely request a missing item immediately",
+          "cue": "Ask the server for the bread that has not arrived.",
+          "english": "Could you bring us the bread now, please?",
+          "spanish": "¿Podría traernos el pan ahora, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "Could you please bring us the bread now?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "¿Nos podría traer el pan ahora, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 2,
+          "grammarTags": [
+            "formula.courtesy",
+            "article",
+            "pronoun.io"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-vegetarian-dish-unavailable-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "ordering"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-vegetarian-dish-unavailable-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "time-phrases",
+            "connectors"
+          ],
+          "capability": "Explain that an ordered dish is no longer available",
+          "cue": "Respond when the restaurant cannot provide part of your order.",
+          "english": "We ordered the vegetarian dish, but it is no longer available.",
+          "spanish": "Pedimos el plato vegetariano, pero ya no está disponible.",
+          "answers": {
+            "english": {
+              "target": [
+                "We ordered the vegetarian dish, but it's no longer available."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Pedimos el plato vegetariano, pero ya no se encuentra disponible."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "article",
+            "preterite.regular",
+            "connector"
+          ]
+        },
+        "note": "Restored preterite.regular for the surface form pedimos and preserved the ya no transition in the reviewed Spanish target. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-cash-before-two-cards-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "payment"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-cash-before-two-cards-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "time-phrases",
+            "connectors"
+          ],
+          "capability": "Ask about using two cards while contrasting a previous payment method",
+          "cue": "Ask whether two cards can be used today.",
+          "english": "Last time we paid cash, but today can we use two cards?",
+          "spanish": "La última vez pagamos en efectivo, pero hoy ¿podemos usar dos tarjetas?",
+          "answers": {
+            "english": {
+              "target": [
+                "We paid cash last time, but can we use two cards today?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "La vez pasada pagamos en efectivo, pero ¿podemos usar dos tarjetas hoy?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "question.formation",
+            "preterite.regular",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-fridays-menu-day-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "past-visits"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-fridays-menu-day-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "time-phrases",
+            "connectors"
+          ],
+          "capability": "Contrast a past restaurant habit with one completed event",
+          "cue": "Describe a previous pattern of visits and a particular meal.",
+          "english": "Last month, we came here every Friday, but one night we tried the daily set menu.",
+          "spanish": "El mes pasado veníamos aquí todos los viernes, pero una noche probamos el menú del día.",
+          "answers": {
+            "english": {
+              "target": [
+                "We came here every Friday last month, but one night we tried the set menu."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "El mes pasado veníamos aquí cada viernes, pero una noche probamos el menú del día."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 4,
+          "grammarTags": [
+            "article",
+            "imperfect",
+            "preterite.regular",
+            "connector"
+          ]
+        },
+        "note": "Aligned menú del día with daily set menu rather than daily special. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-overcooked-steak-deduct-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "complaints-resolution"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-overcooked-steak-deduct-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "connectors"
+          ],
+          "capability": "Connect an overcooked dish to a polite billing correction request",
+          "cue": "Ask for a charge to be removed after a cooking problem.",
+          "english": "Because the steak was overcooked, could you take it off the bill, please?",
+          "spanish": "Como el bistec quedó demasiado cocido, ¿podría quitarlo de la cuenta, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "Could you take the steak off the bill, please, since it was overcooked?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Ya que el bistec quedó demasiado cocido, ¿podría quitarlo de la cuenta, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 4,
+          "grammarTags": [
+            "formula.courtesy",
+            "pronoun.do",
+            "preterite.regular",
+            "connector"
+          ]
+        },
+        "note": "Replaced stiff deduct/descontar wording with natural take off/quitar wording. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-reservation-table-not-ready-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "arrival-seating"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-reservation-table-not-ready-v1",
+          "level": "foundation",
+          "focus": [
+            "connectors"
+          ],
+          "capability": "Mention a reservation and report that the table is still not ready",
+          "cue": "You have arrived for your reservation, but your table is not ready.",
+          "english": "We have a reservation, but our table is not ready yet.",
+          "spanish": "Tenemos una reserva, pero nuestra mesa todavía no está lista.",
+          "answers": {
+            "english": {
+              "target": [
+                "We have a reservation, but our table still isn't ready."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Tenemos una reserva, pero nuestra mesa aún no está lista."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 2,
+          "grammarTags": [
+            "connector",
+            "negation"
+          ]
+        },
+        "note": "Raised the coordinated negated prompt above the difficulty-1 band. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-rice-instead-fries-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "ordering",
+          "preferences-modifications"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-rice-instead-fries-v1",
+          "level": "foundation",
+          "focus": [
+            "connectors"
+          ],
+          "capability": "Politely request a side substitution with an order",
+          "cue": "Order fish and ask for rice instead of fries.",
+          "english": "Could you bring me rice instead of fries with the fish, please?",
+          "spanish": "¿Podría traerme arroz en lugar de papas fritas con el pescado, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "Could you bring me rice rather than fries with the fish, please?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "¿Me podría traer arroz en vez de papas fritas con el pescado, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 2,
+          "grammarTags": [
+            "formula.courtesy",
+            "article",
+            "pronoun.io",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-nut-free-dessert-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "ordering",
+          "preferences-modifications"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-nut-free-dessert-v1",
+          "level": "foundation",
+          "focus": [
+            "connectors"
+          ],
+          "capability": "Ask which dessert is safe for a guest with a nut allergy",
+          "cue": "Your daughter has a nut allergy. Ask about dessert options.",
+          "english": "My daughter has a nut allergy, so which dessert does not contain nuts?",
+          "spanish": "Mi hija tiene alergia a las nueces, así que ¿qué postre no contiene nueces?",
+          "answers": {
+            "english": {
+              "target": [
+                "My daughter is allergic to nuts, so which dessert doesn't contain any?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Mi hija es alérgica a las nueces, así que ¿qué postre no tiene nueces?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "article",
+            "negation",
+            "question.formation",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-one-receipt-together-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "payment"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-one-receipt-together-v1",
+          "level": "foundation",
+          "focus": [
+            "connectors"
+          ],
+          "capability": "Request one bill when the group is paying together",
+          "cue": "Your group will pay together. Ask for a single bill.",
+          "english": "We are paying together, so could you bring us one bill, please?",
+          "spanish": "Vamos a pagar juntos, así que ¿podría traernos una sola cuenta, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "We're paying together, so could you bring us a single bill, please?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Vamos a pagar juntos, así que ¿nos podría traer una sola cuenta, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "formula.courtesy",
+            "article",
+            "pronoun.io",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-coffee-delay-twenty-minutes-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "service-problems"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-coffee-delay-twenty-minutes-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "time-phrases",
+            "connectors"
+          ],
+          "capability": "Report that a drink ordered earlier has still not arrived",
+          "cue": "You ordered coffee twenty minutes ago, and it has not arrived.",
+          "english": "We ordered coffee twenty minutes ago, and it still has not arrived.",
+          "spanish": "Pedimos café hace veinte minutos y todavía no ha llegado.",
+          "answers": {
+            "english": {
+              "target": [
+                "We ordered coffee twenty minutes ago, and it still hasn't arrived."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Hace veinte minutos pedimos café y todavía no ha llegado."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "preterite.regular",
+            "perfect",
+            "connector",
+            "negation"
+          ]
+        },
+        "note": "Restored preterite.regular for pedimos and retained perfect for ha llegado. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-drink-not-brought-cancel-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "service-problems",
+          "complaints-resolution",
+          "payment"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-drink-not-brought-cancel-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "connectors"
+          ],
+          "capability": "Connect a missing drink to a polite request to remove it from the bill",
+          "cue": "Your drink never arrived. Ask to have it removed from the bill.",
+          "english": "They did not bring me the drink, so could you take it off the bill, please?",
+          "spanish": "No me trajeron la bebida, así que ¿podría quitarla de la cuenta, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "Since they didn't bring me the drink, could you remove it from the bill, please?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Como no me trajeron la bebida, ¿podría quitarla de la cuenta, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 4,
+          "grammarTags": [
+            "formula.courtesy",
+            "article",
+            "pronoun.do",
+            "pronoun.io",
+            "preterite.irregular",
+            "connector",
+            "negation"
+          ]
+        },
+        "note": "Used natural take/remove-it-off-the-bill framing. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-may-kitchen-closing-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "past-visits"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-may-kitchen-closing-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "time-phrases",
+            "connectors"
+          ],
+          "capability": "Contrast an imminent past restaurant event with the service received",
+          "cue": "Describe what happened when you visited in May just before the kitchen closed.",
+          "english": "When we came here in May, they were about to close the kitchen, but they served us anyway.",
+          "spanish": "Cuando vinimos aquí en mayo, estaban por cerrar la cocina, pero de todos modos nos atendieron.",
+          "answers": {
+            "english": {
+              "target": [
+                "When we came here in May, they were just about to close the kitchen, but they served us anyway."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Cuando vinimos aquí en mayo, estaban a punto de cerrar la cocina, pero de todos modos nos atendieron."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 4,
+          "grammarTags": [
+            "imperfect",
+            "preterite.irregular",
+            "periphrasis.aspectual",
+            "connector",
+            "connector.discourse"
+          ]
+        },
+        "note": "Aligned the canonical and target pairs to prospective aspect with estaban por cerrar / estaban a punto de cerrar and retained periphrasis.aspectual. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-uncharged-bottle-corrected-bill-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "payment",
+          "service-problems",
+          "complaints-resolution"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-uncharged-bottle-corrected-bill-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "connectors"
+          ],
+          "capability": "Dispute an incorrect charge and request a corrected bill politely",
+          "cue": "You were charged for a bottle you did not order. Ask for a corrected bill.",
+          "english": "Since we were charged for a bottle we did not order, could you remove that charge and bring us the corrected bill, please?",
+          "spanish": "Como nos cobraron por una botella que no pedimos, ¿podría quitar ese cargo y traernos la cuenta corregida, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "Because we were billed for a bottle we did not order, could you remove that charge and bring us the corrected bill, please?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Como nos cobraron por una botella que no pedimos, ¿podría eliminar ese cargo y traernos la cuenta corregida, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 5,
+          "grammarTags": [
+            "formula.courtesy",
+            "article",
+            "pronoun.io",
+            "preterite.regular",
+            "connector",
+            "negation"
+          ]
+        },
+        "note": "Clarified the erroneous charge, restored regular surface-form tagging, and removed the now-unsupported direct-object-pronoun tag. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-wait-time-table-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "arrival-seating"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-wait-time-table-v1",
+          "level": "foundation",
+          "focus": [
+            "time-phrases"
+          ],
+          "capability": "Ask how long the wait is for a table",
+          "cue": "Ask the host about the wait time.",
+          "english": "How long do we have to wait for a table?",
+          "spanish": "¿Cuánto tiempo tenemos que esperar para conseguir una mesa?",
+          "answers": {
+            "english": {
+              "target": [
+                "How long must we wait for a table?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "¿Cuánto tenemos que esperar para conseguir una mesa?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 2,
+          "grammarTags": [
+            "article",
+            "question.formation"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-lunch-fish-includes-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "ordering"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-lunch-fish-includes-v1",
+          "level": "foundation",
+          "focus": [
+            "time-phrases"
+          ],
+          "capability": "Politely ask what is included with a menu item",
+          "cue": "Ask the server about a lunch dish.",
+          "english": "For lunch, could you tell me what comes with the grilled fish, please?",
+          "spanish": "Para el almuerzo, ¿podría decirme qué incluye el pescado a la parrilla, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "For lunch, could you please tell me what is served with the grilled fish?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Para el almuerzo, ¿podría decirme con qué viene el pescado a la parrilla, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 2,
+          "grammarTags": [
+            "formula.courtesy",
+            "article",
+            "question.formation"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-dinner-sauce-side-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "preferences-modifications"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-dinner-sauce-side-v1",
+          "level": "foundation",
+          "focus": [],
+          "capability": "Politely request sauce on the side",
+          "cue": "Make a short request for sauce to be served separately.",
+          "english": "The sauce on the side, please.",
+          "spanish": "La salsa aparte, por favor.",
+          "answers": {
+            "english": {
+              "target": [
+                "Sauce on the side, please."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Salsa aparte, por favor."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 1,
+          "grammarTags": [
+            "formula.courtesy",
+            "article"
+          ]
+        },
+        "note": "Rewrote this as a genuine difficulty-1 fixed restaurant request, removed the unsupported time focus and imperative tag, and retained truthful courtesy/article tags. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-salty-soup-replace-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "service-problems",
+          "complaints-resolution"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-salty-soup-replace-v1",
+          "level": "foundation",
+          "focus": [
+            "connectors"
+          ],
+          "capability": "Report an overly salty dish and politely request a replacement",
+          "cue": "Tell the server about the soup and ask for a solution.",
+          "english": "The soup is too salty, so could you bring me another one, please?",
+          "spanish": "La sopa está demasiado salada, así que ¿podría traerme otra, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "The soup is too salty, so could you bring me a different one, please?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "La sopa está demasiado salada, así que ¿me podría traer otra, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "formula.courtesy",
+            "article",
+            "pronoun.io",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-sandwiches-forty-minutes-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "ordering",
+          "service-problems"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-sandwiches-forty-minutes-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "time-phrases",
+            "connectors"
+          ],
+          "capability": "Report that part of an earlier order is still missing",
+          "cue": "Tell the server about a delayed order.",
+          "english": "We ordered the sandwiches forty minutes ago, but one of them is still missing.",
+          "spanish": "Pedimos los sándwiches hace cuarenta minutos, pero todavía falta uno.",
+          "answers": {
+            "english": {
+              "target": [
+                "We ordered sandwiches forty minutes ago, but one is still missing."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Hace cuarenta minutos pedimos los sándwiches, pero todavía falta uno."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "article",
+            "preterite.regular",
+            "connector"
+          ]
+        },
+        "note": "Restored preterite.regular for the surface form pedimos. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-last-sunday-special-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "past-visits"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-last-sunday-special-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "time-phrases",
+            "connectors"
+          ],
+          "capability": "Recount a previous visit and a recommendation received",
+          "cue": "Describe a previous lunch at the restaurant.",
+          "english": "Last Sunday, we came for lunch, and the server recommended the daily special.",
+          "spanish": "El domingo pasado vinimos a almorzar y el mesero nos recomendó el plato del día.",
+          "answers": {
+            "english": {
+              "target": [
+                "We came for lunch last Sunday, and the server recommended the daily special."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Vinimos a almorzar el domingo pasado y el mesero nos recomendó el plato del día."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "article",
+            "pronoun.io",
+            "preterite.irregular",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-previous-visit-salty-paella-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "past-visits",
+          "ordering",
+          "service-problems"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-previous-visit-salty-paella-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "time-phrases",
+            "connectors"
+          ],
+          "capability": "Connect a previous order, a recommendation, and a service problem",
+          "cue": "Describe a problem from a previous visit.",
+          "english": "On our previous visit, we ordered the paella because the server recommended it, but it arrived too salty.",
+          "spanish": "En nuestra visita anterior, pedimos la paella porque el mesero la recomendó, pero llegó demasiado salada.",
+          "answers": {
+            "english": {
+              "target": [
+                "During our previous visit, we ordered the paella because the server recommended it, but it arrived too salty."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Durante nuestra visita anterior, pedimos la paella porque el mesero la recomendó, pero llegó demasiado salada."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 4,
+          "grammarTags": [
+            "article",
+            "pronoun.do",
+            "preterite.regular",
+            "connector"
+          ]
+        },
+        "note": "Removed the spurious irregular tag; all produced preterites have regular surface morphology. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-double-charge-refund-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "payment",
+          "complaints-resolution"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-double-charge-refund-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "time-phrases",
+            "connectors"
+          ],
+          "capability": "Report a duplicate charge and request a refund",
+          "cue": "Explain a billing problem to the manager.",
+          "english": "Yesterday, they charged me twice for the same meal, so I showed the manager both charges and requested a refund.",
+          "spanish": "Ayer me cobraron dos veces por la misma comida, así que le mostré ambos cargos al gerente y pedí un reembolso.",
+          "answers": {
+            "english": {
+              "target": [
+                "Yesterday, I was charged twice for the same meal, so I showed the manager both charges and asked for a refund."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Ayer me cobraron dos veces por la misma comida; por eso le mostré ambos cargos al gerente y pedí un reembolso."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 5,
+          "grammarTags": [
+            "article",
+            "pronoun.io",
+            "preterite.regular",
+            "connector"
+          ]
+        },
+        "note": "Kept preterite.regular only because pedí has regular first-person singular morphology. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-door-table-quieter-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "arrival-seating"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-door-table-quieter-v1",
+          "level": "foundation",
+          "focus": [
+            "connectors"
+          ],
+          "capability": "Request a quieter table and give a reason politely",
+          "cue": "Say this to the host.",
+          "english": "Because this table is by the door, could you give us a quieter one, please?",
+          "spanish": "Como esta mesa está junto a la puerta, ¿podría darnos una más tranquila, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "Since this table is by the door, could you give us a quieter one, please?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Ya que esta mesa está junto a la puerta, ¿podría darnos una más tranquila, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "formula.courtesy",
+            "pronoun.io",
+            "comparative",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-dinner-pasta-no-cheese-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "preferences-modifications"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-dinner-pasta-no-cheese-v1",
+          "level": "foundation",
+          "focus": [
+            "time-phrases"
+          ],
+          "capability": "Politely request a dish without cheese for dinner",
+          "cue": "Say this when ordering from the server.",
+          "english": "For dinner, could you make the pasta without cheese, please?",
+          "spanish": "Para la cena, ¿podría preparar la pasta sin queso, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "For dinner, could you please prepare the pasta without cheese?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Para la cena, ¿podría hacer la pasta sin queso, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 2,
+          "grammarTags": [
+            "formula.courtesy",
+            "article",
+            "question.formation"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-dinner-vegetarian-soup-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "ordering"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-dinner-vegetarian-soup-v1",
+          "level": "foundation",
+          "focus": [
+            "time-phrases"
+          ],
+          "capability": "Ask which soup is vegetarian for dinner",
+          "cue": "Ask the server about the menu.",
+          "english": "For dinner, which soup is vegetarian?",
+          "spanish": "Para la cena, ¿qué sopa es vegetariana?",
+          "answers": {
+            "english": {
+              "target": [
+                "At dinner, which soup is vegetarian?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Para cenar, ¿qué sopa es vegetariana?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 1,
+          "grammarTags": [
+            "article",
+            "question.formation"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-before-paying-three-parts-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "payment"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-before-paying-three-parts-v1",
+          "level": "foundation",
+          "focus": [
+            "time-phrases"
+          ],
+          "capability": "Politely ask to divide the bill into three equal parts before paying",
+          "cue": "Say this to the server.",
+          "english": "Before paying, could you divide the bill into three equal parts, please?",
+          "spanish": "Antes de pagar, ¿podría dividir la cuenta en tres partes iguales, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "Could you divide the bill into three equal parts before paying, please?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "¿Podría dividir la cuenta en tres partes iguales antes de pagar, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "formula.courtesy",
+            "article"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-order-add-salad-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "ordering"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-order-add-salad-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "time-phrases",
+            "connectors"
+          ],
+          "capability": "Add an item after a completed order",
+          "cue": "Say this to the server after placing your order.",
+          "english": "We have already placed our order, but could we add a salad?",
+          "spanish": "Ya hemos hecho el pedido, pero ¿podríamos agregar una ensalada?",
+          "answers": {
+            "english": {
+              "target": [
+                "We've already placed our order, but could we add a salad?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Ya hemos pedido, pero ¿podríamos agregar una ensalada?"
+              ],
+              "communicative": [
+                "Ya hicimos el pedido, pero ¿podríamos agregar una ensalada?"
+              ]
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "article",
+            "perfect",
+            "question.formation",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-two-weeks-ago-empty-dining-room-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "past-visits"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-two-weeks-ago-empty-dining-room-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "time-phrases",
+            "connectors"
+          ],
+          "capability": "Describe a completed visit and the restaurant atmosphere at that time",
+          "cue": "Describe a previous visit to the restaurant.",
+          "english": "Two weeks ago, we came for dinner, and the dining room was almost empty.",
+          "spanish": "Hace dos semanas vinimos a cenar y el salón estaba casi vacío.",
+          "answers": {
+            "english": {
+              "target": [
+                "We came for dinner two weeks ago, and the dining room was almost empty."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Vinimos a cenar hace dos semanas y el salón estaba casi vacío."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "preterite.irregular",
+            "imperfect",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-main-dishes-too-early-keep-warm-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "service-problems",
+          "complaints-resolution"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-main-dishes-too-early-keep-warm-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "connectors"
+          ],
+          "capability": "Explain that main dishes arrived too early and request a practical solution",
+          "cue": "Say this to the server.",
+          "english": "The server brought the main dishes while we were still eating the appetizers, so could you keep them warm, please?",
+          "spanish": "El mesero trajo los platos fuertes mientras todavía comíamos las entradas, así que ¿podría mantenerlos calientes, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "The server brought out the main dishes while we were still eating the appetizers, so could you keep them warm, please?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "El mesero trajo los platos fuertes mientras aún comíamos las entradas, así que ¿los podría mantener calientes, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 4,
+          "grammarTags": [
+            "formula.courtesy",
+            "article",
+            "pronoun.do",
+            "preterite.irregular",
+            "imperfect",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-tax-included-correct-total-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "payment",
+          "complaints-resolution"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-tax-included-correct-total-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "connectors"
+          ],
+          "capability": "Dispute a separately charged tax and request a corrected total politely",
+          "cue": "Say this to the server or manager.",
+          "english": "The menu said tax was included, but they charged it to us separately; could you correct the total, please?",
+          "spanish": "El menú decía que el impuesto estaba incluido, pero nos lo cobraron aparte; ¿podría corregir el total, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "The menu said that tax was included, but they charged it separately; could you please correct the total?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "El menú decía que el impuesto estaba incluido, pero nos lo cobraron por separado; ¿podría corregir el total, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 5,
+          "grammarTags": [
+            "formula.courtesy",
+            "article",
+            "pronoun.do-io.combined",
+            "preterite.regular",
+            "imperfect",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-clean-utensils-allergy-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "preferences-modifications"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-clean-utensils-allergy-v1",
+          "level": "foundation",
+          "focus": [
+            "connectors"
+          ],
+          "capability": "Request clean utensils politely and explain an allergy concern",
+          "cue": "Say this to the server.",
+          "english": "Could you use clean utensils because I have a seafood allergy?",
+          "spanish": "¿Podría usar utensilios limpios porque tengo alergia a los mariscos?",
+          "answers": {
+            "english": {
+              "target": [
+                "Could you use clean utensils since I have a seafood allergy?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "¿Podría usar utensilios limpios ya que tengo alergia a los mariscos?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "formula.courtesy",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-window-no-sun-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "arrival-seating"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-window-no-sun-v1",
+          "level": "foundation",
+          "focus": [
+            "connectors"
+          ],
+          "capability": "Request a table location while specifying an unwanted condition",
+          "cue": "Say this to the host.",
+          "english": "We need a table near the window, but out of direct sunlight.",
+          "spanish": "Necesitamos una mesa cerca de la ventana, pero sin luz solar directa.",
+          "answers": {
+            "english": {
+              "target": [
+                "We need a table by the window, but out of direct sunlight."
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Necesitamos una mesa junto a la ventana, pero sin luz solar directa."
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 2,
+          "grammarTags": [
+            "article",
+            "connector",
+            "negation"
+          ]
+        },
+        "note": "Set this single-clause location request to difficulty 2 as a quota compensator. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-service-included-tip-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "payment"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-service-included-tip-v1",
+          "level": "foundation",
+          "focus": [
+            "connectors"
+          ],
+          "capability": "Ask whether service is included and clarify whether a tip is needed",
+          "cue": "Ask the server before paying.",
+          "english": "Could you tell me whether service is included, or should we leave a tip?",
+          "spanish": "¿Podría decirme si el servicio está incluido o si debemos dejar propina?",
+          "answers": {
+            "english": {
+              "target": [
+                "Could you tell me if service is included, or whether we should leave a tip?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "¿Podría decirme si el servicio está incluido o debemos dejar propina?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 3,
+          "grammarTags": [
+            "formula.courtesy",
+            "question.formation",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-warm-juice-colder-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "service-problems",
+          "complaints-resolution"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-warm-juice-colder-v1",
+          "level": "foundation",
+          "focus": [
+            "connectors"
+          ],
+          "capability": "Report that a drink is too warm and politely request a colder replacement",
+          "cue": "Say this to the server.",
+          "english": "This juice is warmer than expected, so could you bring me a colder one, please?",
+          "spanish": "Este jugo está más tibio de lo esperado, así que ¿podría traerme uno más frío, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "This juice is warmer than I expected, so could you bring me a colder one, please?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Este jugo está más tibio de lo que esperaba, así que ¿me podría traer uno más frío, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 4,
+          "grammarTags": [
+            "formula.courtesy",
+            "pronoun.io",
+            "comparative",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-pasta-cream-correction-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "preferences-modifications",
+          "service-problems",
+          "complaints-resolution"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-pasta-cream-correction-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "connectors"
+          ],
+          "capability": "Explain that a dish was prepared against a modification request and ask for a replacement",
+          "cue": "Say this to the server.",
+          "english": "We ordered the pasta without cream, but they prepared it with cream; could you bring me another one, please?",
+          "spanish": "Pedimos la pasta sin crema, pero la prepararon con crema; ¿podría traerme otra, por favor?",
+          "answers": {
+            "english": {
+              "target": [
+                "We ordered the pasta without cream, but it was prepared with cream; could you bring me another one, please?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "Pedimos la pasta sin crema, pero la prepararon con crema; ¿me podría traer otra, por favor?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 4,
+          "grammarTags": [
+            "formula.courtesy",
+            "article",
+            "pronoun.do",
+            "pronoun.io",
+            "preterite.regular",
+            "connector"
+          ]
+        },
+        "note": "Removed the spurious irregular tag from pedimos. Added reviewed noncanonical target alternatives in both languages."
+      },
+      {
+        "candidateId": "restaurant-last-month-patio-again-v1",
+        "decision": "edit",
+        "reviewedCoverageKeys": [
+          "past-visits",
+          "arrival-seating"
+        ],
+        "editedPrompt": {
+          "id": "restaurant-last-month-patio-again-v1",
+          "level": "intermediate",
+          "focus": [
+            "completed-past",
+            "time-phrases",
+            "connectors"
+          ],
+          "capability": "Refer to a previous visit to request a preferred seating area again",
+          "cue": "Say this to the host.",
+          "english": "Last month, the dining room was noisy, so we ate on the patio; this time, could we sit there again?",
+          "spanish": "El mes pasado, el salón estaba ruidoso, así que comimos en el patio; esta vez, ¿podríamos sentarnos allí otra vez?",
+          "answers": {
+            "english": {
+              "target": [
+                "Last month, the dining room was noisy, so we ate on the patio; could we sit there again this time?"
+              ],
+              "communicative": []
+            },
+            "spanish": {
+              "target": [
+                "El mes pasado, el salón estaba ruidoso, así que comimos en el patio; esta vez, ¿podríamos sentarnos allí de nuevo?"
+              ],
+              "communicative": []
+            }
+          },
+          "difficulty": 4,
+          "grammarTags": [
+            "formula.courtesy",
+            "imperfect",
+            "preterite.regular",
+            "connector"
+          ]
+        },
+        "note": "Added reviewed noncanonical target alternatives in both languages."
+      }
+    ]
+  },
+  "critic": {
+    "schemaVersion": 1,
+    "prototypeOnly": true,
+    "candidateHash": "81a209f1b9731b918fed882f2039a8df2d8e2debcca820862d345889762fee00",
+    "reviewedContentHash": "656b27814cdbdb24d41bedf7b4e30e0486ad02ffd2df3cf96bd941d0068497ac",
+    "model": "codex/gpt-5.6-sol",
+    "reviewer": "AIdioma independent sol critic",
+    "reviewedAt": "2026-08-03T20:55:01Z",
+    "verdict": "pass",
+    "findings": []
+  }
+}

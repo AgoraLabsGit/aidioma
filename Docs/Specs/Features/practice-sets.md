@@ -2,7 +2,7 @@
 title: Practice Sets — curated and custom practice
 type: feature-spec
 status: active
-updated: 2026-07-30
+updated: 2026-08-03
 ---
 
 # Practice Sets — curated and custom practice
@@ -25,11 +25,11 @@ and lesson entry, and Practice owns focused collection drills. The current Lesso
 preserved lesson-mix preview under `/lessons/1`; its real recipe, session record, evaluation, and
 lesson-progress behavior remain the A4 SessionEngine implementation.
 
-Saved is an ownership filter in the catalog alongside All and the content facets, not a separate
-Your practice page. Learners can save any practice source with the same bookmark control; the Saved
-filter groups those references without copying or changing the underlying collection. If saved
-practice later expands into cross-source review queues, private lists, or recommendations, that
-broader destination must earn its own page rather than being prebuilt into the prototype.
+Saved is a catalog filter, not a separate page. In the current fixture it contains two distinct
+visit-only sections: bookmarked collection shortcuts and individual prompt references saved after
+feedback. A prompt reference is collection ID + prompt ID, independent of practice direction, and
+the resulting personal-material queue can be practiced in both directions. Neither save kind copies
+content, changes progress identity, survives reload, or claims persistence.
 
 Collections use **Vocabulary, Verbs, Phrases, Topics, and Situations** as overlapping facets, not
 one exclusive enum: a restaurant collection may be mixed content, topic `food`, and situation
@@ -46,7 +46,8 @@ one exclusive enum: a restaurant collection may be mixed content, topic `food`, 
 Each set has an immutable ID, slug, title, description, level range, facets, version, origin,
 visibility, provenance, ordered targets, supported activities, and default session configuration.
 Targets have immutable IDs, bilingual prompts/answers, reviewed alternates, shared GrammarTags,
-difficulty, and optional grammatical features (`mood`, `tense`, `person`, `number`, `form`).
+difficulty, and optional grammatical features (`mood`, `tense`, `person`, `number`, `form`). Numeric
+difficulty is authored metadata, not the removed learner-facing support/difficulty setting.
 
 Activities are capability-driven. Lexical targets support Type/Flashcards; reviewed distractors
 enable Quiz; contextual sentences enable Sentences; a passage enables Story/Reading; a scenario
@@ -55,19 +56,18 @@ reuse shared answer, provenance, and GrammarTag contracts rather than creating a
 
 ## Session configuration
 
-Every set offers only valid intersections of its capabilities:
+The current prototype offers only valid intersections of its capabilities:
 
-- activity, direction (EN→ES / ES→EN / Both), session length, difficulty, and shuffle;
+- activity, direction (EN→ES / ES→EN / Both), focus, and shuffle;
 - Verbs: tense/mood, person/number, and drill type (meaning, recognize form, produce form, context);
 - Phrases: recognition/production, register, and communicative function;
 - Topics/Situations: content kinds, subtopic, and—when authored—role or goal.
 
-Selecting a collection starts practice with remembered defaults. A dedicated options control opens
-advanced choices before starting or while a session is in progress; it does not add an interstitial
-detail screen. Presets may offer Quick practice, Focused drill, and Mixed challenge. Starting a
-session persists a configuration snapshot; changing settings starts a new session rather than
-mutating scoring scope in flight. Invalid combinations (for example imperative + first-person
-singular) are unavailable, not accepted and repaired later.
+Selecting a collection starts with remembered defaults. Settings edit a draft: cancel discards it;
+Start practice/Start new session commits it to a fresh immutable snapshot of activity, direction,
+focus, shuffle, and order seed. Varied sessions schedule each prompt before repeating, avoid the
+prior first prompt when possible, and exhaust Both-direction units before repeating. Shuffle off
+preserves fixture order as the test seam. Invalid combinations are unavailable rather than repaired.
 
 ## MVP delivery
 
@@ -90,12 +90,16 @@ retrieval performance only over targets available in that set/version.
 ## Saved practice identity
 
 Saved practice is a learner-owned reference to one source item, identified by immutable source type
-and ID. It may span lesson mixes, curated collections, and private content, but it never duplicates
-content, changes ownership, or changes progress identity. Durable creation/removal and cross-device
-sync ship with A5 saved/review persistence; the fixture prototype may demonstrate only session-local
-interaction.
+and ID. It may span sources but never duplicates content or changes progress identity. Durable
+creation/removal and cross-device sync remain future; the fixture is visit-local only.
 
 ## Custom generation gate (A9)
+
+The checked-in Restaurant corpus came from a separate operator-only prototype bench with strict
+schemas, bounded resumable checkpoints, deterministic validation, a complete human decision
+manifest, and an independent critic bound to reviewed content. Promotion requires clean post-edit
+validation, acknowledged warnings, and explicit prototype-only acknowledgement; it writes hash-bound
+JSON plus a tracked review sidecar. The bench provides no learner generation, persistence, or A9.
 
 Per ADR-0017, stable Workflow core orchestrates normalize/cache → structured candidate → schema and
 policy validation → independent quality check → private draft → typed learner review → approve,

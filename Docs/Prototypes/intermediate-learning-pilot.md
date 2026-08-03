@@ -99,8 +99,9 @@ against a varied system rather than mistaken for the whole design.
 - `/lessons/intermediate/tell-what-happened` runs the three-step finite teaching arc.
 - `/practice` shows all four collections, optional focus controls, and a continuous practice feed
   with live scoped evaluation and an explicit learner-requested recap.
-- The other four lessons and three collections remain breadth outlines/sample prompts; they are not
-  yet complete learning experiences.
+- Restaurant Spanish now contains 50 distinct reviewed prototype prompts so session depth can be
+  exercised realistically. The other four lessons and three collections remain breadth
+  outlines/sample prompts; none of this material is launch or canonical curriculum content.
 
 ## Practice-screen review decisions
 
@@ -145,10 +146,12 @@ against a varied system rather than mistaken for the whole design.
   shows the complete correct response in larger type, without a `Model answer` label. The two are
   mutually exclusive, so a correction is never shown twice. Correct acknowledgement remains
   intentionally larger than a detail card.
-- Prompt selection schedules distinct prompt-direction units before any repeat. In this prototype
-  the four collections currently contain 10 underlying prompts; the two Time prompts create four
-  units when both directions are selected. Vary-order changes the prompt order within that cycle,
-  while a fixed order preserves fixture order.
+- Prompt selection schedules every distinct underlying prompt before repeating one. With Both
+  directions selected, it completes one direction for every prompt before scheduling the other
+  direction, so all prompt-direction units are distinct before the cycle repeats. Each fresh varied
+  session receives a new shuffle seed and, when more than one prompt matches, does not reuse the
+  previous session's first prompt. Turning Vary the order off preserves fixture order; injected
+  seeds provide the deterministic test seam and are not a learner setting.
 - A shipping collection needs at least 50 reviewed underlying practice units, with 100 as the target.
   Changing direction or activity does not create another unit for this count; it is a presentation
   choice for the same learning material, not additional content. A new session must receive a newly
@@ -157,13 +160,42 @@ against a varied system rather than mistaken for the whole design.
 - The catalog's `Latest` score is retained only for the open visit and disappears on reload. It is
   not a lifetime grade or collection-proficiency claim; durable collection proficiency remains
   deliberately unresolved until evidence and persistence are designed.
+- An ungraded response remains attached to the active prompt and never changes the prompt, count, or
+  score. Retryable failures offer Try grading again; non-retryable failures explain that retry will
+  not help. Editing the response clears the failure, and late results from an abandoned attempt,
+  ended session, or newly started session are ignored.
+- Practice settings are a draft until Start practice/Start new session. Closing or cancelling the
+  dialog discards the draft. Applying settings creates a fresh session with an immutable snapshot of
+  activity, direction, focus, shuffle, and order seed; it never mutates an in-flight scoring scope.
+  There is no learner-facing support/difficulty control. Numeric difficulty remains authored prompt
+  metadata used for content composition and validation.
+- Saved has two deliberately separate visit-only jobs: bookmarked collection shortcuts and
+  individual prompt references saved from feedback. A prompt reference is collection ID + prompt ID,
+  independent of the direction in which it appeared. Personal saved material can start its own
+  shuffled, both-direction practice queue; neither kind of save survives reload.
+
+## Operator-only generation bench
+
+Restaurant depth was produced through a local candidate bench that reuses the executable accepted
+answer, GrammarTag, prompt, and numeric-difficulty contracts where they fit. Generation
+runs are schema-bound, batched, checkpointed, inventory-bound, and deterministically validated.
+Promotion requires a decision for every candidate, explicit warning acknowledgement, reviewed
+coverage keys, an independent critic bound to both raw and reviewed hashes, a passing post-edit
+validation, and explicit prototype-only acknowledgement. The promoted JSON and its review/critic
+sidecar are tracked together and hash-bound.
+The original-only brief omits provenance instead of inventing a source claim.
+
+This is operator tooling for pressure-testing the fixture. It is not the A9 private learner
+generation flow, does not use Workflow or Neon, creates no public or canonical content, and does not
+satisfy ADR-0009's founder/native launch review layers.
 
 ## Prototype boundaries
 
 - Use original local sample content, actual application components, and real typed interaction.
 - Keep learner history, recommendations, and knowledge changes transient; do not imply that they
   were persisted.
-- Do not add database tables, production content, generated-content flows, or mastery thresholds.
+- Do not add database tables, production content publication, learner-triggered generated-content
+  flows, or mastery thresholds. The operator-only candidate bench above is the bounded exception.
 - Do not treat local storage, evaluation output, or a visual progress state as genuine learning
   history.
 - Preserve the current canonical A1 lessons and their database serving-copy contract.
@@ -173,8 +205,8 @@ against a varied system rather than mistaken for the whole design.
 - Learners will eventually be able to save individual words and phrases into personal collections.
   The organization model, naming, and relationship to built-in collections remain intentionally
   undecided; no storage or data model follows from this note.
-- Practice settings need a fresh interaction and visual-design pass once feedback is settled. The
-  current panel is functional prototype scaffolding, not an accepted settings experience.
+- Durable saved material, cross-device collection bookmarks, and personal-list organization remain
+  unresolved; the current visit-only references do not imply a storage or ownership model.
 
 ## What localhost review should reveal
 

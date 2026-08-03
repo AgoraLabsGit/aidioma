@@ -4,10 +4,8 @@ import { useEffect, useRef } from "react";
 import {
   describePracticeConfiguration,
   focusAvailableForStage,
-  practiceDifficultyLabels,
   practiceDirectionLabels,
   type PracticeActivity,
-  type PracticeDifficulty,
   type PracticeDirection,
   type PracticeSetConfiguration,
   type PracticeSetFixture,
@@ -64,7 +62,6 @@ export function PracticeSetOptionsPanel({
       (activity.id === "type" || activity.id === "flashcards"),
   );
   const directions = Object.keys(practiceDirectionLabels) as PracticeDirection[];
-  const difficulties = Object.keys(practiceDifficultyLabels) as PracticeDifficulty[];
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -156,21 +153,6 @@ export function PracticeSetOptionsPanel({
           <p className="control-help">
             A focus changes upcoming practice. It does not change curriculum position or claim mastery.
           </p>
-        </fieldset>
-
-        <fieldset className="configuration-group">
-          <legend>Support</legend>
-          <div className="choice-grid panel-option-list">
-            {difficulties.map((difficulty) => (
-              <ChoiceButton
-                key={difficulty}
-                onClick={() => onUpdate({ difficulty })}
-                selected={configuration.difficulty === difficulty}
-              >
-                {practiceDifficultyLabels[difficulty]}
-              </ChoiceButton>
-            ))}
-          </div>
         </fieldset>
 
         <label className="shuffle-control">

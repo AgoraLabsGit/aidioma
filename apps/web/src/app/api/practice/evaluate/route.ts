@@ -6,6 +6,7 @@ import {
   PracticeEvaluationRequestSchema,
   PracticeEvaluationResponseSchema,
 } from "@/lib/practice-sets/evaluation-contract";
+import { acceptedPracticeAnswerTexts } from "@/lib/practice-sets/practice-prompt-contract";
 import { practiceSetFixtures } from "@/lib/practice-sets/prototype-fixtures";
 
 export const runtime = "nodejs";
@@ -58,8 +59,8 @@ export async function POST(request: Request): Promise<Response> {
     },
     source: {
       sourceText,
-      authoritativeAnswers: answerGroup.target,
-      grammarTags: [],
+      authoritativeAnswers: acceptedPracticeAnswerTexts(modelAnswer, answerGroup.target),
+      grammarTags: prompt.grammarTags,
       assessmentGoal: `${prompt.capability}. ${prompt.cue}`,
     },
     userTrackingId: localEvaluationUser,
@@ -67,10 +68,13 @@ export async function POST(request: Request): Promise<Response> {
   });
 
   if (outcome.kind !== "graded") {
+    const retryable = outcome.kind === "ungraded" && outcome.retryable;
     const response = PracticeEvaluationResponseSchema.parse({
       status: "ungraded",
-      retryable: outcome.kind === "ungraded" ? outcome.retryable : false,
-      message: "I couldn’t grade that answer right now. Your response is still here—please try again.",
+      retryable,
+      message: retryable
+        ? "I couldn’t grade that answer right now. Your response is still here—try again."
+        : "Automatic grading isn’t available for this answer. Your response is still here, but retrying won’t help right now.",
     });
     return json(response, 503);
   }

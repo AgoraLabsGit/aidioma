@@ -24,7 +24,8 @@
     "db:migrate": "node --env-file-if-exists=apps/web/.env.local --import tsx apps/web/scripts/db-migrate.ts",
     "content:seed": "npm run content:validate --silent && npm run db:migrate --silent && node --env-file-if-exists=apps/web/.env.local --import tsx apps/web/scripts/content-seed.ts",
     "prototype:export": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts",
-    "prototype:check": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts --check"
+    "prototype:check": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts --check",
+    "practice:candidates": "npm run practice:candidates --workspace @aidioma/web --"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",
