@@ -197,7 +197,7 @@ function reviewFor(run: CandidateRunEnvelope): HumanReviewManifest {
     candidateHash: candidateRunContentHash(run),
     reviewer: "Prototype operator",
     reviewedAt: "2026-08-03T13:00:00.000Z",
-    acknowledgedWarnings: [],
+    acknowledgedWarnings: ["TARGET_ALTERNATES_SYSTEMICALLY_EMPTY"],
     decisions: run.candidates.map((candidate) => ({
       candidateId: candidate.prompt.id,
       decision: "accept",
@@ -516,6 +516,76 @@ describe("practice candidate generation", () => {
 });
 
 describe("candidate validation and critic-bound promotion", () => {
+  it("warns only when target alternates are systemically empty across a nonempty run", () => {
+    const emptyReport = validateCandidateRun({
+      brief: brief(),
+      run: runEnvelope(),
+      collectionPrompts: [existing],
+      globalPrompts: [existing],
+    });
+    expect(emptyReport.findings).toContainEqual(expect.objectContaining({
+      code: "TARGET_ALTERNATES_SYSTEMICALLY_EMPTY",
+      key: "TARGET_ALTERNATES_SYSTEMICALLY_EMPTY",
+      severity: "warning",
+    }));
+
+    const withOneAlternate = candidates();
+    withOneAlternate[0] = {
+      ...withOneAlternate[0],
+      prompt: {
+        ...withOneAlternate[0].prompt,
+        answers: {
+          ...withOneAlternate[0].prompt.answers,
+          english: { target: ["I want some water."], communicative: [] },
+        },
+      },
+    };
+    const cleanReport = validateCandidateRun({
+      brief: brief(),
+      run: runEnvelope(brief(), withOneAlternate),
+      collectionPrompts: [existing],
+      globalPrompts: [existing],
+    });
+    expect(cleanReport.findings.map((entry) => entry.code)).not.toContain(
+      "TARGET_ALTERNATES_SYSTEMICALLY_EMPTY",
+    );
+  });
+
+  it("requires acknowledgement unless a review edit removes the systemic shortcut", () => {
+    const run = runEnvelope();
+    const unacknowledgedReview = {
+      ...reviewFor(run),
+      acknowledgedWarnings: [],
+    };
+    const base = {
+      brief: brief(),
+      run,
+      collectionPrompts: [existing],
+      globalPrompts: [existing],
+      acknowledgePrototypeOnly: true,
+    };
+    expect(() => promoteCandidateRun({
+      ...base,
+      review: unacknowledgedReview,
+      critic: criticFor(run, unacknowledgedReview),
+    })).toThrow(/TARGET_ALTERNATES_SYSTEMICALLY_EMPTY/u);
+
+    const editedPrompt = structuredClone(run.candidates[0].prompt);
+    editedPrompt.answers.english.target = ["I want some water."];
+    const editedReview: HumanReviewManifest = {
+      ...reviewFor(run),
+      acknowledgedWarnings: [],
+      decisions: reviewFor(run).decisions.map((decision, index) => index === 0
+        ? { ...decision, decision: "edit", editedPrompt }
+        : decision),
+    };
+    expect(() => promoteCandidateRun({
+      ...base,
+      review: editedReview,
+      critic: criticFor(run, editedReview),
+    })).not.toThrow();
+  });
+
   it("enforces per-level grammar tag allowlists", () => {
     const selectedBrief = brief({
       allowedGrammarTags: ["formula.courtesy", "preterite.irregular"],

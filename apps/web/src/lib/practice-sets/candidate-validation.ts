@@ -244,6 +244,21 @@ export function validateCandidateRun(options: ValidateCandidateRunOptions): Cand
       ),
     );
   }
+  if (
+    run.candidates.length > 0 &&
+    !run.candidates.some((candidate) =>
+      candidate.prompt.answers.english.target.length > 0 ||
+      candidate.prompt.answers.spanish.target.length > 0,
+    )
+  ) {
+    findings.push(
+      finding(
+        "warning",
+        "TARGET_ALTERNATES_SYSTEMICALLY_EMPTY",
+        "generated run has no noncanonical target alternates and requires human review",
+      ),
+    );
+  }
 
   for (const candidate of run.candidates) {
     const prompt = candidate.prompt;
