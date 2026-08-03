@@ -32,6 +32,17 @@ const SAFE_SCHEMA_PATH_SEGMENTS = new Set([
 export type PracticeSchemaDiagnostic = {
   finishReason?: string;
   issues: Array<{ path: string; code: string }>;
+  shape?: {
+    candidateKeys: string[];
+    promptKind: string;
+    promptKeys: string[];
+    answersKind: string;
+    answersKeys: string[];
+    englishKind: string;
+    englishKeys: string[];
+    spanishKind: string;
+    spanishKeys: string[];
+  };
 };
 
 function record(value: unknown): Record<string, unknown> | undefined {
@@ -64,6 +75,48 @@ function safeIssuePath(value: unknown): string {
   return segments.join(".").slice(0, 240);
 }
 
+function safeKind(value: unknown): string {
+  if (value === null) return "null";
+  if (Array.isArray(value)) return "array";
+  return ["object", "string", "number", "boolean", "undefined"].includes(typeof value)
+    ? typeof value
+    : "unknown";
+}
+
+function safeShapeKeys(value: unknown): string[] {
+  const valueRecord = record(value);
+  if (!valueRecord) return [];
+  return Object.keys(valueRecord)
+    .filter((key) => SAFE_SCHEMA_PATH_SEGMENTS.has(key))
+    .sort()
+    .slice(0, 20);
+}
+
+function safeFirstCandidateShape(value: unknown): PracticeSchemaDiagnostic["shape"] {
+  const root = record(value);
+  const candidates = Array.isArray(root?.candidates) ? root.candidates : [];
+  const candidate = candidates[0];
+  const candidateRecord = record(candidate);
+  if (!candidateRecord) return undefined;
+  const prompt = candidateRecord.prompt;
+  const promptRecord = record(prompt);
+  const answers = promptRecord?.answers;
+  const answersRecord = record(answers);
+  const english = answersRecord?.english;
+  const spanish = answersRecord?.spanish;
+  return {
+    candidateKeys: safeShapeKeys(candidate),
+    promptKind: safeKind(prompt),
+    promptKeys: safeShapeKeys(prompt),
+    answersKind: safeKind(answers),
+    answersKeys: safeShapeKeys(answers),
+    englishKind: safeKind(english),
+    englishKeys: safeShapeKeys(english),
+    spanishKind: safeKind(spanish),
+    spanishKeys: safeShapeKeys(spanish),
+  };
+}
+
 /**
  * Extracts only bounded schema coordinates. It never reads validation values,
  * generated text, provider bodies, error messages, or credential-bearing fields.
@@ -76,8 +129,11 @@ export function summarizePracticeSchemaFailure(error: {
     typeof error.finishReason === "string" && SAFE_FINISH_REASONS.has(error.finishReason)
       ? error.finishReason
       : undefined;
-  const issues = TypeValidationError.isInstance(error.cause)
-    ? validationIssues(error.cause.cause)
+  const typeValidationError = TypeValidationError.isInstance(error.cause)
+    ? error.cause
+    : undefined;
+  const issues = typeValidationError
+    ? validationIssues(typeValidationError.cause)
         .slice(0, MAX_SCHEMA_DIAGNOSTIC_ISSUES)
         .map((issue) => {
           const issueRecord = record(issue);
@@ -91,14 +147,25 @@ export function summarizePracticeSchemaFailure(error: {
   return {
     ...(finishReason && { finishReason }),
     issues,
+    ...(typeValidationError && {
+      shape: safeFirstCandidateShape(typeValidationError.value),
+    }),
   };
 }
 
 export function formatPracticeSchemaDiagnostic(diagnostic: PracticeSchemaDiagnostic): string {
+  const shape = diagnostic.shape;
   const parts = [
     diagnostic.finishReason ? `finishReason=${diagnostic.finishReason}` : undefined,
     diagnostic.issues.length > 0
       ? `issues=${diagnostic.issues.map((issue) => `${issue.path}:${issue.code}`).join(",")}`
+      : undefined,
+    shape
+      ? `shape=candidate[${shape.candidateKeys.join(",")}]` +
+        `|prompt:${shape.promptKind}[${shape.promptKeys.join(",")}]` +
+        `|answers:${shape.answersKind}[${shape.answersKeys.join(",")}]` +
+        `|english:${shape.englishKind}[${shape.englishKeys.join(",")}]` +
+        `|spanish:${shape.spanishKind}[${shape.spanishKeys.join(",")}]`
       : undefined,
   ].filter((part): part is string => part !== undefined);
   return parts.length > 0 ? `; ${parts.join("; ")}` : "";

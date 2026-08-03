@@ -18,7 +18,22 @@ describe("practice candidate schema diagnostics", () => {
       received: secret,
     }));
     const validationError = new TypeValidationError({
-      value: { apiKey: secret, generatedText: secret },
+      value: {
+        apiKey: secret,
+        generatedText: secret,
+        candidates: [{
+          id: secret,
+          prompt: {
+            answers: [{ english: secret }],
+            capability: secret,
+            cue: secret,
+            english: secret,
+            spanish: secret,
+          },
+          coverageKeys: [secret],
+          untrustedSecretKey: secret,
+        }],
+      },
       cause: { issues },
     });
 
@@ -36,6 +51,17 @@ describe("practice candidate schema diagnostics", () => {
     });
     expect(diagnostic.issues[1].code).toBe("unknown");
     expect(diagnostic.issues[2].path).toBe("candidates.2.?.?");
+    expect(diagnostic.shape).toEqual({
+      candidateKeys: ["coverageKeys", "id", "prompt"],
+      promptKind: "object",
+      promptKeys: ["answers", "capability", "cue", "english", "spanish"],
+      answersKind: "array",
+      answersKeys: [],
+      englishKind: "undefined",
+      englishKeys: [],
+      spanishKind: "undefined",
+      spanishKeys: [],
+    });
     expect(formatted).not.toContain(secret);
     expect(formatted).not.toContain("full validation message");
     expect(formatted).not.toContain("apiKey");
