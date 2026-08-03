@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-07-28T18:44:33.929Z",
+  "updatedAt": "2026-07-30T19:39:05.979Z",
   "ids": {
     "a1-01-hola-me-llamo": {
       "contentVersion": 1
@@ -478,6 +478,150 @@
     },
     "a1-04.q.04": {
       "contentVersion": 1
+    },
+    "a1-05-ser-y-estar": {
+      "contentVersion": 1
+    },
+    "a1-05.e.01": {
+      "contentVersion": 1
+    },
+    "a1-05.v.cansado": {
+      "contentVersion": 1
+    },
+    "a1-05.v.contento": {
+      "contentVersion": 1
+    },
+    "a1-05.v.triste": {
+      "contentVersion": 1
+    },
+    "a1-05.v.enfermo": {
+      "contentVersion": 1
+    },
+    "a1-05.v.ocupado": {
+      "contentVersion": 1
+    },
+    "a1-05.v.nervioso": {
+      "contentVersion": 1
+    },
+    "a1-05.v.tengo-anos": {
+      "contentVersion": 1
+    },
+    "a1-05.v.cero": {
+      "contentVersion": 1
+    },
+    "a1-05.v.uno": {
+      "contentVersion": 1
+    },
+    "a1-05.v.dos": {
+      "contentVersion": 1
+    },
+    "a1-05.v.tres": {
+      "contentVersion": 1
+    },
+    "a1-05.v.diez": {
+      "contentVersion": 1
+    },
+    "a1-05.v.quince": {
+      "contentVersion": 1
+    },
+    "a1-05.v.veinte": {
+      "contentVersion": 1
+    },
+    "a1-05.v.treinta": {
+      "contentVersion": 1
+    },
+    "a1-05.s.01": {
+      "contentVersion": 1
+    },
+    "a1-05.s.02": {
+      "contentVersion": 1
+    },
+    "a1-05.s.03": {
+      "contentVersion": 1
+    },
+    "a1-05.s.04": {
+      "contentVersion": 1
+    },
+    "a1-05.s.05": {
+      "contentVersion": 1
+    },
+    "a1-05.s.06": {
+      "contentVersion": 1
+    },
+    "a1-05.s.07": {
+      "contentVersion": 1
+    },
+    "a1-05.s.08": {
+      "contentVersion": 1
+    },
+    "a1-05.s.09": {
+      "contentVersion": 1
+    },
+    "a1-05.s.10": {
+      "contentVersion": 1
+    },
+    "a1-05.s.11": {
+      "contentVersion": 1
+    },
+    "a1-05.s.12": {
+      "contentVersion": 1
+    },
+    "a1-05.s.13": {
+      "contentVersion": 1
+    },
+    "a1-05.s.14": {
+      "contentVersion": 1
+    },
+    "a1-05.s.15": {
+      "contentVersion": 1
+    },
+    "a1-05.s.16": {
+      "contentVersion": 1
+    },
+    "a1-05.s.17": {
+      "contentVersion": 1
+    },
+    "a1-05.s.18": {
+      "contentVersion": 1
+    },
+    "a1-05.p.01": {
+      "contentVersion": 1
+    },
+    "a1-05.p.01.01": {
+      "contentVersion": 1
+    },
+    "a1-05.p.01.02": {
+      "contentVersion": 1
+    },
+    "a1-05.p.01.03": {
+      "contentVersion": 1
+    },
+    "a1-05.p.01.04": {
+      "contentVersion": 1
+    },
+    "a1-05.p.01.05": {
+      "contentVersion": 1
+    },
+    "a1-05.p.01.06": {
+      "contentVersion": 1
+    },
+    "a1-05.c.01": {
+      "contentVersion": 1
+    },
+    "a1-05.q.01": {
+      "contentVersion": 1
+    },
+    "a1-05.q.02": {
+      "contentVersion": 1
+    },
+    "a1-05.q.03": {
+      "contentVersion": 1
+    },
+    "a1-05.q.04": {
+      "contentVersion": 1
+    },
+    "a1-05.r.01": {
+      "contentVersion": 2
     }
   }
 }

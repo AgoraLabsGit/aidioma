@@ -16,7 +16,8 @@
  * (ordinal↔slug↔item-id-prefix), W4 (snapshot refuses a red build),
  * N1 (hint-3 substring leak), N2 (exampleEs scan + dropped capitalization exemption),
  * N5 (duplicate-id ordinal map is dedupe-safe), and P-003 setId partitioning for vocab
- * exercise coverage. Plus a green baseline on the real corpus.
+ * exercise coverage. Also covers P-005 reference-card immutable ids and vocabRef resolution.
+ * Plus a green baseline on the real corpus.
  */
 
 import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync } from 'node:fs';
@@ -193,6 +194,54 @@ function main() {
     rmSync(snap, { force: true });
     const res = runValidate(dir, [a1()], ['--update-snapshot', '--snapshot', snap]);
     check('W4b: clean build + --update-snapshot writes the snapshot', existsSync(snap) && has(res, { code: 'SNAPSHOT_UPDATED' }));
+  }
+
+  /* ---- P-005a: reference-card ids participate in the immutable-id snapshot ---- */
+  {
+    const dir = tmp('p005-snapshot');
+    const snap = join(TMP_ROOT, 'p005-snapshot.json');
+    const l = a1();
+    const cardId = 'a1-01.r.fixture';
+    l.referenceCards = [{
+      id: cardId,
+      kind: 'referenceCard',
+      title: 'Fixture reference card',
+      markdown: 'Fixture.',
+      vocabRefs: [l.vocab[0].id],
+    }];
+    const updated = runValidate(dir, [l], ['--update-snapshot', '--snapshot', snap]);
+    const snapshotIds = existsSync(snap) ? JSON.parse(readFileSync(snap, 'utf8')).ids : {};
+    check(
+      'P-005a: reference-card id is written to the immutable-id snapshot',
+      updated.exitCode === 0 && snapshotIds[cardId]?.contentVersion === l.contentVersion,
+    );
+
+    l.referenceCards = [];
+    const removed = runValidate(dir, [l], ['--snapshot', snap]);
+    check(
+      'P-005a: removing a snapshotted reference-card id trips SNAPSHOT_MISSING',
+      has(removed, { code: 'SNAPSHOT_MISSING', lessonId: '(global)', msgIncludes: cardId }) && removed.exitCode === 1,
+    );
+  }
+
+  /* ---- P-005b: reference-card vocabRefs use normal resolution rules ---- */
+  {
+    const l = a1();
+    const cardId = 'a1-01.r.fixture';
+    l.referenceCards = [{
+      id: cardId,
+      kind: 'referenceCard',
+      title: 'Fixture reference card',
+      markdown: 'Fixture.',
+      vocabRefs: ['a1-01.v.does-not-exist'],
+    }];
+    const res = runValidate(tmp('p005-vocabref'), [l]);
+    check(
+      'P-005b: bad reference-card vocabRef trips VOCABREF_RESOLVE on the card',
+      has(res, { code: 'VOCABREF_RESOLVE', lessonId: l.id, msgIncludes: 'does-not-exist' }) &&
+        res.findings.some((f) => f.code === 'VOCABREF_RESOLVE' && f.itemId === cardId) &&
+        res.exitCode === 1,
+    );
   }
 
   /* ---- N1: hint 3 that CONTAINS the full answer (not just equals) ---- */

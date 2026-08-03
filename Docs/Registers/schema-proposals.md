@@ -16,6 +16,8 @@ Schema status: v0-DRAFT (unapproved) → v1-FROZEN (approved; additive-only afte
 
 | P-006 | 2026-07-28 | Additive: `deprecated: boolean = false` on every authored item/segment | Make “deprecate, never delete” executable before the shared contract moves to its package | **APPROVED** | 2026-07-28, App Design Coordinator during A0 legacy/SSOT audit. Existing content parses unchanged via default. Seed keeps historical rows addressable and excludes deprecated items from new sessions. |
 
+| P-007 | 2026-07-30 | Additive widening: let a closed `setId` group exceed the raw `Lesson.vocab.max(15)` while a validator counts that group as one conceptual load item | A1-05 must teach numbers 0–30 as one closed set, and the binding authoring rule gives every member its own immutable vocab ID; 31 number records cannot fit the frozen 15-record array cap even before feelings and the age chunk. | **PROPOSED** | Content lane proposal. Recommended shape: widen only the raw schema ceiling, retain the 8–15 conceptual-load ceiling in CI (`setId` partition = one), and add boundary fixtures. No lesson should rely on this until the App Design Coordinator approves it. A1-05 may use a bounded representative subset plus a full study card as temporary evidence, but cannot claim complete typed/flashcard coverage of 0–30 under the current contract. |
+
 Statuses: PROPOSED / APPROVED / CHANGES-REQUESTED / REJECTED
 
 ## P-001 — evidence & requested rulings (for the App Design Coordinator)

@@ -2,7 +2,7 @@
 title: C2-1 — Draft and gate the remaining A1 launch lessons
 type: wave-slice
 status: active
-updated: 2026-07-28
+updated: 2026-07-30
 ---
 
 # C2-1 — Draft and gate the remaining A1 launch lessons
@@ -37,24 +37,39 @@ updated: 2026-07-28
   contract smoke 13/13; fixtures 18/18; prototype freshness PASS.
 - Local integration: lesson merged at `b96097e`; generated prototype data refreshed at `38dc0af`.
 
+## a1-05 checkpoint — L1 proven; L2 blocked 2026-07-30
+- Drafted `a1-05-ser-y-estar` at `contentVersion: 2`: 15 raw vocab rows (eight conceptual
+  groups after the number set), 18 sentences, six passage segments, four quick checks, and one
+  complete 0–30 reference card. The five-lesson corpus validates and exports deterministically.
+- L2 r1 found 4 major and 4 minor issues. All seven locally fixable findings and 13 missing English
+  alternates were corrected; the read-only r2 delta audit is clean for those fixes.
+- L2 remains FAIL on one major contract blocker: 23 number members are study-only, because the
+  binding one-ID-per-number rule needs 38 raw vocab rows while `Lesson.vocab.max(15)` allows 15.
+  P-007 proposes widening only the raw ceiling while CI retains the 8–15 conceptual-load limit.
+- Whole-diff review found the validator omitted reference-card IDs/refs and the prototype exporter
+  dropped vocab accept sets. Both were fixed; three regression checks raise fixtures to 21/21, the
+  missing reference-card ID is snapshotted, generated vocab answers are complete, and delta review is clean.
+  First PR CI then exposed the App seed test's hard-coded four-lesson corpus; its expected list now
+  includes a1-05 and the full App test suite passes 140/140.
+
 ## Gates (stage 2 — record actual results)
 | Gate | Command | Result |
 |---|---|---|
-| typecheck | `npm run content:typecheck` | PASS at a1-04 checkpoint |
-| validate | `npm run content:validate` | PASS — 0 errors across four lessons; five documented a1-01 warnings |
-| smoke | `npm run contract:smoke && npm run content:fixtures && npm run prototype:check` | PASS — 13/13, 18/18, current export |
+| typecheck | `npm run content:typecheck` | PASS at blocked a1-05 checkpoint |
+| validate | `npm run content:validate` | PASS — 0 errors across five lessons; five documented a1-01 warnings; a1-05 0/0/0 |
+| smoke | `npm run contract:smoke && npm run content:fixtures && npm run prototype:check` | PASS — 13/13, 21/21, current five-lesson export |
 
 ## Audit (stage 3)
 - Auditors: independent linguistic QA per new lesson plus a tooling/contract audit for OI-025.
-- Findings: OI-025 contract audit closed; a1-04 L2 r1 findings and the r2 versioning blocker are
-  closed. The slice remains active for a1-05…a1-12.
-- Delta re-audit: a1-04 r3 PASS with 0 findings.
+- Findings: OI-025 and a1-04 are closed. a1-05's seven local findings plus two integration-review
+  findings are closed; P-007 owns the sole remaining major.
+- Delta re-audits: a1-04 r3 PASS; a1-05 r2 clean for local fixes; tooling review CLEAN.
 
 ## Review (stage 4)
-- a1-04 L2-PASS (r3). Remaining lessons pending.
+- a1-04 L2-PASS (r3). a1-05 remains L2-FAIL (r2, P-007); a1-06 has not started.
 
 ## Proof (stage 6)
-- Four-lesson corpus validates with zero errors and exports deterministically to the prototype.
+- Five-lesson corpus validates with zero errors and exports deterministically to the prototype.
   Full 12-lesson proof remains pending.
 
 ## Clean (stage 7)
@@ -62,3 +77,4 @@ updated: 2026-07-28
 
 ## Decisions
 - Operator approved un-pausing C2 on 2026-07-28, with OI-025 completed before new lesson drafting.
+- P-007 is proposed, not approved; no schema change or claim of complete 0–30 typed coverage was made.

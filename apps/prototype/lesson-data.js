@@ -7,7 +7,7 @@
  *   vocab.hint (from example pair), passage-seg.hint + quiz.hint (generic nudges).
  * DROPPED (no prototype slot): sentence.difficulty.
  * METADATA (no UI consumer): lesson.objective, lesson.conversation.
- * Lessons exported: a1-01-hola-me-llamo -> l1, a1-02-soy-asi -> l2, a1-03-que-haces -> l3, a1-04-donde-esta -> l4.
+ * Lessons exported: a1-01-hola-me-llamo -> l1, a1-02-soy-asi -> l2, a1-03-que-haces -> l3, a1-04-donde-esta -> l4, a1-05-ser-y-estar -> l5.
  */
 window.AIDIOMA_LESSONS = {
   "l1": {
@@ -92,10 +92,12 @@ window.AIDIOMA_LESSONS = {
           "en": "goodbye",
           "pos": "expression",
           "accEs": [
-            "adiós"
+            "adiós",
+            "hasta luego"
           ],
           "accEn": [
-            "goodbye"
+            "goodbye",
+            "bye"
           ],
           "hint": "Adiós, señor. — Goodbye, sir."
         },
@@ -105,10 +107,12 @@ window.AIDIOMA_LESSONS = {
           "en": "thank you",
           "pos": "expression",
           "accEs": [
-            "gracias"
+            "gracias",
+            "muchas gracias"
           ],
           "accEn": [
-            "thank you"
+            "thank you",
+            "thanks"
           ],
           "hint": "Gracias, señora. — Thank you, ma'am."
         },
@@ -131,11 +135,14 @@ window.AIDIOMA_LESSONS = {
           "en": "excuse me / sorry",
           "pos": "expression",
           "accEs": [
-            "perdón"
+            "perdón",
+            "disculpa",
+            "discúlpame"
           ],
           "accEn": [
             "excuse me",
-            "sorry"
+            "sorry",
+            "pardon me"
           ],
           "hint": "Perdón, señora. — Excuse me, ma'am."
         },
@@ -177,7 +184,9 @@ window.AIDIOMA_LESSONS = {
           "accEn": [
             "sir",
             "man",
-            "mr."
+            "mr.",
+            "mister",
+            "gentleman"
           ],
           "hint": "El señor es de México. — The man is from Mexico."
         },
@@ -192,7 +201,8 @@ window.AIDIOMA_LESSONS = {
           "accEn": [
             "ma'am",
             "lady",
-            "mrs."
+            "mrs.",
+            "madam"
           ],
           "hint": "La señora es de Colombia. — The lady is from Colombia."
         },
@@ -202,10 +212,13 @@ window.AIDIOMA_LESSONS = {
           "en": "my name is (I'm called)",
           "pos": "phrase · chunk",
           "accEs": [
-            "me llamo"
+            "me llamo",
+            "mi nombre es"
           ],
           "accEn": [
-            "my name is"
+            "my name is",
+            "i'm called",
+            "i am called"
           ],
           "hint": "Me llamo Ana. — My name is Ana."
         },
@@ -215,10 +228,13 @@ window.AIDIOMA_LESSONS = {
           "en": "your name is (you're called)",
           "pos": "phrase · chunk",
           "accEs": [
-            "te llamas"
+            "te llamas",
+            "tu nombre es"
           ],
           "accEn": [
-            "your name is"
+            "your name is",
+            "you're called",
+            "you are called"
           ],
           "hint": "Tú te llamas Pedro. — Your name is Pedro."
         },
@@ -228,11 +244,20 @@ window.AIDIOMA_LESSONS = {
           "en": "his/her name is (he/she is called)",
           "pos": "phrase · chunk",
           "accEs": [
-            "se llama"
+            "se llama",
+            "su nombre es"
           ],
           "accEn": [
             "his",
-            "her name is"
+            "her name is",
+            "his name is",
+            "he's called",
+            "she's called",
+            "he is called",
+            "she is called",
+            "your name is",
+            "you're called",
+            "you are called"
           ],
           "hint": "Ella se llama Camila. — Her name is Camila."
         }
@@ -589,7 +614,8 @@ window.AIDIOMA_LESSONS = {
           "en": "tall",
           "pos": "adjective",
           "accEs": [
-            "alto"
+            "alto",
+            "alta"
           ],
           "accEn": [
             "tall"
@@ -615,11 +641,15 @@ window.AIDIOMA_LESSONS = {
           "en": "pretty / nice-looking",
           "pos": "adjective",
           "accEs": [
-            "bonito"
+            "bonito",
+            "bonita",
+            "lindo",
+            "linda"
           ],
           "accEn": [
             "pretty",
-            "nice-looking"
+            "nice-looking",
+            "good-looking"
           ],
           "hint": "Ella es bonita. — She's pretty."
         },
@@ -629,7 +659,8 @@ window.AIDIOMA_LESSONS = {
           "en": "nice / friendly",
           "pos": "adjective",
           "accEs": [
-            "simpático"
+            "simpático",
+            "simpática"
           ],
           "accEn": [
             "nice",
@@ -647,7 +678,8 @@ window.AIDIOMA_LESSONS = {
           ],
           "accEn": [
             "intelligent",
-            "smart"
+            "smart",
+            "clever"
           ],
           "hint": "Tú eres inteligente. — You're smart."
         },
@@ -657,11 +689,13 @@ window.AIDIOMA_LESSONS = {
           "en": "slim / thin",
           "pos": "adjective",
           "accEs": [
-            "delgado"
+            "delgado",
+            "delgada"
           ],
           "accEn": [
             "slim",
-            "thin"
+            "thin",
+            "slender"
           ],
           "hint": "Él es delgado. — He's slim."
         },
@@ -674,7 +708,8 @@ window.AIDIOMA_LESSONS = {
             "amable"
           ],
           "accEn": [
-            "kind"
+            "kind",
+            "nice"
           ],
           "hint": "La señora es amable. — The lady is kind."
         },
@@ -684,10 +719,13 @@ window.AIDIOMA_LESSONS = {
           "en": "hardworking",
           "pos": "adjective",
           "accEs": [
-            "trabajador"
+            "trabajador",
+            "trabajadora"
           ],
           "accEn": [
-            "hardworking"
+            "hardworking",
+            "hard-working",
+            "industrious"
           ],
           "hint": "El señor es trabajador. — The man is hardworking."
         },
@@ -697,7 +735,8 @@ window.AIDIOMA_LESSONS = {
           "en": "Mexican",
           "pos": "adjective",
           "accEs": [
-            "mexicano"
+            "mexicano",
+            "mexicana"
           ],
           "accEn": [
             "mexican"
@@ -710,7 +749,8 @@ window.AIDIOMA_LESSONS = {
           "en": "Colombian",
           "pos": "adjective",
           "accEs": [
-            "colombiano"
+            "colombiano",
+            "colombiana"
           ],
           "accEn": [
             "colombian"
@@ -1142,7 +1182,8 @@ window.AIDIOMA_LESSONS = {
             "escuchar"
           ],
           "accEn": [
-            "to listen"
+            "to listen",
+            "to listen to"
           ],
           "hint": "Escucho a la señora. — I listen to the lady."
         },
@@ -1155,7 +1196,9 @@ window.AIDIOMA_LESSONS = {
             "descansar"
           ],
           "accEn": [
-            "to rest"
+            "to rest",
+            "to relax",
+            "to take a break"
           ],
           "hint": "Hoy descanso. — Today I rest."
         },
@@ -1194,7 +1237,8 @@ window.AIDIOMA_LESSONS = {
             "necesitar"
           ],
           "accEn": [
-            "to need"
+            "to need",
+            "to require"
           ],
           "hint": "Necesito descansar. — I need to rest."
         }
@@ -1601,7 +1645,8 @@ window.AIDIOMA_LESSONS = {
             "estar"
           ],
           "accEn": [
-            "to be"
+            "to be",
+            "to be located"
           ],
           "hint": "La casa está aquí. — The house is here."
         },
@@ -1625,7 +1670,8 @@ window.AIDIOMA_LESSONS = {
           "en": "house / home",
           "pos": "noun · f",
           "accEs": [
-            "casa"
+            "casa",
+            "hogar"
           ],
           "accEn": [
             "house",
@@ -1639,7 +1685,8 @@ window.AIDIOMA_LESSONS = {
           "en": "apartment",
           "pos": "noun · m",
           "accEs": [
-            "apartamento"
+            "apartamento",
+            "departamento"
           ],
           "accEn": [
             "apartment"
@@ -1694,7 +1741,8 @@ window.AIDIOMA_LESSONS = {
             "baño"
           ],
           "accEn": [
-            "bathroom"
+            "bathroom",
+            "restroom"
           ],
           "hint": "El baño está allí. — The bathroom is over there."
         },
@@ -1704,7 +1752,9 @@ window.AIDIOMA_LESSONS = {
           "en": "room / bedroom",
           "pos": "noun · m",
           "accEs": [
-            "cuarto"
+            "cuarto",
+            "habitación",
+            "dormitorio"
           ],
           "accEn": [
             "room",
@@ -1744,7 +1794,8 @@ window.AIDIOMA_LESSONS = {
           "en": "here",
           "pos": "adverb",
           "accEs": [
-            "aquí"
+            "aquí",
+            "acá"
           ],
           "accEn": [
             "here"
@@ -1757,7 +1808,8 @@ window.AIDIOMA_LESSONS = {
           "en": "there / over there",
           "pos": "adverb",
           "accEs": [
-            "allí"
+            "allí",
+            "allá"
           ],
           "accEn": [
             "there",
@@ -1771,11 +1823,14 @@ window.AIDIOMA_LESSONS = {
           "en": "on / above",
           "pos": "expression",
           "accEs": [
-            "sobre"
+            "sobre",
+            "encima de"
           ],
           "accEn": [
             "on",
-            "above"
+            "above",
+            "on top of",
+            "over"
           ],
           "hint": "La ventana está sobre la mesa. — The window is above the table."
         },
@@ -1785,11 +1840,13 @@ window.AIDIOMA_LESSONS = {
           "en": "under / below",
           "pos": "phrase",
           "accEs": [
-            "debajo de"
+            "debajo de",
+            "bajo"
           ],
           "accEn": [
             "under",
-            "below"
+            "below",
+            "underneath"
           ],
           "hint": "La silla está debajo de la mesa. — The chair is under the table."
         }
@@ -2219,6 +2276,718 @@ window.AIDIOMA_LESSONS = {
             "there are no tables or chairs in the bathroom."
           ],
           "show": "There is no table or chair in the bathroom.",
+          "hint": "Translate the highlighted Spanish line into natural English."
+        }
+      ]
+    }
+  },
+  "l5": {
+    "n": 5,
+    "title": "Ser y estar: identity and state",
+    "prof": 92,
+    "objective": "You can choose between ser and estar to say who someone is versus how they feel right now, and use numbers to 30.",
+    "conversation": {
+      "scenario": "Meeting a classmate and talking about identity, feelings, and age.",
+      "openingLine": "Hola. Estoy contenta hoy. ¿Cómo estás tú?",
+      "openingLineGloss": "Hi. I'm happy today. How are you?",
+      "goalPhrases": [
+        "Soy amable.",
+        "Hoy estoy contento.",
+        "No estoy cansado.",
+        "Tengo veinte años."
+      ]
+    },
+    "items": {
+      "quiz": [
+        {
+          "type": "mc",
+          "label": "Quiz",
+          "prompt": "Yo ___ cansado hoy.",
+          "options": [
+            "estoy",
+            "soy",
+            "está",
+            "eres"
+          ],
+          "correct": 0,
+          "why": "Use estoy for a current state felt by yo.",
+          "hint": "Re-read the prompt and pick the form that fits."
+        },
+        {
+          "type": "mc",
+          "label": "Quiz",
+          "prompt": "Ella es amable, pero hoy ___ nerviosa.",
+          "options": [
+            "está",
+            "es",
+            "estoy",
+            "son"
+          ],
+          "correct": 0,
+          "why": "The kindness is a trait, while today's nervous state takes está.",
+          "hint": "Re-read the prompt and pick the form that fits."
+        },
+        {
+          "type": "mc",
+          "label": "Quiz",
+          "prompt": "Tengo ___ años. (20)",
+          "options": [
+            "veinte",
+            "quince",
+            "treinta",
+            "diez"
+          ],
+          "correct": 0,
+          "why": "Veinte is the cardinal number 20 inside the fixed age phrase.",
+          "hint": "Re-read the prompt and pick the form that fits."
+        },
+        {
+          "type": "mc",
+          "label": "Quiz",
+          "prompt": "In the reading, how does Camila feel today?",
+          "options": [
+            "Tired but happy",
+            "Sick and sad",
+            "Busy and nervous",
+            "Young and kind"
+          ],
+          "correct": 0,
+          "why": "Camila says she is tired today but happy.",
+          "hint": "Re-read the prompt and pick the form that fits."
+        }
+      ],
+      "words": [
+        {
+          "type": "flash",
+          "es": "cansado",
+          "en": "tired",
+          "pos": "adjective",
+          "accEs": [
+            "cansado",
+            "cansada"
+          ],
+          "accEn": [
+            "tired"
+          ],
+          "hint": "Hoy estoy cansado. — I'm tired today."
+        },
+        {
+          "type": "flash",
+          "es": "contento",
+          "en": "happy / glad",
+          "pos": "adjective",
+          "accEs": [
+            "contento",
+            "contenta"
+          ],
+          "accEn": [
+            "happy",
+            "glad",
+            "pleased"
+          ],
+          "hint": "Ella está contenta. — She's happy."
+        },
+        {
+          "type": "flash",
+          "es": "triste",
+          "en": "sad",
+          "pos": "adjective",
+          "accEs": [
+            "triste"
+          ],
+          "accEn": [
+            "sad"
+          ],
+          "hint": "Hoy no estoy triste. — I'm not sad today."
+        },
+        {
+          "type": "flash",
+          "es": "enfermo",
+          "en": "sick / ill",
+          "pos": "adjective",
+          "accEs": [
+            "enfermo",
+            "enferma"
+          ],
+          "accEn": [
+            "sick",
+            "ill",
+            "unwell"
+          ],
+          "hint": "Él está enfermo. — He's sick."
+        },
+        {
+          "type": "flash",
+          "es": "ocupado",
+          "en": "busy",
+          "pos": "adjective",
+          "accEs": [
+            "ocupado",
+            "ocupada"
+          ],
+          "accEn": [
+            "busy"
+          ],
+          "hint": "Estamos ocupados hoy. — We're busy today."
+        },
+        {
+          "type": "flash",
+          "es": "nervioso",
+          "en": "nervous",
+          "pos": "adjective",
+          "accEs": [
+            "nervioso",
+            "nerviosa"
+          ],
+          "accEn": [
+            "nervous",
+            "anxious"
+          ],
+          "hint": "Tú estás nervioso. — You're nervous."
+        },
+        {
+          "type": "flash",
+          "es": "tengo … años",
+          "en": "I am … years old",
+          "pos": "phrase · chunk",
+          "accEs": [
+            "tengo … años",
+            "tengo ... años"
+          ],
+          "accEn": [
+            "i am … years old",
+            "i'm … years old",
+            "i am ... years old",
+            "i'm ... years old"
+          ],
+          "hint": "Tengo veinte años. — I'm twenty years old."
+        },
+        {
+          "type": "flash",
+          "es": "cero",
+          "en": "zero",
+          "pos": "expression",
+          "accEs": [
+            "cero"
+          ],
+          "accEn": [
+            "zero",
+            "0"
+          ],
+          "hint": "Hay cero sillas. — There are zero chairs."
+        },
+        {
+          "type": "flash",
+          "es": "uno",
+          "en": "one",
+          "pos": "expression",
+          "accEs": [
+            "uno",
+            "un",
+            "una"
+          ],
+          "accEn": [
+            "one",
+            "1"
+          ],
+          "hint": "Hay una mesa. — There is one table."
+        },
+        {
+          "type": "flash",
+          "es": "dos",
+          "en": "two",
+          "pos": "expression",
+          "accEs": [
+            "dos"
+          ],
+          "accEn": [
+            "two",
+            "2"
+          ],
+          "hint": "Hay dos sillas. — There are two chairs."
+        },
+        {
+          "type": "flash",
+          "es": "tres",
+          "en": "three",
+          "pos": "expression",
+          "accEs": [
+            "tres"
+          ],
+          "accEn": [
+            "three",
+            "3"
+          ],
+          "hint": "Hay tres señoras. — There are three ladies."
+        },
+        {
+          "type": "flash",
+          "es": "diez",
+          "en": "ten",
+          "pos": "expression",
+          "accEs": [
+            "diez"
+          ],
+          "accEn": [
+            "ten",
+            "10"
+          ],
+          "hint": "Hay diez sillas. — There are ten chairs."
+        },
+        {
+          "type": "flash",
+          "es": "quince",
+          "en": "fifteen",
+          "pos": "expression",
+          "accEs": [
+            "quince"
+          ],
+          "accEn": [
+            "fifteen",
+            "15"
+          ],
+          "hint": "Tengo quince años. — I'm fifteen years old."
+        },
+        {
+          "type": "flash",
+          "es": "veinte",
+          "en": "twenty",
+          "pos": "expression",
+          "accEs": [
+            "veinte"
+          ],
+          "accEn": [
+            "twenty",
+            "20"
+          ],
+          "hint": "Tengo veinte años. — I'm twenty years old."
+        },
+        {
+          "type": "flash",
+          "es": "treinta",
+          "en": "thirty",
+          "pos": "expression",
+          "accEs": [
+            "treinta"
+          ],
+          "accEn": [
+            "thirty",
+            "30"
+          ],
+          "hint": "Tengo treinta años. — I'm thirty years old."
+        }
+      ],
+      "sentences": [
+        {
+          "type": "tr",
+          "es": "Hoy estoy cansado.",
+          "en": "I'm tired today.",
+          "accEs": [
+            "hoy estoy cansado.",
+            "estoy cansado hoy.",
+            "hoy estoy cansada.",
+            "estoy cansada hoy.",
+            "yo estoy cansado hoy."
+          ],
+          "accEn": [
+            "i'm tired today.",
+            "i am tired today."
+          ],
+          "hint": "This is a current state, so choose the right verb for how someone feels now."
+        },
+        {
+          "type": "tr",
+          "es": "Soy amable, pero hoy estoy nervioso.",
+          "en": "I'm kind, but I'm nervous today.",
+          "accEs": [
+            "soy amable, pero hoy estoy nervioso.",
+            "yo soy amable, pero hoy estoy nervioso.",
+            "soy amable, pero estoy nervioso hoy.",
+            "soy amable, pero hoy estoy nerviosa.",
+            "yo soy amable, pero hoy estoy nerviosa."
+          ],
+          "accEn": [
+            "i'm kind, but i'm nervous today.",
+            "i am kind, but i am nervous today.",
+            "i'm kind, but i am nervous today.",
+            "i am kind, but i'm nervous today.",
+            "i'm nice, but i'm anxious today."
+          ],
+          "hint": "Contrast a trait with a feeling right now."
+        },
+        {
+          "type": "tr",
+          "es": "Ella está contenta hoy.",
+          "en": "She's happy today.",
+          "accEs": [
+            "ella está contenta hoy.",
+            "está contenta hoy.",
+            "hoy ella está contenta.",
+            "hoy está contenta.",
+            "ella hoy está contenta."
+          ],
+          "accEn": [
+            "she's happy today.",
+            "she is happy today.",
+            "she's glad today."
+          ],
+          "hint": "Describe how she feels now, not what kind of person she is."
+        },
+        {
+          "type": "tr",
+          "es": "Él es trabajador, pero hoy está enfermo.",
+          "en": "He's hardworking, but he's sick today.",
+          "accEs": [
+            "él es trabajador, pero hoy está enfermo.",
+            "es trabajador, pero hoy está enfermo.",
+            "él es trabajador, pero está enfermo hoy.",
+            "es trabajador, pero está enfermo hoy.",
+            "hoy está enfermo, pero él es trabajador."
+          ],
+          "accEn": [
+            "he's hardworking, but he's sick today.",
+            "he is hardworking, but he is sick today.",
+            "he's hardworking, but he is sick today.",
+            "he is hardworking, but he's sick today.",
+            "he's hard-working, but he's ill today."
+          ],
+          "hint": "Separate his usual quality from his health today."
+        },
+        {
+          "type": "tr",
+          "es": "Estamos ocupados hoy.",
+          "en": "We're busy today.",
+          "accEs": [
+            "estamos ocupados hoy.",
+            "hoy estamos ocupados.",
+            "nosotros estamos ocupados hoy.",
+            "estamos ocupadas hoy.",
+            "nosotras estamos ocupadas hoy."
+          ],
+          "accEn": [
+            "we're busy today.",
+            "we are busy today."
+          ],
+          "hint": "Describe the group's state today and keep plural agreement."
+        },
+        {
+          "type": "tr",
+          "es": "Soy joven, pero hoy estoy triste.",
+          "en": "I'm young, but I'm sad today.",
+          "accEs": [
+            "soy joven, pero hoy estoy triste.",
+            "yo soy joven, pero hoy estoy triste.",
+            "soy joven, pero estoy triste hoy.",
+            "hoy estoy triste, pero soy joven.",
+            "yo soy joven, pero estoy triste hoy."
+          ],
+          "accEn": [
+            "i'm young, but i'm sad today.",
+            "i am young, but i am sad today.",
+            "i'm young, but i am sad today.",
+            "i am young, but i'm sad today."
+          ],
+          "hint": "Contrast an identifying trait with today's feeling."
+        },
+        {
+          "type": "tr",
+          "es": "Tú estás nervioso, pero eres amable.",
+          "en": "You're nervous, but you're kind.",
+          "accEs": [
+            "tú estás nervioso, pero eres amable.",
+            "estás nervioso, pero eres amable.",
+            "tú estás nerviosa, pero eres amable.",
+            "estás nerviosa, pero eres amable.",
+            "eres amable, pero estás nervioso."
+          ],
+          "accEn": [
+            "you're nervous, but you're kind.",
+            "you are nervous, but you are kind.",
+            "you're nervous, but you are kind.",
+            "you are nervous, but you're kind.",
+            "you're anxious, but you're nice."
+          ],
+          "hint": "Address one person and contrast a current feeling with a trait."
+        },
+        {
+          "type": "tr",
+          "es": "Ellas son inteligentes, pero hoy están cansadas.",
+          "en": "They're smart, but they're tired today.",
+          "accEs": [
+            "ellas son inteligentes, pero hoy están cansadas.",
+            "son inteligentes, pero hoy están cansadas.",
+            "ellas son inteligentes, pero están cansadas hoy.",
+            "son inteligentes, pero están cansadas hoy.",
+            "ellos son inteligentes, pero hoy están cansados."
+          ],
+          "accEn": [
+            "they're smart, but they're tired today.",
+            "they are smart, but they are tired today.",
+            "they're smart, but they are tired today.",
+            "they are smart, but they're tired today.",
+            "they're intelligent, but they're tired today."
+          ],
+          "hint": "For a group of women, contrast a trait with today's state and keep agreement plural."
+        },
+        {
+          "type": "tr",
+          "es": "Hoy no estoy enferma; estoy contenta.",
+          "en": "I'm not sick today; I'm happy.",
+          "accEs": [
+            "hoy no estoy enferma; estoy contenta.",
+            "no estoy enferma hoy; estoy contenta.",
+            "hoy no estoy enfermo; estoy contento.",
+            "no estoy enfermo hoy; estoy contento.",
+            "estoy contenta; hoy no estoy enferma."
+          ],
+          "accEn": [
+            "i'm not sick today; i'm happy.",
+            "i am not sick today; i am happy.",
+            "i'm not sick today; i am happy.",
+            "i am not sick today; i'm happy.",
+            "i'm not ill today; i'm glad."
+          ],
+          "hint": "Deny one current state, then give the contrasting state."
+        },
+        {
+          "type": "tr",
+          "es": "El señor está ocupado y la señora está nerviosa.",
+          "en": "The man is busy, and the lady is nervous.",
+          "accEs": [
+            "el señor está ocupado y la señora está nerviosa.",
+            "la señora está nerviosa y el señor está ocupado.",
+            "está nerviosa la señora, y el señor está ocupado.",
+            "el señor está ocupado; la señora está nerviosa."
+          ],
+          "accEn": [
+            "the man is busy, and the lady is nervous.",
+            "the gentleman is busy, and the woman is nervous.",
+            "the man is busy and the lady is anxious."
+          ],
+          "hint": "Give one present state for each person and match each adjective."
+        },
+        {
+          "type": "tr",
+          "es": "Tengo veinte años y hoy estoy contento.",
+          "en": "I'm twenty years old, and I'm happy today.",
+          "accEs": [
+            "tengo veinte años y hoy estoy contento.",
+            "yo tengo veinte años y hoy estoy contento.",
+            "tengo veinte años y estoy contento hoy.",
+            "tengo veinte años y hoy estoy contenta.",
+            "hoy estoy contento y tengo veinte años."
+          ],
+          "accEn": [
+            "i'm twenty years old, and i'm happy today.",
+            "i am twenty years old, and i am happy today.",
+            "i'm twenty years old, and i am happy today.",
+            "i am twenty years old, and i'm happy today.",
+            "i'm 20 years old, and i'm glad today."
+          ],
+          "hint": "Use the memorized age phrase, then add today's feeling."
+        },
+        {
+          "type": "tr",
+          "es": "Tengo quince años, pero hoy estoy cansada.",
+          "en": "I'm fifteen years old, but I'm tired today.",
+          "accEs": [
+            "tengo quince años, pero hoy estoy cansada.",
+            "yo tengo quince años, pero hoy estoy cansada.",
+            "tengo quince años, pero estoy cansada hoy.",
+            "tengo quince años, pero hoy estoy cansado.",
+            "yo tengo quince años, pero hoy estoy cansado."
+          ],
+          "accEn": [
+            "i'm fifteen years old, but i'm tired today.",
+            "i am fifteen years old, but i am tired today.",
+            "i'm fifteen years old, but i am tired today.",
+            "i am fifteen years old, but i'm tired today.",
+            "i'm 15 years old, but i'm tired today."
+          ],
+          "hint": "Give an age with the set phrase, then contrast it with today's state."
+        },
+        {
+          "type": "tr",
+          "es": "Hay dos sillas en la cocina.",
+          "en": "There are two chairs in the kitchen.",
+          "accEs": [
+            "hay dos sillas en la cocina.",
+            "en la cocina hay dos sillas.",
+            "hay 2 sillas en la cocina.",
+            "en la cocina hay 2 sillas."
+          ],
+          "accEn": [
+            "there are two chairs in the kitchen.",
+            "the kitchen has two chairs.",
+            "there are 2 chairs in the kitchen."
+          ],
+          "hint": "State how many pieces of furniture exist in the room."
+        },
+        {
+          "type": "tr",
+          "es": "Aquí hay tres señoras contentas.",
+          "en": "There are three happy ladies here.",
+          "accEs": [
+            "aquí hay tres señoras contentas.",
+            "hay tres señoras contentas aquí.",
+            "aquí hay 3 señoras contentas.",
+            "hay 3 señoras contentas aquí."
+          ],
+          "accEn": [
+            "there are three happy ladies here.",
+            "three happy ladies are here.",
+            "there are 3 happy women here."
+          ],
+          "hint": "Say how many women are here and make the feeling adjective agree with the group."
+        },
+        {
+          "type": "tr",
+          "es": "Hay diez sillas, pero una mesa.",
+          "en": "There are ten chairs, but one table.",
+          "accEs": [
+            "hay diez sillas, pero una mesa.",
+            "hay una mesa, pero diez sillas.",
+            "hay 10 sillas, pero una mesa.",
+            "hay una mesa, pero hay diez sillas."
+          ],
+          "accEn": [
+            "there are ten chairs, but one table.",
+            "there are 10 chairs, but one table."
+          ],
+          "hint": "Contrast a larger chair count with a single table."
+        },
+        {
+          "type": "tr",
+          "es": "Tengo treinta años, soy amable y hoy no estoy triste.",
+          "en": "I'm thirty years old, I'm kind, and I'm not sad today.",
+          "accEs": [
+            "tengo treinta años, soy amable y hoy no estoy triste.",
+            "yo tengo treinta años, soy amable y hoy no estoy triste.",
+            "tengo treinta años, soy amable y no estoy triste hoy.",
+            "hoy no estoy triste, soy amable y tengo treinta años.",
+            "tengo 30 años, soy amable y hoy no estoy triste."
+          ],
+          "accEn": [
+            "i'm thirty years old, i'm kind, and i'm not sad today.",
+            "i am thirty years old, i am kind, and i am not sad today.",
+            "i am thirty years old, i'm kind, and i'm not sad today.",
+            "i'm thirty years old, i am kind, and i'm not sad today.",
+            "i'm thirty years old, i'm kind, and i am not sad today.",
+            "i'm 30 years old, i'm nice, and i'm not sad today."
+          ],
+          "hint": "Combine age, a trait, and a negative current feeling."
+        },
+        {
+          "type": "tr",
+          "es": "Ella es inteligente, pero hoy está ocupada y nerviosa.",
+          "en": "She's smart, but today she's busy and nervous.",
+          "accEs": [
+            "ella es inteligente, pero hoy está ocupada y nerviosa.",
+            "es inteligente, pero hoy está ocupada y nerviosa.",
+            "ella es inteligente, pero está ocupada y nerviosa hoy.",
+            "hoy está ocupada y nerviosa, pero es inteligente.",
+            "es inteligente, pero hoy está nerviosa y ocupada."
+          ],
+          "accEn": [
+            "she's smart, but today she's busy and nervous.",
+            "she is intelligent, but today she is busy and nervous.",
+            "she's smart, but today she is busy and nervous.",
+            "she is smart, but today she's busy and nervous.",
+            "she's smart, but she's busy and anxious today."
+          ],
+          "hint": "Contrast her trait with two feminine states today."
+        },
+        {
+          "type": "tr",
+          "es": "Nosotros somos trabajadores, pero hoy estamos cansados y no descansamos.",
+          "en": "We're hardworking, but today we're tired and we aren't resting.",
+          "accEs": [
+            "nosotros somos trabajadores, pero hoy estamos cansados y no descansamos.",
+            "somos trabajadores, pero hoy estamos cansados y no descansamos.",
+            "nosotras somos trabajadoras, pero hoy estamos cansadas y no descansamos.",
+            "hoy estamos cansados y no descansamos, pero somos trabajadores.",
+            "somos trabajadores, pero estamos cansados hoy y no descansamos.",
+            "nosotros somos trabajadores, pero hoy estamos cansados y no estamos descansando.",
+            "somos trabajadores, pero hoy estamos cansados y no estamos descansando."
+          ],
+          "accEn": [
+            "we're hardworking, but today we're tired and we aren't resting.",
+            "we are hardworking, but today we are tired and we are not resting.",
+            "we're hardworking, but today we are tired and we aren't resting.",
+            "we are hardworking, but today we're tired and we aren't resting.",
+            "we're hardworking, but today we're tired and we are not resting.",
+            "we're hard-working, but we're tired today and not resting."
+          ],
+          "hint": "Contrast the group's usual trait with today's state and a negative action."
+        }
+      ],
+      "story": [
+        {
+          "type": "seg",
+          "context": "",
+          "es": "Me llamo Camila y soy colombiana.",
+          "accept": [
+            "my name is camila and i'm colombian.",
+            "i'm called camila and i am colombian."
+          ],
+          "show": "My name is Camila and I'm Colombian.",
+          "hint": "Translate the highlighted Spanish line into natural English."
+        },
+        {
+          "type": "seg",
+          "context": "Me llamo Camila y soy colombiana.",
+          "es": "Soy joven, inteligente y amable.",
+          "accept": [
+            "i'm young, smart, and kind.",
+            "i am young, intelligent, and nice."
+          ],
+          "show": "I'm young, smart, and kind.",
+          "hint": "Translate the highlighted Spanish line into natural English."
+        },
+        {
+          "type": "seg",
+          "context": "Me llamo Camila y soy colombiana. Soy joven, inteligente y amable.",
+          "es": "Hoy estoy cansada, pero estoy contenta.",
+          "accept": [
+            "i'm tired today, but i'm happy.",
+            "today i am tired, but i am glad."
+          ],
+          "show": "I'm tired today, but I'm happy.",
+          "hint": "Translate the highlighted Spanish line into natural English."
+        },
+        {
+          "type": "seg",
+          "context": "Me llamo Camila y soy colombiana. Soy joven, inteligente y amable. Hoy estoy cansada, pero estoy contenta.",
+          "es": "No estoy enferma ni triste.",
+          "accept": [
+            "i'm not sick or sad.",
+            "i am neither ill nor sad."
+          ],
+          "show": "I'm not sick or sad.",
+          "hint": "Translate the highlighted Spanish line into natural English."
+        },
+        {
+          "type": "seg",
+          "context": "Me llamo Camila y soy colombiana. Soy joven, inteligente y amable. Hoy estoy cansada, pero estoy contenta. No estoy enferma ni triste.",
+          "es": "Tengo veinte años.",
+          "accept": [
+            "i'm twenty years old.",
+            "i am twenty years old.",
+            "i am 20 years old.",
+            "i'm 20 years old."
+          ],
+          "show": "I'm twenty years old.",
+          "hint": "Translate the highlighted Spanish line into natural English."
+        },
+        {
+          "type": "seg",
+          "context": "Me llamo Camila y soy colombiana. Soy joven, inteligente y amable. Hoy estoy cansada, pero estoy contenta. No estoy enferma ni triste. Tengo veinte años.",
+          "es": "Hoy descanso en casa.",
+          "accept": [
+            "today i rest at home.",
+            "i'm resting at home today."
+          ],
+          "show": "Today I rest at home.",
           "hint": "Translate the highlighted Spanish line into natural English."
         }
       ]
