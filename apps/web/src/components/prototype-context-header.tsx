@@ -10,12 +10,14 @@ export function PrototypeContextHeader({
   backLabel,
   onBack,
   title,
+  titleStyle = "context",
   trailing,
 }: {
   backHref?: string;
   backLabel?: string;
   onBack?: () => void;
   title: string;
+  titleStyle?: "context" | "screen";
   trailing?: React.ReactNode;
 }) {
   return (
@@ -31,12 +33,10 @@ export function PrototypeContextHeader({
           </IconButton>
         ) : null}
         <div className="context-title">
-          <h1>{title}</h1>
+          <h1 className={titleStyle === "screen" ? "is-screen-title" : undefined}>{title}</h1>
         </div>
       </div>
-      <div className="context-badges">
-        {trailing ?? <span className="prototype-tag">Fixture prototype</span>}
-      </div>
+      {trailing ? <div className="context-badges">{trailing}</div> : null}
     </header>
   );
 }

@@ -4,6 +4,7 @@ vi.mock("server-only", () => ({}));
 
 import {
   AI_EVALUATION_MAX_OUTPUT_TOKENS,
+  AI_EVALUATION_FEEDBACK_MAX_WORDS,
   AI_EVALUATION_TIMEOUT_MS,
   DEFAULT_AI_EVALUATION_MODEL,
   GatewayAiVerdictGenerator,
@@ -66,7 +67,7 @@ describe("GatewayAiVerdictGenerator", () => {
     expect(options.providerOptions.gateway).not.toHaveProperty("models");
     expect(options.providerOptions.gateway).not.toHaveProperty("quotaEntityId");
     expect(options.providerOptions.gateway).toEqual({
-      tags: ["scope:evaluation-only", "feature:evaluation", "prompt:v1"],
+      tags: ["scope:evaluation-only", "feature:evaluation", "prompt:v2"],
       user: "usr_0123456789abcdef0123456789abcdef",
     });
     expect(JSON.parse(options.prompt)).toEqual({
@@ -95,6 +96,91 @@ describe("GatewayAiVerdictGenerator", () => {
         latencyMs: 25,
         usage: { inputTokens: 31, outputTokens: 22, totalTokens: 53 },
       },
+    });
+  });
+
+  it("includes a server-owned assessment goal when the exercise has one", async () => {
+    const generate = vi.fn<GatewayGenerateText>().mockResolvedValue(
+      successResult({
+        score: 72,
+        verdict: "close",
+        feedback: "Your meaning is clear; use soler followed by an infinitive.",
+        wordDiff: [],
+        errorTags: [],
+      }),
+    );
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
+
+    await generator.evaluate({
+      ...request,
+      assessmentGoal: "Express a customary action with soler.",
+    });
+
+    expect(JSON.parse(generate.mock.calls[0][0].prompt)).toMatchObject({
+      assessmentGoal: "Express a customary action with soler.",
+    });
+  });
+
+  it("caps AI feedback at the learner-facing word limit", async () => {
+    const generate = vi.fn<GatewayGenerateText>().mockResolvedValue(
+      successResult({
+        score: 72,
+        verdict: "close",
+        feedback:
+          "Use the plural article before days of the week in Spanish because it makes habitual actions sound natural and is the form requested by this practice prompt for your answer here today with confidence.",
+        wordDiff: [],
+        errorTags: [],
+      }),
+    );
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
+
+    const outcome = await generator.evaluate(request);
+
+    expect(outcome).toMatchObject({ kind: "graded" });
+    if (outcome.kind === "graded") {
+      expect(outcome.result.feedback.split(/\s+/u)).toHaveLength(AI_EVALUATION_FEEDBACK_MAX_WORDS);
+      expect(outcome.result.feedback).toMatch(/…$/u);
+    }
+  });
+
+  it("replaces impersonal evaluator language with a direct learner message", async () => {
+    const generate = vi.fn<GatewayGenerateText>().mockResolvedValue(
+      successResult({
+        score: 35,
+        verdict: "wrong",
+        feedback:
+          "The learner response contradicts the source meaning, but the reply says something different. Correct translation: use the supplied answer.",
+        wordDiff: [],
+        errorTags: [],
+      }),
+    );
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
+
+    const outcome = await generator.evaluate(request);
+
+    expect(outcome).toMatchObject({
+      kind: "graded",
+      result: { feedback: "You changed the intended meaning. Use the correction below." },
+    });
+  });
+
+  it("does not let AI feedback repeat a complete accepted answer", async () => {
+    const generate = vi.fn<GatewayGenerateText>().mockResolvedValue(
+      successResult({
+        score: 35,
+        verdict: "wrong",
+        feedback: "You changed the meaning; say Soy de Colombia.",
+        wordDiff: [],
+        errorTags: [],
+      }),
+    );
+    const generator = new GatewayAiVerdictGenerator({ gatewayApiKey, generate });
+
+    const outcome = await generator.evaluate(request);
+
+    expect(outcome).toMatchObject({
+      kind: "graded",
+      result: { feedback: "You changed the intended meaning. Use the correction below." },
     });
   });
 
@@ -166,7 +252,7 @@ describe("GatewayAiVerdictGenerator", () => {
     expect(outcome).not.toHaveProperty("result");
   });
 
-  it("rejects valid taxonomy tags that are outside the resolved item's grammar tags", async () => {
+  it("removes taxonomy tags that are outside the resolved item's grammar scope", async () => {
     const generate = vi.fn<GatewayGenerateText>().mockResolvedValue(
       successResult({
         score: 50,
@@ -181,11 +267,14 @@ describe("GatewayAiVerdictGenerator", () => {
     const outcome = await generator.evaluate(request);
 
     expect(outcome).toMatchObject({
-      kind: "ungraded",
-      retryable: true,
-      failure: "schema",
+      kind: "graded",
+      result: {
+        score: 50,
+        verdict: "wrong",
+        feedback: "Review the verb form.",
+        errorTags: [],
+      },
     });
-    expect(outcome).not.toHaveProperty("result");
   });
 
   it.each([

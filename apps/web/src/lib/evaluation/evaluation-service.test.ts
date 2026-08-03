@@ -88,7 +88,7 @@ describe("EvaluationService", () => {
     const outcome = await service.evaluate({
       requestId: "req_ai",
       request: { ...request, userInput: "Soy Ana." },
-      source,
+      source: { ...source, assessmentGoal: "Introduce yourself with llamarse." },
       userTrackingId: "opaque_learner",
     });
 
@@ -97,6 +97,7 @@ describe("EvaluationService", () => {
       expect.objectContaining({
         sourceText: "My name is Ana.",
         acceptedAnswers: source.authoritativeAnswers,
+        assessmentGoal: "Introduce yourself with llamarse.",
         grammarTags: source.grammarTags,
         userTrackingId: "opaque_learner",
       }),

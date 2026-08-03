@@ -121,6 +121,11 @@ export type AcceptedAnswerOptions = {
   splitCanonicalVariants?: boolean;
 };
 
+export type ComparisonOptions = {
+  /** Accept a single added or omitted character in an otherwise exact output. */
+  tolerateSingleCharacterTypo?: boolean;
+};
+
 export type ComparisonDecision =
   | {
       kind: "graded";
@@ -506,9 +511,50 @@ function closeScore(similarity: number): number {
   return Math.min(84, 60 + Math.round(((similarity - CLOSE_SIMILARITY) / 0.3) * 24));
 }
 
+function differsByOneInsertionOrDeletion(left: string, right: string) {
+  if (Math.abs(Array.from(left).length - Array.from(right).length) !== 1) return false;
+
+  const [shorter, longer] = left.length < right.length ? [left, right] : [right, left];
+  let shortIndex = 0;
+  let longIndex = 0;
+  let skipped = false;
+
+  while (shortIndex < shorter.length && longIndex < longer.length) {
+    if (shorter[shortIndex] === longer[longIndex]) {
+      shortIndex += 1;
+      longIndex += 1;
+      continue;
+    }
+    if (skipped) return false;
+    skipped = true;
+    longIndex += 1;
+  }
+
+  return true;
+}
+
+function isTolerableSingleCharacterTypo(
+  userDisplay: readonly string[],
+  expectedDisplay: readonly string[],
+  steps: readonly DiffStep[],
+) {
+  if (userDisplay.length !== expectedDisplay.length) return false;
+  const changes = steps.filter((step) => step.type !== "same");
+  if (changes.length !== 1 || changes[0].type !== "substitute") return false;
+
+  const change = changes[0];
+  const userToken = normalizeForComparison(userDisplay[change.userIndex]);
+  const expectedToken = normalizeForComparison(expectedDisplay[change.expectedIndex]);
+  return (
+    Math.min(Array.from(userToken).length, Array.from(expectedToken).length) >= 4 &&
+    differsByOneInsertionOrDeletion(userToken, expectedToken)
+  );
+}
+
 export function compareAnswer(
   userInput: string,
   acceptedAnswers: readonly string[],
+  options: ComparisonOptions = {},
 ): ComparisonDecision {
   if (userInput.length > EVALUATION_INPUT_MAX_LENGTH) {
     return { kind: "invalid", reason: "too-long" };
@@ -554,6 +600,24 @@ export function compareAnswer(
   const expectedDisplay = prepareText(matchedAnswer, false).split(" ").filter(Boolean);
   const steps = diffTokens(userInput, matchedAnswer);
   const wordDiff = createBoundedWordDiff(userDisplay, expectedDisplay, steps);
+  if (
+    options.tolerateSingleCharacterTypo &&
+    !hasMeaningRisk(userInput, matchedAnswer) &&
+    isTolerableSingleCharacterTypo(userDisplay, expectedDisplay, steps)
+  ) {
+    return {
+      kind: "graded",
+      matchedAnswer,
+      similarity: bestSimilarity,
+      result: {
+        score: 100,
+        verdict: "correct",
+        feedback: "Correct.",
+        errorTags: [],
+        evalSource: "comparison",
+      },
+    };
+  }
   if (
     hasMeaningRisk(userInput, matchedAnswer) ||
     diffNeedsSemanticReview(userDisplay, expectedDisplay, steps) ||

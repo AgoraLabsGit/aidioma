@@ -1,6 +1,7 @@
 /**
- * PROTOTYPE ONLY. These records exercise the Practice Sets interaction model.
- * They are not reviewed content and must not be copied into content/practice-sets.
+ * PROTOTYPE ONLY. These local records exercise the intermediate learning design.
+ * They are original sample content, not reviewed launch content, and must not be
+ * copied into canonical lessons or future collection seeds.
  */
 
 export const practiceSetFacets = [
@@ -14,33 +15,54 @@ export const practiceSetFacets = [
 export type PracticeSetFacet = (typeof practiceSetFacets)[number];
 export type PracticeActivity = "type" | "flashcards";
 export type PracticeDirection = "en-es" | "es-en" | "both";
-export type PracticeDifficulty = "guided" | "standard" | "challenge";
-export type VerbTense = "all" | "present" | "preterite" | "imperative";
-export type VerbPerson =
-  | "all"
-  | "first-singular"
-  | "second-singular"
-  | "third-singular"
-  | "first-plural"
-  | "third-plural";
-export type VerbDrill = "meaning" | "recognize" | "produce" | "context";
+export type PracticeDifficulty = "guided" | "standard" | "stretch";
+export type PracticeFocus =
+  | "recommended"
+  | "completed-past"
+  | "time-phrases"
+  | "spatial-language"
+  | "haber"
+  | "connectors";
+export type PrototypeLearnerStage = "foundation" | "intermediate";
 
 export type PracticeSetConfiguration = {
   activity: PracticeActivity;
   difficulty: PracticeDifficulty;
   direction: PracticeDirection;
-  drill: VerbDrill;
-  person: VerbPerson;
+  focus: PracticeFocus;
   shuffle: boolean;
-  size: 5 | 10 | 15;
-  tense: VerbTense;
 };
 
 type ActivityCapability = {
-  id: "type" | "flashcards" | "quiz" | "sentences" | "story" | "conversation";
+  id: "type" | "flashcards" | "conversation" | "story";
   label: string;
   reason?: string;
   status: "available" | "unavailable";
+};
+
+export type PracticeFocusOption = {
+  description: string;
+  id: PracticeFocus;
+  label: string;
+};
+
+type AnswerGroup = {
+  communicative: string[];
+  target: string[];
+};
+
+export type PracticePrompt = {
+  answers: {
+    english: AnswerGroup;
+    spanish: AnswerGroup;
+  };
+  capability: string;
+  cue: string;
+  english: string;
+  focus: Exclude<PracticeFocus, "recommended">[];
+  id: string;
+  level: PrototypeLearnerStage;
+  spanish: string;
 };
 
 export type PracticeSetFixture = {
@@ -48,16 +70,12 @@ export type PracticeSetFixture = {
   defaultConfiguration: PracticeSetConfiguration;
   description: string;
   facets: PracticeSetFacet[];
+  focuses: PracticeFocusOption[];
   id: string;
   level: string;
-  preview: {
-    answer: string;
-    cue: string;
-    english: string;
-    spanish: string;
-  };
+  prompts: PracticePrompt[];
   slug: string;
-  targetCount: number;
+  support: string;
   title: string;
 };
 
@@ -65,11 +83,14 @@ const defaultConfiguration: PracticeSetConfiguration = {
   activity: "type",
   difficulty: "standard",
   direction: "both",
-  drill: "context",
-  person: "all",
+  focus: "recommended",
   shuffle: true,
-  size: 10,
-  tense: "all",
+};
+
+const recommendedFocus: PracticeFocusOption = {
+  id: "recommended",
+  label: "Recommended mix",
+  description: "AIdioma chooses an appropriate variety for your current level.",
 };
 
 const laterActivity = (
@@ -80,114 +101,299 @@ const laterActivity = (
 
 export const practiceSetFixtures: PracticeSetFixture[] = [
   {
-    id: "prototype-set-essential-verbs-v1",
-    slug: "essential-verbs",
-    title: "Essential Verbs",
-    description: "High-utility verbs across meaning, form recognition, production, and context.",
-    level: "A1–A2",
-    facets: ["Verbs", "Vocabulary"],
-    targetCount: 36,
-    activities: [
-      { id: "type", label: "Type", status: "available" },
-      { id: "flashcards", label: "Flashcards", status: "available" },
-      laterActivity("quiz", "Quiz", "Needs a reviewed distractor set."),
-      laterActivity("sentences", "Sentences", "Needs reviewed contextual sentences."),
-    ],
-    defaultConfiguration,
-    preview: {
-      english: "I am",
-      spanish: "soy",
-      cue: "Produce the present first-person form of ser.",
-      answer: "soy",
-    },
-  },
-  {
-    id: "prototype-set-everyday-phrases-v1",
-    slug: "everyday-phrases",
-    title: "Everyday Phrases",
-    description: "Compact phrases for greetings, politeness, clarification, and small talk.",
-    level: "A1",
-    facets: ["Phrases", "Situations"],
-    targetCount: 24,
-    activities: [
-      { id: "type", label: "Type", status: "available" },
-      { id: "flashcards", label: "Flashcards", status: "available" },
-      laterActivity("conversation", "Conversation", "Needs a reviewed branching scenario."),
-    ],
-    defaultConfiguration,
-    preview: {
-      english: "Excuse me",
-      spanish: "Disculpe",
-      cue: "Use the polite phrase you would say to get someone’s attention.",
-      answer: "Disculpe",
-    },
-  },
-  {
-    id: "prototype-set-core-vocabulary-v1",
-    slug: "core-vocabulary",
-    title: "Core Vocabulary",
-    description: "A compact, frequency-informed mix of common nouns, adjectives, and connectors.",
-    level: "A1",
-    facets: ["Vocabulary"],
-    targetCount: 40,
-    activities: [
-      { id: "type", label: "Type", status: "available" },
-      { id: "flashcards", label: "Flashcards", status: "available" },
-      laterActivity("quiz", "Quiz", "Needs reviewed distractors for every target."),
-    ],
-    defaultConfiguration,
-    preview: {
-      english: "always",
-      spanish: "siempre",
-      cue: "Translate the frequency word.",
-      answer: "siempre",
-    },
-  },
-  {
-    id: "prototype-set-food-v1",
-    slug: "food",
-    title: "Food",
-    description: "Ingredients, meals, preferences, and useful food descriptions.",
-    level: "A1–A2",
-    facets: ["Topics", "Vocabulary"],
-    targetCount: 28,
-    activities: [
-      { id: "type", label: "Type", status: "available" },
-      { id: "flashcards", label: "Flashcards", status: "available" },
-      laterActivity("story", "Story", "Needs a reviewed passage and segment answers."),
-    ],
-    defaultConfiguration,
-    preview: {
-      english: "bread",
-      spanish: "el pan",
-      cue: "Include the article.",
-      answer: "el pan",
-    },
-  },
-  {
-    id: "prototype-set-restaurant-v1",
-    slug: "ordering-at-a-restaurant",
-    title: "Ordering at a Restaurant",
-    description: "Goal-focused language for ordering, changing a dish, and asking for the bill.",
-    level: "A1–A2",
+    id: "intermediate-restaurant",
+    slug: "restaurant-spanish",
+    title: "Restaurant Spanish",
+    description: "Order, explain a mistake, discuss a previous visit, and resolve problems politely.",
+    level: "Foundation–B1",
     facets: ["Situations", "Topics", "Phrases"],
-    targetCount: 18,
     activities: [
       { id: "type", label: "Type", status: "available" },
-      laterActivity(
-        "flashcards",
-        "Flashcards",
-        "This prototype set has no reviewed standalone card backs.",
-      ),
-      laterActivity("conversation", "Conversation", "Needs a reviewed restaurant scenario."),
+      laterActivity("conversation", "Conversation", "A reviewed branching restaurant scenario is not in this pilot."),
+      laterActivity("flashcards", "Flashcards", "This situation collection has no reviewed standalone card backs."),
     ],
-    defaultConfiguration: { ...defaultConfiguration, activity: "type" },
-    preview: {
-      english: "The bill, please.",
-      spanish: "La cuenta, por favor.",
-      cue: "Ask politely when you are ready to pay.",
-      answer: "La cuenta, por favor.",
-    },
+    defaultConfiguration,
+    focuses: [
+      recommendedFocus,
+      {
+        id: "completed-past",
+        label: "Completed past",
+        description: "Explain completed restaurant events using the preterite.",
+      },
+      {
+        id: "time-phrases",
+        label: "Time phrases",
+        description: "Place restaurant actions in time and express recent actions.",
+      },
+      {
+        id: "connectors",
+        label: "Connectors",
+        description: "Connect and qualify an account of a restaurant experience.",
+      },
+    ],
+    support: "Current intermediate scope: past visits, mistakes, recent actions, and connected complaints. Polite phrases remain available as support.",
+    prompts: [
+      {
+        id: "restaurant-foundation-bill",
+        level: "foundation",
+        focus: ["time-phrases"],
+        capability: "Ask for the bill politely",
+        cue: "You are ready to leave. Ask the server for the bill politely.",
+        english: "The bill, please.",
+        spanish: "La cuenta, por favor.",
+        answers: {
+          spanish: {
+            target: ["La cuenta, por favor.", "¿Me trae la cuenta, por favor?"],
+            communicative: ["Quiero pagar, por favor."],
+          },
+          english: {
+            target: ["The bill, please.", "Could you bring me the bill, please?"],
+            communicative: ["I would like to pay, please."],
+          },
+        },
+      },
+      {
+        id: "restaurant-past-mistake",
+        level: "intermediate",
+        focus: ["completed-past"],
+        capability: "Recount a completed restaurant mistake",
+        cue: "Tell the server what happened earlier. Make the completed past event explicit.",
+        english: "Yesterday I ordered soup, but they brought me a salad.",
+        spanish: "Ayer pedí sopa, pero me trajeron una ensalada.",
+        answers: {
+          spanish: {
+            target: [
+              "Ayer pedí sopa, pero me trajeron una ensalada.",
+              "Pedí sopa ayer, pero me trajeron una ensalada.",
+              "Ayer pedí sopa, pero me trajeron ensalada.",
+            ],
+            communicative: ["Quiero sopa, no ensalada.", "Pedí sopa."],
+          },
+          english: {
+            target: ["Yesterday I ordered soup, but they brought me a salad."],
+            communicative: ["I want soup, not salad.", "I ordered soup."],
+          },
+        },
+      },
+      {
+        id: "restaurant-recent-bill",
+        level: "intermediate",
+        focus: ["time-phrases"],
+        capability: "Express a recent action with acabar de",
+        cue: "Say that you have just finished, then ask for the bill.",
+        english: "I just finished. The bill, please.",
+        spanish: "Acabo de terminar. La cuenta, por favor.",
+        answers: {
+          spanish: {
+            target: ["Acabo de terminar. La cuenta, por favor."],
+            communicative: ["Terminé. La cuenta, por favor.", "La cuenta, por favor."],
+          },
+          english: {
+            target: ["I just finished. The bill, please.", "I just finished. The check, please."],
+            communicative: ["I finished. The bill, please.", "The bill, please."],
+          },
+        },
+      },
+      {
+        id: "restaurant-connected-review",
+        level: "intermediate",
+        focus: ["completed-past", "connectors"],
+        capability: "Connect contrasting details in a past account",
+        cue: "Give a balanced account of the meal using a connector for contrast.",
+        english: "Although the food was good, the service was slow.",
+        spanish: "Aunque la comida estuvo buena, el servicio fue lento.",
+        answers: {
+          spanish: {
+            target: [
+              "Aunque la comida estuvo buena, el servicio fue lento.",
+              "La comida estuvo buena; sin embargo, el servicio fue lento.",
+            ],
+            communicative: ["La comida estuvo buena, pero el servicio fue lento."],
+          },
+          english: {
+            target: [
+              "Although the food was good, the service was slow.",
+              "The food was good; however, the service was slow.",
+            ],
+            communicative: ["The food was good, but the service was slow."],
+          },
+        },
+      },
+    ],
+  },
+  {
+    id: "intermediate-getting-around",
+    slug: "getting-around",
+    title: "Getting Around",
+    description: "Locate destinations, understand directions, and explain where something happened.",
+    level: "A2–B1",
+    facets: ["Situations", "Topics", "Phrases"],
+    activities: [
+      { id: "type", label: "Type", status: "available" },
+      laterActivity("conversation", "Conversation", "A reviewed navigation scenario is not in this pilot."),
+    ],
+    defaultConfiguration,
+    focuses: [
+      recommendedFocus,
+      {
+        id: "spatial-language",
+        label: "Location & movement",
+        description: "Practice position, distance, and movement through space.",
+      },
+      {
+        id: "completed-past",
+        label: "What happened there",
+        description: "Explain a completed event at a particular place.",
+      },
+    ],
+    support: "Current scope: aquí/acá, ahí, hacia, hasta, cerca de, lejos de, and practical direction phrases.",
+    prompts: [
+      {
+        id: "around-turn-right",
+        level: "foundation",
+        focus: ["spatial-language"],
+        capability: "Give a simple direction",
+        cue: "Direct someone at the next block.",
+        english: "Turn right at the next block.",
+        spanish: "Doble a la derecha en la próxima cuadra.",
+        answers: {
+          spanish: { target: ["Doble a la derecha en la próxima cuadra."], communicative: ["A la derecha en la próxima cuadra."] },
+          english: { target: ["Turn right at the next block."], communicative: ["To the right at the next block."] },
+        },
+      },
+      {
+        id: "around-walked-toward",
+        level: "intermediate",
+        focus: ["spatial-language", "completed-past"],
+        capability: "Combine movement and a completed event",
+        cue: "Explain the direction you walked and where you stopped.",
+        english: "I walked toward the station and stopped across from the bank.",
+        spanish: "Caminé hacia la estación y paré enfrente del banco.",
+        answers: {
+          spanish: { target: ["Caminé hacia la estación y paré enfrente del banco."], communicative: ["Fui hacia la estación y paré frente al banco."] },
+          english: { target: ["I walked toward the station and stopped across from the bank."], communicative: ["I went toward the station and stopped in front of the bank."] },
+        },
+      },
+    ],
+  },
+  {
+    id: "intermediate-time-habits-plans",
+    slug: "time-habits-plans",
+    title: "Time, Habits, and Plans",
+    description: "Practice routines, recent actions, duration, deadlines, and near-future plans.",
+    level: "A2–B1",
+    facets: ["Topics", "Verbs", "Phrases"],
+    activities: [
+      { id: "type", label: "Type", status: "available" },
+      { id: "flashcards", label: "Flashcards", status: "available" },
+      laterActivity("story", "Story", "A reviewed time-sequenced passage is not in this pilot."),
+    ],
+    defaultConfiguration,
+    focuses: [
+      recommendedFocus,
+      {
+        id: "time-phrases",
+        label: "Time phrases",
+        description: "Practice frequency, recency, duration, and upcoming actions.",
+      },
+      {
+        id: "completed-past",
+        label: "Completed past",
+        description: "Place completed events at a definite time.",
+      },
+    ],
+    support: "Current scope: soler, acabar de, ir a, hace, dentro de, todavía, ya, siempre, and nunca.",
+    prompts: [
+      {
+        id: "time-used-to",
+        level: "intermediate",
+        focus: ["time-phrases"],
+        capability: "Express a customary action with soler",
+        cue: "Describe something you usually do on Sundays.",
+        english: "I usually cook on Sundays.",
+        spanish: "Suelo cocinar los domingos.",
+        answers: {
+          spanish: {
+            target: ["Suelo cocinar los domingos."],
+            communicative: ["Normalmente cocino los domingos."],
+          },
+          english: { target: ["I usually cook on Sundays."], communicative: ["I normally cook on Sundays."] },
+        },
+      },
+      {
+        id: "time-about-to",
+        level: "intermediate",
+        focus: ["time-phrases"],
+        capability: "Express an imminent action",
+        cue: "Say that you are about to leave.",
+        english: "I am about to leave.",
+        spanish: "Estoy por salir.",
+        answers: {
+          spanish: { target: ["Estoy por salir.", "Estoy a punto de salir."], communicative: ["Voy a salir ahora."] },
+          english: { target: ["I am about to leave."], communicative: ["I am going to leave now."] },
+        },
+      },
+    ],
+  },
+  {
+    id: "intermediate-stories-problems",
+    slug: "stories-and-problems",
+    title: "Stories and Explaining Problems",
+    description: "Build connected accounts with time, existence, cause, contrast, and consequence.",
+    level: "B1",
+    facets: ["Topics", "Phrases", "Verbs"],
+    activities: [
+      { id: "type", label: "Type", status: "available" },
+      laterActivity("story", "Story", "A reviewed connected passage is not in this pilot."),
+    ],
+    defaultConfiguration,
+    focuses: [
+      recommendedFocus,
+      {
+        id: "haber",
+        label: "Haber in context",
+        description: "Choose an existential form that matches the account.",
+      },
+      {
+        id: "connectors",
+        label: "Connectors",
+        description: "Express cause, result, contrast, and concession.",
+      },
+      {
+        id: "completed-past",
+        label: "Completed past",
+        description: "Narrate the events that moved the account forward.",
+      },
+    ],
+    support: "Current scope: hay/había/hubo, completed events, and a small set of functional connectors.",
+    prompts: [
+      {
+        id: "stories-no-trains",
+        level: "intermediate",
+        focus: ["haber", "connectors"],
+        capability: "Explain a situation and its result",
+        cue: "Explain why you arrived late using an existential form and a result connector.",
+        english: "There were no trains, so I arrived late.",
+        spanish: "No había trenes, así que llegué tarde.",
+        answers: {
+          spanish: { target: ["No había trenes, así que llegué tarde."], communicative: ["Llegué tarde porque no había trenes."] },
+          english: { target: ["There were no trains, so I arrived late."], communicative: ["I arrived late because there were no trains."] },
+        },
+      },
+      {
+        id: "stories-event",
+        level: "intermediate",
+        focus: ["haber", "completed-past"],
+        capability: "Use hubo for a bounded event",
+        cue: "Report a completed event that occurred yesterday.",
+        english: "There was an accident yesterday.",
+        spanish: "Hubo un accidente ayer.",
+        answers: {
+          spanish: { target: ["Hubo un accidente ayer."], communicative: ["Ayer ocurrió un accidente."] },
+          english: { target: ["There was an accident yesterday."], communicative: ["An accident happened yesterday."] },
+        },
+      },
+    ],
   },
 ];
 
@@ -203,84 +409,85 @@ export const practiceActivityLabels: Record<PracticeActivity, string> = {
 };
 
 export const practiceDifficultyLabels: Record<PracticeDifficulty, string> = {
-  guided: "Guided",
+  guided: "More support",
   standard: "Standard",
-  challenge: "Challenge",
+  stretch: "Less support",
 };
 
-export const verbTenseLabels: Record<VerbTense, string> = {
-  all: "All forms",
-  present: "Present",
-  preterite: "Preterite",
-  imperative: "Imperative",
-};
-
-export const verbPersonLabels: Record<VerbPerson, string> = {
-  all: "All persons",
-  "first-singular": "I · yo",
-  "second-singular": "You · tú",
-  "third-singular": "He/she · él/ella",
-  "first-plural": "We · nosotros",
-  "third-plural": "They · ellos/ellas",
-};
-
-export const verbDrillLabels: Record<VerbDrill, string> = {
-  meaning: "Meaning",
-  recognize: "Recognize form",
-  produce: "Produce form",
-  context: "Mixed context",
+export const prototypeLearnerStageLabels: Record<PrototypeLearnerStage, string> = {
+  foundation: "Foundation",
+  intermediate: "Intermediate",
 };
 
 export function describePracticeConfiguration(
   configuration: PracticeSetConfiguration,
-  isVerbSet: boolean,
+  set: PracticeSetFixture,
 ) {
-  const parts = [
+  const focus = set.focuses.find((option) => option.id === configuration.focus);
+  return [
     practiceActivityLabels[configuration.activity],
     practiceDirectionLabels[configuration.direction],
-    `${configuration.size} items`,
+    focus?.label ?? "Recommended mix",
     practiceDifficultyLabels[configuration.difficulty],
-  ];
-
-  if (isVerbSet) {
-    parts.push(
-      verbTenseLabels[configuration.tense],
-      verbPersonLabels[configuration.person],
-      verbDrillLabels[configuration.drill],
-    );
-  }
-
-  return parts.join(" · ");
+  ].join(" · ");
 }
 
-export function verbPoolCapacity(configuration: PracticeSetConfiguration) {
-  const tenseCapacity: Record<VerbTense, number> = {
-    all: 36,
-    present: 15,
-    preterite: 10,
-    imperative: 5,
-  };
-  const personCapacity: Record<VerbPerson, number> = {
-    all: 36,
-    "first-singular": 5,
-    "second-singular": 5,
-    "third-singular": 5,
-    "first-plural": 5,
-    "third-plural": 5,
-  };
-
-  if (configuration.tense === "imperative" && configuration.person === "first-singular") {
-    return 0;
-  }
-
-  return Math.min(tenseCapacity[configuration.tense], personCapacity[configuration.person]);
-}
-
-export function validDirectionForVerbDrill(
-  direction: PracticeDirection,
-  drill: VerbDrill,
+export function describePracticeOverrides(
+  configuration: PracticeSetConfiguration,
+  set: PracticeSetFixture,
 ) {
-  if (drill === "recognize") return direction === "es-en";
-  if (drill === "produce") return direction === "en-es";
-  return true;
+  const overrides: string[] = [];
+
+  if (configuration.activity !== set.defaultConfiguration.activity) {
+    overrides.push(practiceActivityLabels[configuration.activity]);
+  }
+  if (configuration.direction !== set.defaultConfiguration.direction) {
+    overrides.push(`${practiceDirectionLabels[configuration.direction]} only`);
+  }
+  if (configuration.focus !== set.defaultConfiguration.focus) {
+    const focus = set.focuses.find((option) => option.id === configuration.focus);
+    if (focus) overrides.push(focus.label);
+  }
+  if (configuration.difficulty !== set.defaultConfiguration.difficulty) {
+    overrides.push(practiceDifficultyLabels[configuration.difficulty]);
+  }
+  if (configuration.shuffle !== set.defaultConfiguration.shuffle) {
+    overrides.push(configuration.shuffle ? "Varied order" : "Fixed order");
+  }
+
+  return overrides.length > 0 ? overrides.join(" · ") : null;
+}
+
+export function promptsForConfiguration(
+  set: PracticeSetFixture,
+  configuration: PracticeSetConfiguration,
+  stage: PrototypeLearnerStage,
+) {
+  const stagePrompts =
+    stage === "intermediate"
+      ? [
+          ...set.prompts.filter((prompt) => prompt.level === "intermediate"),
+          ...set.prompts.filter((prompt) => prompt.level === "foundation"),
+        ]
+      : set.prompts.filter((prompt) => prompt.level === "foundation");
+  const requestedFocus = configuration.focus;
+  const focusedPrompts =
+    requestedFocus === "recommended"
+      ? stagePrompts
+      : stagePrompts.filter((prompt) => prompt.focus.includes(requestedFocus));
+
+  return focusedPrompts.length > 0 ? focusedPrompts : stagePrompts;
+}
+
+export function focusAvailableForStage(
+  set: PracticeSetFixture,
+  focus: PracticeFocus,
+  stage: PrototypeLearnerStage,
+) {
+  if (focus === "recommended") return true;
+  return set.prompts.some(
+    (prompt) =>
+      (stage === "intermediate" || prompt.level === "foundation") &&
+      prompt.focus.includes(focus),
+  );
 }

@@ -10,6 +10,7 @@
 | How do we write things down? | [CONVENTIONS.md](CONVENTIONS.md) | 60 lines |
 | What is true about subsystem X? | `Specs/Areas/<area>.md` | 120 each |
 | What is true about capability Y? | `Specs/Features/<feature>.md` | 120 each |
+| What must every learner-facing feature achieve? | [Specs/Features/core-product-criteria.md](Specs/Features/core-product-criteria.md) | 100 |
 | Why did we decide Z? | `Specs/ADRs/` — numbered, append-only | — |
 | What happened in a unit of work? | `Waves/<wave>-<slice>.md` — brief + gates + audit + proof, ONE file | 150 each |
 | What's broken / owed / dying? | `Registers/` — bugs · open-items · deprecations | — |
@@ -27,6 +28,7 @@ have one named home outside Docs and are linked here; archived design is evidenc
 | Question | The source of truth |
 |---|---|
 | App experience and settled UI | [Specs/Features/module-spec.md](Specs/Features/module-spec.md) |
+| Core learner-facing product criteria | [Specs/Features/core-product-criteria.md](Specs/Features/core-product-criteria.md) |
 | Practice Set catalog, settings, capabilities, and custom-generation boundary | [Specs/Features/practice-sets.md](Specs/Features/practice-sets.md) |
 | Voice stages, UX, quality gates, and provider bake-off | [Specs/Features/voice-practice.md](Specs/Features/voice-practice.md) |
 | Production platform and SDK boundaries | [Specs/Areas/platform.md](Specs/Areas/platform.md) |

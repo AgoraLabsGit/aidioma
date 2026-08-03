@@ -323,7 +323,7 @@
     "app": {
       "geometry": {
         "canvasWidth": 1000,
-        "cardWidth": 359,
+        "cardWidth": 728,
         "railWidth": 200
       },
       "tokens": {
@@ -451,7 +451,7 @@
     "app": {
       "geometry": {
         "canvasWidth": 1000,
-        "cardWidth": 359,
+        "cardWidth": 728,
         "railWidth": 200
       },
       "tokens": {
