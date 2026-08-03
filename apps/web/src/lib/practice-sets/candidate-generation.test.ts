@@ -108,6 +108,23 @@ function candidates(): CandidatePracticePrompt[] {
   ];
 }
 
+function modelCandidate(candidate: CandidatePracticePrompt) {
+  const { coverageKeys, prompt: richPrompt } = candidate;
+  const { answers, ...promptFields } = richPrompt;
+  return {
+    coverageKeys,
+    ...promptFields,
+    englishTarget: answers.english.target,
+    englishCommunicative: answers.english.communicative,
+    spanishTarget: answers.spanish.target,
+    spanishCommunicative: answers.spanish.communicative,
+  };
+}
+
+function modelCandidates(items = candidates()) {
+  return items.map(modelCandidate);
+}
+
 function additionalCandidates(): CandidatePracticePrompt[] {
   return [
     {
@@ -230,7 +247,7 @@ function expectEveryObjectPropertyRequired(value: unknown): void {
 
 describe("practice candidate generation", () => {
   it("runs a quota-aware schema-bound batch and checkpoints only semantically valid content", async () => {
-    const generate = vi.fn().mockResolvedValue({ output: { candidates: candidates() } });
+    const generate = vi.fn().mockResolvedValue({ output: { candidates: modelCandidates() } });
     const checkpoints: CandidateRunEnvelope[] = [];
     const run = await generateCandidateRun({
       brief: brief(),
@@ -254,7 +271,7 @@ describe("practice candidate generation", () => {
       ...candidate,
       prompt: { ...candidate.prompt, focus: ["spatial-language" as const] },
     }));
-    const generate = vi.fn().mockResolvedValue({ output: { candidates: invalid } });
+    const generate = vi.fn().mockResolvedValue({ output: { candidates: modelCandidates(invalid) } });
     await expect(generateCandidateRun({
       brief: multiBatchBrief(),
       existingPrompts: [existing],
@@ -315,7 +332,7 @@ describe("practice candidate generation", () => {
     });
     expect(report.findings.map((entry) => entry.code)).toContain(code);
 
-    const generate = vi.fn().mockResolvedValue({ output: { candidates: firstBatch } });
+    const generate = vi.fn().mockResolvedValue({ output: { candidates: modelCandidates(firstBatch) } });
     await expect(generateCandidateRun({
       brief: selectedBrief,
       existingPrompts: [existing],
@@ -335,7 +352,9 @@ describe("practice candidate generation", () => {
       candidateCount: 2,
       requestedModel: "openai/gpt-5.6-terra",
     }]);
-    const generate = vi.fn().mockResolvedValue({ output: { candidates: additionalCandidates() } });
+    const generate = vi.fn().mockResolvedValue({
+      output: { candidates: modelCandidates(additionalCandidates()) },
+    });
     const result = await generateCandidateRun({
       brief: selectedBrief,
       existingPrompts: [existing],
@@ -431,26 +450,43 @@ describe("practice candidate generation", () => {
   });
 
   it("uses a fully required provider schema and transforms string-only answers", async () => {
-    const generated = candidates()[0];
+    const richCandidate = candidates()[0];
+    const generated = modelCandidate(richCandidate);
     expect(ModelCandidatePracticePromptSchema.safeParse(generated).success).toBe(true);
     expect(ModelCandidatePracticePromptSchema.safeParse({
       ...generated,
-      prompt: {
-        ...generated.prompt,
-        answers: {
-          ...generated.prompt.answers,
-          english: { target: [{ text: "Water", region: "US" }], communicative: [] },
-        },
-      },
+      englishTarget: [{ text: "Water", region: "US" }],
     }).success).toBe(false);
     expect(ModelCandidatePracticePromptSchema.safeParse({
       ...generated,
-      prompt: { ...generated.prompt, provenance: { source: "model", license: "x" } },
+      prompt: richCandidate.prompt,
     }).success).toBe(false);
     const jsonSchema = await asSchema(candidateBatchSchema(1)).jsonSchema;
     expect(JSON.stringify(jsonSchema)).not.toMatch(/provenance|region/u);
     expectEveryObjectPropertyRequired(jsonSchema);
-    expect(transformModelCandidateBatch({ candidates: [generated] }, 1)).toEqual([generated]);
+    const candidateItemSchema = (
+      (jsonSchema as { properties: { candidates: { items: { properties: Record<string, unknown> } } } })
+        .properties.candidates.items
+    );
+    expect(Object.keys(candidateItemSchema.properties).sort()).toEqual([
+      "capability",
+      "coverageKeys",
+      "cue",
+      "difficulty",
+      "english",
+      "englishCommunicative",
+      "englishTarget",
+      "focus",
+      "grammarTags",
+      "id",
+      "level",
+      "spanish",
+      "spanishCommunicative",
+      "spanishTarget",
+    ]);
+    expect(candidateItemSchema.properties).not.toHaveProperty("prompt");
+    expect(candidateItemSchema.properties).not.toHaveProperty("answers");
+    expect(transformModelCandidateBatch({ candidates: [generated] }, 1)).toEqual([richCandidate]);
   });
 
   it("requires unique prompt/brief arrays and the dedicated allowlisted model/key", () => {
@@ -461,7 +497,7 @@ describe("practice candidate generation", () => {
       prompt("x", "x", "y", { focus: ["time-phrases", "time-phrases"] }),
     ).success).toBe(false);
     expect(ModelCandidatePracticePromptSchema.safeParse({
-      ...candidates()[0], coverageKeys: ["ordering", "ordering"],
+      ...modelCandidate(candidates()[0]), coverageKeys: ["ordering", "ordering"],
     }).success).toBe(false);
     expect(CollectionBriefSchema.safeParse({
       ...brief(), bannedSpanishTerms: ["Vale", "válé"],
