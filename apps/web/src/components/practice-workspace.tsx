@@ -34,6 +34,14 @@ import {
   practiceUnitsForSession,
   randomSessionOrderSeed,
 } from "@/lib/practice-sets/session-order";
+import {
+  addSavedPracticeReference,
+  hasSavedPracticeReference,
+  removeSavedPracticeReference,
+  savedPracticeReference,
+  savedPracticeReferenceKey,
+  type SavedPracticeReference,
+} from "@/lib/practice-sets/saved-practice-references";
 
 import { PracticeSetOptionsPanel } from "./practice-set-options-panel";
 import { Button, Card, IconButton } from "./primitives";
@@ -44,6 +52,7 @@ type CatalogFilter = "All" | "Saved" | PracticeSetFacet;
 type Configurations = Record<string, PracticeSetConfiguration>;
 type PracticeTurn = {
   answer: string;
+  collectionId: string;
   direction: Exclude<PracticeDirection, "both">;
   evaluation: PracticeGradedEvaluation;
   prompt: PracticePrompt;
@@ -56,6 +65,25 @@ type PracticeEvaluationFailure = {
   message: string;
   retryable: boolean;
 };
+type SavedPromptRecord = {
+  collection: PracticeSetFixture;
+  prompt: PracticePrompt;
+  reference: SavedPracticeReference;
+};
+type SessionSnapshotBase = {
+  avoidFirstPromptId?: string;
+  configuration: PracticeSetConfiguration;
+  orderSeed: number;
+};
+type SessionSnapshot =
+  | (SessionSnapshotBase & {
+      kind: "collection";
+      setId: string;
+    })
+  | (SessionSnapshotBase & {
+      kind: "saved-material";
+      promptReferences: SavedPracticeReference[];
+    });
 const storageKey = "aidioma-intermediate-pilot-configurations:v2";
 const legacyStorageKey = "aidioma-intermediate-pilot-configurations:v1";
 const learnerStage = "intermediate" as const;
@@ -155,6 +183,24 @@ function filterCollections(filter: CatalogFilter, savedSetIds: string[]) {
   return practiceSetFixtures.filter((set) => set.facets.includes(filter));
 }
 
+const promptRecordByReferenceKey = new Map(
+  practiceSetFixtures.flatMap((collection) =>
+    collection.prompts.map((prompt) => [
+      savedPracticeReferenceKey(savedPracticeReference(collection.id, prompt.id)),
+      { collection, prompt },
+    ] as const),
+  ),
+);
+
+function resolveSavedPromptRecords(
+  references: readonly SavedPracticeReference[],
+): SavedPromptRecord[] {
+  return references.flatMap((reference) => {
+    const currentRecord = promptRecordByReferenceKey.get(savedPracticeReferenceKey(reference));
+    return currentRecord ? [{ ...currentRecord, reference }] : [];
+  });
+}
+
 function summarizeSession(turns: PracticeTurn[]): CollectionSessionSummary | null {
   if (turns.length === 0) return null;
 
@@ -246,6 +292,31 @@ function CollectionCard({
   );
 }
 
+function PersonalSavedPromptCard({
+  onRemove,
+  record,
+}: {
+  onRemove: () => void;
+  record: SavedPromptRecord;
+}) {
+  return (
+    <article className="personal-saved-prompt-card">
+      <div className="personal-saved-prompt-copy">
+        <span>{record.collection.title}</span>
+        <strong>{record.prompt.english}</strong>
+        <p lang="es">{record.prompt.spanish}</p>
+      </div>
+      <Button
+        aria-label={`Remove “${record.prompt.english}” from personal saved material`}
+        onClick={onRemove}
+        variant="quiet"
+      >
+        Remove
+      </Button>
+    </article>
+  );
+}
+
 function PromptMessage({
   direction,
   prompt,
@@ -323,9 +394,13 @@ function focusedWordDiff(evaluation: PracticeGradedEvaluation) {
 function FeedbackMessage({
   announce,
   evaluation,
+  isPromptSaved,
+  onTogglePromptSaved,
 }: {
   announce: boolean;
   evaluation: PracticeGradedEvaluation;
+  isPromptSaved: boolean;
+  onTogglePromptSaved: () => void;
 }) {
   const title =
     evaluation.verdict === "correct"
@@ -358,6 +433,20 @@ function FeedbackMessage({
       {showReferenceAnswer ? (
         <p className="feedback-reference-answer">{evaluation.modelAnswer}</p>
       ) : null}
+      <button
+        aria-label={
+          isPromptSaved
+            ? "Remove this prompt from personal saved material"
+            : "Save this prompt to personal saved material"
+        }
+        aria-pressed={isPromptSaved}
+        className={`feedback-save-action saved-toggle${isPromptSaved ? " is-saved" : ""}`}
+        onClick={onTogglePromptSaved}
+        type="button"
+      >
+        <Star aria-hidden="true" />
+        {isPromptSaved ? "Saved for this visit" : "Save this prompt"}
+      </button>
     </article>
   );
 }
@@ -401,18 +490,16 @@ export function PracticeWorkspace({
   const [catalogFilter, setCatalogFilter] = useState<CatalogFilter>("All");
   const [selectedSetId, setSelectedSetId] = useState(practiceSetFixtures[0].id);
   const [savedSetIds, setSavedSetIds] = useState<string[]>([]);
+  const [savedPromptReferences, setSavedPromptReferences] = useState<
+    SavedPracticeReference[]
+  >([]);
   const [latestCollectionSessions, setLatestCollectionSessions] = useState<
     Record<string, CollectionSessionSummary>
   >({});
   const [configurations, setConfigurations] = useState<Configurations>(rememberedConfigurations);
   const [draftConfiguration, setDraftConfiguration] =
     useState<PracticeSetConfiguration | null>(null);
-  const [sessionSnapshot, setSessionSnapshot] = useState<{
-    avoidFirstPromptId?: string;
-    configuration: PracticeSetConfiguration;
-    orderSeed: number;
-    setId: string;
-  } | null>(null);
+  const [sessionSnapshot, setSessionSnapshot] = useState<SessionSnapshot | null>(null);
   const [promptIndex, setPromptIndex] = useState(0);
   const [turns, setTurns] = useState<PracticeTurn[]>([]);
   const [typedAnswer, setTypedAnswer] = useState("");
@@ -453,6 +540,7 @@ export function PracticeWorkspace({
     practiceSetFixtures.find((set) => set.id === selectedSetId) ?? practiceSetFixtures[0];
   const selectedConfiguration = configurations[selectedSet.id];
   const filteredSets = filterCollections(catalogFilter, savedSetIds);
+  const savedPromptRecords = resolveSavedPromptRecords(savedPromptReferences);
 
   function updateDraftConfiguration(patch: Partial<PracticeSetConfiguration>) {
     setDraftConfiguration((current) => (current ? { ...current, ...patch } : current));
@@ -505,8 +593,55 @@ export function PracticeWorkspace({
     setSessionSnapshot({
       avoidFirstPromptId,
       configuration: { ...configuration },
+      kind: "collection",
       orderSeed,
       setId: set.id,
+    });
+    setPromptIndex(0);
+    setTurns([]);
+    setTypedAnswer("");
+    setPendingAnswer(null);
+    setEvaluationFailure(null);
+    setFlashcardRevealed(false);
+    setDraftConfiguration(null);
+    setPracticeOptionsOpen(false);
+    setView("session");
+  }
+
+  function startSavedMaterialPractice() {
+    const currentRecords = resolveSavedPromptRecords(savedPromptReferences);
+    if (currentRecords.length === 0) {
+      setCatalogFilter("Saved");
+      returnToCatalog();
+      return;
+    }
+
+    invalidateEvaluation();
+    const orderSeed = createSessionSeed() >>> 0;
+    const configuration: PracticeSetConfiguration = {
+      activity: "type",
+      direction: "both",
+      focus: "recommended",
+      shuffle: true,
+    };
+    const promptReferences = currentRecords.map((record) => record.reference);
+    const firstPromptId = practiceUnitsForSession(
+      currentRecords.map((record) => record.prompt),
+      configuration,
+      orderSeed,
+      lastSessionFirstPromptIdsRef.current["personal-saved-material"],
+    )[0]?.prompt.id;
+    const avoidFirstPromptId = lastSessionFirstPromptIdsRef.current["personal-saved-material"];
+
+    if (firstPromptId) {
+      lastSessionFirstPromptIdsRef.current["personal-saved-material"] = firstPromptId;
+    }
+    setSessionSnapshot({
+      avoidFirstPromptId,
+      configuration,
+      kind: "saved-material",
+      orderSeed,
+      promptReferences,
     });
     setPromptIndex(0);
     setTurns([]);
@@ -528,6 +663,14 @@ export function PracticeWorkspace({
   function toggleSaved(setId: string) {
     setSavedSetIds((current) =>
       current.includes(setId) ? current.filter((id) => id !== setId) : [...current, setId],
+    );
+  }
+
+  function toggleSavedPrompt(reference: SavedPracticeReference) {
+    setSavedPromptReferences((current) =>
+      hasSavedPracticeReference(current, reference)
+        ? removeSavedPracticeReference(current, reference)
+        : addSavedPracticeReference(current, reference),
     );
   }
 
@@ -566,7 +709,72 @@ export function PracticeWorkspace({
             {filteredSets.length === 1 ? "1 collection" : `${filteredSets.length} collections`}
             {catalogFilter === "All" ? "" : ` · ${catalogFilter}`}
           </p>
-          {filteredSets.length === 0 ? (
+          {catalogFilter === "Saved" ? (
+            <div className="saved-catalog-sections">
+              <section aria-labelledby="bookmarked-collections-heading" className="saved-catalog-section">
+                <div className="saved-section-heading">
+                  <div>
+                    <h2 id="bookmarked-collections-heading">Bookmarked collections</h2>
+                    <p>Collection shortcuts kept only for this visit.</p>
+                  </div>
+                </div>
+                {filteredSets.length === 0 ? (
+                  <Card className="saved-section-empty">
+                    <p>No bookmarked collections for this visit.</p>
+                  </Card>
+                ) : (
+                  <div className="practice-set-grid">
+                    {filteredSets.map((set) => (
+                      <CollectionCard
+                        isSaved
+                        key={set.id}
+                        latestSession={latestCollectionSessions[set.id] ?? null}
+                        onOpenOptions={() => openOptions(set)}
+                        onStart={() => startPractice(set, configurations[set.id])}
+                        onToggleSaved={() => toggleSaved(set.id)}
+                        set={set}
+                      />
+                    ))}
+                  </div>
+                )}
+              </section>
+              <section aria-labelledby="personal-saved-heading" className="saved-catalog-section">
+                <div className="saved-section-heading">
+                  <div>
+                    <h2 id="personal-saved-heading">Personal saved material</h2>
+                    <p>Individual prompts saved from feedback. They last only for this visit.</p>
+                  </div>
+                  {savedPromptRecords.length > 0 ? (
+                    <Button onClick={startSavedMaterialPractice}>
+                      Practice saved material
+                    </Button>
+                  ) : null}
+                </div>
+                {savedPromptRecords.length === 0 ? (
+                  <Card className="saved-section-empty">
+                    <p>
+                      No personal saved material yet. Save a prompt after receiving feedback in
+                      typed practice.
+                    </p>
+                  </Card>
+                ) : (
+                  <div className="personal-saved-prompt-list">
+                    {savedPromptRecords.map((record) => (
+                      <PersonalSavedPromptCard
+                        key={savedPracticeReferenceKey(record.reference)}
+                        onRemove={() =>
+                          setSavedPromptReferences((current) =>
+                            removeSavedPracticeReference(current, record.reference),
+                          )
+                        }
+                        record={record}
+                      />
+                    ))}
+                  </div>
+                )}
+              </section>
+            </div>
+          ) : filteredSets.length === 0 ? (
             <Card className="saved-empty-state">
               <h2>No matching collections</h2>
               <p>Change the filter to see more collections.</p>
@@ -607,15 +815,26 @@ export function PracticeWorkspace({
 
   const snapshot = sessionSnapshot ?? {
     configuration: selectedConfiguration,
+    kind: "collection" as const,
     orderSeed: 0,
     setId: selectedSet.id,
   };
+  const isSavedMaterialSession = snapshot.kind === "saved-material";
   const sessionSet =
-    practiceSetFixtures.find((set) => set.id === snapshot.setId) ?? selectedSet;
+    practiceSetFixtures.find(
+      (set) => set.id === (snapshot.kind === "collection" ? snapshot.setId : selectedSet.id),
+    ) ?? selectedSet;
   const sessionConfiguration = snapshot.configuration;
-  const practiceOverrides = describePracticeOverrides(sessionConfiguration, sessionSet);
+  const practiceOverrides = isSavedMaterialSession
+    ? null
+    : describePracticeOverrides(sessionConfiguration, sessionSet);
   const sessionSummary = summarizeSession(turns);
-  const matchingPrompts = promptsForConfiguration(sessionSet, sessionConfiguration, learnerStage);
+  const savedSessionRecords = isSavedMaterialSession
+    ? resolveSavedPromptRecords(snapshot.promptReferences)
+    : [];
+  const matchingPrompts = isSavedMaterialSession
+    ? savedSessionRecords.map((record) => record.prompt)
+    : promptsForConfiguration(sessionSet, sessionConfiguration, learnerStage);
   const practiceUnits = practiceUnitsForSession(
     matchingPrompts,
     sessionConfiguration,
@@ -625,6 +844,10 @@ export function PracticeWorkspace({
   const practiceUnit = practiceUnits[promptIndex % practiceUnits.length];
   const prompt = practiceUnit.prompt;
   const resolvedDirection = practiceUnit.direction;
+  const promptCollectionId = isSavedMaterialSession
+    ? savedSessionRecords.find((record) => record.prompt === prompt)?.collection.id ?? sessionSet.id
+    : sessionSet.id;
+  const sessionTitle = isSavedMaterialSession ? "Saved material" : sessionSet.title;
   const strengthenedCapabilities = [
     ...new Set(
       turns
@@ -644,7 +867,7 @@ export function PracticeWorkspace({
         <div className="practice-feed recap-feed">
           <Card className="recap-hero-card">
             <span className="eyebrow">Session complete</span>
-            <h2>{sessionSet.title}</h2>
+            <h2>{sessionTitle}</h2>
             <p>
               You answered {turns.length} {turns.length === 1 ? "prompt" : "prompts"}.
             </p>
@@ -665,8 +888,15 @@ export function PracticeWorkspace({
             )}
           </Card>
           <div className="recap-actions">
-            <Button onClick={() => startPractice(sessionSet, sessionConfiguration)}>
-              Practice again
+            <Button
+              disabled={isSavedMaterialSession && savedPromptRecords.length === 0}
+              onClick={() =>
+                isSavedMaterialSession
+                  ? startSavedMaterialPractice()
+                  : startPractice(sessionSet, sessionConfiguration)
+              }
+            >
+              {isSavedMaterialSession ? "Practice saved material again" : "Practice again"}
             </Button>
             <Button onClick={returnToCatalog} variant="quiet">
               Browse collections
@@ -705,9 +935,18 @@ export function PracticeWorkspace({
       }
 
       setTurns((current) => {
-        const nextTurns = [...current, { answer, direction: resolvedDirection, evaluation, prompt }];
+        const nextTurns = [
+          ...current,
+          {
+            answer,
+            collectionId: promptCollectionId,
+            direction: resolvedDirection,
+            evaluation,
+            prompt,
+          },
+        ];
         const nextSummary = summarizeSession(nextTurns);
-        if (nextSummary) {
+        if (nextSummary && !isSavedMaterialSession) {
           setLatestCollectionSessions((sessions) => ({
             ...sessions,
             [sessionSet.id]: nextSummary,
@@ -741,7 +980,7 @@ export function PracticeWorkspace({
       <PrototypeContextHeader
         backLabel="End practice and review this session"
         onBack={endPractice}
-        title={sessionSet.title}
+        title={sessionTitle}
         trailing={
           <>
             {sessionSummary ? (
@@ -763,24 +1002,28 @@ export function PracticeWorkspace({
             >
               {turns.length}
             </span>
-            <IconButton
-              aria-label={
-                savedSetIds.includes(sessionSet.id)
-                  ? `Remove ${sessionSet.title} from saved`
-                  : `Save ${sessionSet.title}`
-              }
-              aria-pressed={savedSetIds.includes(sessionSet.id)}
-              className={`saved-toggle${savedSetIds.includes(sessionSet.id) ? " is-saved" : ""}`}
-              onClick={() => toggleSaved(sessionSet.id)}
-            >
-              <Star aria-hidden="true" />
-            </IconButton>
-            <IconButton
-              aria-label="Adjust practice settings"
-              onClick={() => openOptions(sessionSet, sessionConfiguration)}
-            >
-              <SlidersHorizontal aria-hidden="true" />
-            </IconButton>
+            {isSavedMaterialSession ? null : (
+              <>
+                <IconButton
+                  aria-label={
+                    savedSetIds.includes(sessionSet.id)
+                      ? `Remove ${sessionSet.title} from saved`
+                      : `Save ${sessionSet.title}`
+                  }
+                  aria-pressed={savedSetIds.includes(sessionSet.id)}
+                  className={`saved-toggle${savedSetIds.includes(sessionSet.id) ? " is-saved" : ""}`}
+                  onClick={() => toggleSaved(sessionSet.id)}
+                >
+                  <Star aria-hidden="true" />
+                </IconButton>
+                <IconButton
+                  aria-label="Adjust practice settings"
+                  onClick={() => openOptions(sessionSet, sessionConfiguration)}
+                >
+                  <SlidersHorizontal aria-hidden="true" />
+                </IconButton>
+              </>
+            )}
           </>
         }
       />
@@ -802,6 +1045,15 @@ export function PracticeWorkspace({
                 <FeedbackMessage
                   announce={index === turns.length - 1}
                   evaluation={turn.evaluation}
+                  isPromptSaved={hasSavedPracticeReference(
+                    savedPromptReferences,
+                    savedPracticeReference(turn.collectionId, turn.prompt.id),
+                  )}
+                  onTogglePromptSaved={() =>
+                    toggleSavedPrompt(
+                      savedPracticeReference(turn.collectionId, turn.prompt.id),
+                    )
+                  }
                 />
               </section>
             ))}
@@ -902,7 +1154,7 @@ export function PracticeWorkspace({
           </Button>
         </div>
       )}
-      {practiceOptionsOpen ? (
+      {practiceOptionsOpen && !isSavedMaterialSession ? (
         <PracticeSetOptionsPanel
           configuration={draftConfiguration ?? sessionConfiguration}
           learnerStage={learnerStage}

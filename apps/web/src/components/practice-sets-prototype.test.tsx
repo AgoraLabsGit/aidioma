@@ -584,6 +584,130 @@ describe("Intermediate learning pilot", () => {
     expect(screen.getByRole("button", { name: "Start Restaurant Spanish" })).toBeInTheDocument();
   });
 
+  it("separates truthful Saved empty states for collections and personal material", () => {
+    renderPracticeWorkspace();
+
+    fireEvent.click(screen.getByRole("button", { name: "Saved" }));
+
+    expect(screen.getByRole("heading", { name: "Bookmarked collections" })).toBeInTheDocument();
+    expect(screen.getByText("No bookmarked collections for this visit.")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Personal saved material" })).toBeInTheDocument();
+    expect(
+      screen.getByText(/No personal saved material yet/),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Practice saved material" })).not.toBeInTheDocument();
+  });
+
+  it("saves and removes a prompt from typed feedback without persisting it", async () => {
+    renderPracticeWorkspace();
+    startRestaurantPractice();
+    await answerCurrentPrompt("Ayer pedí sopa, pero me trajeron una ensalada.");
+    await screen.findByRole("status", { name: "Feedback: Correct" });
+
+    const savePrompt = screen.getByRole("button", {
+      name: "Save this prompt to personal saved material",
+    });
+    fireEvent.click(savePrompt);
+    expect(
+      screen.getByRole("button", {
+        name: "Remove this prompt from personal saved material",
+      }),
+    ).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Saved for this visit")).toBeInTheDocument();
+    expect(window.localStorage.length).toBe(0);
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Remove this prompt from personal saved material",
+      }),
+    );
+    expect(
+      screen.getByRole("button", { name: "Save this prompt to personal saved material" }),
+    ).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("recognizes one saved prompt across both practice directions", async () => {
+    renderPracticeWorkspace();
+    fireEvent.click(screen.getByRole("button", { name: "Adjust Restaurant Spanish settings" }));
+    fireEvent.click(screen.getByRole("button", { name: "EN → ES" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /Vary the order/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Start practice" }));
+    await answerCurrentPrompt("First direction answer");
+    await screen.findByRole("status", { name: "Feedback: Correct" });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save this prompt to personal saved material" }),
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "End practice and review this session" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Browse collections" }));
+    fireEvent.click(screen.getByRole("button", { name: "Adjust Restaurant Spanish settings" }));
+    fireEvent.click(screen.getByRole("button", { name: "ES → EN" }));
+    fireEvent.click(screen.getByRole("button", { name: "Start practice" }));
+    fetchMock.mockClear();
+    await answerCurrentPrompt("Second direction answer");
+    await screen.findByRole("status", { name: "Feedback: Correct" });
+
+    expect(
+      screen.getByRole("button", {
+        name: "Remove this prompt from personal saved material",
+      }),
+    ).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("keeps collection bookmarks separate and practices only current saved prompts", async () => {
+    renderPracticeWorkspace();
+    startRestaurantPractice();
+    await answerCurrentPrompt("Save this one");
+    await screen.findByRole("status", { name: "Feedback: Correct" });
+    const firstRequest = JSON.parse(String(fetchMock.mock.calls[0]?.[1]?.body)) as {
+      itemRef: string;
+    };
+    const savedRecord = practiceSetFixtures
+      .flatMap((collection) =>
+        collection.prompts.map((prompt) => ({ collection, prompt })),
+      )
+      .find(({ prompt }) => prompt.id === firstRequest.itemRef);
+    expect(savedRecord).toBeDefined();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save this prompt to personal saved material" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Save Restaurant Spanish" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "End practice and review this session" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Browse collections" }));
+    fireEvent.click(screen.getByRole("button", { name: "Saved" }));
+
+    expect(screen.getByRole("button", { name: "Start Restaurant Spanish" })).toBeInTheDocument();
+    expect(screen.getByText(savedRecord?.prompt.english ?? "missing")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Practice saved material" }));
+    expect(screen.getByRole("heading", { name: "Saved material" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Adjust practice settings" })).not.toBeInTheDocument();
+
+    fetchMock.mockClear();
+    await answerCurrentPrompt("Only saved material");
+    await screen.findByRole("status", { name: "Feedback: Correct" });
+    const savedQueueRequest = JSON.parse(String(fetchMock.mock.calls[0]?.[1]?.body)) as {
+      itemRef: string;
+    };
+    expect(savedQueueRequest.itemRef).toBe(firstRequest.itemRef);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "End practice and review this session" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Browse collections" }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: `Remove “${savedRecord?.prompt.english}” from personal saved material`,
+      }),
+    );
+    expect(screen.getByText(/No personal saved material yet/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Practice saved material" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Start Restaurant Spanish" })).toBeInTheDocument();
+  });
+
   it("preserves the canonical A1 lesson preview separately", () => {
     render(<LessonPracticePreview />);
     expect(screen.getByRole("heading", { name: "Lesson 1" })).toBeInTheDocument();
@@ -606,6 +730,8 @@ describe("Intermediate learning pilot", () => {
 
   it("keeps the lesson and collection experiences accessible", async () => {
     const practice = renderPracticeWorkspace();
+    expect(await axe(practice.container)).toHaveNoViolations();
+    fireEvent.click(screen.getByRole("button", { name: "Saved" }));
     expect(await axe(practice.container)).toHaveNoViolations();
     practice.unmount();
 
