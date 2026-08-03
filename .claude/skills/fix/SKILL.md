@@ -1,23 +1,20 @@
 ---
 name: fix
-description: Fix a bug or make a small product update through a corrective loop with a regression test and register row. Use when the operator says /fix or reports something broken or wanted-changed.
+description: Reproduce and fix an AIdioma defect or small product regression, then prove it through the affected user path. Use when the operator says /fix or reports broken behavior.
 ---
 
-# /fix — bug fix or small product update
+# /fix — reproduce, correct, prove
 
-1. Read `Docs/STATE.md` + `Docs/Registers/bugs.md`. If the report matches an existing row,
-   bump its `↻` count (recurrence is a signal). Otherwise file a new BUG row (or an OI row if
-   it's an update, not a defect) BEFORE touching code.
-2. **Scope check:** if this is really a feature in disguise (new capability, schema change,
-   >~1 session of work), stop and tell the operator it should go through /feature instead.
-   A content or lesson-schema change goes through the content lane's pipeline, not here.
-3. Reproduce and diagnose. State the root cause in the register row, not just the symptom.
-4. **Regression test first:** write a test that FAILS without the fix. No fix merges without one.
-5. Fix on branch `fix/<id>`, minimal blast radius, following existing patterns.
-6. Run the full lane `verify:` gate set. For risky/mutating fixes add 1 light audit pass.
-7. Prove the fix at the user level (the same path the operator saw it break on) — PASS/FAIL
-   script or screenshot evidence.
-8. Keep the fix on its isolated branch; move the register row to Closed with the proof reference;
-   rewrite STATE if position changed. Do not merge. `/close` commits/pushes the worker branch and
-   the sole release coordinator decides which candidate receives it.
-9. Report plainly: what was broken, why, what proves it's fixed.
+1. Read `Docs/INDEX.md` and the highest-numbered handoff, inspect Git status, and reproduce the report
+   in the current app. Do not open a register row or wave file as routine setup.
+2. Explain the root cause and bound the fix. If the request is a new capability, a content-authoring
+   project, or a schema change, use `/feature` and keep that scope explicit.
+3. Create or continue a short-lived `fix/<slug>` branch. Preserve unrelated user changes.
+4. Add the smallest meaningful regression test when the behavior is testable, confirm it catches the
+   defect, and implement the minimal correction.
+5. Run focused tests plus the relevant typecheck, lint, suite, build, content validation, and browser
+   proof. Re-exercise the same learner path that failed.
+6. Update an active spec only when the tested product contract changed. Otherwise record concise
+   continuity in the current handoff if the work will pause.
+7. Report what broke, why, what changed, and the exact evidence that it is fixed. Use `/close` to
+   commit intentionally and publish through a PR.

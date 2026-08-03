@@ -133,3 +133,22 @@ Decisions and dispatch history for the Lesson Plan agent (coordinator). Newest e
   full four-lesson validator PASS (0 errors, five pre-existing a1-01 warnings); contract smoke PASS
   (13); content fixtures PASS (18/18). Prototype freshness remains the expected out-of-scope failure
   because `apps/prototype/lesson-data.js` has not been regenerated for a1-04.
+
+## 2026-07-30 — C2-1 a1-05 L1 proof and P-007 block
+
+- **Draft and local repair:** `a1-05-ser-y-estar` is original neutral-LatAm content at version 2:
+  15 raw vocab rows (eight conceptual groups), 18 sentences, six passage segments, four quick
+  checks, and one 0–30 reference card. R1 found 4 MAJOR / 4 MINOR; all seven local findings and 13
+  missing English alternates were fixed, and the r2 delta audit is clean for those changes.
+- **Unresolved curriculum/contract seam:** the Style Guide requires each 0–30 member to have one
+  graded immutable VocabItem, but 31 numbers plus six feelings and the age chunk require 38 rows
+  against `Lesson.vocab.max(15)`. P-007 is PROPOSED to widen the raw cap while CI retains the 8–15
+  conceptual-load ceiling. Until approval and a full number-member review, a1-05 stays L2-FAIL.
+- **Tooling audit remediation:** whole-diff review found reference cards absent from immutable-ID and
+  vocabRef validation, plus P-003/P-004 vocab alternates missing from the prototype export. Validator,
+  exporter, and fixtures were fixed; the reference-card ID is snapshotted and generated vocab answer
+  sets are complete. Focused delta review is CLEAN.
+- **Gate evidence on current `origin/main`:** typecheck PASS; five-lesson validator PASS with 0
+  errors (only five documented a1-01 warnings); contract smoke 13/13; fixtures 21/21; prototype
+  export/check PASS; generated JavaScript syntax and `git diff --check` PASS. Initial PR CI exposed
+  the App seed test's hard-coded four-lesson list; adding a1-05 closed it and App tests pass 140/140.

@@ -1,6 +1,8 @@
-import { ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
+import Link from "next/link";
 
 import { a1Lessons } from "@/lib/course";
+import { intermediatePilotLessons } from "@/lib/intermediate-pilot";
 
 import { LessonRow } from "./lesson-row";
 import { Badge, Card, ScreenContainer } from "./primitives";
@@ -10,18 +12,58 @@ export function LessonCatalog() {
     <ScreenContainer>
       <header className="screen-header">
         <h1>Lessons</h1>
-        <p>Your road, level by level. Lesson 1 is the place to begin.</p>
+        <p>Learn one capability at a time, then use it across real situations.</p>
       </header>
 
       <section aria-label="Course levels" className="level-groups">
+        <details className="level-group current-level intermediate-pilot-level" open>
+          <summary>
+            <span>
+              <strong>Intermediate</strong>
+              <small>Build connected, practical Spanish</small>
+            </span>
+            <span className="level-summary-meta">
+              <Badge className="level-status">Current level</Badge>
+              <ChevronDown aria-hidden="true" className="level-caret" />
+            </span>
+          </summary>
+          <div className="intermediate-lesson-grid">
+            {intermediatePilotLessons.map((lesson, index) => (
+              <Card className="intermediate-lesson-card" key={lesson.slug}>
+                <div className="intermediate-lesson-heading">
+                  <span className="set-level">Lesson {index + 1}</span>
+                  <Badge>{lesson.status === "available" ? "Try now" : "Outlined"}</Badge>
+                </div>
+                <h2>{lesson.title}</h2>
+                <p>{lesson.objective}</p>
+                <ul aria-label={`${lesson.title} capabilities`} className="capability-chip-list">
+                  {lesson.capabilities.map((capability) => (
+                    <li key={capability}>{capability}</li>
+                  ))}
+                </ul>
+                {lesson.status === "available" ? (
+                  <Link
+                    className="intermediate-lesson-action"
+                    href={`/lessons/intermediate/${lesson.slug}`}
+                  >
+                    Start lesson <ArrowRight aria-hidden="true" />
+                  </Link>
+                ) : (
+                  <span className="intermediate-lesson-action is-muted">Coming soon</span>
+                )}
+              </Card>
+            ))}
+          </div>
+        </details>
+
         <details className="level-group current-level" open>
           <summary>
             <span>
-              <strong>A1 · Foundations</strong>
-              <small>Lessons 1–12</small>
+              <strong>Beginner</strong>
+              <small>Build a strong foundation</small>
             </span>
             <span className="level-summary-meta">
-              <Badge className="level-status">You are here</Badge>
+              <Badge className="level-status">A1</Badge>
               <ChevronDown aria-hidden="true" className="level-caret" />
             </span>
           </summary>
@@ -38,18 +80,6 @@ export function LessonCatalog() {
           </Card>
         </details>
 
-        <details className="level-group locked-level">
-          <summary>
-            <span>
-              <strong>A2 · Building blocks</strong>
-              <small>Opens after the A1 path</small>
-            </span>
-            <span className="level-summary-meta">
-              <Badge className="level-status">Locked</Badge>
-              <ChevronDown aria-hidden="true" className="level-caret" />
-            </span>
-          </summary>
-        </details>
       </section>
     </ScreenContainer>
   );

@@ -72,9 +72,9 @@ function toWords(l: LessonT) {
     es: v.es,
     en: v.en,
     pos: posLabel(v),
-    // accEs: no alternates in schema for vocab -> just the lemma (eval engine handles accents/case).
-    accEs: uniq([lc(v.es)]),
-    accEn: enVariants(v.en),
+    // Include canonical/display-split answers plus P-003/P-004 accepted variants.
+    accEs: uniq([lc(v.es), ...v.acceptedEs.map((e) => lc(acceptedText(e)))]),
+    accEn: uniq([...enVariants(v.en), ...v.acceptedEn.map((e) => lc(acceptedText(e)))]),
     // SYNTHESIZED: vocab has no `hint`; use the example pair (matches mock's example-quoting hints).
     hint: `${v.exampleEs} — ${v.exampleEn}`,
   }));

@@ -1,5 +1,10 @@
 # CONVENTIONS — how we write things down
 
+> **Technical reference after the 2026-08-03 Docs reset.** The naming and decision-history rules
+> remain useful, but references below to `ROADMAP.yaml`, `STATE.md`, Waves, and registers describe
+> the archived workflow. Current documentation starts at `Docs/INDEX.md`; grounded spec structure
+> is defined by the active spine and Handoff 026.
+
 > Hard cap 60 lines. Process questions belong in PROCESS.md, not here.
 
 ## Frontmatter (required on every Specs/, Waves/, Lessons/ file — four keys, no more)

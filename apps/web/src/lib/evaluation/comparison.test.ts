@@ -313,6 +313,25 @@ describe("comparison gate", () => {
     expect(decision.result.verdict).toBe("close");
   });
 
+  it("accepts one inserted or omitted English output character only when explicitly enabled", () => {
+    expect(compareAnswer("I just finished, the check pelease.", ["I just finished. The check, please."])).toMatchObject({
+      kind: "graded",
+      result: { verdict: "close" },
+    });
+    expect(
+      compareAnswer(
+        "I just finished, the check pelease.",
+        ["I just finished. The check, please."],
+        { tolerateSingleCharacterTypo: true },
+      ),
+    ).toMatchObject({ kind: "graded", result: { score: 100, verdict: "correct" } });
+    expect(
+      compareAnswer("I just finished, the chick please.", ["I just finished. The check, please."], {
+        tolerateSingleCharacterTypo: true,
+      }),
+    ).toMatchObject({ kind: "graded", result: { verdict: "close" } });
+  });
+
   it("returns deterministic close at the 0.70 boundary", () => {
     const decision = compareAnswer("abcdefgxxx", ["abcdefghij"]);
     expect(decision.kind).toBe("graded");

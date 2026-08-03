@@ -708,6 +708,75 @@ input {
   margin-top: 0.5rem;
 }
 
+.intermediate-lesson-grid {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.intermediate-lesson-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.intermediate-lesson-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.intermediate-lesson-card h2 {
+  margin: 0.45rem 0 0;
+  font-size: 1rem;
+}
+
+.intermediate-lesson-card > p {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.capability-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.capability-chip-list li {
+  padding: 0.25rem 0.45rem;
+  border-radius: 999px;
+  color: var(--text);
+  background: var(--soft);
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+
+.intermediate-lesson-action {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.35rem;
+  margin-top: 0.55rem;
+  color: var(--accent-text);
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.intermediate-lesson-action svg {
+  width: 15px;
+  height: 15px;
+}
+
+.intermediate-lesson-action.is-muted {
+  color: var(--faint);
+}
+
 /* Practice */
 .practice-workspace {
   position: relative;
@@ -912,7 +981,9 @@ input {
   border-radius: 999px;
   color: var(--text);
   background: var(--card);
+  caret-color: var(--accent-text);
   font-size: 16px;
+  font-weight: 500;
 }
 
 .practice-composer input::placeholder {
@@ -956,6 +1027,13 @@ input {
   white-space: nowrap;
 }
 
+.prototype-context-start .context-title h1.is-screen-title {
+  font-size: var(--type-screen-title);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
 .prototype-tag,
 .session-count {
   display: inline-flex;
@@ -975,6 +1053,58 @@ input {
 
 .prototype-feed {
   gap: 0.8rem;
+}
+
+.prototype-lens-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  border-left: 3px solid var(--accent);
+}
+
+.prototype-lens-card > div:first-child {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.prototype-lens-card strong {
+  margin-top: 0.15rem;
+  font-size: 0.86rem;
+}
+
+.prototype-lens-card small {
+  margin-top: 0.15rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.pilot-stage-control {
+  display: flex;
+  flex: none;
+  padding: 0.2rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--soft);
+}
+
+.pilot-stage-control button {
+  min-height: 38px;
+  padding: 0.45rem 0.65rem;
+  border: 0;
+  border-radius: 8px;
+  color: var(--text);
+  background: transparent;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pilot-stage-control button.is-selected {
+  color: var(--text);
+  background: var(--card);
+  box-shadow: 0 1px 3px rgba(12, 14, 17, 0.12);
 }
 
 .prototype-screen-heading,
@@ -1084,9 +1214,10 @@ input {
 
 .practice-set-card {
   display: flex;
+  position: relative;
   min-width: 0;
-  min-height: 164px;
-  flex-direction: column;
+  min-height: 104px;
+  overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
   background: var(--card);
@@ -1101,7 +1232,7 @@ input {
   min-width: 0;
   flex: 1;
   flex-direction: column;
-  padding: 0.95rem 1rem 0.7rem;
+  padding: 0.7rem 6.1rem 0.7rem 1rem;
   border: 0;
   border-radius: var(--radius-card);
   color: var(--text);
@@ -1114,6 +1245,22 @@ input {
   background: transparent;
 }
 
+.set-card-topline {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.set-session-score {
+  flex: none;
+  color: var(--good);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
 .practice-set-start:focus-visible {
   position: relative;
   z-index: 1;
@@ -1121,18 +1268,18 @@ input {
 
 .set-card-actions {
   display: flex;
-  min-height: 44px;
-  border-top: 1px solid var(--border);
+  position: absolute;
+  right: 0.45rem;
+  bottom: 0.35rem;
+  gap: 0.15rem;
 }
 
 .set-card-action {
   display: inline-flex;
-  min-width: 0;
-  min-height: 44px;
-  flex: 1;
+  width: 40px;
+  min-height: 40px;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
   border: 0;
   color: var(--muted);
   background: transparent;
@@ -1219,14 +1366,17 @@ input {
 }
 
 .set-card-footer {
-  margin-top: auto;
-  padding-top: 0.75rem;
+  justify-content: flex-start;
+  margin-top: 0.55rem;
   color: var(--faint);
   font-size: 0.7rem;
   font-weight: 600;
 }
 
 .set-start-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
   color: var(--accent-text);
 }
 
@@ -1627,8 +1777,261 @@ input {
   accent-color: var(--accent);
 }
 
-.set-session-summary small {
+.session-customization-note {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 0.2rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.session-customization-note svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex: none;
+}
+
+.session-score-chip,
+.session-count-chip {
+  display: inline-flex;
+  min-width: 0;
+  align-items: baseline;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.session-score-chip strong {
+  color: var(--good);
+  font-weight: 700;
+}
+
+.chat-practice-feed {
+  gap: 0.85rem;
+  scroll-behavior: smooth;
+}
+
+.practice-turn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.practice-turn + .practice-turn {
+  margin-top: 0.35rem;
+}
+
+.practice-message {
+  min-width: 0;
   overflow-wrap: anywhere;
+}
+
+.prompt-message {
+  position: relative;
+  padding: 0.8rem 1rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--card);
+}
+
+.prompt-context-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.prompt-context-row .activity-label {
+  flex: none;
+  justify-content: flex-end;
+}
+
+.prompt-context-row:not(:has(.prompt-cue)) {
+  justify-content: flex-end;
+}
+
+.prompt-message .prompt-cue {
+  margin: 0 !important;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.prompt-message h2 {
+  margin: 0.65rem 0 0;
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.prompt-message.has-direction-only {
+  padding-right: 5.5rem;
+}
+
+.prompt-message.has-direction-only .activity-label {
+  position: absolute;
+  top: 0.95rem;
+  right: 1rem;
+}
+
+.prompt-message.has-direction-only h2 {
+  margin-top: 0;
+}
+
+.answer-message {
+  max-width: min(85%, 34rem);
+  align-self: flex-end;
+  padding: 0.75rem 0.95rem;
+  border: 1px solid var(--border);
+  border-radius: 14px 14px 4px 14px;
+  color: var(--text);
+  background: var(--accent-soft);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.feedback-message {
+  width: min(92%, 38rem);
+  align-self: flex-start;
+  padding: 0.85rem 0.95rem;
+  border-left: 3px solid var(--good);
+  border-radius: 4px 14px 14px 14px;
+  background: var(--card);
+}
+
+.feedback-message.is-compact {
+  width: fit-content;
+  padding: 0.72rem 1rem;
+}
+
+.feedback-message.is-compact .feedback-heading {
+  gap: 0.5rem;
+}
+
+.feedback-message.is-compact .feedback-heading svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.feedback-message.is-compact .feedback-heading strong {
+  font-size: 1.05rem;
+}
+
+.feedback-message.feedback-close,
+.feedback-message.feedback-wrong {
+  border-left-color: var(--accent);
+}
+
+.feedback-close .feedback-heading,
+.feedback-wrong .feedback-heading {
+  color: var(--accent-text);
+}
+
+.feedback-message > p {
+  margin: 0.55rem 0 0;
+  font-size: 0.82rem;
+}
+
+.feedback-message .feedback-reference-answer {
+  margin-top: 0.75rem;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.feedback-diff {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+
+.diff-token {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  background: var(--soft);
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+.diff-arrow,
+.diff-suggestion {
+  color: var(--accent-text);
+}
+
+.grading-message,
+.grading-error {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 4px 12px 12px 12px;
+  color: var(--muted);
+  background: var(--card);
+  font-size: 0.78rem;
+}
+
+.grading-message svg,
+.grading-error svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.grading-message svg {
+  animation: grading-spin 0.9s linear infinite;
+}
+
+.grading-error {
+  color: var(--error);
+}
+
+@keyframes grading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.practice-composer input:disabled {
+  color: var(--muted);
+  opacity: 1;
+}
+
+.lesson-teaching-card {
+  border-left: 3px solid var(--accent);
+}
+
+.lesson-teaching-card > p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.lesson-support-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: var(--radius-control);
+  background: var(--soft);
+  color: var(--text);
+  font-size: 0.74rem;
+}
+
+.lesson-support-strip svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  color: var(--accent-text);
 }
 
 .prompt-cue {
@@ -1636,13 +2039,31 @@ input {
 }
 
 .prototype-type-card h1 {
-  margin-top: 1.2rem;
+  margin-top: 0.85rem;
   font-size: 1.55rem;
   text-align: center;
 }
 
+.prototype-type-card .activity-label {
+  justify-content: flex-end;
+}
+
+.feedback-anchor {
+  scroll-margin-bottom: 0.75rem;
+}
+
 .prototype-feedback-card {
   border-left: 3px solid var(--good);
+}
+
+.prototype-feedback-card.feedback-partial,
+.prototype-feedback-card.feedback-unconfirmed {
+  border-left-color: var(--accent);
+}
+
+.feedback-partial .feedback-heading,
+.feedback-unconfirmed .feedback-heading {
+  color: var(--accent-text);
 }
 
 .feedback-heading {
@@ -1661,6 +2082,28 @@ input {
 .prototype-feedback-card p {
   margin: 0.55rem 0 0;
   font-size: 0.82rem;
+}
+
+.submitted-answer {
+  margin: -0.15rem 0 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.submitted-answer > span {
+  color: var(--faint);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.submitted-answer > p {
+  margin-top: 0.25rem;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 .prototype-feedback-card small {
@@ -1716,6 +2159,81 @@ input {
 .prototype-boundary-note span {
   color: var(--muted);
   font-size: 0.7rem;
+}
+
+.continuous-practice-controls {
+  justify-content: flex-end;
+}
+
+.continuous-practice-controls .button:first-child {
+  flex: 1;
+}
+
+.recap-feed,
+.lesson-complete-feed {
+  justify-content: center;
+}
+
+.recap-hero-card,
+.lesson-complete-card {
+  border-left: 3px solid var(--accent);
+}
+
+.recap-hero-card h2,
+.lesson-complete-card h2 {
+  margin: 0.4rem 0 0;
+  font-size: 1.15rem;
+}
+
+.recap-hero-card p,
+.lesson-complete-card p,
+.evidence-preview-card > p {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.lesson-complete-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  margin-bottom: 0.7rem;
+  border-radius: 50%;
+  color: var(--good);
+  background: var(--soft);
+}
+
+.lesson-complete-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.evidence-preview-card ul {
+  margin: 0.65rem 0 0;
+  padding-left: 1.2rem;
+  color: var(--text);
+  font-size: 0.78rem;
+}
+
+.evidence-preview-card li + li {
+  margin-top: 0.3rem;
+}
+
+.evidence-preview-card > small {
+  display: block;
+  margin-top: 0.65rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.recap-actions {
+  display: flex;
+  gap: 0.55rem;
+}
+
+.recap-actions .button {
+  flex: 1;
 }
 
 .flashcard-controls {
@@ -1998,6 +2516,10 @@ input {
     flex-wrap: nowrap;
   }
 
+  .session-score-label {
+    display: none;
+  }
+
   .prototype-tag {
     max-width: 8rem;
     overflow: hidden;
@@ -2005,9 +2527,19 @@ input {
   }
 
   .quiet-entry-card,
-  .detail-actions {
+  .detail-actions,
+  .prototype-lens-card,
+  .recap-actions {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .pilot-stage-control {
+    width: 100%;
+  }
+
+  .pilot-stage-control button {
+    flex: 1;
   }
 
   .quiet-entry-card .button,
@@ -2094,7 +2626,7 @@ input {
 }
 
 @media (min-width: 680px) {
-  .practice-set-grid {
+  .intermediate-lesson-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

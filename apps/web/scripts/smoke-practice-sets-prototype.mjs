@@ -159,23 +159,23 @@ async function assertKeyboardCatalogControls(page) {
 
 async function assertOptionsKeyboard(page, label) {
   const focused = page.locator(":focus");
-  if ((await focused.getAttribute("aria-label")) !== "Close practice options") {
-    throw new Error(`Practice options did not move focus into the dialog in ${label}.`);
+  if ((await focused.getAttribute("aria-label")) !== "Close practice settings") {
+    throw new Error(`Practice settings did not move focus into the dialog in ${label}.`);
   }
   const outline = await focused.evaluate((element) => {
     const style = getComputedStyle(element);
     return { style: style.outlineStyle, width: style.outlineWidth };
   });
   if (outline.style === "none" || outline.width === "0px") {
-    throw new Error(`Practice options close control has no visible focus in ${label}.`);
+    throw new Error(`Practice settings close control has no visible focus in ${label}.`);
   }
 
   await page.keyboard.press("Escape");
-  await page.getByRole("dialog", { name: "Practice options", exact: true }).waitFor({
+  await page.getByRole("dialog", { name: "Practice settings", exact: true }).waitFor({
     state: "detached",
   });
-  await page.getByRole("button", { name: "Customize Essential Verbs", exact: true }).press("Enter");
-  await page.getByRole("dialog", { name: "Practice options", exact: true }).waitFor();
+  await page.getByRole("button", { name: "Adjust Restaurant Spanish settings", exact: true }).press("Enter");
+  await page.getByRole("dialog", { name: "Practice settings", exact: true }).waitFor();
 }
 
 async function stopServer(server) {
@@ -205,6 +205,7 @@ async function run() {
       cwd: appDirectory,
       env: {
         ...process.env,
+        AIDIOMA_ENABLE_LOCAL_PRACTICE_EVALUATION: "true",
         CLERK_SECRET_KEY: "",
         DATABASE_URL: "",
         NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "",
@@ -235,24 +236,27 @@ async function run() {
         });
         await context.addInitScript((selectedTheme) => {
           localStorage.setItem("aidioma-theme", selectedTheme);
-          localStorage.removeItem("aidioma-practice-set-prototype-configurations:v1");
+          localStorage.removeItem("aidioma-intermediate-pilot-configurations:v1");
         }, theme);
         const page = await context.newPage();
-        await page.goto(`${baseUrl}/lessons/1`, { waitUntil: "networkidle" });
-        await page.getByRole("heading", { name: "Lesson 1", exact: true }).waitFor();
-        await screenshot(page, `lesson-mix-${label}`);
+        await page.goto(`${baseUrl}/lessons/intermediate/tell-what-happened`, { waitUntil: "networkidle" });
+        await page.getByRole("heading", { name: "Tell what happened", exact: true }).waitFor();
+        await screenshot(page, `intermediate-lesson-${label}`);
         screenshotCount += 1;
-        await assertAccessible(page, `lesson mix ${label}`);
-        await assertNoHorizontalOverflow(page, `lesson mix ${label}`);
+        await assertAccessible(page, `intermediate lesson ${label}`);
+        await assertNoHorizontalOverflow(page, `intermediate lesson ${label}`);
         const lessonsNavigation = page.getByRole("link", { name: "Lessons", exact: true }).first();
         if ((await lessonsNavigation.getAttribute("aria-current")) !== "page") {
           throw new Error(`Lessons navigation is not current on the lesson preview in ${label}.`);
         }
-        await page.getByRole("link", { name: "End preview and return to Lessons", exact: true }).click();
+        await page.getByRole("link", { name: "End lesson and return to Lessons", exact: true }).click();
         await page.getByRole("heading", { name: "Lessons", exact: true }).waitFor();
 
         await page.goto(`${baseUrl}/practice`, { waitUntil: "networkidle" });
         await page.getByRole("heading", { name: "Practice", exact: true }).waitFor();
+        if (await page.getByText(/Working prototype|Prototype lens/i).count()) {
+          throw new Error(`Development chrome is visible in the catalog in ${label}.`);
+        }
         await assertAccessible(page, `catalog ${label}`);
         await assertNoHorizontalOverflow(page, `catalog ${label}`);
 
@@ -265,31 +269,73 @@ async function run() {
         await assertAccessible(page, `catalog ${label}`);
         await assertNoHorizontalOverflow(page, `catalog ${label}`);
         await assertReducedMotion(page, `catalog ${label}`);
+        const collectionRows = await page.locator(".practice-set-card").evaluateAll((cards) =>
+          cards.slice(0, 2).map((card) => {
+            const bounds = card.getBoundingClientRect();
+            return { left: bounds.left, top: bounds.top, width: bounds.width };
+          }),
+        );
+        if (
+          collectionRows.length !== 2 ||
+          collectionRows[1].top <= collectionRows[0].top ||
+          Math.abs(collectionRows[1].left - collectionRows[0].left) > 1 ||
+          Math.abs(collectionRows[1].width - collectionRows[0].width) > 1
+        ) {
+          throw new Error(`Collections are not rendered as consistent rows in ${label}.`);
+        }
 
-        await page.getByRole("button", { name: "Save Essential Verbs", exact: true }).click();
+        await page.getByRole("button", { name: "Save Restaurant Spanish", exact: true }).click();
         await page.getByRole("button", { name: "Saved", exact: true }).click();
-        await page.getByRole("button", { name: "Start Essential Verbs", exact: true }).waitFor();
+        await page.getByRole("button", { name: "Start Restaurant Spanish", exact: true }).waitFor();
         await screenshot(page, `saved-${label}`);
         screenshotCount += 1;
         await assertAccessible(page, `saved ${label}`);
         await assertNoHorizontalOverflow(page, `saved ${label}`);
-        await page.getByRole("button", { name: "Start Essential Verbs", exact: true }).click();
+        await page.getByRole("button", { name: "Start Restaurant Spanish", exact: true }).click();
         await page
-          .getByRole("button", { name: "End preview and return to Practice", exact: true })
+          .getByRole("button", { name: "End practice and review this session", exact: true })
           .click();
 
-        await page.getByRole("button", { name: "Start Essential Verbs", exact: true }).click();
-        await page.getByLabel("Type a prototype answer", { exact: true }).fill("soy");
-        await page.getByRole("button", { name: "Preview feedback", exact: true }).click();
-        await page.getByText("Representative feedback state", { exact: true }).waitFor();
+        await page.getByRole("button", { name: "Start Restaurant Spanish", exact: true }).click();
+        if (await page.getByText("Current scope", { exact: true }).count()) {
+          throw new Error(`Focused practice still shows the redundant Current scope card in ${label}.`);
+        }
+        const answerInput = page.getByLabel("Type your answer", { exact: true });
+        await answerInput.fill("Ayer pedí sopa, pero me trajeron una ensalada.");
+        if ((await answerInput.inputValue()) !== "Ayer pedí sopa, pero me trajeron una ensalada.") {
+          throw new Error(`The typed answer is not visible in the composer in ${label}.`);
+        }
+        await page.getByRole("button", { name: "Send answer", exact: true }).click();
+        await page.getByRole("status", { name: "Feedback: Correct", exact: true }).waitFor();
+        const submittedAnswer = await page.getByLabel("Your answer", { exact: true }).innerText();
+        if (!submittedAnswer.includes("Ayer pedí sopa, pero me trajeron una ensalada.")) {
+          throw new Error(`Feedback does not preserve the submitted answer in ${label}.`);
+        }
         await screenshot(page, `type-session-${label}`);
         screenshotCount += 1;
         await assertAccessible(page, `type session ${label}`);
         await assertNoHorizontalOverflow(page, `type session ${label}`);
-        await page.getByRole("button", { name: "End preview and return to Practice", exact: true }).click();
+        if (await page.getByRole("button", { name: "Next practice", exact: true }).count()) {
+          throw new Error(`A Next practice gate is still visible in ${label}.`);
+        }
+        const servedPromptHeadings = await page
+          .locator(".prompt-message h2")
+          .evaluateAll((headings) => headings.map((heading) => heading.textContent?.trim()));
+        if (
+          servedPromptHeadings.length < 2 ||
+          servedPromptHeadings.at(-1) === servedPromptHeadings[0]
+        ) {
+          throw new Error(`Continuous practice did not append a fresh prompt in ${label}.`);
+        }
+        await page.getByLabel("Type your answer", { exact: true }).waitFor();
+        await page
+          .getByRole("button", { name: "End practice and review this session", exact: true })
+          .click();
+        await page.getByRole("heading", { name: "Practice recap", exact: true }).waitFor();
+        await page.getByRole("button", { name: "Browse collections", exact: true }).click();
 
         const customizeButton = page.getByRole("button", {
-          name: "Customize Essential Verbs",
+          name: "Adjust Restaurant Spanish settings",
           exact: true,
         });
         if (viewport.id === "phone" && theme === "light") {
@@ -297,7 +343,7 @@ async function run() {
         } else {
           await customizeButton.click();
         }
-        await page.getByRole("dialog", { name: "Practice options", exact: true }).waitFor();
+        await page.getByRole("dialog", { name: "Practice settings", exact: true }).waitFor();
         if (viewport.id === "phone" && theme === "light") {
           await assertOptionsKeyboard(page, label);
         }
@@ -314,34 +360,21 @@ async function run() {
           document.documentElement.style.fontSize = "";
         });
 
-        await page.getByRole("button", { name: "5", exact: true }).click();
-        const imperative = page.getByRole("button", { name: "Imperative", exact: true });
-        if (!(await imperative.isEnabled())) throw new Error(`Imperative did not enable for a 5-item session in ${label}.`);
-        await imperative.click();
-        if (await page.getByRole("button", { name: "I · yo", exact: true }).isEnabled()) {
-          throw new Error(`Invalid first-person imperative is enabled in ${label}.`);
-        }
         await page.getByRole("button", { name: "EN → ES", exact: true }).click();
-        if (await page.getByRole("button", { name: "Recognize form", exact: true }).isEnabled()) {
-          throw new Error(`Recognize form is enabled for EN → ES in ${label}.`);
-        }
-
-        await page.getByRole("button", { name: "Flashcards", exact: true }).click();
+        await page.getByRole("button", { name: /Time phrases/, exact: false }).click();
         await page.getByRole("button", { name: "Start practice", exact: true }).click();
-        await page.getByRole("button", { name: "Reveal flashcard answer", exact: true }).waitFor();
-        await screenshot(page, `flashcard-session-${label}`);
+        await page.getByRole("heading", { name: "I just finished. The bill, please.", exact: true }).waitFor();
+        await screenshot(page, `focused-session-${label}`);
         screenshotCount += 1;
-        await assertAccessible(page, `flashcard session ${label}`);
-        await assertNoHorizontalOverflow(page, `flashcard session ${label}`);
-        await page.getByRole("button", { name: "Reveal flashcard answer", exact: true }).click();
-        await page.getByRole("button", { name: "Hide flashcard answer", exact: true }).waitFor();
+        await assertAccessible(page, `focused session ${label}`);
+        await assertNoHorizontalOverflow(page, `focused session ${label}`);
 
         await context.close();
       }
     }
 
     console.log(
-      `PRACTICE SETS SMOKE PASS: Practice opens directly on Collections with a Saved filter; Lessons owns the preserved Lesson Mix route; direct session and options; capability rules; axe; keyboard; visible focus; reduced motion; 200% text; no horizontal overflow; ${screenshotCount} screenshots.`,
+      `INTERMEDIATE PILOT SMOKE PASS: varied lesson and collection catalogs; finite lesson arc; continuous collection practice; scoped feedback; optional focus; recap; axe; keyboard; visible focus; reduced motion; 200% text; no horizontal overflow; ${screenshotCount} screenshots.`,
     );
     console.log(`Screenshots: ${screenshotsDirectory}`);
   } finally {

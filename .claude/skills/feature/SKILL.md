@@ -1,26 +1,24 @@
 ---
 name: feature
-description: Take a new feature idea through research (if needed), a written spec, operator approval, and planning into the roadmap. Use when the operator says /feature or proposes new capability.
+description: Shape a proposed AIdioma capability through a small live-product experiment and write only the specification that tested behavior earns. Use when the operator says /feature or proposes a new capability.
 ---
 
-# /feature — idea → spec → roadmap
+# /feature — idea → live test → grounded spec
 
-1. Read `Docs/STATE.md`, `Docs/ROADMAP.yaml`, `Docs/Registers/open-items.md` (the idea may
-   already be a row), and any touched `Docs/Specs/` files. Check the current authorities in
-   `Docs/INDEX.md` — the idea may already be mapped in FEATURES-ROADMAP.md.
-2. **Clarify with the operator in plain language** (max 3–5 questions): what problem, for whom,
-   what does success look like on screen. No jargon.
-3. **Research only if genuinely unfamiliar** (new subsystem, external API, architecture
-   question): spawn a read-only research sub-agent, findings only. If findings contradict the
-   idea's assumptions, surface that FIRST — one plain-language call.
-4. **Spec:** write/update `Docs/Specs/Features/<feature>.md` (<=120 lines, CONVENTIONS
-   frontmatter): what it does, how it behaves at the edges, what it explicitly does NOT do,
-   which Areas + which lane it touches. Architecture-shaping choices become an ADR. A lesson-
-   schema change is a proposal in `Docs/Registers/schema-proposals.md`, not an ADR.
-5. **Plan:** break into slices sized <=1 session each, tagged to a lane, every wave keeping
-   >=1 operator-visible slice. Present the operator a briefing: what they'll see, rough effort,
-   where it slots (this wave never — feature freeze; next wave or later), any ONE strategic
-   trade-off as a flat yes/no.
-6. On approval: add slices to `Docs/ROADMAP.yaml` (status `pending`), close/link the OI row,
-   set spec `status: active`. Do NOT start building — /run picks it up in its wave.
-7. Report: the spec path, where it landed in the roadmap, what /run will do first.
+1. Read `Docs/INDEX.md`, the highest-numbered handoff, and the active product criteria or technical
+   references relevant to the idea. Do not add roadmap slices, wave packets, or register rows.
+2. Describe the learner problem, the visible success condition, and the smallest live experiment.
+   Ask at most one short group of questions when founder input is required.
+3. Check the current app first. Reuse its proven Practice/Lessons patterns and identify what genuinely
+   needs testing; do not let a historical proposal become product truth by default.
+4. Prototype the smallest end-to-end behavior on a short-lived branch. Preserve content authorship and
+   the lesson-schema boundary; call out either as a separate decision before changing it.
+5. Exercise the behavior through the real user path and run the relevant automated checks. Iterate
+   from observed behavior and founder feedback.
+6. Once behavior is accepted, create or update one active feature spec with:
+   - what the learner sees;
+   - what must be true;
+   - what it must not do;
+   - how the live prototype proves it.
+7. Leave unresolved architecture as one small next test, not speculative system truth. Report the
+   tested outcome, spec path, evidence, and next implementation step; use `/close` for PR publication.

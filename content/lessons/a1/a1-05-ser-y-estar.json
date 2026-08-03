@@ -1,0 +1,596 @@
+{
+  "schemaVersion": 1,
+  "id": "a1-05-ser-y-estar",
+  "ordinal": 5,
+  "level": "A1",
+  "title": "Ser y estar: identity and state",
+  "objective": "You can choose between ser and estar to say who someone is versus how they feel right now, and use numbers to 30.",
+  "grammarFocus": ["verb.ser-estar.contrast", "verb.estar", "number.cardinal"],
+  "prerequisites": ["a1-04-donde-esta"],
+  "explanation": {
+    "id": "a1-05.e.01",
+    "kind": "explanation",
+    "markdown": "Spanish has two verbs for \"to be.\" Use **ser** for identity and traits; use **estar** for a state or feeling now. Compare *Soy amable, pero hoy estoy cansado* (\"I'm kind, but I'm tired today\") and *Ella es inteligente, pero está nerviosa* (\"She's smart, but she's nervous\"). *Él es joven, pero hoy está enfermo* (\"He's young, but he's sick today\") shows the same contrast.\n\nThe number set in this lesson runs from *cero* to *treinta*.\n\nFor age, learn *tengo … años* as a set phrase; the verb mechanics come later.\n\nOne caution: a trait can also change over time. Choose *estar* when you mean the person's state now, not simply because the state is temporary.",
+    "grammarTags": ["verb.ser-estar.contrast", "number.cardinal"]
+  },
+  "vocab": [
+    {
+      "id": "a1-05.v.cansado",
+      "kind": "vocab",
+      "es": "cansado",
+      "en": "tired",
+      "acceptedEs": ["cansada"],
+      "acceptedEn": [],
+      "pos": "adj",
+      "exampleEs": "Hoy estoy cansado.",
+      "exampleEn": "I'm tired today."
+    },
+    {
+      "id": "a1-05.v.contento",
+      "kind": "vocab",
+      "es": "contento",
+      "en": "happy / glad",
+      "acceptedEs": ["contenta"],
+      "acceptedEn": ["pleased"],
+      "pos": "adj",
+      "exampleEs": "Ella está contenta.",
+      "exampleEn": "She's happy."
+    },
+    {
+      "id": "a1-05.v.triste",
+      "kind": "vocab",
+      "es": "triste",
+      "en": "sad",
+      "acceptedEs": [],
+      "acceptedEn": [],
+      "pos": "adj",
+      "exampleEs": "Hoy no estoy triste.",
+      "exampleEn": "I'm not sad today."
+    },
+    {
+      "id": "a1-05.v.enfermo",
+      "kind": "vocab",
+      "es": "enfermo",
+      "en": "sick / ill",
+      "acceptedEs": ["enferma"],
+      "acceptedEn": ["unwell"],
+      "pos": "adj",
+      "exampleEs": "Él está enfermo.",
+      "exampleEn": "He's sick."
+    },
+    {
+      "id": "a1-05.v.ocupado",
+      "kind": "vocab",
+      "es": "ocupado",
+      "en": "busy",
+      "acceptedEs": ["ocupada"],
+      "acceptedEn": [],
+      "pos": "adj",
+      "exampleEs": "Estamos ocupados hoy.",
+      "exampleEn": "We're busy today."
+    },
+    {
+      "id": "a1-05.v.nervioso",
+      "kind": "vocab",
+      "es": "nervioso",
+      "en": "nervous",
+      "acceptedEs": ["nerviosa"],
+      "acceptedEn": ["anxious"],
+      "pos": "adj",
+      "exampleEs": "Tú estás nervioso.",
+      "exampleEn": "You're nervous."
+    },
+    {
+      "id": "a1-05.v.tengo-anos",
+      "kind": "vocab",
+      "es": "tengo … años",
+      "en": "I am … years old",
+      "acceptedEs": ["tengo ... años"],
+      "acceptedEn": ["I'm … years old", "I am ... years old", "I'm ... years old"],
+      "pos": "phrase",
+      "chunk": true,
+      "exampleEs": "Tengo veinte años.",
+      "exampleEn": "I'm twenty years old."
+    },
+    {
+      "id": "a1-05.v.cero",
+      "kind": "vocab",
+      "es": "cero",
+      "en": "zero",
+      "acceptedEs": [],
+      "acceptedEn": ["0"],
+      "pos": "other",
+      "setId": "numbers-0-30",
+      "exampleEs": "Hay cero sillas.",
+      "exampleEn": "There are zero chairs."
+    },
+    {
+      "id": "a1-05.v.uno",
+      "kind": "vocab",
+      "es": "uno",
+      "en": "one",
+      "acceptedEs": ["un", "una"],
+      "acceptedEn": ["1"],
+      "pos": "other",
+      "setId": "numbers-0-30",
+      "exampleEs": "Hay una mesa.",
+      "exampleEn": "There is one table."
+    },
+    {
+      "id": "a1-05.v.dos",
+      "kind": "vocab",
+      "es": "dos",
+      "en": "two",
+      "acceptedEs": [],
+      "acceptedEn": ["2"],
+      "pos": "other",
+      "setId": "numbers-0-30",
+      "exampleEs": "Hay dos sillas.",
+      "exampleEn": "There are two chairs."
+    },
+    {
+      "id": "a1-05.v.tres",
+      "kind": "vocab",
+      "es": "tres",
+      "en": "three",
+      "acceptedEs": [],
+      "acceptedEn": ["3"],
+      "pos": "other",
+      "setId": "numbers-0-30",
+      "exampleEs": "Hay tres señoras.",
+      "exampleEn": "There are three ladies."
+    },
+    {
+      "id": "a1-05.v.diez",
+      "kind": "vocab",
+      "es": "diez",
+      "en": "ten",
+      "acceptedEs": [],
+      "acceptedEn": ["10"],
+      "pos": "other",
+      "setId": "numbers-0-30",
+      "exampleEs": "Hay diez sillas.",
+      "exampleEn": "There are ten chairs."
+    },
+    {
+      "id": "a1-05.v.quince",
+      "kind": "vocab",
+      "es": "quince",
+      "en": "fifteen",
+      "acceptedEs": [],
+      "acceptedEn": ["15"],
+      "pos": "other",
+      "setId": "numbers-0-30",
+      "exampleEs": "Tengo quince años.",
+      "exampleEn": "I'm fifteen years old."
+    },
+    {
+      "id": "a1-05.v.veinte",
+      "kind": "vocab",
+      "es": "veinte",
+      "en": "twenty",
+      "acceptedEs": [],
+      "acceptedEn": ["20"],
+      "pos": "other",
+      "setId": "numbers-0-30",
+      "exampleEs": "Tengo veinte años.",
+      "exampleEn": "I'm twenty years old."
+    },
+    {
+      "id": "a1-05.v.treinta",
+      "kind": "vocab",
+      "es": "treinta",
+      "en": "thirty",
+      "acceptedEs": [],
+      "acceptedEn": ["30"],
+      "pos": "other",
+      "setId": "numbers-0-30",
+      "exampleEs": "Tengo treinta años.",
+      "exampleEn": "I'm thirty years old."
+    }
+  ],
+  "sentences": [
+    {
+      "id": "a1-05.s.01",
+      "kind": "sentence",
+      "es": "Hoy estoy cansado.",
+      "en": "I'm tired today.",
+      "acceptedEs": ["Estoy cansado hoy.", "Hoy estoy cansada.", "Estoy cansada hoy.", "Yo estoy cansado hoy."],
+      "acceptedEn": ["I am tired today."],
+      "grammarTags": ["verb.ser-estar.contrast", "verb.estar"],
+      "vocabRefs": ["a1-04.v.estar", "a1-05.v.cansado"],
+      "difficulty": 1,
+      "hints": [
+        "This is a current state, so choose the right verb for how someone feels now.",
+        "Use the *yo* form of *estar* before the adjective; match the speaker's gender.",
+        "*Hoy estoy ___* — add the adjective for needing rest."
+      ],
+      "flashcard": { "eligible": true, "front": "es" }
+    },
+    {
+      "id": "a1-05.s.02",
+      "kind": "sentence",
+      "es": "Soy amable, pero hoy estoy nervioso.",
+      "en": "I'm kind, but I'm nervous today.",
+      "acceptedEs": ["Yo soy amable, pero hoy estoy nervioso.", "Soy amable, pero estoy nervioso hoy.", "Soy amable, pero hoy estoy nerviosa.", "Yo soy amable, pero hoy estoy nerviosa."],
+      "acceptedEn": ["I am kind, but I am nervous today.", "I'm kind, but I am nervous today.", "I am kind, but I'm nervous today.", "I'm nice, but I'm anxious today."],
+      "grammarTags": ["verb.ser-estar.contrast", "verb.estar"],
+      "vocabRefs": ["a1-02.v.amable", "a1-04.v.estar", "a1-05.v.nervioso"],
+      "difficulty": 4,
+      "hints": [
+        "Contrast a trait with a feeling right now.",
+        "Use *ser* for the trait and *estar* for today's state, joined by *pero*.",
+        "*Soy amable, pero hoy estoy ___* — finish with the current feeling."
+      ]
+    },
+    {
+      "id": "a1-05.s.03",
+      "kind": "sentence",
+      "es": "Ella está contenta hoy.",
+      "en": "She's happy today.",
+      "acceptedEs": ["Está contenta hoy.", "Hoy ella está contenta.", "Hoy está contenta.", "Ella hoy está contenta."],
+      "acceptedEn": ["She is happy today.", "She's glad today."],
+      "grammarTags": ["verb.ser-estar.contrast", "verb.estar"],
+      "vocabRefs": ["a1-04.v.estar", "a1-05.v.contento"],
+      "difficulty": 2,
+      "hints": [
+        "Describe how she feels now, not what kind of person she is.",
+        "Use third-person *estar* and make the adjective feminine.",
+        "*Ella está ___ hoy* — supply the feminine form of 'glad.'"
+      ],
+      "flashcard": { "eligible": true }
+    },
+    {
+      "id": "a1-05.s.04",
+      "kind": "sentence",
+      "es": "Él es trabajador, pero hoy está enfermo.",
+      "en": "He's hardworking, but he's sick today.",
+      "acceptedEs": ["Es trabajador, pero hoy está enfermo.", "Él es trabajador, pero está enfermo hoy.", "Es trabajador, pero está enfermo hoy.", "Hoy está enfermo, pero él es trabajador."],
+      "acceptedEn": ["He is hardworking, but he is sick today.", "He's hardworking, but he is sick today.", "He is hardworking, but he's sick today.", "He's hard-working, but he's ill today."],
+      "grammarTags": ["verb.ser-estar.contrast", "verb.estar"],
+      "vocabRefs": ["a1-02.v.trabajador", "a1-04.v.estar", "a1-05.v.enfermo"],
+      "difficulty": 4,
+      "hints": [
+        "Separate his usual quality from his health today.",
+        "Use *ser* with the quality and *estar* with the health state.",
+        "*Él es trabajador, pero hoy está ___* — add the health adjective."
+      ]
+    },
+    {
+      "id": "a1-05.s.05",
+      "kind": "sentence",
+      "es": "Estamos ocupados hoy.",
+      "en": "We're busy today.",
+      "acceptedEs": ["Hoy estamos ocupados.", "Nosotros estamos ocupados hoy.", "Estamos ocupadas hoy.", "Nosotras estamos ocupadas hoy."],
+      "acceptedEn": ["We are busy today."],
+      "grammarTags": ["verb.ser-estar.contrast", "verb.estar", "agreement.gender-number"],
+      "vocabRefs": ["a1-04.v.estar", "a1-05.v.ocupado"],
+      "difficulty": 2,
+      "hints": [
+        "Describe the group's state today and keep plural agreement.",
+        "Use the *nosotros* form of *estar* plus a plural adjective.",
+        "*Estamos ___ hoy* — make the state adjective plural."
+      ]
+    },
+    {
+      "id": "a1-05.s.06",
+      "kind": "sentence",
+      "es": "Soy joven, pero hoy estoy triste.",
+      "en": "I'm young, but I'm sad today.",
+      "acceptedEs": ["Yo soy joven, pero hoy estoy triste.", "Soy joven, pero estoy triste hoy.", "Hoy estoy triste, pero soy joven.", "Yo soy joven, pero estoy triste hoy."],
+      "acceptedEn": ["I am young, but I am sad today.", "I'm young, but I am sad today.", "I am young, but I'm sad today."],
+      "grammarTags": ["verb.ser-estar.contrast", "verb.estar"],
+      "vocabRefs": ["a1-02.v.joven", "a1-04.v.estar", "a1-05.v.triste"],
+      "difficulty": 4,
+      "hints": [
+        "Contrast an identifying trait with today's feeling.",
+        "Use *ser* before the trait and *estar* before the feeling.",
+        "*Soy joven, pero hoy estoy ___* — add the feeling."
+      ]
+    },
+    {
+      "id": "a1-05.s.07",
+      "kind": "sentence",
+      "es": "Tú estás nervioso, pero eres amable.",
+      "en": "You're nervous, but you're kind.",
+      "acceptedEs": ["Estás nervioso, pero eres amable.", "Tú estás nerviosa, pero eres amable.", "Estás nerviosa, pero eres amable.", "Eres amable, pero estás nervioso."],
+      "acceptedEn": ["You are nervous, but you are kind.", "You're nervous, but you are kind.", "You are nervous, but you're kind.", "You're anxious, but you're nice."],
+      "grammarTags": ["verb.ser-estar.contrast", "verb.estar"],
+      "vocabRefs": ["a1-04.v.estar", "a1-05.v.nervioso", "a1-02.v.amable"],
+      "difficulty": 4,
+      "hints": [
+        "Address one person and contrast a current feeling with a trait.",
+        "Use *estar* for the feeling and the *tú* form of *ser* for the trait.",
+        "*Tú estás nervioso, pero ___ amable* — fill in the *tú* form of *ser*."
+      ]
+    },
+    {
+      "id": "a1-05.s.08",
+      "kind": "sentence",
+      "es": "Ellas son inteligentes, pero hoy están cansadas.",
+      "en": "They're smart, but they're tired today.",
+      "acceptedEs": ["Son inteligentes, pero hoy están cansadas.", "Ellas son inteligentes, pero están cansadas hoy.", "Son inteligentes, pero están cansadas hoy.", "Ellos son inteligentes, pero hoy están cansados."],
+      "acceptedEn": ["They are smart, but they are tired today.", "They're smart, but they are tired today.", "They are smart, but they're tired today.", "They're intelligent, but they're tired today."],
+      "grammarTags": ["verb.ser-estar.contrast", "verb.estar", "agreement.gender-number"],
+      "vocabRefs": ["a1-02.v.inteligente", "a1-04.v.estar", "a1-05.v.cansado"],
+      "difficulty": 4,
+      "hints": [
+        "For a group of women, contrast a trait with today's state and keep agreement plural.",
+        "Use plural *ser* for the trait, plural *estar* for the state, and a feminine plural ending.",
+        "*Ellas son inteligentes, pero hoy están ___* — complete the feminine plural state."
+      ]
+    },
+    {
+      "id": "a1-05.s.09",
+      "kind": "sentence",
+      "es": "Hoy no estoy enferma; estoy contenta.",
+      "en": "I'm not sick today; I'm happy.",
+      "acceptedEs": ["No estoy enferma hoy; estoy contenta.", "Hoy no estoy enfermo; estoy contento.", "No estoy enfermo hoy; estoy contento.", "Estoy contenta; hoy no estoy enferma."],
+      "acceptedEn": ["I am not sick today; I am happy.", "I'm not sick today; I am happy.", "I am not sick today; I'm happy.", "I'm not ill today; I'm glad."],
+      "grammarTags": ["verb.ser-estar.contrast", "verb.estar", "negation"],
+      "vocabRefs": ["a1-04.v.estar", "a1-05.v.enfermo", "a1-05.v.contento"],
+      "difficulty": 4,
+      "hints": [
+        "Deny one current state, then give the contrasting state.",
+        "Put *no* before the first *estar* form; both adjectives agree with the same speaker.",
+        "*Hoy no estoy enferma; estoy ___* — add the positive feeling."
+      ]
+    },
+    {
+      "id": "a1-05.s.10",
+      "kind": "sentence",
+      "es": "El señor está ocupado y la señora está nerviosa.",
+      "en": "The man is busy, and the lady is nervous.",
+      "acceptedEs": ["La señora está nerviosa y el señor está ocupado.", "Está nerviosa la señora, y el señor está ocupado.", "El señor está ocupado; la señora está nerviosa."],
+      "acceptedEn": ["The gentleman is busy, and the woman is nervous.", "The man is busy and the lady is anxious."],
+      "grammarTags": ["verb.ser-estar.contrast", "verb.estar", "agreement.gender-number"],
+      "vocabRefs": ["a1-01.v.senor", "a1-04.v.estar", "a1-05.v.ocupado", "a1-01.v.senora", "a1-05.v.nervioso"],
+      "difficulty": 4,
+      "hints": [
+        "Give one present state for each person and match each adjective.",
+        "Use singular *estar* twice; one adjective is masculine and the other feminine.",
+        "*El señor está ocupado y la señora está ___* — finish with the feminine feeling."
+      ]
+    },
+    {
+      "id": "a1-05.s.11",
+      "kind": "sentence",
+      "es": "Tengo veinte años y hoy estoy contento.",
+      "en": "I'm twenty years old, and I'm happy today.",
+      "acceptedEs": ["Yo tengo veinte años y hoy estoy contento.", "Tengo veinte años y estoy contento hoy.", "Tengo veinte años y hoy estoy contenta.", "Hoy estoy contento y tengo veinte años."],
+      "acceptedEn": ["I am twenty years old, and I am happy today.", "I'm twenty years old, and I am happy today.", "I am twenty years old, and I'm happy today.", "I'm 20 years old, and I'm glad today."],
+      "grammarTags": ["number.cardinal", "verb.estar"],
+      "vocabRefs": ["a1-05.v.tengo-anos", "a1-05.v.veinte", "a1-04.v.estar", "a1-05.v.contento"],
+      "difficulty": 4,
+      "hints": [
+        "Use the memorized age phrase, then add today's feeling.",
+        "Put the number inside *tengo … años*; use *estar* for the second clause.",
+        "*Tengo veinte años y hoy estoy ___* — complete the current feeling."
+      ],
+      "flashcard": { "eligible": true, "front": "es" }
+    },
+    {
+      "id": "a1-05.s.12",
+      "kind": "sentence",
+      "es": "Tengo quince años, pero hoy estoy cansada.",
+      "en": "I'm fifteen years old, but I'm tired today.",
+      "acceptedEs": ["Yo tengo quince años, pero hoy estoy cansada.", "Tengo quince años, pero estoy cansada hoy.", "Tengo quince años, pero hoy estoy cansado.", "Yo tengo quince años, pero hoy estoy cansado."],
+      "acceptedEn": ["I am fifteen years old, but I am tired today.", "I'm fifteen years old, but I am tired today.", "I am fifteen years old, but I'm tired today.", "I'm 15 years old, but I'm tired today."],
+      "grammarTags": ["number.cardinal", "verb.estar"],
+      "vocabRefs": ["a1-05.v.tengo-anos", "a1-05.v.quince", "a1-04.v.estar", "a1-05.v.cansado"],
+      "difficulty": 4,
+      "hints": [
+        "Give an age with the set phrase, then contrast it with today's state.",
+        "Keep the number inside the age chunk and use *estar* before the feminine adjective.",
+        "*Tengo quince años, pero hoy estoy ___* — add the state in feminine form."
+      ]
+    },
+    {
+      "id": "a1-05.s.13",
+      "kind": "sentence",
+      "es": "Hay dos sillas en la cocina.",
+      "en": "There are two chairs in the kitchen.",
+      "acceptedEs": ["En la cocina hay dos sillas.", "Hay 2 sillas en la cocina.", "En la cocina hay 2 sillas."],
+      "acceptedEn": ["The kitchen has two chairs.", "There are 2 chairs in the kitchen."],
+      "grammarTags": ["number.cardinal", "verb.hay"],
+      "vocabRefs": ["a1-04.v.hay", "a1-05.v.dos", "a1-04.v.silla", "a1-04.v.cocina"],
+      "difficulty": 2,
+      "hints": [
+        "State how many pieces of furniture exist in the room.",
+        "Use *hay*, then the number and the plural noun.",
+        "*Hay ___ sillas en la cocina* — write the number after one."
+      ]
+    },
+    {
+      "id": "a1-05.s.14",
+      "kind": "sentence",
+      "es": "Aquí hay tres señoras contentas.",
+      "en": "There are three happy ladies here.",
+      "acceptedEs": ["Hay tres señoras contentas aquí.", "Aquí hay 3 señoras contentas.", "Hay 3 señoras contentas aquí."],
+      "acceptedEn": ["Three happy ladies are here.", "There are 3 happy women here."],
+      "grammarTags": ["number.cardinal", "verb.hay", "agreement.gender-number"],
+      "vocabRefs": ["a1-04.v.aqui", "a1-04.v.hay", "a1-05.v.tres", "a1-01.v.senora", "a1-05.v.contento"],
+      "difficulty": 3,
+      "hints": [
+        "Say how many women are here and make the feeling adjective agree with the group.",
+        "Use *hay* with a number, then a feminine plural noun and adjective.",
+        "*Aquí hay tres señoras ___* — complete the feminine plural feeling."
+      ]
+    },
+    {
+      "id": "a1-05.s.15",
+      "kind": "sentence",
+      "es": "Hay diez sillas, pero una mesa.",
+      "en": "There are ten chairs, but one table.",
+      "acceptedEs": ["Hay una mesa, pero diez sillas.", "Hay 10 sillas, pero una mesa.", "Hay una mesa, pero hay diez sillas."],
+      "acceptedEn": ["There are 10 chairs, but one table."],
+      "grammarTags": ["number.cardinal", "verb.hay"],
+      "vocabRefs": ["a1-04.v.hay", "a1-05.v.diez", "a1-04.v.silla", "a1-05.v.uno", "a1-04.v.mesa"],
+      "difficulty": 4,
+      "hints": [
+        "Contrast a larger chair count with a single table.",
+        "Use *hay* once; the first number is ten and feminine *una* modifies the table.",
+        "*Hay diez sillas, pero ___ mesa* — add the feminine form of one."
+      ]
+    },
+    {
+      "id": "a1-05.s.16",
+      "kind": "sentence",
+      "es": "Tengo treinta años, soy amable y hoy no estoy triste.",
+      "en": "I'm thirty years old, I'm kind, and I'm not sad today.",
+      "acceptedEs": ["Yo tengo treinta años, soy amable y hoy no estoy triste.", "Tengo treinta años, soy amable y no estoy triste hoy.", "Hoy no estoy triste, soy amable y tengo treinta años.", "Tengo 30 años, soy amable y hoy no estoy triste."],
+      "acceptedEn": ["I am thirty years old, I am kind, and I am not sad today.", "I am thirty years old, I'm kind, and I'm not sad today.", "I'm thirty years old, I am kind, and I'm not sad today.", "I'm thirty years old, I'm kind, and I am not sad today.", "I'm 30 years old, I'm nice, and I'm not sad today."],
+      "grammarTags": ["number.cardinal", "verb.ser-estar.contrast", "verb.estar", "negation"],
+      "vocabRefs": ["a1-05.v.tengo-anos", "a1-05.v.treinta", "a1-02.v.amable", "a1-04.v.estar", "a1-05.v.triste"],
+      "difficulty": 5,
+      "hints": [
+        "Combine age, a trait, and a negative current feeling.",
+        "Use the age chunk first, *ser* for the trait, and *no estar* for today's state.",
+        "*Tengo treinta años, soy amable y hoy no estoy ___* — finish with the feeling."
+      ]
+    },
+    {
+      "id": "a1-05.s.17",
+      "kind": "sentence",
+      "es": "Ella es inteligente, pero hoy está ocupada y nerviosa.",
+      "en": "She's smart, but today she's busy and nervous.",
+      "acceptedEs": ["Es inteligente, pero hoy está ocupada y nerviosa.", "Ella es inteligente, pero está ocupada y nerviosa hoy.", "Hoy está ocupada y nerviosa, pero es inteligente.", "Es inteligente, pero hoy está nerviosa y ocupada."],
+      "acceptedEn": ["She is intelligent, but today she is busy and nervous.", "She's smart, but today she is busy and nervous.", "She is smart, but today she's busy and nervous.", "She's smart, but she's busy and anxious today."],
+      "grammarTags": ["verb.ser-estar.contrast", "verb.estar", "agreement.gender-number"],
+      "vocabRefs": ["a1-02.v.inteligente", "a1-04.v.estar", "a1-05.v.ocupado", "a1-05.v.nervioso"],
+      "difficulty": 5,
+      "hints": [
+        "Contrast her trait with two feminine states today.",
+        "Use *ser* for the trait and *estar* for the two current states.",
+        "*Ella es inteligente, pero hoy está ocupada y ___* — complete the second state."
+      ]
+    },
+    {
+      "id": "a1-05.s.18",
+      "kind": "sentence",
+      "es": "Nosotros somos trabajadores, pero hoy estamos cansados y no descansamos.",
+      "en": "We're hardworking, but today we're tired and we aren't resting.",
+      "acceptedEs": ["Somos trabajadores, pero hoy estamos cansados y no descansamos.", "Nosotras somos trabajadoras, pero hoy estamos cansadas y no descansamos.", "Hoy estamos cansados y no descansamos, pero somos trabajadores.", "Somos trabajadores, pero estamos cansados hoy y no descansamos.", "Nosotros somos trabajadores, pero hoy estamos cansados y no estamos descansando.", "Somos trabajadores, pero hoy estamos cansados y no estamos descansando."],
+      "acceptedEn": ["We are hardworking, but today we are tired and we are not resting.", "We're hardworking, but today we are tired and we aren't resting.", "We are hardworking, but today we're tired and we aren't resting.", "We're hardworking, but today we're tired and we are not resting.", "We're hard-working, but we're tired today and not resting."],
+      "grammarTags": ["verb.ser-estar.contrast", "verb.estar", "agreement.gender-number", "verb.regular.ar", "negation"],
+      "vocabRefs": ["a1-02.v.trabajador", "a1-04.v.estar", "a1-05.v.cansado", "a1-03.v.descansar"],
+      "difficulty": 5,
+      "hints": [
+        "Contrast the group's usual trait with today's state and a negative action.",
+        "Use plural *ser*, plural *estar*, and put *no* before the final -ar verb.",
+        "*Nosotros somos trabajadores, pero hoy estamos cansados y no ___* — finish with the group action."
+      ]
+    }
+  ],
+  "passage": {
+    "id": "a1-05.p.01",
+    "kind": "passage",
+    "title": "Cómo está Camila hoy",
+    "segments": [
+      {
+        "id": "a1-05.p.01.01",
+        "es": "Me llamo Camila y soy colombiana.",
+        "en": ["My name is Camila and I'm Colombian.", "I'm called Camila and I am Colombian."],
+        "vocabRefs": ["a1-01.v.me-llamo", "a1-02.v.colombiano"]
+      },
+      {
+        "id": "a1-05.p.01.02",
+        "es": "Soy joven, inteligente y amable.",
+        "en": ["I'm young, smart, and kind.", "I am young, intelligent, and nice."],
+        "vocabRefs": ["a1-02.v.joven", "a1-02.v.inteligente", "a1-02.v.amable"]
+      },
+      {
+        "id": "a1-05.p.01.03",
+        "es": "Hoy estoy cansada, pero estoy contenta.",
+        "en": ["I'm tired today, but I'm happy.", "Today I am tired, but I am glad."],
+        "vocabRefs": ["a1-04.v.estar", "a1-05.v.cansado", "a1-05.v.contento"]
+      },
+      {
+        "id": "a1-05.p.01.04",
+        "es": "No estoy enferma ni triste.",
+        "en": ["I'm not sick or sad.", "I am neither ill nor sad."],
+        "vocabRefs": ["a1-04.v.estar", "a1-05.v.enfermo", "a1-05.v.triste"]
+      },
+      {
+        "id": "a1-05.p.01.05",
+        "es": "Tengo veinte años.",
+        "en": ["I'm twenty years old.", "I am twenty years old.", "I am 20 years old.", "I'm 20 years old."],
+        "vocabRefs": ["a1-05.v.tengo-anos", "a1-05.v.veinte"]
+      },
+      {
+        "id": "a1-05.p.01.06",
+        "es": "Hoy descanso en casa.",
+        "en": ["Today I rest at home.", "I'm resting at home today."],
+        "vocabRefs": ["a1-03.v.descansar", "a1-04.v.casa"]
+      }
+    ]
+  },
+  "conversation": {
+    "id": "a1-05.c.01",
+    "kind": "conversation",
+    "scenario": "Meeting a classmate and talking about identity, feelings, and age.",
+    "personaPrompt": "You are Camila, a friendly classmate. Speak slowly in short, present-tense Spanish sentences using only cumulative vocabulary and this lesson's feelings, numbers, ser, estar, and the age chunk. Use tú with the learner, no slang, and never vosotros. Ask one short question at a time about how the learner feels and their age.",
+    "openingLine": "Hola. Estoy contenta hoy. ¿Cómo estás tú?",
+    "openingLineGloss": "Hi. I'm happy today. How are you?",
+    "goalPhrases": ["Soy amable.", "Hoy estoy contento.", "No estoy cansado.", "Tengo veinte años."],
+    "vocabRefs": ["a1-01.v.hola", "a1-02.v.amable", "a1-04.v.estar", "a1-05.v.contento", "a1-05.v.cansado", "a1-05.v.tengo-anos", "a1-05.v.veinte"]
+  },
+  "quickChecks": [
+    {
+      "id": "a1-05.q.01",
+      "kind": "multipleChoice",
+      "prompt": "Yo ___ cansado hoy.",
+      "choices": ["estoy", "soy", "está", "eres"],
+      "correctIndex": 0,
+      "explanation": "Use estoy for a current state felt by yo.",
+      "grammarTags": ["verb.ser-estar.contrast", "verb.estar"],
+      "vocabRefs": ["a1-04.v.estar", "a1-05.v.cansado"],
+      "difficulty": 1
+    },
+    {
+      "id": "a1-05.q.02",
+      "kind": "multipleChoice",
+      "prompt": "Ella es amable, pero hoy ___ nerviosa.",
+      "choices": ["está", "es", "estoy", "son"],
+      "correctIndex": 0,
+      "explanation": "The kindness is a trait, while today's nervous state takes está.",
+      "grammarTags": ["verb.ser-estar.contrast", "verb.estar"],
+      "vocabRefs": ["a1-02.v.amable", "a1-04.v.estar", "a1-05.v.nervioso"],
+      "difficulty": 2
+    },
+    {
+      "id": "a1-05.q.03",
+      "kind": "multipleChoice",
+      "prompt": "Tengo ___ años. (20)",
+      "choices": ["veinte", "quince", "treinta", "diez"],
+      "correctIndex": 0,
+      "explanation": "Veinte is the cardinal number 20 inside the fixed age phrase.",
+      "grammarTags": ["number.cardinal"],
+      "vocabRefs": ["a1-05.v.tengo-anos", "a1-05.v.veinte"],
+      "difficulty": 2
+    },
+    {
+      "id": "a1-05.q.04",
+      "kind": "multipleChoice",
+      "prompt": "In the reading, how does Camila feel today?",
+      "passageRef": "a1-05.p.01.03",
+      "choices": ["Tired but happy", "Sick and sad", "Busy and nervous", "Young and kind"],
+      "correctIndex": 0,
+      "explanation": "Camila says she is tired today but happy.",
+      "grammarTags": [],
+      "vocabRefs": ["a1-05.v.cansado", "a1-05.v.contento"],
+      "difficulty": 2
+    }
+  ],
+  "referenceCards": [
+    {
+      "id": "a1-05.r.01",
+      "kind": "referenceCard",
+      "title": "Numbers from 0 to 30",
+      "markdown": "0 **cero** · 1 **uno** · 2 **dos** · 3 **tres** · 4 **cuatro** · 5 **cinco** · 6 **seis** · 7 **siete** · 8 **ocho** · 9 **nueve** · 10 **diez**\n\n11 **once** · 12 **doce** · 13 **trece** · 14 **catorce** · 15 **quince** · 16 **dieciséis** · 17 **diecisiete** · 18 **dieciocho** · 19 **diecinueve** · 20 **veinte**\n\n21 **veintiuno** · 22 **veintidós** · 23 **veintitrés** · 24 **veinticuatro** · 25 **veinticinco** · 26 **veintiséis** · 27 **veintisiete** · 28 **veintiocho** · 29 **veintinueve** · 30 **treinta**",
+      "grammarTags": ["number.cardinal"],
+      "vocabRefs": ["a1-05.v.cero", "a1-05.v.uno", "a1-05.v.dos", "a1-05.v.tres", "a1-05.v.diez", "a1-05.v.quince", "a1-05.v.veinte", "a1-05.v.treinta"]
+    }
+  ],
+  "contentVersion": 2
+}

@@ -114,7 +114,7 @@ git for-each-ref --format='%(refname:short) %(objectname)' refs/remotes/origin |
 
 if ((worktree_cleanup_audit)); then
   echo
-  echo "PRE-SHIP WORKTREE CLEANUP AUDIT VS TARGET"
+  echo "TARGET WORKTREE CLEANUP AUDIT"
   worktree_cleanup_blockers=0
   primary_worktree="$(git worktree list --porcelain | sed -n 's/^worktree //p' | sed -n '1p')"
 
@@ -146,7 +146,7 @@ fi
 
 if ((cleanup_audit)); then
   echo
-  echo "POST-SHIP CLEANUP AUDIT VS TARGET"
+  echo "POST-MERGE CLEANUP AUDIT VS TARGET"
   cleanup_blockers=0
   primary_worktree="$(git worktree list --porcelain | sed -n 's/^worktree //p' | sed -n '1p')"
 
@@ -164,7 +164,7 @@ if ((cleanup_audit)); then
     elif [[ "$worktree_path" == "$primary_worktree" ]]; then
       verdict="KEEP_PRIMARY_SWITCH_TO_MAIN"
     else
-      verdict="SAFE_REMOVE_AFTER_SHIP"
+      verdict="SAFE_REMOVE_AFTER_MERGE"
     fi
     printf 'worktree %-58s | %-34s | %s\n' "$worktree_path" "$worktree_branch" "$verdict"
   done < <(git worktree list --porcelain | sed -n 's/^worktree //p')

@@ -1,0 +1,48 @@
+{
+  "lessonId": "a1-05-ser-y-estar",
+  "verdict": "CLEAN_FOR_LOCAL_FIXES",
+  "overallLessonStatus": "BLOCKED_FAIL_P007",
+  "findings": [
+    {
+      "severity": "MAJOR",
+      "checklistPoint": 6,
+      "itemId": "a1-05.r.01",
+      "code": "P-007_NUMBER_SET_SCHEMA_CAP",
+      "issue": "Twenty-three required numbers exist only on an ungraded ReferenceCard. They have no immutable VocabItem IDs or bidirectional accept sets, while adding all 31 number members plus the seven non-number items would require 38 vocab entries against Lesson.vocab.max(15).",
+      "proposedFix": "Approve and implement P-007, then author and independently review every missing graded number member before the lesson can reach L2-PASS."
+    }
+  ],
+  "checks": {
+    "contentVersion": { "status": "PASS", "actual": 2 },
+    "localFindingsReviewed": 7,
+    "localFindingsResolved": 7,
+    "missingAlternatesRequested": 13,
+    "missingAlternatesPresent": 13,
+    "focusedRegressions": 0,
+    "thinEnglishAcceptSets": "PASS",
+    "s15MeaningAndNaturalness": "PASS",
+    "twoClauseDifficulty": "PASS",
+    "p01_06Naturalness": "PASS",
+    "q01NeutralOrder": "PASS",
+    "explanationExamples": { "status": "PASS", "fullGlossedExamples": 3, "words": 114 },
+    "p01_05AgeAlternates": "PASS"
+  },
+  "remaining": {
+    "major": 1,
+    "minor": 0,
+    "requiredNumberMembers": 31,
+    "gradedNumberMembers": 8,
+    "missingGradedMembers": 23,
+    "missingValues": "4–9, 11–14, 16–19, 21–29",
+    "schemaVocabMaximum": 15,
+    "requiredTotalVocabItems": 38
+  },
+  "stats": {
+    "validatorCommand": "npm run content:validate -- --lesson a1-05-ser-y-estar --json",
+    "validatorPassed": true,
+    "validatorErrors": 0,
+    "validatorWarnings": 0,
+    "validatorInfo": 0,
+    "notes": "Read-only delta re-audit. All locally authorized r1 fixes are clean at contentVersion 2. Overall L2 remains FAIL/BLOCKED solely on the unapproved P-007 contract change; no file was edited by the auditor."
+  }
+}

@@ -14,7 +14,7 @@ export function LessonPracticePreview() {
     <div className="practice-workspace">
       <PrototypeContextHeader
         backHref="/lessons"
-        backLabel="End preview and return to Lessons"
+        backLabel="End lesson and return to Lessons"
         title="Lesson 1"
         trailing={<span className="session-count">1 / 10</span>}
       />
@@ -26,7 +26,7 @@ export function LessonPracticePreview() {
             <strong>Lesson mix</strong>
             <small>Hola: greetings and introducing yourself</small>
           </span>
-          <span className="status-tag">Preview</span>
+          <span className="status-tag">Beginner</span>
         </Card>
 
         <Card className="activity-card prototype-type-card">
@@ -42,19 +42,13 @@ export function LessonPracticePreview() {
           <Card aria-live="polite" className="prototype-feedback-card" role="status">
             <div className="feedback-heading">
               <Check aria-hidden="true" />
-              <strong>Representative feedback state</strong>
+              <strong>Model answer</strong>
             </div>
             <p>
-              Fixture answer: <strong>Hola, me llamo Ana.</strong>
+              <strong>Hola, me llamo Ana.</strong>
             </p>
-            <small>No answer was evaluated or saved in this prototype.</small>
           </Card>
         ) : null}
-
-        <Card className="prototype-boundary-note">
-          <strong>Design proof only</strong>
-          <span>This preview creates no session, evaluation, proficiency, or lesson-progress record.</span>
-        </Card>
       </div>
 
       <form
@@ -65,7 +59,7 @@ export function LessonPracticePreview() {
         }}
       >
         <label className="visually-hidden" htmlFor="lesson-practice-answer">
-          Type a prototype answer
+          Type your answer
         </label>
         <input
           id="lesson-practice-answer"
@@ -73,11 +67,11 @@ export function LessonPracticePreview() {
             setTypedAnswer(event.target.value);
             setFeedbackVisible(false);
           }}
-          placeholder="Type a prototype answer"
+          placeholder="Type your answer"
           type="text"
           value={typedAnswer}
         />
-        <IconButton aria-label="Preview feedback" disabled={!typedAnswer.trim()} type="submit">
+        <IconButton aria-label="Check answer" disabled={!typedAnswer.trim()} type="submit">
           <Send aria-hidden="true" />
         </IconButton>
       </form>

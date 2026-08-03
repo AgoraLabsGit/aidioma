@@ -1,49 +1,50 @@
-# Docs — the map
+# AIdioma documentation
 
-> One question → one home. Hard caps are binding.
+This is the small map for current work. The tested application in `apps/web/` is the product source
+of truth. Active documents record decisions accepted from that experience; technical references
+preserve useful contracts and rationale, but neither speculation nor archived history may override
+what the live product has proved.
 
-| Question | The ONLY answer | Cap |
-|---|---|---|
-| Where are we right now? | [STATE.md](STATE.md) — rewritten in place, never appended | 60 lines |
-| What's the plan and status? | [ROADMAP.yaml](ROADMAP.yaml) — two lanes (App / Content); wins every conflict | — |
-| How does work run? | [PROCESS.md](PROCESS.md) — the machine | 150 lines |
-| How do we write things down? | [CONVENTIONS.md](CONVENTIONS.md) | 60 lines |
-| What is true about subsystem X? | `Specs/Areas/<area>.md` | 120 each |
-| What is true about capability Y? | `Specs/Features/<feature>.md` | 120 each |
-| Why did we decide Z? | `Specs/ADRs/` — numbered, append-only | — |
-| What happened in a unit of work? | `Waves/<wave>-<slice>.md` — brief + gates + audit + proof, ONE file | 150 each |
-| What's broken / owed / dying? | `Registers/` — bugs · open-items · deprecations | — |
-| What's parked for after MVP? | [Registers/post-mvp.md](Registers/post-mvp.md) | — |
-| What did a cross-wave audit find? | `Audits/` — dated reports; follow-ups → register rows | — |
-| What did we learn (durable)? | `Lessons/` — one atomic file per lesson | — |
-| Session continuity mid-wave | `Handoffs/` — dated; highest number = latest | — |
-| Superseded anything | `Archive/` + one-line row in `Archive/CATALOG.md` | — |
+## Active spine
 
-## Current authorities
-
-`Docs/` is the application-design and process SSOT. Executable contracts and authored content
-have one named home outside Docs and are linked here; archived design is evidence, not authority.
-
-| Question | The source of truth |
+| Purpose | Source |
 |---|---|
-| App experience and settled UI | [Specs/Features/module-spec.md](Specs/Features/module-spec.md) |
-| Practice Set catalog, settings, capabilities, and custom-generation boundary | [Specs/Features/practice-sets.md](Specs/Features/practice-sets.md) |
-| Voice stages, UX, quality gates, and provider bake-off | [Specs/Features/voice-practice.md](Specs/Features/voice-practice.md) |
-| Production platform and SDK boundaries | [Specs/Areas/platform.md](Specs/Areas/platform.md) |
-| Evaluation boundary and result contract | [Specs/Areas/evaluation.md](Specs/Areas/evaluation.md) |
-| Persistence model | [Specs/Areas/data-model.md](Specs/Areas/data-model.md) |
-| Session recipe and blend formula | [Specs/Areas/session-engine.md](Specs/Areas/session-engine.md) |
-| Progress and proficiency | [Specs/Features/progress.md](Specs/Features/progress.md) + [Specs/Areas/proficiency.md](Specs/Areas/proficiency.md) |
-| Content-to-app governance | [Specs/Areas/content-pipeline.md](Specs/Areas/content-pipeline.md) |
-| Accepted decisions | [Specs/ADRs/](Specs/ADRs/) |
-| Lesson schema contract (executable) | [packages/lesson-schema/src/index.ts](../packages/lesson-schema/src/index.ts) |
-| Schema proposals and rulings | [Registers/schema-proposals.md](Registers/schema-proposals.md) |
-| Curriculum spine (12 A1 + buffer + A2/B1) | [content/curriculum/CURRICULUM-MAP.md](../content/curriculum/CURRICULUM-MAP.md) |
-| Content authoring / QA state | [content/SESSION-LOG.md](../content/SESSION-LOG.md) + [content/review/REVIEW-LOG.md](../content/review/REVIEW-LOG.md) |
-| Temporary design reference | [apps/prototype/index.html](../apps/prototype/index.html) |
-| Superseded design and documentation | [Archive/CATALOG.md](Archive/CATALOG.md) |
+| Product-wide learner criteria | [Core product criteria](Specs/Features/core-product-criteria.md) |
+| Accepted Practice decisions and prototype boundaries | [Intermediate learning pilot](Prototypes/intermediate-learning-pilot.md) |
+| Current work and continuity | [Handoff 026](Handoffs/026-2026-08-03-clean-main-practice-next.md) |
+| This map | `Docs/INDEX.md` |
 
-## Boot ritual (every session)
-1. Read `STATE.md`. 2. Read `ROADMAP.yaml` for the active wave in each lane. 3. Open only what
-those point at; grep `Docs/**` (and the linked authorities above) for anything else. Never
-front-load the tree.
+The Practice Page UI/UX and Practice-serving engine specs do not exist yet. Create them only after
+their behavior has been exercised and accepted in the live application. New specs should state what
+the learner sees, what must be true, what must not happen, and how the prototype proves it.
+
+## Technical-reference shelf
+
+- [ADRs](Specs/ADRs/) preserve decision history. A newer accepted active decision may supersede
+  their product implications without erasing the record.
+- [Area references](Specs/Areas/) cover content, persistence, evaluation, platform, proficiency,
+  and session-engine boundaries.
+- Retained feature references:
+  [accessibility](Specs/Features/accessibility.md),
+  [Practice Sets](Specs/Features/practice-sets.md),
+  [progress](Specs/Features/progress.md), and
+  [voice practice](Specs/Features/voice-practice.md).
+- Dated implementation references:
+  [Eve and Workflow fit](Audits/2026-07-30-eve-workflow-fit.md) and
+  [voice readiness](Audits/2026-07-30-voice-implementation-readiness.md).
+- Repository documentation reference:
+  [process](PROCESS.md), [conventions](CONVENTIONS.md), and
+  [deferred decisions](References/deferred-decisions.md).
+- Content contract rulings: [schema proposals](Registers/schema-proposals.md).
+
+Executable contracts and authored material remain outside Docs:
+
+- `packages/lesson-schema/` — executable lesson-content contract.
+- `content/` — curriculum, authored content, research, style, and review evidence.
+- `tooling/content/` — content validation and fixtures.
+- `apps/web/` — application behavior and validation source.
+
+## History
+
+[Archive/CATALOG.md](Archive/CATALOG.md) maps superseded plans, handoffs, reviews, registers, and
+other historical evidence. Archive material is searchable context, never current authority.

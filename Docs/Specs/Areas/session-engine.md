@@ -9,7 +9,9 @@ updated: 2026-07-29
 
 > A0-4 / OI-021. Runtime shape for practice sessions. Weight formula detail:
 > Consensus §1.3 — this file locks MVP recipes and the Continue vs size-10 split.
-> UI surface: [module-spec](../Features/module-spec.md). Data inputs: [data-model](data-model.md).
+> Current UI review surface: [intermediate pilot](../../Prototypes/intermediate-learning-pilot.md).
+> Historical screen contract: [module spec](../../Archive/Specs/Features/module-spec.md). Data inputs:
+> [data model](data-model.md).
 
 ## MVP recipes
 

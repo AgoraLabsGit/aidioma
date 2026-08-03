@@ -114,4 +114,4 @@ updated: 2026-07-30
 
 - Web baseline: ADR-0002. Provider/model: ADR-0007. SDK decisions: ADR-0014/ADR-0016/ADR-0017.
 - Trust/failure contract: `evaluation.md`. Voice capability: `../Features/voice-practice.md`.
-- Native/offline/pronunciation triggers: `Registers/post-mvp.md`.
+- Historical native/offline/pronunciation triggers: `Docs/Archive/Registers/post-mvp.md`.

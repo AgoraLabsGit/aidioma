@@ -7,8 +7,13 @@ updated: 2026-07-23
 
 # ADR-0001 — Docs-as-memory dev process adopted
 
+> Historical decision record. The 2026-08-03 documentation reset retained the useful validation and
+> repository-hygiene rules while archiving the roadmap/wave control files. Current onboarding begins
+> at `Docs/INDEX.md` and the latest handoff.
+
 **Decision:** This project runs the wave/slice dev process defined in `Docs/PROCESS.md`
-(imported from the Praxis project's process kit, `PROCESS-KIT.md`). ROADMAP.yaml is the plan
+(imported from the Praxis project's process kit, `Docs/Archive/Operations/PROCESS-KIT.md`). The former
+ROADMAP was the plan
 SSOT; no work is "done" without gates + audit + on-screen proof; nothing is pushed without
 operator GO.
 

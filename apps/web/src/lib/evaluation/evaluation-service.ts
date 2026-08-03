@@ -9,6 +9,13 @@ import {
 } from "./contracts";
 import type { ResolvedLessonSource } from "./source-resolver";
 
+export type EvaluationServiceSource = Pick<
+  ResolvedLessonSource,
+  "authoritativeAnswers" | "grammarTags" | "sourceText"
+> & {
+  assessmentGoal?: string;
+};
+
 export type EvaluationServiceOutcome =
   | { kind: "graded"; result: EvaluationResult }
   | { kind: "invalid"; reason: "empty" | "too-long" }
@@ -37,7 +44,7 @@ export type EvaluationLogger = (event: EvaluationLogEvent) => void;
 export type EvaluationServiceRequest = {
   requestId: string;
   request: EvaluationRequest;
-  source: ResolvedLessonSource;
+  source: EvaluationServiceSource;
   userTrackingId?: string;
   signal?: AbortSignal;
 };
@@ -75,6 +82,7 @@ export class EvaluationService {
     const comparison = compareAnswer(
       input.request.userInput,
       input.source.authoritativeAnswers,
+      { tolerateSingleCharacterTypo: input.request.direction === "es-en" },
     );
 
     if (comparison.kind === "invalid") {
@@ -105,6 +113,7 @@ export class EvaluationService {
       sourceText: input.source.sourceText,
       userInput: input.request.userInput,
       acceptedAnswers: input.source.authoritativeAnswers,
+      assessmentGoal: input.source.assessmentGoal,
       direction: input.request.direction,
       modality: input.request.modality,
       grammarTags: input.source.grammarTags,
