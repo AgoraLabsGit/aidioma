@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -17,7 +17,11 @@ function gradedResponse(
   feedback: string,
   modelAnswer: string,
   score = verdict === "correct" ? 100 : verdict === "close" ? 74 : 35,
-  wordDiff?: Array<{ mark: "close" | "extra" | "missing" | "wrong"; suggestion?: string; text: string }>,
+  wordDiff?: Array<{
+    mark: "close" | "correct" | "extra" | "missing" | "wrong";
+    suggestion?: string;
+    text: string;
+  }>,
 ) {
   return Response.json({
     status: "graded",
@@ -29,6 +33,10 @@ function gradedResponse(
     modelAnswer,
     ...(wordDiff && { wordDiff }),
   });
+}
+
+function ungradedResponse(retryable: boolean, message: string) {
+  return Response.json({ status: "ungraded", retryable, message }, { status: 503 });
 }
 
 function startRestaurantPractice() {
@@ -187,6 +195,151 @@ describe("Intermediate learning pilot", () => {
     expect(feedback).toHaveTextContent("los domingos");
     expect(feedback).not.toHaveTextContent("Suelo cocinar los domingos.");
     expect(feedback).not.toHaveTextContent("Model answer:");
+  });
+
+  it.each([
+    ["empty", []],
+    ["all-correct", [{ mark: "correct" as const, text: "Quiero" }]],
+    ["suggestion-less", [{ mark: "wrong" as const, text: "Quiero" }]],
+  ])("falls back to the full model answer for a %s word diff", async (_label, wordDiff) => {
+    fetchMock.mockResolvedValueOnce(
+      gradedResponse(
+        "wrong",
+        "Use the completed event requested by the prompt.",
+        "Ayer pedí sopa, pero me trajeron una ensalada.",
+        35,
+        wordDiff,
+      ),
+    );
+    renderPracticeWorkspace();
+    startRestaurantPractice();
+    await answerCurrentPrompt("Quiero sopa.");
+
+    const feedback = await screen.findByRole("status", { name: "Feedback: Keep working" });
+    expect(feedback).toHaveTextContent("Ayer pedí sopa, pero me trajeron una ensalada.");
+    expect(screen.queryByLabelText("Answer details")).not.toBeInTheDocument();
+  });
+
+  it("retries a retryable grading failure with the preserved answer and restores focus", async () => {
+    fetchMock
+      .mockResolvedValueOnce(
+        ungradedResponse(
+          true,
+          "I couldn’t grade that answer right now. Your response is still here—try again.",
+        ),
+      )
+      .mockResolvedValueOnce(
+        gradedResponse(
+          "correct",
+          "Correct.",
+          "Ayer pedí sopa, pero me trajeron una ensalada.",
+        ),
+      );
+    renderPracticeWorkspace();
+    startRestaurantPractice();
+    await answerCurrentPrompt("Ayer pedí sopa, pero me trajeron una ensalada.");
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Your response is still here");
+    expect(screen.getByLabelText("Type your answer")).toHaveValue(
+      "Ayer pedí sopa, pero me trajeron una ensalada.",
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Try grading again" }));
+
+    expect(await screen.findByRole("status", { name: "Feedback: Correct" })).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    await waitFor(() => expect(screen.getByLabelText("Type your answer")).toHaveFocus());
+  });
+
+  it("preserves a non-retryable answer without offering a misleading retry", async () => {
+    fetchMock.mockResolvedValueOnce(
+      ungradedResponse(
+        false,
+        "Automatic grading isn’t available for this answer. Your response is still here, but retrying won’t help right now.",
+      ),
+    );
+    renderPracticeWorkspace();
+    startRestaurantPractice();
+    await answerCurrentPrompt("Quiero sopa.");
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("retrying won’t help right now");
+    expect(screen.getByLabelText("Type your answer")).toHaveValue("Quiero sopa.");
+    expect(screen.queryByRole("button", { name: "Try grading again" })).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Completed practice cards: 0")).toBeInTheDocument();
+  });
+
+  it("treats a malformed grading response as retryable and preserves the answer", async () => {
+    fetchMock.mockResolvedValueOnce(new Response("not-json", { status: 502 }));
+    renderPracticeWorkspace();
+    startRestaurantPractice();
+    await answerCurrentPrompt("Quiero sopa.");
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("Your response is still here");
+    expect(screen.getByRole("button", { name: "Try grading again" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Type your answer")).toHaveValue("Quiero sopa.");
+  });
+
+  it("ignores an evaluation result after ending and restarting the session", async () => {
+    let resolveEvaluation: ((response: Response) => void) | undefined;
+    fetchMock.mockImplementationOnce(
+      () =>
+        new Promise<Response>((resolve) => {
+          resolveEvaluation = resolve;
+        }),
+    );
+    const { container } = renderPracticeWorkspace();
+    startRestaurantPractice();
+    await answerCurrentPrompt("Ayer pedí sopa, pero me trajeron una ensalada.");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "End practice and review this session" }),
+    );
+    startRestaurantPractice();
+    const restartedPrompt = currentPromptText(container);
+    await act(async () => {
+      resolveEvaluation?.(
+        gradedResponse(
+          "correct",
+          "Correct.",
+          "Ayer pedí sopa, pero me trajeron una ensalada.",
+        ),
+      );
+      await Promise.resolve();
+    });
+
+    expect(currentPromptText(container)).toBe(restartedPrompt);
+    expect(screen.getByLabelText("Completed practice cards: 0")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Your answer")).not.toBeInTheDocument();
+    expect(screen.queryByRole("status", { name: "Feedback: Correct" })).not.toBeInTheDocument();
+  });
+
+  it("ignores an evaluation result after applying a new session configuration", async () => {
+    let resolveEvaluation: ((response: Response) => void) | undefined;
+    fetchMock.mockImplementationOnce(
+      () =>
+        new Promise<Response>((resolve) => {
+          resolveEvaluation = resolve;
+        }),
+    );
+    renderPracticeWorkspace();
+    startRestaurantPractice();
+    await answerCurrentPrompt("Ayer pedí sopa, pero me trajeron una ensalada.");
+
+    fireEvent.click(screen.getByRole("button", { name: "Adjust practice settings" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Apply settings" }));
+    await act(async () => {
+      resolveEvaluation?.(
+        gradedResponse(
+          "correct",
+          "Correct.",
+          "Ayer pedí sopa, pero me trajeron una ensalada.",
+        ),
+      );
+      await Promise.resolve();
+    });
+
+    expect(screen.getByLabelText("Completed practice cards: 0")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Your answer")).not.toBeInTheDocument();
+    expect(screen.queryByRole("status", { name: "Feedback: Correct" })).not.toBeInTheDocument();
   });
 
   it("ends only when the learner chooses and summarizes the visit", async () => {

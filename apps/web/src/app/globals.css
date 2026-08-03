@@ -1991,7 +1991,15 @@ input {
 }
 
 .grading-error {
+  flex-wrap: wrap;
   color: var(--error);
+}
+
+.grading-error .grading-retry-button {
+  min-height: 36px;
+  margin-left: 0.25rem;
+  border-color: currentColor;
+  color: inherit;
 }
 
 @keyframes grading-spin {

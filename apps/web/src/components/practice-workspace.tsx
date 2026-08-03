@@ -51,6 +51,10 @@ type CollectionSessionSummary = {
   completedCards: number;
   correctRate: number;
 };
+type PracticeEvaluationFailure = {
+  message: string;
+  retryable: boolean;
+};
 const storageKey = "aidioma-intermediate-pilot-configurations:v1";
 const learnerStage = "intermediate" as const;
 
@@ -232,6 +236,19 @@ function normalizedFeedbackAnswer(value: string) {
   return value.trim().toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
 }
 
+function focusedWordDiff(evaluation: PracticeGradedEvaluation) {
+  if (evaluation.verdict === "correct") return [];
+
+  const modelAnswer = normalizedFeedbackAnswer(evaluation.modelAnswer);
+  return (evaluation.wordDiff ?? []).filter(
+    (entry) => {
+      if (entry.mark === "correct" || entry.suggestion === undefined) return false;
+      const suggestion = normalizedFeedbackAnswer(entry.suggestion);
+      return suggestion.length > 0 && suggestion !== modelAnswer;
+    },
+  );
+}
+
 function FeedbackMessage({
   announce,
   evaluation,
@@ -249,13 +266,8 @@ function FeedbackMessage({
   const showCoaching =
     evaluation.verdict !== "correct" &&
     evaluation.feedback.trim().toLocaleLowerCase() !== `${title.toLocaleLowerCase()}.`;
-  const wholeAnswerReplacement = evaluation.wordDiff?.some(
-    (entry) =>
-      entry.suggestion !== undefined &&
-      normalizedFeedbackAnswer(entry.suggestion) === normalizedFeedbackAnswer(evaluation.modelAnswer),
-  );
-  const showWordDiff = evaluation.verdict !== "correct" && !!evaluation.wordDiff && !wholeAnswerReplacement;
-  const showReferenceAnswer = evaluation.verdict !== "correct" && !showWordDiff;
+  const correctionDiff = focusedWordDiff(evaluation);
+  const showReferenceAnswer = evaluation.verdict !== "correct" && correctionDiff.length === 0;
 
   return (
     <article
@@ -271,9 +283,7 @@ function FeedbackMessage({
         <strong>{title}</strong>
       </div>
       {showCoaching ? <p>{evaluation.feedback}</p> : null}
-      {showWordDiff && evaluation.wordDiff ? (
-        <WordDiff entries={evaluation.wordDiff} />
-      ) : null}
+      {correctionDiff.length > 0 ? <WordDiff entries={correctionDiff} /> : null}
       {showReferenceAnswer ? (
         <p className="feedback-reference-answer">{evaluation.modelAnswer}</p>
       ) : null}
@@ -285,15 +295,28 @@ async function gradeAnswer(
   prompt: PracticePrompt,
   direction: Exclude<PracticeDirection, "both">,
   userInput: string,
+  signal: AbortSignal,
 ) {
   const response = await fetch("/api/practice/evaluate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ itemRef: prompt.id, direction, userInput }),
+    signal,
   });
-  const body = (await response.json()) as unknown;
+  let body: unknown;
+  try {
+    body = (await response.json()) as unknown;
+  } catch {
+    throw new Error(
+      "I couldn’t grade that answer right now. Your response is still here—try again.",
+    );
+  }
   const parsed = PracticeEvaluationResponseSchema.safeParse(body);
-  if (!parsed.success) throw new Error("I couldn’t grade that answer right now. Please try again.");
+  if (!parsed.success) {
+    throw new Error(
+      "I couldn’t grade that answer right now. Your response is still here—try again.",
+    );
+  }
   return parsed.data;
 }
 
@@ -321,9 +344,14 @@ export function PracticeWorkspace({
   const [turns, setTurns] = useState<PracticeTurn[]>([]);
   const [typedAnswer, setTypedAnswer] = useState("");
   const [pendingAnswer, setPendingAnswer] = useState<string | null>(null);
-  const [evaluationError, setEvaluationError] = useState<string | null>(null);
+  const [evaluationFailure, setEvaluationFailure] = useState<PracticeEvaluationFailure | null>(
+    null,
+  );
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [flashcardRevealed, setFlashcardRevealed] = useState(false);
+  const answerInputRef = useRef<HTMLInputElement>(null);
+  const evaluationAttemptRef = useRef(0);
+  const evaluationControllerRef = useRef<AbortController | null>(null);
   const feedEndRef = useRef<HTMLDivElement>(null);
   const lastSessionFirstPromptIdsRef = useRef<Record<string, string>>({});
 
@@ -334,6 +362,14 @@ export function PracticeWorkspace({
       // Remembering these display preferences is optional.
     }
   }, [configurations]);
+
+  useEffect(
+    () => () => {
+      evaluationAttemptRef.current += 1;
+      evaluationControllerRef.current?.abort();
+    },
+    [],
+  );
 
   useEffect(() => {
     if (view !== "session") return;
@@ -346,7 +382,7 @@ export function PracticeWorkspace({
       });
     });
     return () => window.cancelAnimationFrame(frame);
-  }, [evaluationError, isEvaluating, turns.length, view]);
+  }, [evaluationFailure, isEvaluating, turns.length, view]);
 
   const selectedSet =
     practiceSetFixtures.find((set) => set.id === selectedSetId) ?? practiceSetFixtures[0];
@@ -365,7 +401,15 @@ export function PracticeWorkspace({
     setPracticeOptionsOpen(true);
   }
 
+  function invalidateEvaluation() {
+    evaluationAttemptRef.current += 1;
+    evaluationControllerRef.current?.abort();
+    evaluationControllerRef.current = null;
+    setIsEvaluating(false);
+  }
+
   function startPractice(set: PracticeSetFixture, configuration: PracticeSetConfiguration) {
+    invalidateEvaluation();
     const orderSeed = createSessionSeed() >>> 0;
     const avoidFirstPromptId = lastSessionFirstPromptIdsRef.current[set.id];
     const matchingPrompts = promptsForConfiguration(set, configuration, learnerStage);
@@ -388,19 +432,22 @@ export function PracticeWorkspace({
     setTurns([]);
     setTypedAnswer("");
     setPendingAnswer(null);
-    setEvaluationError(null);
+    setEvaluationFailure(null);
     setFlashcardRevealed(false);
     setPracticeOptionsOpen(false);
     setView("session");
   }
 
   function applyPracticeSettings() {
+    invalidateEvaluation();
     setSessionSnapshot((current) => ({
       avoidFirstPromptId: current?.avoidFirstPromptId,
       configuration: { ...configurations[selectedSet.id] },
       orderSeed: current?.orderSeed ?? createSessionSeed(),
       setId: selectedSet.id,
     }));
+    setPendingAnswer(null);
+    setEvaluationFailure(null);
     setPracticeOptionsOpen(false);
   }
 
@@ -411,9 +458,17 @@ export function PracticeWorkspace({
   }
 
   function returnToCatalog() {
+    invalidateEvaluation();
     setPracticeOptionsOpen(false);
     setSessionSnapshot(null);
     setView("catalog");
+  }
+
+  function endPractice() {
+    invalidateEvaluation();
+    setPendingAnswer(null);
+    setEvaluationFailure(null);
+    setView(turns.length > 0 ? "recap" : "catalog");
   }
 
   if (view === "catalog") {
@@ -556,12 +611,21 @@ export function PracticeWorkspace({
     if (!answer || isEvaluating) return;
 
     setPendingAnswer(answer);
-    setEvaluationError(null);
+    setEvaluationFailure(null);
     setIsEvaluating(true);
+    const attempt = evaluationAttemptRef.current + 1;
+    evaluationAttemptRef.current = attempt;
+    evaluationControllerRef.current?.abort();
+    const controller = new AbortController();
+    evaluationControllerRef.current = controller;
     try {
-      const evaluation = await gradeAnswer(prompt, resolvedDirection, answer);
+      const evaluation = await gradeAnswer(prompt, resolvedDirection, answer, controller.signal);
+      if (evaluationAttemptRef.current !== attempt) return;
       if (evaluation.status === "ungraded") {
-        setEvaluationError(evaluation.message);
+        setEvaluationFailure({
+          message: evaluation.message,
+          retryable: evaluation.retryable,
+        });
         return;
       }
 
@@ -580,13 +644,20 @@ export function PracticeWorkspace({
       setTypedAnswer("");
       setPendingAnswer(null);
     } catch (error) {
-      setEvaluationError(
-        error instanceof Error
-          ? error.message
-          : "I couldn’t grade that answer right now. Please try again.",
-      );
+      if (evaluationAttemptRef.current !== attempt) return;
+      setEvaluationFailure({
+        message:
+          error instanceof Error
+            ? error.message
+            : "I couldn’t grade that answer right now. Your response is still here—try again.",
+        retryable: true,
+      });
     } finally {
-      setIsEvaluating(false);
+      if (evaluationAttemptRef.current === attempt) {
+        evaluationControllerRef.current = null;
+        setIsEvaluating(false);
+        window.requestAnimationFrame(() => answerInputRef.current?.focus());
+      }
     }
   }
 
@@ -594,7 +665,7 @@ export function PracticeWorkspace({
     <div className="practice-workspace">
       <PrototypeContextHeader
         backLabel="End practice and review this session"
-        onBack={() => setView(turns.length > 0 ? "recap" : "catalog")}
+        onBack={endPractice}
         title={sessionSet.title}
         trailing={
           <>
@@ -667,9 +738,19 @@ export function PracticeWorkspace({
                   <LoaderCircle aria-hidden="true" /> Checking your answer…
                 </div>
               ) : null}
-              {evaluationError ? (
+              {evaluationFailure ? (
                 <div aria-live="polite" className="practice-message grading-error" role="alert">
-                  <CircleAlert aria-hidden="true" /> {evaluationError}
+                  <CircleAlert aria-hidden="true" />
+                  <span>{evaluationFailure.message}</span>
+                  {evaluationFailure.retryable ? (
+                    <Button
+                      className="grading-retry-button"
+                      onClick={() => void submitAnswer()}
+                      variant="quiet"
+                    >
+                      Try grading again
+                    </Button>
+                  ) : null}
                 </div>
               ) : null}
             </section>
@@ -706,13 +787,13 @@ export function PracticeWorkspace({
             Type your answer
           </label>
           <input
-            aria-describedby={evaluationError ? "practice-evaluation-error" : undefined}
+            aria-describedby={evaluationFailure ? "practice-evaluation-error" : undefined}
             disabled={isEvaluating}
             id="practice-set-answer"
             onChange={(event) => {
               setTypedAnswer(event.target.value);
-              if (evaluationError) {
-                setEvaluationError(null);
+              if (evaluationFailure) {
+                setEvaluationFailure(null);
                 setPendingAnswer(null);
               }
             }}
@@ -720,10 +801,11 @@ export function PracticeWorkspace({
             spellCheck="false"
             type="text"
             value={typedAnswer}
+            ref={answerInputRef}
           />
-          {evaluationError ? (
+          {evaluationFailure ? (
             <span className="visually-hidden" id="practice-evaluation-error">
-              {evaluationError}
+              {evaluationFailure.message}
             </span>
           ) : null}
           <IconButton aria-label="Send answer" disabled={!typedAnswer.trim() || isEvaluating} type="submit">
