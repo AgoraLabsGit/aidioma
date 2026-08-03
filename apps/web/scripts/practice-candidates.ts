@@ -29,6 +29,10 @@ import {
   loadPromotedPrototypePrompts,
 } from "../src/lib/practice-sets/promoted-practice-prompts";
 import { practiceSetFixtures } from "../src/lib/practice-sets/prototype-fixtures";
+import {
+  formatPracticeSchemaDiagnostic,
+  summarizePracticeSchemaFailure,
+} from "../src/lib/practice-sets/candidate-schema-diagnostic";
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = resolve(SCRIPT_DIR, "..");
@@ -113,13 +117,17 @@ function gatewayGenerator(apiKey: string): GenerateCandidateBatch {
         providerOptions: { gateway: { tags: request.tags } },
       });
     } catch (error) {
-      const category = NoObjectGeneratedError.isInstance(error)
-        ? "schema"
-        : APICallError.isInstance(error)
-          ? `provider-${error.statusCode ?? "unknown"}`
-          : error instanceof Error && /timeout/iu.test(error.name)
-            ? "timeout"
-            : "provider";
+      if (NoObjectGeneratedError.isInstance(error)) {
+        const diagnostic = formatPracticeSchemaDiagnostic(
+          summarizePracticeSchemaFailure(error),
+        );
+        throw new Error(`Practice candidate provider request failed (schema${diagnostic})`);
+      }
+      const category = APICallError.isInstance(error)
+        ? `provider-${error.statusCode ?? "unknown"}`
+        : error instanceof Error && /timeout/iu.test(error.name)
+          ? "timeout"
+          : "provider";
       throw new Error(`Practice candidate provider request failed (${category})`);
     }
     return {
