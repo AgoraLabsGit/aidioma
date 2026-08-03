@@ -29,6 +29,10 @@ import {
   type PracticeSetFacet,
   type PracticeSetFixture,
 } from "@/lib/practice-sets/prototype-fixtures";
+import {
+  practiceUnitsForSession,
+  randomSessionOrderSeed,
+} from "@/lib/practice-sets/session-order";
 
 import { PracticeSetOptionsPanel } from "./practice-set-options-panel";
 import { Button, Card, IconButton } from "./primitives";
@@ -47,11 +51,6 @@ type CollectionSessionSummary = {
   completedCards: number;
   correctRate: number;
 };
-type PracticeUnit = {
-  direction: Exclude<PracticeDirection, "both">;
-  prompt: PracticePrompt;
-};
-
 const storageKey = "aidioma-intermediate-pilot-configurations:v1";
 const learnerStage = "intermediate" as const;
 
@@ -90,43 +89,6 @@ function summarizeSession(turns: PracticeTurn[]): CollectionSessionSummary | nul
       (turns.filter((turn) => turn.evaluation.verdict === "correct").length / turns.length) * 100,
     ),
   };
-}
-
-function stableOrderValue(value: string) {
-  return Array.from(value).reduce((hash, character) => (hash * 31 + character.codePointAt(0)!) >>> 0, 0);
-}
-
-function practiceUnitsForSession(
-  prompts: PracticePrompt[],
-  configuration: PracticeSetConfiguration,
-  sessionOrderSeed: number,
-): PracticeUnit[] {
-  const [firstPrompt, ...remainingPrompts] = prompts;
-  const orderedPrompts = configuration.shuffle
-    ? [
-        firstPrompt,
-        ...remainingPrompts.sort(
-          (left, right) =>
-            stableOrderValue(`${left.id}:${sessionOrderSeed}`) -
-            stableOrderValue(`${right.id}:${sessionOrderSeed}`),
-        ),
-      ]
-    : prompts;
-  const availablePrompts = orderedPrompts.filter(
-    (prompt): prompt is PracticePrompt => prompt !== undefined,
-  );
-
-  if (configuration.direction !== "both") {
-    const direction: Exclude<PracticeDirection, "both"> = configuration.direction;
-    return availablePrompts.map((prompt) => ({ prompt, direction }));
-  }
-
-  return [0, 1].flatMap((directionRound) =>
-    availablePrompts.map((prompt, promptPosition) => ({
-      prompt,
-      direction: (promptPosition + directionRound) % 2 === 0 ? "en-es" : "es-en",
-    })),
-  );
 }
 
 function FilterButton({
@@ -335,7 +297,11 @@ async function gradeAnswer(
   return parsed.data;
 }
 
-export function PracticeWorkspace() {
+export function PracticeWorkspace({
+  createSessionSeed = randomSessionOrderSeed,
+}: {
+  createSessionSeed?: () => number;
+} = {}) {
   const [view, setView] = useState<PracticeView>("catalog");
   const [practiceOptionsOpen, setPracticeOptionsOpen] = useState(false);
   const [catalogFilter, setCatalogFilter] = useState<CatalogFilter>("All");
@@ -346,18 +312,20 @@ export function PracticeWorkspace() {
   >({});
   const [configurations, setConfigurations] = useState<Configurations>(rememberedConfigurations);
   const [sessionSnapshot, setSessionSnapshot] = useState<{
+    avoidFirstPromptId?: string;
     configuration: PracticeSetConfiguration;
+    orderSeed: number;
     setId: string;
   } | null>(null);
   const [promptIndex, setPromptIndex] = useState(0);
   const [turns, setTurns] = useState<PracticeTurn[]>([]);
   const [typedAnswer, setTypedAnswer] = useState("");
   const [pendingAnswer, setPendingAnswer] = useState<string | null>(null);
-  const [sessionOrderSeed, setSessionOrderSeed] = useState(0);
   const [evaluationError, setEvaluationError] = useState<string | null>(null);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [flashcardRevealed, setFlashcardRevealed] = useState(false);
   const feedEndRef = useRef<HTMLDivElement>(null);
+  const lastSessionFirstPromptIdsRef = useRef<Record<string, string>>({});
 
   useEffect(() => {
     try {
@@ -398,10 +366,25 @@ export function PracticeWorkspace() {
   }
 
   function startPractice(set: PracticeSetFixture, configuration: PracticeSetConfiguration) {
+    const orderSeed = createSessionSeed() >>> 0;
+    const avoidFirstPromptId = lastSessionFirstPromptIdsRef.current[set.id];
+    const matchingPrompts = promptsForConfiguration(set, configuration, learnerStage);
+    const firstPromptId = practiceUnitsForSession(
+      matchingPrompts,
+      configuration,
+      orderSeed,
+      avoidFirstPromptId,
+    )[0]?.prompt.id;
+
+    if (firstPromptId) lastSessionFirstPromptIdsRef.current[set.id] = firstPromptId;
     setSelectedSetId(set.id);
-    setSessionSnapshot({ configuration: { ...configuration }, setId: set.id });
+    setSessionSnapshot({
+      avoidFirstPromptId,
+      configuration: { ...configuration },
+      orderSeed,
+      setId: set.id,
+    });
     setPromptIndex(0);
-    setSessionOrderSeed((current) => current + 1);
     setTurns([]);
     setTypedAnswer("");
     setPendingAnswer(null);
@@ -412,10 +395,12 @@ export function PracticeWorkspace() {
   }
 
   function applyPracticeSettings() {
-    setSessionSnapshot({
+    setSessionSnapshot((current) => ({
+      avoidFirstPromptId: current?.avoidFirstPromptId,
       configuration: { ...configurations[selectedSet.id] },
+      orderSeed: current?.orderSeed ?? createSessionSeed(),
       setId: selectedSet.id,
-    });
+    }));
     setPracticeOptionsOpen(false);
   }
 
@@ -492,6 +477,7 @@ export function PracticeWorkspace() {
 
   const snapshot = sessionSnapshot ?? {
     configuration: selectedConfiguration,
+    orderSeed: 0,
     setId: selectedSet.id,
   };
   const sessionSet =
@@ -503,7 +489,8 @@ export function PracticeWorkspace() {
   const practiceUnits = practiceUnitsForSession(
     matchingPrompts,
     sessionConfiguration,
-    sessionOrderSeed,
+    snapshot.orderSeed,
+    snapshot.avoidFirstPromptId,
   );
   const practiceUnit = practiceUnits[promptIndex % practiceUnits.length];
   const prompt = practiceUnit.prompt;

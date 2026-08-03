@@ -2,6 +2,8 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { practiceSetFixtures } from "@/lib/practice-sets/prototype-fixtures";
+
 import { IntermediateLessonPilot } from "./intermediate-lesson-pilot";
 import { LessonPracticePreview } from "./lesson-practice-preview";
 import { PracticeWorkspace } from "./practice-workspace";
@@ -31,6 +33,15 @@ function gradedResponse(
 
 function startRestaurantPractice() {
   fireEvent.click(screen.getByRole("button", { name: "Start Restaurant Spanish" }));
+}
+
+function renderPracticeWorkspace(sessionSeed = 42) {
+  return render(<PracticeWorkspace createSessionSeed={() => sessionSeed} />);
+}
+
+function currentPromptText(container: HTMLElement) {
+  const headings = container.querySelectorAll(".prompt-message h2");
+  return headings.item(headings.length - 1).textContent;
 }
 
 async function answerCurrentPrompt(answer: string) {
@@ -87,7 +98,7 @@ describe("Intermediate learning pilot", () => {
   });
 
   it("shows four intermediate collections without development chrome", () => {
-    render(<PracticeWorkspace />);
+    renderPracticeWorkspace();
 
     expect(screen.getByRole("heading", { name: "Practice" })).toBeInTheDocument();
     expect(screen.getByText("4 collections")).toBeInTheDocument();
@@ -102,7 +113,7 @@ describe("Intermediate learning pilot", () => {
   });
 
   it("uses icon-only collection actions and no redundant start label", () => {
-    render(<PracticeWorkspace />);
+    renderPracticeWorkspace();
 
     expect(screen.getByRole("button", { name: "Save Restaurant Spanish" })).toHaveTextContent("");
     expect(
@@ -112,14 +123,10 @@ describe("Intermediate learning pilot", () => {
   });
 
   it("starts intermediate Restaurant practice without a fixed item cap", () => {
-    render(<PracticeWorkspace />);
+    const { container } = renderPracticeWorkspace();
     startRestaurantPractice();
 
-    expect(
-      screen.getByRole("heading", {
-        name: "Yesterday I ordered soup, but they brought me a salad.",
-      }),
-    ).toBeInTheDocument();
+    expect(currentPromptText(container)).toBeTruthy();
     expect(screen.getByLabelText("Completed practice cards: 0")).toHaveTextContent("0");
     expect(screen.queryByLabelText("Active practice settings")).not.toBeInTheDocument();
     expect(screen.queryByText("Recommended mix")).not.toBeInTheDocument();
@@ -128,22 +135,24 @@ describe("Intermediate learning pilot", () => {
   });
 
   it("sends only the prompt identity, direction, and learner answer", async () => {
-    render(<PracticeWorkspace />);
+    renderPracticeWorkspace();
     startRestaurantPractice();
     await answerCurrentPrompt("Quiero sopa, no ensalada.");
 
     await screen.findByRole("status", { name: "Feedback: Almost" });
     const [, request] = fetchMock.mock.calls[0];
-    expect(JSON.parse(String(request?.body))).toEqual({
-      itemRef: "restaurant-past-mistake",
-      direction: "en-es",
-      userInput: "Quiero sopa, no ensalada.",
-    });
+    const requestBody = JSON.parse(String(request?.body)) as Record<string, unknown>;
+    const restaurantPromptIds = practiceSetFixtures[0].prompts.map((prompt) => prompt.id);
+    expect(Object.keys(requestBody).sort()).toEqual(["direction", "itemRef", "userInput"]);
+    expect(restaurantPromptIds).toContain(requestBody.itemRef);
+    expect(["en-es", "es-en"]).toContain(requestBody.direction);
+    expect(requestBody.userInput).toBe("Quiero sopa, no ensalada.");
   });
 
   it("appends feedback and the next prompt while keeping the composer", async () => {
-    render(<PracticeWorkspace />);
+    const { container } = renderPracticeWorkspace();
     startRestaurantPractice();
+    const firstPrompt = currentPromptText(container);
     await answerCurrentPrompt("Ayer pedí sopa, pero me trajeron una ensalada.");
 
     expect(await screen.findByRole("status", { name: "Feedback: Correct" })).toHaveTextContent(
@@ -152,9 +161,7 @@ describe("Intermediate learning pilot", () => {
     expect(screen.getByLabelText("Your answer")).toHaveTextContent(
       "Ayer pedí sopa, pero me trajeron una ensalada.",
     );
-    expect(
-      screen.getByRole("heading", { name: "Aunque la comida estuvo buena, el servicio fue lento." }),
-    ).toBeInTheDocument();
+    expect(currentPromptText(container)).not.toBe(firstPrompt);
     expect(screen.getByLabelText("Type your answer")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Next practice" })).not.toBeInTheDocument();
     expect(
@@ -164,8 +171,12 @@ describe("Intermediate learning pilot", () => {
   });
 
   it("shows live-grader feedback for a plausible non-matching answer", async () => {
-    render(<PracticeWorkspace />);
-    fireEvent.click(screen.getByRole("button", { name: "Start Time, Habits, and Plans" }));
+    renderPracticeWorkspace();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Adjust Time, Habits, and Plans settings" }),
+    );
+    fireEvent.click(screen.getByRole("checkbox", { name: /Vary the order/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Start practice" }));
     await answerCurrentPrompt("Suelo cocinar en domingos.");
 
     const feedback = await screen.findByRole("status", { name: "Feedback: Almost" });
@@ -179,7 +190,7 @@ describe("Intermediate learning pilot", () => {
   });
 
   it("ends only when the learner chooses and summarizes the visit", async () => {
-    render(<PracticeWorkspace />);
+    renderPracticeWorkspace();
     startRestaurantPractice();
     await answerCurrentPrompt("Ayer pedí sopa, pero me trajeron una ensalada.");
     await screen.findByRole("status", { name: "Feedback: Correct" });
@@ -190,11 +201,11 @@ describe("Intermediate learning pilot", () => {
 
     expect(screen.getByRole("heading", { name: "Practice recap" })).toBeInTheDocument();
     expect(screen.getByText("You answered 1 prompt.")).toBeInTheDocument();
-    expect(screen.getByText("Recount a completed restaurant mistake")).toBeInTheDocument();
+    expect(screen.getAllByRole("listitem")).toHaveLength(1);
   });
 
   it("shows the latest session score on the collection row for this visit", async () => {
-    render(<PracticeWorkspace />);
+    renderPracticeWorkspace();
     startRestaurantPractice();
     await answerCurrentPrompt("Ayer pedí sopa, pero me trajeron una ensalada.");
     await screen.findByRole("status", { name: "Feedback: Correct" });
@@ -210,7 +221,7 @@ describe("Intermediate learning pilot", () => {
   });
 
   it("counts a learner-facing correct verdict even when its numeric score is below 90", async () => {
-    render(<PracticeWorkspace />);
+    renderPracticeWorkspace();
     startRestaurantPractice();
     await answerCurrentPrompt("Ayer pedí sopa, pero me trajeron ensalada.");
 
@@ -218,20 +229,38 @@ describe("Intermediate learning pilot", () => {
     expect(screen.getByLabelText("Session score: 100% correct")).toBeInTheDocument();
   });
 
-  it("serves each prompt-direction unit before repeating a prompt", async () => {
-    render(<PracticeWorkspace />);
-    fireEvent.click(screen.getByRole("button", { name: "Start Time, Habits, and Plans" }));
-    await answerCurrentPrompt("Suelo cocinar los domingos.");
+  it("does not start Practice again with the same shuffled prompt", async () => {
+    const { container } = renderPracticeWorkspace(42);
+    startRestaurantPractice();
+    const firstSessionPrompt = currentPromptText(container);
+    await answerCurrentPrompt("Ayer pedí sopa, pero me trajeron una ensalada.");
     await screen.findByRole("status", { name: "Feedback: Correct" });
-    await answerCurrentPrompt("I am about to leave.");
 
-    expect(
-      await screen.findByRole("heading", { name: "Suelo cocinar los domingos." }),
-    ).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", { name: "End practice and review this session" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Practice again" }));
+
+    expect(currentPromptText(container)).not.toBe(firstSessionPrompt);
+  });
+
+  it("keeps repeated fixed-order sessions fixed", () => {
+    const { container } = renderPracticeWorkspace(42);
+    fireEvent.click(screen.getByRole("button", { name: "Adjust Restaurant Spanish settings" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /Vary the order/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Start practice" }));
+    const firstSessionPrompt = currentPromptText(container);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "End practice and review this session" }),
+    );
+    startRestaurantPractice();
+
+    expect(currentPromptText(container)).toBe(firstSessionPrompt);
   });
 
   it("offers optional focus controls without exposing unavailable work", async () => {
-    render(<PracticeWorkspace />);
+    const { container } = renderPracticeWorkspace();
     fireEvent.click(screen.getByRole("button", { name: "Adjust Restaurant Spanish settings" }));
 
     expect(await screen.findByRole("dialog", { name: "Practice settings" })).toBeInTheDocument();
@@ -241,13 +270,11 @@ describe("Intermediate learning pilot", () => {
     fireEvent.click(screen.getByRole("button", { name: "Start practice" }));
 
     expect(screen.getByLabelText("Active practice settings")).toHaveTextContent("Time phrases");
-    expect(
-      screen.getByRole("heading", { name: "I just finished. The bill, please." }),
-    ).toBeInTheDocument();
+    expect(currentPromptText(container)).toBeTruthy();
   });
 
   it("keeps Saved as lightweight local organization", () => {
-    render(<PracticeWorkspace />);
+    renderPracticeWorkspace();
 
     fireEvent.click(screen.getByRole("button", { name: "Save Restaurant Spanish" }));
     fireEvent.click(screen.getByRole("button", { name: "Saved" }));
@@ -277,7 +304,7 @@ describe("Intermediate learning pilot", () => {
   });
 
   it("keeps the lesson and collection experiences accessible", async () => {
-    const practice = render(<PracticeWorkspace />);
+    const practice = renderPracticeWorkspace();
     expect(await axe(practice.container)).toHaveNoViolations();
     practice.unmount();
 

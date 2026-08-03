@@ -291,7 +291,11 @@ async function run() {
         screenshotCount += 1;
         await assertAccessible(page, `saved ${label}`);
         await assertNoHorizontalOverflow(page, `saved ${label}`);
-        await page.getByRole("button", { name: "Start Restaurant Spanish", exact: true }).click();
+        await page
+          .getByRole("button", { name: "Adjust Restaurant Spanish settings", exact: true })
+          .click();
+        await page.getByRole("checkbox", { name: /Vary the order/ }).uncheck();
+        await page.getByRole("button", { name: "Start practice", exact: true }).click();
         await page
           .getByRole("button", { name: "End practice and review this session", exact: true })
           .click();
