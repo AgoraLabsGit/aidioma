@@ -2,7 +2,7 @@
 title: Evaluation — secure comparison-first grading
 type: area-spec
 status: active
-updated: 2026-07-30
+updated: 2026-08-03
 ---
 
 # Evaluation — secure comparison-first grading
@@ -88,7 +88,9 @@ explanation after the choice; typed modes use mode-smart help from the module sp
   browser cannot smuggle answers, thresholds, tags, model choices, or `correctIndex` across the boundary.
 - AI timeout/transient-provider/schema failure after comparison misses → retryable **ungraded**;
   deterministic upstream 4xx is non-retryable except 408/429. Preserve input and never fabricate
-  a score, verdict, tags, or feedback.
+  a score, verdict, tags, or feedback. Practice offers retry only for retryable results; an ungraded
+  attempt does not advance the queue, completed count, or score. Editing clears the failure, and
+  results from superseded attempts or an ended/restarted session are ignored.
 - Comparison success stands even if the AI provider is unavailable.
 - After authentication and request validation, the app checks the Vercel Firewall SDK with the
   server-derived `usr_` hash, then applies the separate local per-instance burst/concurrency/

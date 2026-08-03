@@ -11,12 +11,12 @@ what the live product has proved.
 |---|---|
 | Product-wide learner criteria | [Core product criteria](Specs/Features/core-product-criteria.md) |
 | Accepted Practice decisions and prototype boundaries | [Intermediate learning pilot](Prototypes/intermediate-learning-pilot.md) |
-| Current work and continuity | [Handoff 026](Handoffs/026-2026-08-03-clean-main-practice-next.md) |
+| Current work and continuity | [Handoff 027](Handoffs/027-2026-08-03-practice-learning-loop.md) |
 | This map | `Docs/INDEX.md` |
 
-The Practice Page UI/UX and Practice-serving engine specs do not exist yet. Create them only after
-their behavior has been exercised and accepted in the live application. New specs should state what
-the learner sees, what must be true, what must not happen, and how the prototype proves it.
+Grounded Practice behavior is recorded in the retained Practice Sets, evaluation, and content-pipeline
+specs after live exercise. Dedicated Practice Page UI/UX and serving-engine specs still do not exist;
+create them only when their accepted scope needs a separate authoritative home.
 
 ## Technical-reference shelf
 

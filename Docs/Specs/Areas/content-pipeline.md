@@ -2,7 +2,7 @@
 title: Content pipeline — app-facing contract
 type: area-spec
 status: active
-updated: 2026-07-29
+updated: 2026-08-03
 ---
 
 # Content pipeline — app-facing contract
@@ -56,6 +56,18 @@ any mutation. Preview is explicit; Production also requires the documented exact
 Curated sets use the same validate-then-idempotent-seed boundary into `practice_sets` and
 `practice_set_targets`; JSON remains canonical. Private generated sets do not enter `content/` and
 must pass the generation gate in the Practice Sets spec before persistence.
+
+## Prototype candidate bench
+
+The local Restaurant candidate bench is operator-only pressure-test tooling, not the A9 private-set
+pipeline. It reuses shared accepted-answer, GrammarTag, prompt, and numeric-difficulty contracts;
+uses strict provider/run schemas, bounded batches, inventory hashes, and resumable checkpoints; and
+stops on schema or semantic checkpoint failure before another model call. Promotion requires
+deterministic validation, one human decision per candidate, warning acknowledgement, reviewed
+coverage claims, and a different-model independent critic bound to the raw and reviewed hashes.
+Promoted prototype JSON and its tracked review/critic sidecar are hash-bound. They remain fixture
+input: not `content/`, not canonical curriculum, not public content, and not an ADR-0009 launch pass.
+The original-only brief forbids generated provenance rather than asserting an external source.
 
 ## Deferred pipeline work
 
