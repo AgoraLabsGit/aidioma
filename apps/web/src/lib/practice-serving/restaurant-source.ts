@@ -10,6 +10,10 @@ import {
 } from "../practice-sets/prototype-fixtures";
 import restaurantPromptsJson from "../practice-sets/prototype-content/restaurant-prompts.json";
 import { loadPromotedPrototypePrompts } from "../practice-sets/promoted-practice-prompts";
+import {
+  savedPracticeReferenceKey,
+  type SavedPracticeReference,
+} from "../practice-sets/saved-practice-references";
 
 export const RESTAURANT_COLLECTION_ID = "intermediate-restaurant" as const;
 export const RESTAURANT_COLLECTION_VERSION = "reviewed-prototype-v1" as const;
@@ -89,6 +93,11 @@ export type ResolvedPracticeSource = {
     collectionId: typeof RESTAURANT_COLLECTION_ID;
     collectionVersion: typeof RESTAURANT_COLLECTION_VERSION;
   };
+  savedScope?: {
+    requestedReferenceCount: number;
+    unavailableReferenceCount: number;
+    validReferenceCount: number;
+  };
 };
 
 export type PracticeSourceUnavailableReason =
@@ -104,6 +113,10 @@ export type ResolvePracticeSourceResult =
       request: PracticeServingSourceRequest;
       status: "unavailable";
     };
+
+export type SavedRestaurantPracticeSourceRequest = PracticeServingSourceRequest & {
+  references: readonly SavedPracticeReference[];
+};
 
 type RestaurantPublicationValidation =
   | {
@@ -296,6 +309,52 @@ export function resolveRestaurantPracticeSource(
         collectionId: RESTAURANT_COLLECTION_ID,
         collectionVersion: RESTAURANT_COLLECTION_VERSION,
       },
+    },
+  };
+}
+
+/**
+ * Resolves a learner-frozen Saved Restaurant scope against the same pinned reviewed source as the
+ * collection journey. Missing references stay missing; they are never replaced by other Restaurant
+ * prompts. Non-Restaurant Saved material is intentionally handled by its existing path.
+ */
+export function resolveSavedRestaurantPracticeSource(
+  request: SavedRestaurantPracticeSourceRequest,
+): ResolvePracticeSourceResult {
+  const { references, ...sourceRequest } = request;
+  const uniqueReferences = [...new Map(
+    references.map((reference) => [savedPracticeReferenceKey(reference), reference]),
+  ).values()];
+  const sourceResult = resolveRestaurantPracticeSource(sourceRequest);
+  if (sourceResult.status === "unavailable") return sourceResult;
+
+  const requestedRestaurantIds = new Set(
+    uniqueReferences
+      .filter((reference) => reference.collectionId === RESTAURANT_COLLECTION_ID)
+      .map((reference) => reference.promptId),
+  );
+  const candidates = sourceResult.source.candidates.filter((candidate) =>
+    requestedRestaurantIds.has(candidate.itemId),
+  );
+  const validIds = new Set(candidates.map((candidate) => candidate.itemId));
+  const prompts = sourceResult.source.prompts.filter((prompt) => validIds.has(prompt.id));
+  const savedScope = {
+    requestedReferenceCount: uniqueReferences.length,
+    unavailableReferenceCount: uniqueReferences.length - validIds.size,
+    validReferenceCount: validIds.size,
+  };
+
+  if (candidates.length === 0) {
+    return unavailable(sourceRequest, "no_eligible_reviewed_items");
+  }
+
+  return {
+    status: "ready",
+    source: {
+      ...sourceResult.source,
+      candidates,
+      prompts,
+      savedScope,
     },
   };
 }

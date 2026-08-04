@@ -2,17 +2,19 @@
 id: PRACTICE-PAGE-001
 title: Practice page and learner controls
 area: practice
-status: draft
+status: planned
 implementation: mixed
-founder_review: required
+founder_review: approved
 updated: 2026-08-04
 ---
 
 # Practice page and learner controls
 
-This is the planning draft for `PRACTICE-PAGE-001`. It incorporates the founder's requested catalog
-changes, an audit of current executable behavior, and an independent three-perspective design panel.
-It is not implementation authority until founder approval moves the work item to `planned`.
+This is the founder-approved planning contract for the immediate catalog portion of
+`PRACTICE-PAGE-001`. It incorporates the founder's requested changes, an audit of current executable
+behavior, an independent three-perspective design panel, and a fresh adversarial audit. Accepted
+catalog decisions are implementation authority for a future `/feat`; broader deferred Practice-page
+questions remain unapproved.
 
 The founder rejected the Settings design rendered on 2026-08-03 as the target experience. This
 catalog plan does not approve that panel or expose additional engine controls.
@@ -169,10 +171,10 @@ There is a roadmap for permanent collection evidence, but no approved formula or
 5. `/plan` then `/feat DATA-PERSISTENCE-001` may add the minimum authenticated session, evaluation,
    evidence, and rebuildable rollup storage required by the approved product behavior.
 
-The proposed slim left perimeter rail is a candidate presentation pattern pending founder approval
-and the dependent progress work. It must represent exactly one durable collection-progress concept,
-not a blend of coverage, accuracy, recency, and review urgency. `PROGRESS-SAVED-001` owns whether its
-geometry is segmented, continuous, or categorical after defining a truthful scale and scope.
+The slim left perimeter rail is an accepted future presentation pattern, but it remains gated on the
+dependent progress work. It must represent exactly one durable collection-progress concept, not a
+blend of coverage, accuracy, recency, and review urgency. `PROGRESS-SAVED-001` owns its states,
+geometry, colors, truthful scale, and scope.
 
 Candidate state vocabulary for `PROGRESS-SAVED-001` review is `Not started`, `In progress`,
 `Building confidence`, and `Strong evidence`. `Review suggested` is orthogonal and must not share the
@@ -300,24 +302,21 @@ and expose only the approved progress filters and recent ordering.
 - Duplicate/retried submissions cannot double-count, and same-visit correction cannot alone advance a
   durable confirmation state.
 
-## Open founder decisions
+## Founder-approved catalog decisions
 
-1. Approve `Browse` / `My practice` as the primary catalog organization, or retain the narrower word
-   `Saved` for the personal view?
-2. Approve defining the badge as the collection's target level and using `B1` for the current
-   prototype cards while deferring `B1.1`/`B1.2` until a real sublevel model exists?
-3. Approve removing the current content chips now, with grouped filters introduced only when reliable
-   category/level/activity metadata makes them useful?
-4. Approve a slim left-side progress rail as a future pattern while deferring its states, geometry,
-   colors, and release to `PROGRESS-SAVED-001` and persistence planning?
-5. While the remaining sources are unreviewed and unintegrated, should the immediate prototype keep
-   all four cards under an explicit prototype boundary, or should the learner catalog show only the
-   serving-authoritative Restaurant source until each source is migrated? Neither choice confers
-   production readiness.
-6. Approve removing the visit-only `% latest` score from catalog cards while retaining truthful
-   current-session/recap accuracy?
-7. Approve keeping the current Settings launcher temporarily, with its rejected panel explicitly
-   unchanged pending `PRACTICE-SETTINGS-001`, rather than hiding the action now?
+1. Use `Browse` / `My practice` as the primary catalog organization.
+2. Define the badge as the collection's target level and use `B1` for the current prototype cards.
+   Defer `B1.1`/`B1.2` until AIdioma has a real sublevel model.
+3. Remove the current content chips now. Introduce grouped filters only when reliable
+   category/level/activity metadata makes them useful.
+4. Reserve a slim left-side progress rail as a future pattern. Defer its states, geometry, colors,
+   and release to `PROGRESS-SAVED-001` and persistence planning.
+5. Keep all four cards for prototype review under the explicit prototype boundary. This does not
+   confer production readiness; non-Restaurant sources remain unreviewed and unintegrated.
+6. Remove the visit-only `% latest` score from catalog cards while retaining truthful
+   current-session/recap accuracy.
+7. Keep the current Settings launcher temporarily, with its rejected panel explicitly unchanged
+   pending `PRACTICE-SETTINGS-001`.
 
 ## Decisions and discovered issues
 
@@ -330,12 +329,13 @@ and expose only the approved progress filters and recent ordering.
 | PRACTICE-PAGE-D003 | implemented | Applying options starts a fresh immutable configuration. | `PRACTICE-PAGE-001` in [WORK.yaml](../WORK.yaml) |
 | PRACTICE-PAGE-D004 | legacy-accepted | Practice input may support an AI-question interaction distinct from grading. | `EVALUATION-001` in [WORK.yaml](../WORK.yaml) |
 | PRACTICE-PAGE-D005 | accepted | The current rendered Practice Settings design is not the target experience. | `PRACTICE-SETTINGS-001` in [WORK.yaml](../WORK.yaml) |
-| PRACTICE-PAGE-D006 | candidate | Use a responsive card grid with Save above Settings and the level at the bottom-right of the content region. | `PRACTICE-PAGE-001` in [WORK.yaml](../WORK.yaml) |
-| PRACTICE-PAGE-D007 | candidate | Define level as typed target-level metadata, use `B1` for current prototype cards if approved, and defer AIdioma decimal subdivisions until their meaning exists. | `PRACTICE-PAGE-001` in [WORK.yaml](../WORK.yaml) |
-| PRACTICE-PAGE-D008 | candidate | Replace the mixed chip row with `Browse` / `My practice` and grouped, capability-gated filters. | `PRACTICE-PAGE-001` in [WORK.yaml](../WORK.yaml) |
-| PRACTICE-PAGE-D009 | candidate | Reserve a slim left collection-progress rail, with exact geometry deferred, and do not ship it before durable evidence and persistence exist. | `PROGRESS-SAVED-001` in [WORK.yaml](../WORK.yaml) |
-| PRACTICE-PAGE-D010 | candidate | Remove visit-only `% latest` from catalog cards; keep transient accuracy in the session/recap. | `PRACTICE-PAGE-001` and `PROGRESS-SAVED-001` in [WORK.yaml](../WORK.yaml) |
-| PRACTICE-PAGE-D011 | candidate | Keep the current Settings launcher as an explicitly temporary path without approving its rejected panel. | `PRACTICE-SETTINGS-001` in [WORK.yaml](../WORK.yaml) |
+| PRACTICE-PAGE-D006 | accepted | Use a responsive card grid with Save above Settings and the level at the bottom-right of the content region. | `PRACTICE-PAGE-001` in [WORK.yaml](../WORK.yaml) |
+| PRACTICE-PAGE-D007 | accepted | Define level as typed target-level metadata, use `B1` for current prototype cards, and defer AIdioma decimal subdivisions until their meaning exists. | `PRACTICE-PAGE-001` in [WORK.yaml](../WORK.yaml) |
+| PRACTICE-PAGE-D008 | accepted | Replace the mixed chip row with `Browse` / `My practice` and grouped, capability-gated filters. | `PRACTICE-PAGE-001` in [WORK.yaml](../WORK.yaml) |
+| PRACTICE-PAGE-D009 | accepted | Reserve a slim left collection-progress rail, with exact states and geometry deferred, and do not ship it before durable evidence and persistence exist. | `PROGRESS-SAVED-001` in [WORK.yaml](../WORK.yaml) |
+| PRACTICE-PAGE-D010 | accepted | Remove visit-only `% latest` from catalog cards; keep transient accuracy in the session/recap. | `PRACTICE-PAGE-001` and `PROGRESS-SAVED-001` in [WORK.yaml](../WORK.yaml) |
+| PRACTICE-PAGE-D011 | accepted | Keep the current Settings launcher as an explicitly temporary path without approving its rejected panel. | `PRACTICE-SETTINGS-001` in [WORK.yaml](../WORK.yaml) |
+| PRACTICE-PAGE-D012 | accepted | Keep all four cards for prototype review while preserving explicit reviewed-source and production-readiness gates. | `PRACTICE-PAGE-001`, `PRACTICE-SERVING-001`, `EVALUATION-001`, and `PLATFORM-SECURITY-001` in [WORK.yaml](../WORK.yaml) |
 
 ### Discovered issues and follow-ups
 

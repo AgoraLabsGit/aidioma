@@ -2,10 +2,10 @@
 id: PRACTICE-SERVING-001
 title: Practice serving and reinforced scheduling
 area: practice-serving
-status: active
-implementation: partial
+status: implemented
+implementation: implemented
 founder_review: approved
-updated: 2026-08-03
+updated: 2026-08-04
 ---
 
 # Practice serving and reinforced scheduling
@@ -61,7 +61,7 @@ focus, invents reviewed novelty, or calls same-visit correction durable learning
 
 ## Implemented behavior
 
-The first Restaurant typed vertical slice is implemented:
+The Restaurant collection and visit-local Saved Restaurant typed journeys are implemented:
 
 - A browser-safe pure `practice-policy-v1` transition engine owns deterministic five-item working
   sets, independent Both directions, miss return, third-miss parking, refill, reviewed repetition,
@@ -77,14 +77,24 @@ The first Restaurant typed vertical slice is implemented:
 - `PracticeWorkspace` preserves the immutable visit snapshot and learner-controlled End. Restaurant
   typed offers come from the engine instead of numeric modulo advancement; blocked narrow-pool states
   require an explicit single-use Repeat now choice, settings change, or End.
+- Personal Saved Restaurant typed practice intersects the learner's frozen references with the same
+  pinned reviewed Restaurant source and uses policy v1 with `sourceKind: saved`. It reports invalid
+  references, under-five working sets, spacing limits, and zero-valid scopes without adding other
+  Restaurant material. Other Saved collections remain on their explicitly named existing path.
+- Reinforced Restaurant visits can pause into a serialized checkpoint held only in current-page React
+  memory. Resume re-resolves the exact source and validates the application schema, serving policy,
+  state schema, and frozen source identities before restoring the transcript, completed count, typed
+  draft, and next offer. Refresh, closing the page, or another device cannot resume this visit.
 - Deterministic tests prove the policy traces and application mapping. The production-route smoke
-  proves `A miss -> B -> C -> D -> A retry`, rendering, keyboard flow, axe checks, reduced motion,
-  200% text, and no horizontal overflow at 320px, phone, and desktop viewports in both themes.
+  proves collection and four-item Saved `A miss -> B -> C -> D -> A retry`, current-page pause and
+  exact resume without browser storage, rendering, keyboard flow, axe checks, reduced motion, 200%
+  text, and no horizontal overflow at 320px, phone, and desktop viewports in both themes.
 
-Personal Saved practice, non-Restaurant prototype collections, and Flashcards remain explicitly on
-the legacy exhaustive modulo path. They do not claim policy-v1 reinforcement. The application still
-uses an in-memory prototype snapshot, a hard-coded intermediate learner stage, and no durable learner
-history; production checkpoint ownership and durable resume remain deferred to their owning work.
+Non-Restaurant personal Saved practice, non-Restaurant prototype collections, and Flashcards remain
+explicitly on the legacy exhaustive modulo path. They do not claim policy-v1 reinforcement. The
+application still uses a hard-coded intermediate learner stage and has no durable learner history;
+production checkpoint ownership plus refresh, cross-device, and durable resume remain deferred to
+their owning work.
 
 ## Approved policy v1
 
@@ -418,3 +428,5 @@ them as learning KPIs or durable learner state.
 | PRACTICE-SERVING-I003 | implementation limitation | Learner stage is hard-coded and no durable history exists. V1 accepts an explicit resolved stage and treats history as unknown; durable adaptation remains deferred. | `PROGRESS-SAVED-001` and `DATA-PERSISTENCE-001` in [WORK.yaml](../WORK.yaml) |
 | PRACTICE-SERVING-I004 | implemented | Before this slice, a non-retryable ungraded result had no continue-without-evidence escape. The typed serving path now preserves the answer and requires an explicit learner choice to continue without learning evidence; evaluator copy and semantics remain owned separately. | `EVALUATION-001` and `PRACTICE-PAGE-001` in [WORK.yaml](../WORK.yaml) |
 | PRACTICE-SERVING-I005 | deferred activity gap | Flashcard Next records no honest retrieval outcome, so it cannot participate in success-based reinforcement. Do not infer success; resolve its interaction before adaptation. | `PRACTICE-PAGE-001` in [WORK.yaml](../WORK.yaml) |
+| PRACTICE-SERVING-I006 | implemented | Personal Saved Restaurant references now resolve against the pinned reviewed source and use policy v1. Invalid, stale, short, and zero-valid scopes stay explicit; non-Restaurant Saved material remains on its named existing path. | `PRACTICE-SERVING-001` in [WORK.yaml](../WORK.yaml) |
+| PRACTICE-SERVING-I007 | implemented | Reinforced Restaurant visits now cross a serialized current-page checkpoint/restore boundary that aborts stale evaluation, revalidates the frozen source and versions, and never writes the checkpoint to browser storage. Refresh, cross-device, and durable resume remain deferred. | `PRACTICE-SERVING-001` and `DATA-PERSISTENCE-001` in [WORK.yaml](../WORK.yaml) |

@@ -174,7 +174,7 @@ async function assertPracticePolish(page, label) {
   ) {
     throw new Error(`Almost feedback is still visually crowded in ${label}.`);
   }
-  if (result.headerCount !== 4 || result.headerHeightSpread > 1) {
+  if (result.headerCount !== 5 || result.headerHeightSpread > 1) {
     throw new Error(`Practice header controls are not consistently sized in ${label}.`);
   }
 }
@@ -383,6 +383,10 @@ async function run() {
         await page.getByRole("button", { name: "Send answer", exact: true }).click();
         await page.getByRole("status", { name: "Feedback: Almost", exact: true }).waitFor();
         await page.getByLabel("Completed practice cards: 1", { exact: true }).waitFor();
+        await page
+          .getByRole("button", { name: "Save this prompt to personal saved material", exact: true })
+          .last()
+          .click();
         await assertPracticePolish(page, label);
         await screenshot(page, `correction-${label}`);
         screenshotCount += 1;
@@ -397,6 +401,10 @@ async function run() {
           await page
             .getByLabel(`Completed practice cards: ${index + 2}`, { exact: true })
             .waitFor();
+          await page
+            .getByRole("button", { name: "Save this prompt to personal saved material", exact: true })
+            .last()
+            .click();
         }
         const retryPrompt = await page
           .locator(".active-practice-turn .prompt-message h2")
@@ -445,6 +453,117 @@ async function run() {
         await page.getByRole("heading", { name: "Practice recap", exact: true }).waitFor();
         await page.getByRole("button", { name: "Browse collections", exact: true }).click();
 
+        await page.getByRole("button", { name: "Saved", exact: true }).click();
+        const savedPairs = await page.locator(".personal-saved-prompt-card").evaluateAll((cards) =>
+          cards.map((card) => ({
+            english: card.querySelector("strong")?.textContent?.trim() ?? "",
+            spanish: card.querySelector("p")?.textContent?.trim() ?? "",
+          })),
+        );
+        if (savedPairs.length !== 4) {
+          throw new Error(`Expected four exact Saved Restaurant prompts in ${label}, found ${savedPairs.length}.`);
+        }
+        await page
+          .getByRole("button", { name: "Practice saved Restaurant prompts", exact: true })
+          .click();
+        await page.getByText(/fewer than five reviewed prompts/i).waitFor();
+        const currentSavedOffer = async () => {
+          const text = await page
+            .locator(".active-practice-turn .prompt-message h2")
+            .innerText();
+          const direction = await page
+            .locator(".active-practice-turn .activity-label")
+            .innerText();
+          const pair = savedPairs.find((candidate) =>
+            direction.includes("EN → ES")
+              ? candidate.english === text
+              : candidate.spanish === text,
+          );
+          if (!pair) throw new Error(`Saved prompt was substituted outside the frozen scope in ${label}.`);
+          return {
+            direction,
+            prompt: text,
+            target: direction.includes("EN → ES") ? pair.spanish : pair.english,
+          };
+        };
+        const firstSavedOffer = await currentSavedOffer();
+        const riskyComparisonWords = new Set([
+          "no", "not", "never", "without", "nothing", "neither", "nor",
+          "nunca", "jamás", "sin", "nada", "nadie", "ningún", "ninguna",
+          "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+          "uno", "una", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez",
+        ]);
+        const typoWord = [...firstSavedOffer.target.matchAll(/\p{L}+/gu)]
+          .filter((match) => match[0].length >= 4 && !riskyComparisonWords.has(match[0].toLowerCase()))
+          .sort((left, right) => right[0].length - left[0].length)[0];
+        if (!typoWord || typoWord.index === undefined) {
+          throw new Error(`Could not create a deterministic Saved miss in ${label}.`);
+        }
+        const typoIndex = typoWord.index + Math.floor(typoWord[0].length / 2);
+        const replacement = firstSavedOffer.target[typoIndex].toLowerCase() === "z" ? "q" : "z";
+        const typoTarget = `${firstSavedOffer.target.slice(0, typoIndex)}${replacement}${firstSavedOffer.target.slice(typoIndex + 1)}`;
+        await page.getByLabel("Type your answer", { exact: true }).fill(typoTarget);
+        await page.getByRole("button", { name: "Send answer", exact: true }).click();
+        await page.getByLabel("Completed practice cards: 1", { exact: true }).waitFor();
+        const afterMissOffer = await currentSavedOffer();
+        await page.getByLabel("Type your answer", { exact: true }).fill("Draft kept while paused");
+        await page
+          .getByRole("button", { name: "Pause practice on this page", exact: true })
+          .click();
+        await page
+          .getByRole("heading", { name: "Saved Restaurant practice is paused", exact: true })
+          .waitFor();
+        await screenshot(page, `saved-paused-${label}`);
+        screenshotCount += 1;
+        await assertAccessible(page, `paused Saved Restaurant visit ${label}`);
+        await assertNoHorizontalOverflow(page, `paused Saved Restaurant visit ${label}`);
+        await page.evaluate(() => {
+          document.documentElement.style.fontSize = "200%";
+        });
+        await assertNoHorizontalOverflow(page, `paused Saved Restaurant visit ${label} at 200% text`);
+        await page.evaluate(() => {
+          document.documentElement.style.fontSize = "";
+        });
+        const checkpointStorageKeys = await page.evaluate(() =>
+          Object.keys(localStorage).filter((key) => /checkpoint|paused|practice-visit/i.test(key)),
+        );
+        if (checkpointStorageKeys.length > 0) {
+          throw new Error(`Paused visit leaked into browser storage in ${label}: ${checkpointStorageKeys.join(", ")}.`);
+        }
+        await page.getByRole("button", { name: "Resume practice", exact: true }).click();
+        const resumedOffer = await currentSavedOffer();
+        if (
+          resumedOffer.prompt !== afterMissOffer.prompt ||
+          resumedOffer.direction !== afterMissOffer.direction ||
+          (await page.getByLabel("Type your answer", { exact: true }).inputValue()) !==
+            "Draft kept while paused"
+        ) {
+          throw new Error(`Saved Restaurant pause did not restore the exact next turn in ${label}.`);
+        }
+        for (let completed = 2; completed <= 4; completed += 1) {
+          const offer = await currentSavedOffer();
+          await page.getByLabel("Type your answer", { exact: true }).fill(offer.target);
+          await page.getByRole("button", { name: "Send answer", exact: true }).click();
+          await page
+            .getByLabel(`Completed practice cards: ${completed}`, { exact: true })
+            .waitFor();
+        }
+        const savedRetry = await currentSavedOffer();
+        if (
+          savedRetry.prompt !== firstSavedOffer.prompt ||
+          savedRetry.direction !== firstSavedOffer.direction
+        ) {
+          throw new Error(`A missed Saved Restaurant prompt did not return after three saved items in ${label}.`);
+        }
+        await screenshot(page, `saved-reinforced-${label}`);
+        screenshotCount += 1;
+        await assertAccessible(page, `reinforced Saved Restaurant visit ${label}`);
+        await assertNoHorizontalOverflow(page, `reinforced Saved Restaurant visit ${label}`);
+        await page
+          .getByRole("button", { name: "End practice and review this session", exact: true })
+          .click();
+        await page.getByRole("button", { name: "Browse collections", exact: true }).click();
+
         const customizeButton = page.getByRole("button", {
           name: "Adjust Restaurant Spanish settings",
           exact: true,
@@ -485,7 +604,7 @@ async function run() {
     }
 
     console.log(
-      `INTERMEDIATE PILOT SMOKE PASS: varied lesson and collection catalogs; finite lesson arc; reinforced A-B-C-D-A miss return; missing-evaluator recovery without retry loop; continuous collection practice; scoped feedback; optional focus; recap; axe; keyboard; visible focus; reduced motion; 320px and 200% text; no horizontal overflow; ${screenshotCount} screenshots.`,
+      `INTERMEDIATE PILOT SMOKE PASS: varied lesson and collection catalogs; finite lesson arc; reinforced collection and Saved Restaurant A-B-C-D-A miss return; current-page pause/resume without browser storage; missing-evaluator recovery without retry loop; continuous collection practice; scoped feedback; optional focus; recap; axe; keyboard; visible focus; reduced motion; 320px and 200% text; no horizontal overflow; ${screenshotCount} screenshots.`,
     );
     console.log(`Screenshots: ${screenshotsDirectory}`);
   } finally {

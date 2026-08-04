@@ -1383,12 +1383,62 @@ input {
   flex: none;
 }
 
+.saved-practice-actions,
+.paused-practice-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.saved-practice-actions {
+  justify-content: flex-end;
+}
+
 .saved-section-empty {
   padding: 0.85rem 1rem;
 }
 
 .saved-section-empty p {
   margin: 0;
+}
+
+.saved-section-empty .button {
+  margin-top: 0.65rem;
+}
+
+.paused-practice-feed {
+  align-items: center;
+  justify-content: center;
+}
+
+.paused-practice-card {
+  display: grid;
+  width: min(100%, 38rem);
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.8rem 0.9rem;
+  padding: 1.1rem;
+}
+
+.paused-practice-card > svg {
+  width: 22px;
+  height: 22px;
+  color: var(--accent-text);
+}
+
+.paused-practice-card h2 {
+  margin: 0.15rem 0 0.45rem;
+  font-size: 1.05rem;
+}
+
+.paused-practice-card p {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.paused-practice-actions {
+  grid-column: 2;
 }
 
 .personal-saved-prompt-list {
