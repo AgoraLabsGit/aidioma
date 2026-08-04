@@ -1,20 +1,11 @@
 ---
 name: status
-description: Give a read-only report of the current AIdioma product, Git state, evidence, and next action. Use when the operator says /status or asks where things stand.
+description: Report AIdioma work, fixes, specs, Git, PR, runtime, evidence, and the best next command without making changes. Use when the operator says /status.
 ---
 
-# /status — current truth, read only
+# /status
 
-Read `Docs/INDEX.md`, the highest-numbered handoff, Git branch/worktree/status information, open PR
-and check state when relevant, and the current localhost product status. Treat old
-STATE/ROADMAP/Waves/register documents as historical context, not the status authority.
-
-In no more than ten concise lines, report:
-
-- what is working in the live Practice/Lessons app;
-- what is changed, committed, uncommitted, or awaiting a PR/check;
-- any validation or founder decision still owed;
-- every material branch/worktree cleanup blocker; and
-- the single best next command or action.
-
-Make no changes, commits, pushes, cleanup actions, or documentation updates.
+Read `AGENTS.md`, `WORK.yaml`, `FIXES.yaml`, `HANDOFF.md`, the selected spec, Git/worktree/PR state,
+and relevant localhost status. Make no changes. Report counts and rows for open, planning, planned,
+active, blocked, deferred, and complete work; every fix status; current slice; last evidence;
+repository/runtime blockers; and one recommended next command.

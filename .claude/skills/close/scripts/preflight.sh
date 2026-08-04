@@ -28,6 +28,11 @@ while (($#)); do
   shift
 done
 
+if ((cleanup_audit || worktree_cleanup_audit)) && [[ "$target_ref" != "origin/main" ]]; then
+  echo "FAIL cleanup audits may prove containment only against origin/main" >&2
+  exit 2
+fi
+
 repo_root="$(git rev-parse --show-toplevel)"
 common_git_dir="$(git rev-parse --path-format=absolute --git-common-dir)"
 repo_family_root="$(dirname "$common_git_dir")"
@@ -78,7 +83,7 @@ git diff --cached --check
 echo
 echo "REPO DEV/PREVIEW SERVERS"
 repo_server_processes="$({ ps -axo pid=,ppid=,command= || true; } | awk -v root="$repo_family_root/" '
-  index($0, root) && ($0 ~ /node_modules\/[.]bin\/(next|vite)([[:space:]]|$)/ || $0 ~ /next-server([[:space:]]|$)/ || $0 ~ /vercel[[:space:]]+(dev|serve)([[:space:]]|$)/) { print }
+  index($0, root) && ($0 ~ /node_modules\/[.]bin\/(next|vite)([[:space:]]|$)/ || $0 ~ /next-server([[:space:]]|$)/ || $0 ~ /vercel[[:space:]]+(dev|serve)([[:space:]]|$)/ || $0 ~ /tooling\/work-dashboard\/server[.]ts/) { print }
 ')"
 if [[ -n "$repo_server_processes" ]]; then
   printf '%s\n' "$repo_server_processes"
