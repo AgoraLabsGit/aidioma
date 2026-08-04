@@ -18,6 +18,7 @@ import {
   buildAcceptedAnswers,
   compareAnswer,
   comparisonSimilarity,
+  createCorrectionPresentation,
   createWordDiff,
   levenshteinDistance,
   normalizeForComparison,
@@ -240,6 +241,21 @@ describe("word diff", () => {
       { text: "aquí", mark: "correct" },
       { text: "estoy", mark: "extra" },
     ]);
+  });
+
+  it("preserves one full reviewed sentence and marks small and material changes", () => {
+    expect(
+      createCorrectionPresentation("Yo soi Colombia hoy", [
+        "Yo soy de Colombia.",
+        "Soy de Colombia.",
+      ]),
+    ).toEqual({
+      text: "Yo soy de Colombia.",
+      highlights: [
+        { start: 3, end: 6, kind: "spelling" },
+        { start: 7, end: 9, kind: "different" },
+      ],
+    });
   });
 
   it("bounds entry count and text lengths to the response contract", () => {

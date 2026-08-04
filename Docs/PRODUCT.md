@@ -10,10 +10,10 @@ updated: 2026-08-03
 
 # AIdioma product principles
 
-This migration dossier is not product authority. `legacy-accepted` means a decision was accepted in
-the pre-reset documentation and remains preserved pending an explicit migration disposition.
-`accepted` is reserved for a decision the founder approves in the new SSOT; this draft contains no
-such approval by implication.
+This migration dossier distinguishes explicit new-SSOT founder approvals from unresolved migrated
+claims. `legacy-accepted` means a decision was accepted in the pre-reset documentation and remains
+preserved pending an explicit migration disposition. `accepted` is used only for a decision the
+founder explicitly approves in the new SSOT.
 
 ## Product promise
 
@@ -38,6 +38,12 @@ learning and serving systems are sophisticated.
   uncertain response but must not invent scoring authority.
 - Prefer a small composable system with explicit boundaries over page-specific implementations.
 
+## Accepted product decisions
+
+- A shipping Practice collection has at least 50 distinct reviewed underlying prompts, with 100 as
+  the target. Direction and activity variants do not inflate that count. Founder approved this
+  content-depth rule during `PRACTICE-SERVING-001` planning on 2026-08-03.
+
 ## Legacy-accepted decisions awaiting migration disposition
 
 These decisions are preserved; listing them here does not freshly approve, reject, or implement them.
@@ -48,8 +54,6 @@ These decisions are preserved; listing them here does not freshly approve, rejec
   collections.
 - Useful lesson reference cards are an MVP capability outside the graded lesson Mix arc.
 - The Practice input may support asking AI questions as a distinct interaction from a graded answer.
-- A shipping collection has at least 50 distinct reviewed learning units, with 100 as the target;
-  direction and activity variants do not inflate that count.
 - Typed Practice defaults to Both directions while permitting a learner override.
 - Completed/Mastered, persisted sessions, streak semantics, and their prior lifecycle rules remain
   preserved but are explicitly reopened where the continuous-visit model conflicts with them.

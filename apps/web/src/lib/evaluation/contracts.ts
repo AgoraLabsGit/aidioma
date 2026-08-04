@@ -4,6 +4,7 @@ import { z } from "zod";
 export const EVALUATION_INPUT_MAX_LENGTH = 1_000;
 export const EVALUATION_WORD_DIFF_MAX_ENTRIES = 100;
 export const EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH = 200;
+export const EVALUATION_CORRECTION_MAX_HIGHLIGHTS = 100;
 
 export const EvaluationSourceSchema = z.enum(["comparison", "ai"]);
 export const EvaluationVerdictSchema = z.enum(["correct", "close", "wrong"]);
@@ -42,6 +43,44 @@ export const WordDiffEntrySchema = z
       .optional(),
   })
   .strict();
+
+export const CorrectionHighlightSchema = z
+  .object({
+    start: z.number().int().min(0).max(EVALUATION_INPUT_MAX_LENGTH),
+    end: z.number().int().min(1).max(EVALUATION_INPUT_MAX_LENGTH),
+    kind: z.enum(["spelling", "different"]),
+  })
+  .strict()
+  .refine((highlight) => highlight.end > highlight.start, {
+    message: "correction highlight end must be after start",
+  });
+
+export const CorrectionPresentationSchema = z
+  .object({
+    text: z.string().trim().min(1).max(EVALUATION_INPUT_MAX_LENGTH),
+    highlights: z.array(CorrectionHighlightSchema).max(EVALUATION_CORRECTION_MAX_HIGHLIGHTS),
+  })
+  .strict()
+  .superRefine((presentation, context) => {
+    let previousEnd = 0;
+    presentation.highlights.forEach((highlight, index) => {
+      if (highlight.end > presentation.text.length) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "correction highlight exceeds correction text",
+          path: ["highlights", index, "end"],
+        });
+      }
+      if (highlight.start < previousEnd) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "correction highlights must be ordered and non-overlapping",
+          path: ["highlights", index, "start"],
+        });
+      }
+      previousEnd = highlight.end;
+    });
+  });
 
 const gradedFields = {
   score: z.number().int().min(10).max(100),
@@ -109,6 +148,7 @@ export type EvaluationModality = z.infer<typeof EvaluationModalitySchema>;
 export type EvaluationRequest = z.infer<typeof EvaluationRequestSchema>;
 export type BrowserEvaluationRequest = EvaluationRequest;
 export type WordDiffEntry = z.infer<typeof WordDiffEntrySchema>;
+export type CorrectionPresentation = z.infer<typeof CorrectionPresentationSchema>;
 export type AiStructuredEvaluationResult = z.infer<typeof AiEvaluationResultSchema>;
 export type AiEvaluationResult = Omit<EvaluationResult, "evalSource" | "modelUsed">;
 export type EvaluationResult = z.infer<typeof EvaluationResultSchema>;

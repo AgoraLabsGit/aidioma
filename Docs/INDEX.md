@@ -21,8 +21,8 @@ only. `/close` validates, reconciles, publishes, cleans Git, and rewrites the ha
 
 1. Product language and authority
 2. Practice serving and reinforced scheduling
-3. Practice page and Settings
-4. Evaluation and feedback
+3. Evaluation and feedback
+4. Practice page and Settings
 5. Progress, saved material, and persistence
 6. Lessons and shared capability reuse
 7. Content generation and review

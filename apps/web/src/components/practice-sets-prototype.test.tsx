@@ -3,6 +3,9 @@ import { axe, toHaveNoViolations } from "jest-axe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { practiceSetFixtures } from "@/lib/practice-sets/prototype-fixtures";
+import {
+  resolveRestaurantPracticeSource,
+} from "@/lib/practice-serving/restaurant-source";
 
 import { IntermediateLessonPilot } from "./intermediate-lesson-pilot";
 import { LessonPracticePreview } from "./lesson-practice-preview";
@@ -15,13 +18,13 @@ const fetchMock = vi.fn<typeof fetch>();
 function gradedResponse(
   verdict: "correct" | "close" | "wrong",
   feedback: string,
-  modelAnswer: string,
+  correctionText: string,
   score = verdict === "correct" ? 100 : verdict === "close" ? 74 : 35,
-  wordDiff?: Array<{
-    mark: "close" | "correct" | "extra" | "missing" | "wrong";
-    suggestion?: string;
-    text: string;
-  }>,
+  correctionHighlights: Array<{
+    start: number;
+    end: number;
+    kind: "spelling" | "different";
+  }> = [],
 ) {
   return Response.json({
     status: "graded",
@@ -30,8 +33,9 @@ function gradedResponse(
     feedback,
     errorTags: [],
     evalSource: verdict === "correct" ? "comparison" : "ai",
-    modelAnswer,
-    ...(wordDiff && { wordDiff }),
+    ...(verdict !== "correct" && {
+      correction: { text: correctionText, highlights: correctionHighlights },
+    }),
   });
 }
 
@@ -90,14 +94,17 @@ describe("Intermediate learning pilot", () => {
       }
       if (
         request.itemRef === "time-used-to" &&
-        request.userInput === "Suelo cocinar en domingos."
+        request.userInput === "Suelo cocinar en domingo."
       ) {
         return gradedResponse(
           "close",
           "Use los domingos for a habitual action, not en domingos.",
           "Suelo cocinar los domingos.",
           undefined,
-          [{ mark: "close", text: "en domingos", suggestion: "los domingos" }],
+          [
+            { start: 14, end: 17, kind: "different" },
+            { start: 18, end: 26, kind: "spelling" },
+          ],
         );
       }
       return gradedResponse("correct", "Correct.", "I just finished. The bill, please.");
@@ -163,9 +170,9 @@ describe("Intermediate learning pilot", () => {
     const firstPrompt = currentPromptText(container);
     await answerCurrentPrompt("Ayer pedí sopa, pero me trajeron una ensalada.");
 
-    expect(await screen.findByRole("status", { name: "Feedback: Correct" })).toHaveTextContent(
-      "Correct",
-    );
+    const feedback = await screen.findByRole("status", { name: "Feedback: Correct" });
+    expect(feedback).toHaveTextContent("Correct");
+    expect(feedback).toHaveClass("feedback-correct");
     expect(screen.getByLabelText("Your answer")).toHaveTextContent(
       "Ayer pedí sopa, pero me trajeron una ensalada.",
     );
@@ -178,6 +185,107 @@ describe("Intermediate learning pilot", () => {
     expect(screen.getByLabelText("Completed practice cards: 1")).toHaveTextContent("1");
   });
 
+  it("returns a missed Restaurant direction after three other prompts", async () => {
+    fetchMock.mockResolvedValueOnce(
+      gradedResponse(
+        "wrong",
+        "Use the reviewed target for this prompt.",
+        "Reviewed target answer.",
+      ),
+    );
+    const { container } = renderPracticeWorkspace(42);
+    startRestaurantPractice();
+    const missedPrompt = currentPromptText(container);
+    const missedDirection = container.querySelector(
+      ".active-practice-turn .activity-label",
+    )?.textContent;
+    expect(missedDirection).toMatch(/^(EN → ES|ES → EN)$/);
+
+    await answerCurrentPrompt("First miss");
+    await waitFor(() =>
+      expect(screen.getByLabelText("Completed practice cards: 1")).toBeInTheDocument(),
+    );
+    const intervening = [currentPromptText(container)];
+    for (let completed = 2; completed <= 4; completed += 1) {
+      await answerCurrentPrompt(`Retrieved ${completed}`);
+      await waitFor(() =>
+        expect(
+          screen.getByLabelText(`Completed practice cards: ${completed}`),
+        ).toBeInTheDocument(),
+      );
+      if (completed < 4) intervening.push(currentPromptText(container));
+    }
+
+    expect(new Set(intervening)).toHaveLength(3);
+    expect(intervening).not.toContain(missedPrompt);
+    expect(currentPromptText(container)).toBe(missedPrompt);
+    expect(
+      container.querySelector(".active-practice-turn .activity-label"),
+    ).toHaveTextContent(missedDirection as string);
+  });
+
+  it("shows exact-scope unavailability without widening or crashing", async () => {
+    const unavailableResolver: typeof resolveRestaurantPracticeSource = (request) => ({
+      status: "unavailable",
+      reason: "no_eligible_reviewed_items",
+      request,
+    });
+    const practice = render(
+      <PracticeWorkspace resolveRestaurantSource={unavailableResolver} />,
+    );
+    startRestaurantPractice();
+
+    expect(
+      screen.getByRole("heading", { name: "No reviewed practice matches these settings" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/instead of quietly broadening it/i)).toBeInTheDocument();
+    expect(screen.queryByLabelText("Type your answer")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Adjust settings" })).toBeInTheDocument();
+    expect(await axe(practice.container)).toHaveNoViolations();
+  });
+
+  it("requires an explicit repeat choice when a singleton cannot be spaced", async () => {
+    const resolved = resolveRestaurantPracticeSource({
+      activity: "type",
+      collectionId: "intermediate-restaurant",
+      direction: "both",
+      focus: "recommended",
+      stage: "intermediate",
+    });
+    expect(resolved.status).toBe("ready");
+    if (resolved.status !== "ready") return;
+    const singletonResolver: typeof resolveRestaurantPracticeSource = () => ({
+      status: "ready",
+      source: {
+        ...resolved.source,
+        candidates: resolved.source.candidates.slice(0, 1),
+        prompts: resolved.source.prompts.slice(0, 1),
+      },
+    });
+    fetchMock.mockResolvedValueOnce(
+      gradedResponse("wrong", "Try this reviewed prompt again.", "Reviewed answer."),
+    );
+    const practice = render(
+      <PracticeWorkspace resolveRestaurantSource={singletonResolver} />,
+    );
+    startRestaurantPractice();
+    const prompt = currentPromptText(practice.container);
+    await answerCurrentPrompt("Missed singleton");
+
+    expect(
+      await screen.findByRole("heading", {
+        name: "More spacing is not available in this scope",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.queryByLabelText("Type your answer")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Repeat now" }));
+
+    expect(currentPromptText(practice.container)).toBe(prompt);
+    expect(screen.getByLabelText("Type your answer")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Repeat now" })).not.toBeInTheDocument();
+    expect(await axe(practice.container)).toHaveNoViolations();
+  });
+
   it("shows live-grader feedback for a plausible non-matching answer", async () => {
     renderPracticeWorkspace();
     fireEvent.click(
@@ -185,30 +293,29 @@ describe("Intermediate learning pilot", () => {
     );
     fireEvent.click(screen.getByRole("checkbox", { name: /Vary the order/ }));
     fireEvent.click(screen.getByRole("button", { name: "Start practice" }));
-    await answerCurrentPrompt("Suelo cocinar en domingos.");
+    await answerCurrentPrompt("Suelo cocinar en domingo.");
 
     const feedback = await screen.findByRole("status", { name: "Feedback: Almost" });
+    expect(feedback).toHaveClass("feedback-close");
     expect(feedback).toHaveTextContent(
       "Use los domingos for a habitual action, not en domingos.",
     );
-    expect(feedback).toHaveTextContent("en domingos");
-    expect(feedback).toHaveTextContent("los domingos");
-    expect(feedback).not.toHaveTextContent("Suelo cocinar los domingos.");
-    expect(feedback).not.toHaveTextContent("Model answer:");
+    const correction = screen.getByLabelText("A correct answer: Suelo cocinar los domingos.");
+    expect(correction).toHaveTextContent("Suelo cocinar los domingos.");
+    expect(correction.querySelector(".correction-close")).toHaveTextContent("domingos");
+    expect(correction.querySelector(".correction-changed")).toHaveTextContent("los");
+    expect(screen.queryByLabelText("Correction key")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Answer details")).not.toBeInTheDocument();
   });
 
-  it.each([
-    ["empty", []],
-    ["all-correct", [{ mark: "correct" as const, text: "Quiero" }]],
-    ["suggestion-less", [{ mark: "wrong" as const, text: "Quiero" }]],
-  ])("falls back to the full model answer for a %s word diff", async (_label, wordDiff) => {
+  it("shows one complete reviewed answer instead of correction chips", async () => {
     fetchMock.mockResolvedValueOnce(
       gradedResponse(
         "wrong",
         "Use the completed event requested by the prompt.",
         "Ayer pedí sopa, pero me trajeron una ensalada.",
         35,
-        wordDiff,
+        [{ start: 0, end: 4, kind: "different" }],
       ),
     );
     renderPracticeWorkspace();
@@ -216,7 +323,12 @@ describe("Intermediate learning pilot", () => {
     await answerCurrentPrompt("Quiero sopa.");
 
     const feedback = await screen.findByRole("status", { name: "Feedback: Keep working" });
-    expect(feedback).toHaveTextContent("Ayer pedí sopa, pero me trajeron una ensalada.");
+    expect(feedback).toHaveClass("feedback-wrong");
+    expect(
+      screen.getByLabelText(
+        "A correct answer: Ayer pedí sopa, pero me trajeron una ensalada.",
+      ),
+    ).toHaveTextContent("Ayer pedí sopa, pero me trajeron una ensalada.");
     expect(screen.queryByLabelText("Answer details")).not.toBeInTheDocument();
   });
 
@@ -250,21 +362,28 @@ describe("Intermediate learning pilot", () => {
     await waitFor(() => expect(screen.getByLabelText("Type your answer")).toHaveFocus());
   });
 
-  it("preserves a non-retryable answer without offering a misleading retry", async () => {
+  it("explicitly continues without evidence after a non-retryable grading failure", async () => {
     fetchMock.mockResolvedValueOnce(
       ungradedResponse(
         false,
         "Automatic grading isn’t available for this answer. Your response is still here, but retrying won’t help right now.",
       ),
     );
-    renderPracticeWorkspace();
+    const { container } = renderPracticeWorkspace();
     startRestaurantPractice();
+    const deferredPrompt = currentPromptText(container);
     await answerCurrentPrompt("Quiero sopa.");
 
     expect(await screen.findByRole("alert")).toHaveTextContent("retrying won’t help right now");
     expect(screen.getByLabelText("Type your answer")).toHaveValue("Quiero sopa.");
     expect(screen.queryByRole("button", { name: "Try grading again" })).not.toBeInTheDocument();
     expect(screen.getByLabelText("Completed practice cards: 0")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Continue without grading" }));
+
+    expect(currentPromptText(container)).not.toBe(deferredPrompt);
+    expect(screen.getByLabelText("Type your answer")).toHaveValue("");
+    expect(screen.getByLabelText("Completed practice cards: 0")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Your answer")).not.toBeInTheDocument();
   });
 
   it("treats a malformed grading response as retryable and preserves the answer", async () => {
@@ -275,6 +394,18 @@ describe("Intermediate learning pilot", () => {
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Your response is still here");
     expect(screen.getByRole("button", { name: "Try grading again" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Type your answer")).toHaveValue("Quiero sopa.");
+  });
+
+  it("does not loop when the local grading route is unavailable", async () => {
+    fetchMock.mockResolvedValueOnce(new Response(null, { status: 404 }));
+    renderPracticeWorkspace();
+    startRestaurantPractice();
+    await answerCurrentPrompt("Quiero sopa.");
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("retrying won’t help right now");
+    expect(screen.queryByRole("button", { name: "Try grading again" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Continue without grading" })).toBeInTheDocument();
     expect(screen.getByLabelText("Type your answer")).toHaveValue("Quiero sopa.");
   });
 
@@ -382,8 +513,13 @@ describe("Intermediate learning pilot", () => {
     expect(screen.getByLabelText("Session score: 100% correct")).toBeInTheDocument();
   });
 
-  it("does not start Practice again with the same shuffled prompt", async () => {
-    const { container } = renderPracticeWorkspace(42);
+  it("uses a fresh seed for a new varied Practice visit", async () => {
+    const createSessionSeed = vi.fn()
+      .mockReturnValueOnce(42)
+      .mockReturnValueOnce(43);
+    const { container } = render(
+      <PracticeWorkspace createSessionSeed={createSessionSeed} />,
+    );
     startRestaurantPractice();
     const firstSessionPrompt = currentPromptText(container);
     await answerCurrentPrompt("Ayer pedí sopa, pero me trajeron una ensalada.");
@@ -394,6 +530,7 @@ describe("Intermediate learning pilot", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "Practice again" }));
 
+    expect(createSessionSeed).toHaveBeenCalledTimes(2);
     expect(currentPromptText(container)).not.toBe(firstSessionPrompt);
   });
 
@@ -469,7 +606,9 @@ describe("Intermediate learning pilot", () => {
   });
 
   it("starts in-session changes as a fully reset, freshly ordered session", async () => {
-    const createSessionSeed = vi.fn(() => 42);
+    const createSessionSeed = vi.fn()
+      .mockReturnValueOnce(42)
+      .mockReturnValueOnce(43);
     const { container } = render(<PracticeWorkspace createSessionSeed={createSessionSeed} />);
     startRestaurantPractice();
     const firstPrompt = currentPromptText(container);
@@ -534,7 +673,7 @@ describe("Intermediate learning pilot", () => {
         },
       }),
     );
-    renderPracticeWorkspace();
+    const { container } = renderPracticeWorkspace();
     fireEvent.click(screen.getByRole("button", { name: "Adjust Restaurant Spanish settings" }));
 
     expect(await screen.findByRole("button", { name: "EN → ES" })).toHaveAttribute(
@@ -558,6 +697,7 @@ describe("Intermediate learning pilot", () => {
     expect(screen.getByLabelText("Active practice settings")).toHaveTextContent(
       "EN → ES only · Time phrases · Fixed order",
     );
+    expect(container.querySelector(".active-practice-turn .activity-label")).toBeNull();
   });
 
   it("offers optional focus controls without exposing unavailable work", async () => {
@@ -572,6 +712,19 @@ describe("Intermediate learning pilot", () => {
 
     expect(screen.getByLabelText("Active practice settings")).toHaveTextContent("Time phrases");
     expect(currentPromptText(container)).toBeTruthy();
+  });
+
+  it("removes the repeated prompt tag for a fixed ES to EN session", () => {
+    const { container } = renderPracticeWorkspace();
+    fireEvent.click(screen.getByRole("button", { name: "Adjust Restaurant Spanish settings" }));
+    fireEvent.click(screen.getByRole("button", { name: "ES → EN" }));
+    fireEvent.click(screen.getByRole("button", { name: "Start practice" }));
+
+    expect(screen.getByLabelText("Active practice settings")).toHaveTextContent("ES → EN only");
+    expect(container.querySelector(".active-practice-turn .activity-label")).toBeNull();
+    expect(container.querySelector(".active-practice-turn .prompt-message")).toHaveClass(
+      "has-no-context",
+    );
   });
 
   it("keeps Saved as lightweight local organization", () => {

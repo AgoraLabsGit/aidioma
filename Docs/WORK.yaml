@@ -62,12 +62,19 @@ work:
     dependencies: []
     blocked_by: []
     reusable_by: [practice, lessons]
-    next_slice: Plan server-owned Practice source resolution, local failure behavior, learner-safe output, and cross-surface adapters.
-    evidence: []
+    next_slice: >-
+      After the next PRACTICE-SERVING-001 implementation, use /plan EVALUATION-001 to decide structured coaching points and feedback-language behavior shared by Practice and Lessons, including when one versus multiple points are justified, ordering, total reading budget, safe fallbacks, and the browser/API migration.
+    evidence:
+      - Independent runtime audit on 2026-08-03 confirmed that non-exact Practice answers correctly reach the AI path and that the missing EVALUATION_AI_GATEWAY_API_KEY caused the reported HTTP 503 configuration failure.
+      - Founder authorized local reuse of the existing Gateway key for evaluation on 2026-08-04; the ignored apps/web/.env.local now explicitly configures EVALUATION_AI_GATEWAY_API_KEY without weakening the adapter's fail-closed ambient-key rule.
+      - npm run prove:evaluate --workspace @aidioma/web passed development database identity, deterministic comparison, live Gateway AI grading, and no-persistence assertions.
+      - Production-mode localhost returned HTTP 200 with status graded and evalSource ai for a non-exact Practice answer; a browser submission rendered learner feedback, advanced the completed count once, and showed no grading error.
+      - >-
+        Founder proposed breaking dense coaching into discrete bullets on 2026-08-04. Independent contract audit recommends 1-3 validated coaching points returned by the grader, never browser punctuation-splitting; this remains a planning decision because it changes shared Practice/Lesson evaluation behavior and the evaluation API.
   - id: PRACTICE-PAGE-001
     title: Practice page learner journey
     area: practice
-    status: open
+    status: planning
     kind: feature
     founder_approval: required
     summary: Review the collection catalog, continuous practice interaction, feedback transitions, saved entry points, and session controls as one coherent learner journey.
@@ -75,21 +82,57 @@ work:
     dependencies: [PRACTICE-SERVING-001, UI-SYSTEM-001]
     blocked_by: []
     reusable_by: [practice]
-    next_slice: Plan the page after serving and UI-system capabilities are explicit enough to avoid another patchwork redesign.
-    evidence: []
+    next_slice: >-
+      Obtain founder decisions on the catalog draft: Browse/My practice naming, B1 target-level metadata, removal of the mixed chips, future left progress rail, prototype collection visibility, removal of % latest, and temporary Settings launcher. Approval moves this item to planned and makes the immediate catalog slice eligible for /feat; broader page candidates remain deferred.
+    evidence:
+      - >-
+        Founder approved four immediate Practice polish changes on 2026-08-04: smaller practice-question typography, verdict-distinct accessible feedback surfaces for correct/close/wrong, larger feedback copy, and equal-height Settings, Save, completed-count, and session-result header items.
+      - >-
+        The four approved polish changes are implemented. Focused component assertions prove the three learner-visible verdict labels and presentation classes, and production-route browser smoke proves the question and feedback type sizes, verdict-specific perimeter treatment, equal-height four-item session header, axe, reduced motion, 200% text, and no horizontal overflow across 320px, phone, and desktop viewports in both themes.
+      - >-
+        Founder approved replacing isolated correction chips with one complete reviewed answer on 2026-08-04. The implemented presentation is generated from the closest reviewed answer instead of provider-authored word fragments; small spelling fixes use blue with a dotted underline, while changed or missing words use rose with a solid underline.
+      - >-
+        Founder requested a non-orange visual direction on 2026-08-04 and subsequently rejected the violet filled surface. Current Practice feedback uses a neutral card interior with verdict-colored perimeter and heading, lighter correction text, and no repeated color key; fixed-direction sessions show direction once in the session summary while alternating sessions retain per-prompt direction labels. The 264-test app suite, build, typecheck, lint, and 42-screenshot responsive browser smoke passed.
+      - >-
+        Founder raised contextual word translation, saved words, and verb tables on 2026-08-04. Independent product audit recommends a staged, post-feedback-only first version using reviewed word or phrase annotations, contextual meaning, lemma and part of speech, the form used for reviewed verbs, honest visit-only saving, and links only to authored verb forms. Universal tap-any-word lookup, durable Saved Words, arbitrary AI translation, and full conjugation remain later capabilities with content, identity, authentication, and persistence dependencies.
+      - >-
+        Remaining candidate discussions are not approved designs: a radial session-result display, click-or-tap word help or translation, the recap's purpose and resulting redesign or removal, and collection and filter organization.
+      - >-
+        Founder requested on 2026-08-04 that collection level move to the bottom right, Save move above Settings at the top right, internal/range level wording become a concise B1-style label, permanent collection progress be discussed as a minimal perimeter treatment, and the mixed filter chips receive a design review.
+      - >-
+        Executable audit confirmed unconstrained level strings, 40px absolutely positioned card actions, one mixed organization/content chip row, visit-only Saved and latest-session score, Restaurant-only reviewed serving authority, and no learner persistence tables.
+      - >-
+        An independent three-perspective panel reviewed catalog information architecture, durable progress/persistence honesty, and responsive card accessibility. The synthesis recommends Browse/My practice, typed target-level metadata, removal of % latest from cards, a vertical Save/Settings rail, and a future left progress indicator gated on approved evidence.
+      - >-
+        A fresh adversarial audit found source-readiness, current-card disposition, sequencing, and accessible-control gaps. The revised draft separates serving authority from production readiness, disposes of % latest and the temporary Settings launcher, splits immediate/dependent proof, defines switch and card semantics, and passed re-audit with no remaining material approval blockers.
+      - npm run work:validate -- --docs-root Docs (0 errors, 0 warnings)
   - id: PRACTICE-SERVING-001
     title: Adaptive and reinforced Practice serving
     area: practice-serving
-    status: open
+    status: active
     kind: feature
-    founder_approval: required
+    founder_approval: approved
     summary: Replace inventory-only ordering with working sets, deliberate miss requeue, interleaving, refill, direction, and graduation policies.
     spec: Specs/practice-serving.md
     dependencies: []
     blocked_by: []
     reusable_by: [practice]
-    next_slice: Use /plan to decide working-set size, miss lag, refill, graduation, interleaving, and direction coupling before extracting Lesson reuse.
-    evidence: []
+    next_slice: >-
+      Next command after /close: use /feat PRACTICE-SERVING-001 to move visit-local Saved Restaurant typed practice onto the same reinforced journey, preserve clear shortfall and zero-valid recovery, and add a tested in-memory checkpoint/restore boundary without claiming refresh or cross-device persistence. Keep non-Restaurant collections and Flashcards on their explicitly named existing paths until separately migrated or hidden.
+    evidence:
+      - Founder approved the explained learner journey, policy-v1 recommendations, and test-and-tune posture on 2026-08-03.
+      - Founder approved 50 reviewed prompts as the shipping minimum, 100 as target, and 10 per advertised exact serving scope on 2026-08-03.
+      - Executable audit confirmed the current verdict-blind exhaustive two-pass modulo queue, in-memory snapshot, silent focus fallback, hard-coded learner stage, and absence of learner scheduling tables.
+      - Independent three-agent design panel covered learning/product policy, deterministic architecture/contracts, and learner journey/accessibility.
+      - Fresh adversarial audit found no material product decision to reopen and passed after parking, recovery, source-authority, migration, and determinism clarifications.
+      - "Targeted current-behavior tests passed: session-order and Practice prototype, 41 tests."
+      - npm run work:validate -- --docs-root Docs
+      - Pure practice-policy-v1 engine tests passed for deterministic working sets, Both independence, A-B-C-D-A retry, parking/refill, repetition, recovery tokens, stale ordinals, and exact resume compatibility.
+      - Restaurant source tests passed for the pinned 50-prompt reviewed-prototype payload, 50/10 publication gates, exact focus resolution, and fail-closed source drift.
+      - Typed adapter and Practice component tests passed for verdict mapping, no-evidence defer, singleton recovery, exact-scope unavailability, stale evaluation results, and learner-controlled End.
+      - App typecheck, lint, 261-test full suite, and production build passed after the Restaurant typed integration and evaluator-recovery correction.
+      - Production-route Practice smoke passed deterministic-comparison reinforced miss return plus missing-evaluator Continue-without-grading recovery, axe, keyboard, reduced-motion, 200% text, and no-overflow checks across 320px, phone, and desktop viewports in both themes (36 screenshots); configured Gateway AI grading remains owned by EVALUATION-001.
+      - A fresh independent three-agent implementation audit traced runtime grading, test seams, and learner recovery; it found that mocked evaluator layers and deterministic smoke answers had masked the absent evaluation-only credential. Permanent configuration and 4xx failures now avoid retry loops, and the subsequently authorized local key wiring passed live API and browser AI-grading proof.
   - id: PRACTICE-SETTINGS-001
     title: Practice session configuration and Settings redesign
     area: practice
@@ -98,11 +141,13 @@ work:
     founder_approval: required
     summary: Replace internal metadata and engine controls with a small set of meaningful learner requests.
     spec: null
-    dependencies: [PRACTICE-SERVING-001, UI-SYSTEM-001]
-    blocked_by: [PRACTICE-SERVING-001, UI-SYSTEM-001]
+    dependencies: [PRACTICE-SERVING-001, EVALUATION-001, UI-SYSTEM-001]
+    blocked_by: [PRACTICE-SERVING-001, EVALUATION-001, UI-SYSTEM-001]
     reusable_by: [practice, lessons]
-    next_slice: Run /plan only after the serving capability model and canonical UI patterns identify which choices are real.
-    evidence: []
+    next_slice: Run /plan only after Practice serving, shared feedback-language behavior, and canonical UI patterns identify which learner choices are real.
+    evidence:
+      - >-
+        Founder requested on 2026-08-04 that Settings let learners choose the language used for grading feedback. The available languages, default, fallback, and relationship to the practice direction remain product decisions for /plan.
   - id: PROGRESS-SAVED-001
     title: Honest progress and durable saved material
     area: progress
