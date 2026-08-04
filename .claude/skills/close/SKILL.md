@@ -1,46 +1,20 @@
 ---
 name: close
-description: Validate, commit, and publish current AIdioma work through a protected-main PR, then safely remove only branches and worktrees already contained in main. Use when the operator says /close, requests publication, ends a session, or asks for repository cleanup.
+description: Close an AIdioma planning, feature, fix, or migration session by reconciling SSOT, validating, publishing through protected main, cleaning contained refs, and writing the next kickoff. Use when the operator says /close or ends a session.
 ---
 
-# /close — intentional commit, checked PR, contained cleanup
+# /close
 
-## Safety rules
-
-- `origin/main` is the sole durable integrated branch. Never push directly to it, force-push, reset
-  user work, or delete a branch/worktree whose exact tip is not contained in fetched `origin/main`.
-- Preserve unrelated or ambiguous changes. Stage explicit paths after reviewing the complete diff;
-  do not use blanket staging as a substitute for deciding what belongs.
-- Stop repo-owned development servers before removing their worktrees. Never force-remove a dirty
-  worktree.
-- Old STATE/ROADMAP/Waves/register files do not control close. Do not recreate their boilerplate.
-
-## Close workflow
-
-1. Read `Docs/INDEX.md` and the highest-numbered handoff. Inspect all worktrees, local/remote branches,
-   stashes, open Git operations, server processes, and current PRs. Run
-   `.claude/skills/close/scripts/preflight.sh --fetch` when it fits the repository state.
-2. Review `git status`, unstaged/staged diffs, generated files, and secrets. Decide the exact owned
-   paths. Update only active specs or the current handoff needed to explain tested behavior or a pause.
-3. Run the checks appropriate to the diff. Application work normally requires typecheck, lint, tests,
-   production build, and the affected browser smoke. Content/schema work requires its contract and
-   content validations. A failed or skipped required check stays visible.
-4. Stage only intentional paths, inspect the staged diff, and create a scoped commit. Confirm the
-   worktree is clean and the commit contains exactly the intended change.
-5. Push the short-lived branch without force. Open or update one PR to `main`, link the exact HEAD and
-   validation evidence, and wait for protected `app-validate` and `content-validate`. Verify the exact
-   Preview or candidate for learner-facing changes.
-6. Merge only the reviewed, unchanged candidate through the PR. If checks fail, the branch moves, or
-   live proof disagrees, fix and revalidate instead of merging a different SHA.
-7. Fetch/prune after merge. Before cleanup, prove each disposable tip with
-   `git merge-base --is-ancestor <tip> origin/main`. Close superseded PRs, remove only clean contained
-   secondary worktrees, and then delete their contained local/remote branches. Keep one clean primary
-   worktree on local `main` exactly matching `origin/main`.
-8. Rerun the cleanup audit with
-   `.claude/skills/close/scripts/preflight.sh --fetch --target origin/main --cleanup-audit`.
-
-## Final report
-
-Give the branch and exact SHA, commit and PR, checks and live proof, files intentionally preserved,
-merge result, deleted and remaining branches/worktrees, and the next action. If work is not merged,
-state the precise blocker and leave every recovery ref intact.
+1. Read `AGENTS.md` and current memory files. Inspect all owned/unrelated diffs, worktrees, branches,
+   stashes, operations, PRs, and servers. Run `scripts/preflight.sh --fetch` when applicable.
+2. Reconcile WORK/FIXES status and evidence, the active spec, and current implemented truth. Overwrite
+   `HANDOFF.md` with candidate state, remaining work, evidence, and a kickoff message. Exact final
+   merge/runtime facts belong in the close response because a commit cannot contain its own SHA.
+3. Run focused and repository-wide checks appropriate to the diff plus affected browser proof. A
+   skipped required gate is visible, not silently passed.
+4. `/close` is explicit authorization to stage the reviewed scope, commit, push the short-lived
+   branch, open/update a PR, and merge that exact unchanged head after required checks pass. It does
+   not authorize production data/config changes or an expanded diff.
+5. Fetch/prune and prove containment before deleting refs/worktrees. Return to one clean local main
+   exactly matching the sole origin/main. Restart localhost from that main when app code changed.
+6. Report outcome, SHA/PR, validation, preserved work, cleanup, runtime, and next command.

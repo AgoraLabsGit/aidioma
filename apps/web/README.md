@@ -36,6 +36,6 @@ the live deferred constraint on every run, and closes the database connection be
 - `npm run smoke` (requires a prior production build and installed Playwright Chromium)
 
 `npm run smoke:install` installs only the Chromium binary used by the headless smoke check.
-`npm run references` refreshes the 16 light/dark phone/desktop prototype reference screenshots;
-the smoke gate saves matching application screenshots and verifies the shared token and geometry
-contract against those references.
+The smoke gate exercises the current application directly and writes its ignored evidence under
+`apps/web/artifacts/`. `npm run references` captures the temporary static lesson-review surface;
+it is not the learner application or a product source of truth.

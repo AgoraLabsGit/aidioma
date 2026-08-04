@@ -25,8 +25,8 @@ Layers 3 (your checklist review) and 4 (paid native-speaker pass) remain — lay
 
 ## Where your judgment adds the most (10-minute pass)
 
-1. **Play lessons 2 and 3 in the prototype** (reload `apps/prototype/index.html`). You're the best judge of
-   whether the sentences feel natural and the difficulty ramp feels right.
+1. **Play lessons 2 and 3 in the temporary static review surface** (`apps/prototype/index.html`).
+   You're the best judge of whether the sentences feel natural and the difficulty ramp feels right.
 2. **a1-02's explanation** (gender agreement) — the pedagogically dense one; is the -o/-e/-or rule
    presentation how you'd teach it?
 3. **a1-03 difficulty skew** (QA advisory): sentences cluster at difficulty 2. Fine for an early lesson,

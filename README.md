@@ -41,12 +41,7 @@ npm run app:smoke
 npm run smoke:practice-sets --workspace @aidioma/web
 ```
 
-Both browser smokes write screenshots under the ignored `apps/web/artifacts/` directory. The old
-static-prototype capture remains available only as optional technical-reference tooling:
-
-```bash
-npm run references --workspace @aidioma/web
-```
+Both browser smokes write screenshots under the ignored `apps/web/artifacts/` directory.
 
 For lesson content or its executable contract:
 
@@ -60,15 +55,15 @@ npm run content:fixtures
 
 ## Working in the repository
 
-Start a session with `Docs/INDEX.md`, then read the highest-numbered file in `Docs/Handoffs/` for
-current context. Confirm important product claims in the running app before changing a spec.
+Read `AGENTS.md`, then resolve the complete current documentation root described there. `WORK.yaml`
+owns the queue and `HANDOFF.md` owns current continuity. Confirm product claims in executable code
+and the running app before changing a spec.
 
 - `apps/web/` — responsive Next.js application and browser proofs.
 - `content/` — authored curriculum, lessons, reviews, and content evidence.
 - `packages/lesson-schema/` — executable lesson contract.
 - `tooling/` — content validation and supporting scripts.
-- `Docs/` — active product criteria, tested design decisions, technical references, ADRs, and
-  historical handoffs.
+- `Docs/` — current product, work, specification, fix, and handoff sources.
 
 Keep application work, authored content, and schema changes as deliberate scopes. Do not treat
 research as publishable lesson material or change the lesson contract incidentally.
@@ -77,5 +72,9 @@ Work on a short-lived branch, preserve unrelated changes, validate the real user
 through a pull request. Protected `main` requires `app-validate` and `content-validate`. Delete a
 branch or worktree only after its exact tip is clean and contained in fetched `origin/main`.
 
-Agent commands remain available as `/run`, `/fix`, `/feature`, `/status`, and `/close`; their current
-workflows live under `.claude/skills/`.
+Agent commands are `/plan`, `/feat`, `/fix`, `/status`, and `/close`; their repository workflows live
+under `.claude/skills/`. The read-only work dashboard runs locally with:
+
+```bash
+npm run work:dashboard
+```

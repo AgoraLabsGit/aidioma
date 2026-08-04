@@ -1,0 +1,235 @@
+version: 1
+work:
+  - id: DEV-SYSTEM-001
+    title: Command-driven development and SSOT reset
+    area: development-system
+    status: complete
+    kind: process
+    founder_approval: approved
+    summary: Replace documentation sprawl with five commands, one work registry, bounded fixes, reviewed specs, and one current handoff.
+    spec: null
+    dependencies: []
+    blocked_by: []
+    reusable_by: [all-surfaces]
+    next_slice: Complete; begin the next product session with /plan PRACTICE-SERVING-001.
+    evidence:
+      - Founder approved the clean-room migration and command/dashboard build on 2026-08-03.
+      - npm run work:validate -- --docs-root Docs.next
+      - npm run work:validate -- --docs-root Docs.next --require-migration-ready
+      - npm run work:typecheck
+      - npm run work:test (24 tests)
+      - App typecheck, lint, and 229 tests passed.
+      - App production build passed; no application source changed in this work item.
+      - Content validation passed with 0 errors and 21 fixture tests passed.
+      - Contract typecheck and 13 smoke checks passed.
+      - Prototype freshness check passed; removal remains blocked until its review job is replaced.
+      - Dashboard browser proof passed against canonical Docs with 29 rows and 0 issues.
+  - id: REPO-CLEANUP-001
+    title: Remove obsolete static prototype after replacing its review job
+    area: repository
+    status: blocked
+    kind: process
+    founder_approval: approved
+    summary: Remove apps/prototype and its isolated tooling only after lessons 2 and 3 have an equivalent runnable founder-review surface.
+    spec: null
+    dependencies: [LESSON-REVIEW-SURFACE-001]
+    blocked_by: [LESSON-REVIEW-SURFACE-001]
+    reusable_by: [repository]
+    next_slice: Keep the static surface and freshness gate until equivalence proof is recorded.
+    evidence:
+      - Adversarial audit confirmed apps/web currently exposes only the hard-coded Lesson 1 learner route.
+  - id: LESSON-REVIEW-SURFACE-001
+    title: Replace the static founder lesson-review surface
+    area: lessons
+    status: open
+    kind: process
+    founder_approval: required
+    summary: Provide a safe local way to review canonical lessons 2 and 3 before deleting apps/prototype.
+    spec: null
+    dependencies: []
+    blocked_by: []
+    reusable_by: [content-review, lessons]
+    next_slice: Decide whether the replacement belongs in apps/web or a local review workbench and prove lessons 2 and 3 render equivalently.
+    evidence: []
+  - id: EVALUATION-001
+    title: Reliable shared evaluation and feedback
+    area: evaluation
+    status: open
+    kind: feature
+    founder_approval: required
+    summary: Establish a source-neutral, secure comparison-first evaluator and concise feedback contract reusable by Practice and Lessons; current Practice fixtures ship answer authority to the client and use a local-only route.
+    spec: Specs/evaluation-and-feedback.md
+    dependencies: []
+    blocked_by: []
+    reusable_by: [practice, lessons]
+    next_slice: Plan server-owned Practice source resolution, local failure behavior, learner-safe output, and cross-surface adapters.
+    evidence: []
+  - id: PRACTICE-PAGE-001
+    title: Practice page learner journey
+    area: practice
+    status: open
+    kind: feature
+    founder_approval: required
+    summary: Review the collection catalog, continuous practice interaction, feedback transitions, saved entry points, and session controls as one coherent learner journey.
+    spec: Specs/practice-page.md
+    dependencies: [PRACTICE-SERVING-001, UI-SYSTEM-001]
+    blocked_by: []
+    reusable_by: [practice]
+    next_slice: Plan the page after serving and UI-system capabilities are explicit enough to avoid another patchwork redesign.
+    evidence: []
+  - id: PRACTICE-SERVING-001
+    title: Adaptive and reinforced Practice serving
+    area: practice-serving
+    status: open
+    kind: feature
+    founder_approval: required
+    summary: Replace inventory-only ordering with working sets, deliberate miss requeue, interleaving, refill, direction, and graduation policies.
+    spec: Specs/practice-serving.md
+    dependencies: []
+    blocked_by: []
+    reusable_by: [practice]
+    next_slice: Use /plan to decide working-set size, miss lag, refill, graduation, interleaving, and direction coupling before extracting Lesson reuse.
+    evidence: []
+  - id: PRACTICE-SETTINGS-001
+    title: Practice session configuration and Settings redesign
+    area: practice
+    status: blocked
+    kind: feature
+    founder_approval: required
+    summary: Replace internal metadata and engine controls with a small set of meaningful learner requests.
+    spec: null
+    dependencies: [PRACTICE-SERVING-001, UI-SYSTEM-001]
+    blocked_by: [PRACTICE-SERVING-001, UI-SYSTEM-001]
+    reusable_by: [practice, lessons]
+    next_slice: Run /plan only after the serving capability model and canonical UI patterns identify which choices are real.
+    evidence: []
+  - id: PROGRESS-SAVED-001
+    title: Honest progress and durable saved material
+    area: progress
+    status: open
+    kind: feature
+    founder_approval: required
+    summary: Define evidence, session completion, saved identity, persistence, and learner-visible progress without false mastery claims.
+    spec: Specs/progress-and-saved-material.md
+    dependencies: [PRACTICE-SERVING-001]
+    blocked_by: []
+    reusable_by: [practice, lessons, home]
+    next_slice: Plan evidence vocabulary and the minimum durable saved/session data.
+    evidence: []
+  - id: CONTENT-GENERATION-001
+    title: Reviewed content generation and publication pipeline
+    area: content
+    status: open
+    kind: feature
+    founder_approval: required
+    summary: Generalize proven generation gates while preserving authored authority, review layers, ownership, provenance, and publication boundaries.
+    spec: Specs/content-generation.md
+    dependencies: []
+    blocked_by: []
+    reusable_by: [practice, lessons]
+    next_slice: Plan the boundary between operator candidates, canonical content, and future private learner generation.
+    evidence: []
+  - id: SCHEMA-P007-001
+    title: Closed-set conceptual load and raw vocabulary representation
+    area: content
+    status: open
+    kind: feature
+    founder_approval: required
+    summary: Decide whether a closed set may widen raw vocabulary rows while preserving a reviewed conceptual-load limit.
+    spec: null
+    dependencies: []
+    blocked_by: []
+    reusable_by: [lessons, content]
+    next_slice: Run /plan with lesson 5 evidence before changing the lesson schema.
+    evidence: []
+  - id: UI-SYSTEM-001
+    title: Canonical UI system and page templates
+    area: ui
+    status: open
+    kind: system
+    founder_approval: required
+    summary: Define tokens, primitives, patterns, templates, accessibility proof, and extraction rules for composable application surfaces.
+    spec: Specs/ui-system.md
+    dependencies: []
+    blocked_by: []
+    reusable_by: [practice, lessons, home, settings]
+    next_slice: Inventory current components and plan the minimum canonical library needed before Settings implementation.
+    evidence: []
+  - id: PLATFORM-SECURITY-001
+    title: Production platform and learner-write hardening
+    area: platform
+    status: open
+    kind: system
+    founder_approval: required
+    summary: Close environment, runtime DB, dependency-timeout, browser-containment, and learner-write trust-boundary gaps before durable learner writes.
+    spec: Specs/platform-and-security.md
+    dependencies: []
+    blocked_by: []
+    reusable_by: [all-surfaces]
+    next_slice: Plan pre-write hardening independently of the future data model.
+    evidence: []
+  - id: DATA-PERSISTENCE-001
+    title: Learner session and evidence persistence
+    area: data
+    status: deferred
+    kind: system
+    founder_approval: required
+    summary: Plan the minimum safe session, evaluation, progress, preference, and saved-material persistence after serving/evidence semantics and pre-write platform hardening are approved.
+    spec: Specs/data-and-persistence.md
+    dependencies: [PRACTICE-SERVING-001, PROGRESS-SAVED-001, PLATFORM-SECURITY-001]
+    blocked_by: [PRACTICE-SERVING-001, PROGRESS-SAVED-001, PLATFORM-SECURITY-001]
+    reusable_by: [practice, lessons, home]
+    next_slice: Reassess the historical planned-table list after serving, evidence, and platform planning.
+    evidence: []
+  - id: LESSONS-001
+    title: Lessons learner journey and Practice reuse
+    area: lessons
+    status: deferred
+    kind: feature
+    founder_approval: required
+    summary: Define finite lesson teaching/progression and consume only Practice engines, evaluation adapters, and UI patterns whose contracts have been proven independently.
+    spec: Specs/lessons.md
+    dependencies: [PRACTICE-SERVING-001, EVALUATION-001, UI-SYSTEM-001]
+    blocked_by: [PRACTICE-SERVING-001, EVALUATION-001, UI-SYSTEM-001]
+    reusable_by: [lessons]
+    next_slice: Revisit after Practice contracts exist; use a concrete Lesson slice as the second consumer before extracting shared abstractions.
+    evidence: []
+  - id: NATIVE-CLIENT-001
+    title: Native application client
+    area: platform
+    status: deferred
+    kind: feature
+    founder_approval: required
+    summary: Consider a separate native client behind stable web APIs after the web product and service boundaries are proven.
+    spec: null
+    dependencies: [PLATFORM-SECURITY-001]
+    blocked_by: []
+    reusable_by: [native]
+    next_slice: Reassess only after the web MVP and API contracts stabilize.
+    evidence: []
+  - id: VOICE-001
+    title: Staged voice practice
+    area: voice
+    status: deferred
+    kind: feature
+    founder_approval: required
+    summary: Preserve voice as a later capability requiring its own UX, evaluation, privacy, latency, and cost plan.
+    spec: null
+    dependencies: [EVALUATION-001, PLATFORM-SECURITY-001]
+    blocked_by: []
+    reusable_by: [practice, lessons]
+    next_slice: Run /plan only when typed Practice and evaluation are stable.
+    evidence: []
+  - id: AI-TUTOR-001
+    title: Tool-using tutor and durable agent workflows
+    area: ai-agents
+    status: deferred
+    kind: research
+    founder_approval: required
+    summary: Preserve tutor/agent ideas as deferred research without committing to Eve, Workflow, or another runtime.
+    spec: null
+    dependencies: [PLATFORM-SECURITY-001]
+    blocked_by: []
+    reusable_by: [practice, lessons]
+    next_slice: Re-evaluate when a concrete learner job cannot be satisfied by simpler services.
+    evidence: []
