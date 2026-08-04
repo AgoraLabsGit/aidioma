@@ -3,6 +3,7 @@ import { axe, toHaveNoViolations } from "jest-axe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { practiceSetFixtures } from "@/lib/practice-sets/prototype-fixtures";
+import { savedPracticeReference } from "@/lib/practice-sets/saved-practice-references";
 import {
   resolveRestaurantPracticeSource,
 } from "@/lib/practice-serving/restaurant-source";
@@ -278,6 +279,11 @@ describe("Intermediate learning pilot", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.queryByLabelText("Type your answer")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Pause practice on this page" }));
+    fireEvent.click(screen.getByRole("button", { name: "Resume practice" }));
+    expect(
+      screen.getByRole("heading", { name: "More spacing is not available in this scope" }),
+    ).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Repeat now" }));
 
     expect(currentPromptText(practice.container)).toBe(prompt);
@@ -835,8 +841,8 @@ describe("Intermediate learning pilot", () => {
 
     expect(screen.getByRole("button", { name: "Start Restaurant Spanish" })).toBeInTheDocument();
     expect(screen.getByText(savedRecord?.prompt.english ?? "missing")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Practice saved material" }));
-    expect(screen.getByRole("heading", { name: "Saved material" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Practice saved Restaurant prompts" }));
+    expect(screen.getByRole("heading", { name: "Saved Restaurant prompts" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Adjust practice settings" })).not.toBeInTheDocument();
 
     fetchMock.mockClear();
@@ -859,6 +865,170 @@ describe("Intermediate learning pilot", () => {
     expect(screen.getByText(/No personal saved material yet/)).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Practice saved material" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Start Restaurant Spanish" })).toBeInTheDocument();
+  });
+
+  it("pauses and restores the exact reinforced Saved Restaurant journey in memory", async () => {
+    const practice = renderPracticeWorkspace(42);
+    startRestaurantPractice();
+
+    for (let completed = 1; completed <= 4; completed += 1) {
+      await answerCurrentPrompt(`Save Restaurant prompt ${completed}`);
+      await screen.findByRole("status", { name: "Feedback: Correct" });
+      const saveButtons = screen.getAllByRole("button", {
+        name: "Save this prompt to personal saved material",
+      });
+      fireEvent.click(saveButtons[saveButtons.length - 1]);
+    }
+    fireEvent.click(screen.getByRole("button", { name: "End practice and review this session" }));
+    fireEvent.click(screen.getByRole("button", { name: "Browse collections" }));
+    fireEvent.click(screen.getByRole("button", { name: "Saved" }));
+    fireEvent.click(screen.getByRole("button", { name: "Practice saved Restaurant prompts" }));
+
+    fetchMock.mockResolvedValueOnce(
+      gradedResponse("wrong", "Use the reviewed target.", "Reviewed target."),
+    );
+    const missedPrompt = currentPromptText(practice.container);
+    const missedDirection = practice.container.querySelector(
+      ".active-practice-turn .activity-label",
+    )?.textContent;
+    await answerCurrentPrompt("Saved miss");
+    await waitFor(() =>
+      expect(screen.getByLabelText("Completed practice cards: 1")).toBeInTheDocument(),
+    );
+    const nextPrompt = currentPromptText(practice.container);
+    fireEvent.change(screen.getByLabelText("Type your answer"), {
+      target: { value: "Draft kept during this page pause" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Pause practice on this page" }));
+
+    expect(screen.getByRole("heading", { name: "Saved Restaurant practice is paused" })).toBeInTheDocument();
+    expect(screen.getByText(/only while this page stays open/i)).toBeInTheDocument();
+    expect(window.localStorage.length).toBe(0);
+    fireEvent.click(screen.getByRole("button", { name: "Resume practice" }));
+
+    expect(currentPromptText(practice.container)).toBe(nextPrompt);
+    expect(screen.getByLabelText("Completed practice cards: 1")).toBeInTheDocument();
+    expect(screen.getByLabelText("Type your answer")).toHaveValue(
+      "Draft kept during this page pause",
+    );
+    for (let completed = 2; completed <= 4; completed += 1) {
+      fireEvent.change(screen.getByLabelText("Type your answer"), {
+        target: { value: `Saved retrieved ${completed}` },
+      });
+      fireEvent.click(screen.getByRole("button", { name: "Send answer" }));
+      await waitFor(() =>
+        expect(screen.getByLabelText(`Completed practice cards: ${completed}`)).toBeInTheDocument(),
+      );
+    }
+    expect(currentPromptText(practice.container)).toBe(missedPrompt);
+    expect(
+      practice.container.querySelector(".active-practice-turn .activity-label"),
+    ).toHaveTextContent(missedDirection as string);
+    expect(await axe(practice.container)).toHaveNoViolations();
+  });
+
+  it("fails closed when a paused source changes and offers an explicit updated visit", () => {
+    const resolved = resolveRestaurantPracticeSource({
+      activity: "type",
+      collectionId: "intermediate-restaurant",
+      direction: "both",
+      focus: "recommended",
+      stage: "intermediate",
+    });
+    expect(resolved.status).toBe("ready");
+    if (resolved.status !== "ready") return;
+    const resolver = vi.fn<typeof resolveRestaurantPracticeSource>()
+      .mockReturnValueOnce(resolved)
+      .mockReturnValueOnce({
+        status: "ready",
+        source: {
+          ...resolved.source,
+          candidates: resolved.source.candidates.slice(1),
+          prompts: resolved.source.prompts.slice(1),
+        },
+      })
+      .mockReturnValue(resolved);
+    render(<PracticeWorkspace resolveRestaurantSource={resolver} />);
+    startRestaurantPractice();
+    fireEvent.click(screen.getByRole("button", { name: "Pause practice on this page" }));
+    fireEvent.click(screen.getByRole("button", { name: "Resume practice" }));
+
+    expect(
+      screen.getByRole("heading", { name: "This reviewed source version is unavailable" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/will not substitute different material/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Start an updated visit" }));
+    expect(screen.getByLabelText("Type your answer")).toBeInTheDocument();
+    expect(resolver).toHaveBeenCalledTimes(3);
+  });
+
+  it("ignores a late grading result across pause and preserves the answer as a draft", async () => {
+    let finishGrading: ((response: Response) => void) | undefined;
+    fetchMock.mockImplementationOnce(() => new Promise<Response>((resolve) => {
+      finishGrading = resolve;
+    }));
+    renderPracticeWorkspace();
+    startRestaurantPractice();
+    fireEvent.change(screen.getByLabelText("Type your answer"), {
+      target: { value: "Keep this ungraded draft" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Send answer" }));
+    await screen.findByText("Checking your answer…");
+    fireEvent.click(screen.getByRole("button", { name: "Pause practice on this page" }));
+    fireEvent.click(screen.getByRole("button", { name: "Resume practice" }));
+
+    expect(screen.getByLabelText("Type your answer")).toHaveValue("Keep this ungraded draft");
+    await act(async () => {
+      finishGrading?.(gradedResponse("correct", "Correct.", "Reviewed target."));
+      await Promise.resolve();
+    });
+    expect(screen.getByLabelText("Completed practice cards: 0")).toBeInTheDocument();
+    expect(screen.getByLabelText("Type your answer")).toHaveValue("Keep this ungraded draft");
+  });
+
+  it("explains unavailable Saved Restaurant references without substituting or showing Flashcards", () => {
+    const unavailableReference = savedPracticeReference(
+      "intermediate-restaurant",
+      "withdrawn-restaurant-prompt",
+    );
+    const practice = render(
+      <PracticeWorkspace initialSavedPromptReferences={[unavailableReference]} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Saved" }));
+
+    expect(screen.getByText(/1 saved prompt is no longer available/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Remove unavailable saved material" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Practice saved Restaurant prompts" }));
+
+    expect(
+      screen.getByRole("heading", { name: "No saved Restaurant prompts are available" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/did not replace them with other prompts/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Review saved material" })).toBeInTheDocument();
+    expect(screen.queryByLabelText("Type your answer")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Reset card" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Next card" })).not.toBeInTheDocument();
+    expect(practice.container.querySelector(".active-practice-turn")).toBeNull();
+  });
+
+  it("keeps other Saved collections on their named existing path", () => {
+    const restaurantPrompt = practiceSetFixtures[0].prompts[0];
+    const otherCollection = practiceSetFixtures[1];
+    const otherPrompt = otherCollection.prompts[0];
+    const practice = render(
+      <PracticeWorkspace
+        initialSavedPromptReferences={[
+          savedPracticeReference(practiceSetFixtures[0].id, restaurantPrompt.id),
+          savedPracticeReference(otherCollection.id, otherPrompt.id),
+        ]}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Saved" }));
+
+    expect(screen.getByRole("button", { name: "Practice saved Restaurant prompts" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Practice other saved material" }));
+    expect(currentPromptText(practice.container)).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Pause practice on this page" })).not.toBeInTheDocument();
   });
 
   it("preserves the canonical A1 lesson preview separately", () => {

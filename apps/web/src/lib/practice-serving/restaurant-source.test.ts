@@ -13,6 +13,7 @@ import {
   RESTAURANT_COLLECTION_VERSION,
   RESTAURANT_ITEM_VERSION,
   resolveRestaurantPracticeSource,
+  resolveSavedRestaurantPracticeSource,
   restaurantPromptPayloadHash,
   validateRestaurantSourcePublication,
 } from "./restaurant-source";
@@ -174,5 +175,49 @@ describe("Restaurant reviewed prototype source", () => {
     if (result.status !== "ready") return;
     expect(JSON.parse(JSON.stringify(result.source))).toEqual(result.source);
     expect(JSON.stringify(result.source)).not.toMatch(/reviewer|critic|model|credential/iu);
+  });
+
+  it("resolves only exact Saved Restaurant references and reports unavailable material", () => {
+    const restaurant = practiceSetFixtures.find((set) => set.id === RESTAURANT_COLLECTION_ID);
+    expect(restaurant).toBeDefined();
+    if (!restaurant) return;
+    const savedIds = restaurant.prompts.slice(0, 3).map((prompt) => prompt.id);
+    const result = resolveSavedRestaurantPracticeSource({
+      activity: "type",
+      collectionId: RESTAURANT_COLLECTION_ID,
+      direction: "both",
+      focus: "recommended",
+      references: [
+        ...savedIds.map((promptId) => ({ collectionId: RESTAURANT_COLLECTION_ID, promptId })),
+        { collectionId: RESTAURANT_COLLECTION_ID, promptId: "withdrawn-prompt" },
+      ],
+      stage: "intermediate",
+    });
+
+    expect(result.status).toBe("ready");
+    if (result.status !== "ready") return;
+    expect(result.source.candidates.map((candidate) => candidate.itemId)).toEqual(savedIds);
+    expect(result.source.prompts.map((prompt) => prompt.id)).toEqual(savedIds);
+    expect(result.source.savedScope).toEqual({
+      requestedReferenceCount: 4,
+      unavailableReferenceCount: 1,
+      validReferenceCount: 3,
+    });
+  });
+
+  it("fails explicitly when no Saved Restaurant references remain valid", () => {
+    expect(resolveSavedRestaurantPracticeSource({
+      activity: "type",
+      collectionId: RESTAURANT_COLLECTION_ID,
+      direction: "both",
+      focus: "recommended",
+      references: [
+        { collectionId: RESTAURANT_COLLECTION_ID, promptId: "withdrawn-prompt" },
+      ],
+      stage: "intermediate",
+    })).toMatchObject({
+      status: "unavailable",
+      reason: "no_eligible_reviewed_items",
+    });
   });
 });

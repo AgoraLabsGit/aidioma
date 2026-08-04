@@ -63,7 +63,7 @@ work:
     blocked_by: []
     reusable_by: [practice, lessons]
     next_slice: >-
-      After the next PRACTICE-SERVING-001 implementation, use /plan EVALUATION-001 to decide structured coaching points and feedback-language behavior shared by Practice and Lessons, including when one versus multiple points are justified, ordering, total reading budget, safe fallbacks, and the browser/API migration.
+      Use /plan EVALUATION-001 to decide the shared Practice/Lessons feedback contract: explicit feedback language and matching fallbacks; structured coaching and immediate phrase-repair prompts after a miss; meaning-changing versus ordinary spelling treatment; calmer verdict and reviewed-answer language; reading budget; and the browser/API migration.
     evidence:
       - Independent runtime audit on 2026-08-03 confirmed that non-exact Practice answers correctly reach the AI path and that the missing EVALUATION_AI_GATEWAY_API_KEY caused the reported HTTP 503 configuration failure.
       - Founder authorized local reuse of the existing Gateway key for evaluation on 2026-08-04; the ignored apps/web/.env.local now explicitly configures EVALUATION_AI_GATEWAY_API_KEY without weakening the adapter's fail-closed ambient-key rule.
@@ -71,19 +71,25 @@ work:
       - Production-mode localhost returned HTTP 200 with status graded and evalSource ai for a non-exact Practice answer; a browser submission rendered learner feedback, advanced the completed count once, and showed no grading error.
       - >-
         Founder proposed breaking dense coaching into discrete bullets on 2026-08-04. Independent contract audit recommends 1-3 validated coaching points returned by the grader, never browser punctuation-splitting; this remains a planning decision because it changes shared Practice/Lesson evaluation behavior and the evaluation API.
+      - >-
+        Founder raised immediate reinforcement after an incorrect answer on 2026-08-04, using reviewed mappings such as available to disponible and no longer to ya no. Planning must distinguish an optional one-or-two-phrase same-turn repair from later scheduled retrieval, avoid counting the repair as mastery evidence, and decide when spelling changes are meaning-bearing enough to practice.
+      - >-
+        Founder reported feedback switching between English and Spanish. Current deterministic feedback is English and the AI path has no explicit learner-facing feedback-language contract; /plan must choose a default, supported values, and safe same-language fallbacks before Settings exposes the choice.
+      - >-
+        Founder proposed removing the large Almost and Keep working headings and the shouty A CORRECT ANSWER label. Planning should preserve an understandable non-color verdict while testing calmer status language and visually separated coaching and reviewed-answer regions.
   - id: PRACTICE-PAGE-001
     title: Practice page learner journey
     area: practice
-    status: planning
+    status: planned
     kind: feature
-    founder_approval: required
+    founder_approval: approved
     summary: Review the collection catalog, continuous practice interaction, feedback transitions, saved entry points, and session controls as one coherent learner journey.
     spec: Specs/practice-page.md
     dependencies: [PRACTICE-SERVING-001, UI-SYSTEM-001]
     blocked_by: []
     reusable_by: [practice]
     next_slice: >-
-      Obtain founder decisions on the catalog draft: Browse/My practice naming, B1 target-level metadata, removal of the mixed chips, future left progress rail, prototype collection visibility, removal of % latest, and temporary Settings launcher. Approval moves this item to planned and makes the immediate catalog slice eligible for /feat; broader page candidates remain deferred.
+      Use /feat PRACTICE-PAGE-001 to implement the approved immediate catalog slice: responsive card grid, Save above Settings, B1 at the content bottom right, Browse/My practice, removal of the mixed chips and % latest, truthful prototype boundaries, and catalog-specific accessibility proof. Do not add the future progress rail or redesign Settings.
     evidence:
       - >-
         Founder approved four immediate Practice polish changes on 2026-08-04: smaller practice-question typography, verdict-distinct accessible feedback surfaces for correct/close/wrong, larger feedback copy, and equal-height Settings, Save, completed-count, and session-result header items.
@@ -104,12 +110,18 @@ work:
       - >-
         An independent three-perspective panel reviewed catalog information architecture, durable progress/persistence honesty, and responsive card accessibility. The synthesis recommends Browse/My practice, typed target-level metadata, removal of % latest from cards, a vertical Save/Settings rail, and a future left progress indicator gated on approved evidence.
       - >-
-        A fresh adversarial audit found source-readiness, current-card disposition, sequencing, and accessible-control gaps. The revised draft separates serving authority from production readiness, disposes of % latest and the temporary Settings launcher, splits immediate/dependent proof, defines switch and card semantics, and passed re-audit with no remaining material approval blockers.
+        A fresh adversarial audit found source-readiness, current-card disposition, sequencing, and accessible-control gaps. The revised draft separates serving authority from production readiness, removes % latest while preserving the temporary Settings launcher, splits immediate/dependent proof, defines switch and card semantics, and passed re-audit with no remaining material approval blockers.
       - npm run work:validate -- --docs-root Docs (0 errors, 0 warnings)
+      - >-
+        Founder approved the complete catalog recommendation on 2026-08-04: Browse/My practice, typed B1 target level, removal of mixed chips and % latest, Save above the temporary Settings launcher, four-card prototype visibility with explicit readiness gates, and a future left progress rail whose evidence and visuals remain deferred.
+      - >-
+        Founder proposed an icon-only star for saving the current prompt, likely at the feedback card's right edge, and distinct word-saving actions beside reviewed phrases. The eventual design must preserve a 44px target, pressed state, accessible name, and a clear distinction between saving a prompt and saving a word or phrase.
+      - >-
+        Founder wants Practice to support clarifying Spanish-learning questions. The current composer grades every submission, so the page plan must evaluate an explicit Answer versus Ask AIdioma interaction or follow-up button; a question must not advance the serving schedule or create learning evidence.
   - id: PRACTICE-SERVING-001
     title: Adaptive and reinforced Practice serving
     area: practice-serving
-    status: active
+    status: complete
     kind: feature
     founder_approval: approved
     summary: Replace inventory-only ordering with working sets, deliberate miss requeue, interleaving, refill, direction, and graduation policies.
@@ -118,7 +130,7 @@ work:
     blocked_by: []
     reusable_by: [practice]
     next_slice: >-
-      Next command after /close: use /feat PRACTICE-SERVING-001 to move visit-local Saved Restaurant typed practice onto the same reinforced journey, preserve clear shortfall and zero-valid recovery, and add a tested in-memory checkpoint/restore boundary without claiming refresh or cross-device persistence. Keep non-Restaurant collections and Flashcards on their explicitly named existing paths until separately migrated or hidden.
+      Complete. Next use /plan EVALUATION-001 for structured coaching, immediate repair, feedback language, and calmer feedback semantics.
     evidence:
       - Founder approved the explained learner journey, policy-v1 recommendations, and test-and-tune posture on 2026-08-03.
       - Founder approved 50 reviewed prompts as the shipping minimum, 100 as target, and 10 per advertised exact serving scope on 2026-08-03.
@@ -133,6 +145,14 @@ work:
       - App typecheck, lint, 261-test full suite, and production build passed after the Restaurant typed integration and evaluator-recovery correction.
       - Production-route Practice smoke passed deterministic-comparison reinforced miss return plus missing-evaluator Continue-without-grading recovery, axe, keyboard, reduced-motion, 200% text, and no-overflow checks across 320px, phone, and desktop viewports in both themes (36 screenshots); configured Gateway AI grading remains owned by EVALUATION-001.
       - A fresh independent three-agent implementation audit traced runtime grading, test seams, and learner recovery; it found that mocked evaluator layers and deterministic smoke answers had masked the absent evaluation-only credential. Permanent configuration and 4xx failures now avoid retry loops, and the subsequently authorized local key wiring passed live API and browser AI-grading proof.
+      - >-
+        Visit-local personal Saved Restaurant prompts now resolve only from their frozen valid references in the pinned reviewed Restaurant source and use policy v1. Invalid references are reported, under-five pools remain explicit, zero-valid scopes offer recovery without substitution, and non-Restaurant Saved material plus Flashcards remain on their named existing paths.
+      - >-
+        Reinforced Restaurant collection and Saved visits can pause into a serialized checkpoint held only in current-page React memory. Resume re-resolves and validates the exact frozen source and versions, restores the transcript, completed count, typed draft, and next offer, ignores late grading results, and makes no refresh, cross-device, or durable-persistence claim.
+      - Focused Saved/source/checkpoint/component proof passed 53 tests; the complete app suite passed 273 tests across 32 files.
+      - App typecheck, zero-warning lint, production build, Git diff check, and work-registry validation passed.
+      - >-
+        Production-route browser smoke passed collection and four-item Saved Restaurant A-B-C-D-A reinforcement, current-page pause/resume without browser-storage writes, unavailable-evaluator recovery, axe, keyboard, reduced motion, 200% text, and no horizontal overflow across 320px, phone, and desktop viewports in both themes (54 screenshots).
   - id: PRACTICE-SETTINGS-001
     title: Practice session configuration and Settings redesign
     area: practice
@@ -142,25 +162,34 @@ work:
     summary: Replace internal metadata and engine controls with a small set of meaningful learner requests.
     spec: null
     dependencies: [PRACTICE-SERVING-001, EVALUATION-001, UI-SYSTEM-001]
-    blocked_by: [PRACTICE-SERVING-001, EVALUATION-001, UI-SYSTEM-001]
+    blocked_by: [EVALUATION-001, UI-SYSTEM-001]
     reusable_by: [practice, lessons]
     next_slice: Run /plan only after Practice serving, shared feedback-language behavior, and canonical UI patterns identify which learner choices are real.
     evidence:
       - >-
         Founder requested on 2026-08-04 that Settings let learners choose the language used for grading feedback. The available languages, default, fallback, and relationship to the practice direction remain product decisions for /plan.
   - id: PROGRESS-SAVED-001
-    title: Honest progress and durable saved material
+    title: Learner Knowledge Profile and durable saved material
     area: progress
     status: open
     kind: feature
     founder_approval: required
-    summary: Define evidence, session completion, saved identity, persistence, and learner-visible progress without false mastery claims.
+    summary: Define a learner-owned Knowledge Profile for word and phrase evidence, attempts, saved material, session completion, review needs, and learner-visible progress without false mastery claims.
     spec: Specs/progress-and-saved-material.md
     dependencies: [PRACTICE-SERVING-001]
     blocked_by: []
     reusable_by: [practice, lessons, home]
-    next_slice: Plan evidence vocabulary and the minimum durable saved/session data.
-    evidence: []
+    next_slice: >-
+      Use /plan PROGRESS-SAVED-001 to define the first useful Knowledge Profile before choosing tables: stable word/phrase and meaning identity, recognition versus production observations, attempt and assistance facts, delayed evidence, review states, saved-word and custom-collection behavior, learner-visible list/filter views, session relationships, correction/deletion, and the minimum durable release. Treat a visual knowledge graph as a later presentation option only if it helps learners choose what to practice.
+    evidence:
+      - >-
+        Founder asked on 2026-08-04 whether AIdioma tracks understanding word by word and whether mastered, partly known, and struggling vocabulary could form a list or knowledge graph. Executable truth is that it does not: Practice has only visit-local results and the database has no learner word, phrase, attempt, saved-word, mastery, or durable Practice-session records.
+      - >-
+        The existing progress-and-saved-material dossier and data-and-persistence dossier are draft planning inputs, not an approved Knowledge Profile or migration plan. They preserve useful boundaries such as separating immediate accuracy from durable learning and recognition from production, but /plan must still decide the learner promise and minimum evidence model.
+      - >-
+        A learner-facing wordbook or filtered evidence list is the preferred first presentation candidate because it can support a clear next practice action. A relationship graph remains optional until real relationships provide more value than list states such as Seen, Practicing, Needs review, or Strong recent evidence; Mastered must not be claimed from one answer or same-turn correction.
+      - >-
+        Saving a prompt, saving a contextual word or phrase, and organizing a custom collection are distinct learner jobs. Durable saved vocabulary should preserve reviewed context, meaning, form, source, direction, and evidence history rather than reducing knowledge to an isolated string.
   - id: CONTENT-GENERATION-001
     title: Reviewed content generation and publication pipeline
     area: content
@@ -222,10 +251,13 @@ work:
     summary: Plan the minimum safe session, evaluation, progress, preference, and saved-material persistence after serving/evidence semantics and pre-write platform hardening are approved.
     spec: Specs/data-and-persistence.md
     dependencies: [PRACTICE-SERVING-001, PROGRESS-SAVED-001, PLATFORM-SECURITY-001]
-    blocked_by: [PRACTICE-SERVING-001, PROGRESS-SAVED-001, PLATFORM-SECURITY-001]
+    blocked_by: [PROGRESS-SAVED-001, PLATFORM-SECURITY-001]
     reusable_by: [practice, lessons, home]
-    next_slice: Reassess the historical planned-table list after serving, evidence, and platform planning.
-    evidence: []
+    next_slice: >-
+      After the Knowledge Profile and pre-write security plans are approved, use /plan DATA-PERSISTENCE-001 to choose the smallest authenticated, owner-checked, idempotent learner schema for the approved attempt, session, evidence, and saved-material behavior; do not migrate the historical candidate table list wholesale.
+    evidence:
+      - >-
+        Executable audit confirmed on 2026-08-04 that the database contains only lessons and lesson_items plus the migration journal. There are no learner word records, attempt tables, saved-word tables, mastery states, or durable Practice sessions.
   - id: LESSONS-001
     title: Lessons learner journey and Practice reuse
     area: lessons
@@ -235,7 +267,7 @@ work:
     summary: Define finite lesson teaching/progression and consume only Practice engines, evaluation adapters, and UI patterns whose contracts have been proven independently.
     spec: Specs/lessons.md
     dependencies: [PRACTICE-SERVING-001, EVALUATION-001, UI-SYSTEM-001]
-    blocked_by: [PRACTICE-SERVING-001, EVALUATION-001, UI-SYSTEM-001]
+    blocked_by: [EVALUATION-001, UI-SYSTEM-001]
     reusable_by: [lessons]
     next_slice: Revisit after Practice contracts exist; use a concrete Lesson slice as the second consumer before extracting shared abstractions.
     evidence: []
@@ -271,10 +303,15 @@ work:
     status: deferred
     kind: research
     founder_approval: required
-    summary: Preserve tutor/agent ideas as deferred research without committing to Eve, Workflow, or another runtime.
+    summary: Define how learners can ask contextual follow-up and open Spanish-learning questions without confusing tutoring with graded Practice, and preserve durable agent ideas without committing to Eve, Workflow, or another runtime.
     spec: null
     dependencies: [PLATFORM-SECURITY-001]
     blocked_by: []
     reusable_by: [practice, lessons]
-    next_slice: Re-evaluate when a concrete learner job cannot be satisfied by simpler services.
-    evidence: []
+    next_slice: >-
+      After the evaluation contract is clear, assess the smallest explicit Ask AIdioma interaction, its context and safety boundaries, and whether a normal request or streamed chat service is sufficient. Consider a durable workflow only when a concrete long-running learner job requires it.
+    evidence:
+      - >-
+        Founder requested clarifying questions and open Spanish-learning discussion from Practice on 2026-08-04. Current Practice sends every composer submission to the grading endpoint and has no question intent, tutor conversation, or durable agent workflow.
+      - >-
+        Current Practice does not use Vercel Workflow. It calls a direct evaluation route and uses a comparison-first evaluation service with an AI Gateway fallback for uncertain answers; a transitive workflow serialization package is not application workflow usage.
