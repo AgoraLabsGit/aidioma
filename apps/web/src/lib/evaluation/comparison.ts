@@ -7,10 +7,12 @@ import type {
 
 import {
   EVALUATION_INPUT_MAX_LENGTH,
+  EVALUATION_CORRECTION_MAX_HIGHLIGHTS,
   EVALUATION_WORD_DIFF_MAX_ENTRIES,
   EVALUATION_WORD_DIFF_TEXT_MAX_LENGTH,
   type EvaluationDirection,
   type EvaluationResult,
+  type CorrectionPresentation,
   type WordDiffEntry,
 } from "./contracts";
 
@@ -351,6 +353,69 @@ export function createWordDiff(userInput: string, expected: string): WordDiffEnt
   const steps = diffTokens(userInput, expected);
 
   return createBoundedWordDiff(userDisplay, expectedDisplay, steps);
+}
+
+export function createCorrectionPresentation(
+  userInput: string,
+  acceptedAnswers: readonly string[],
+): CorrectionPresentation {
+  if (acceptedAnswers.length === 0) {
+    throw new Error("A correction requires at least one reviewed answer");
+  }
+
+  let text = acceptedAnswers[0];
+  let bestSimilarity = -1;
+  for (const candidate of acceptedAnswers) {
+    const similarity = comparisonSimilarity(
+      normalizeForComparison(userInput),
+      normalizeForComparison(candidate),
+    );
+    if (similarity > bestSimilarity) {
+      text = candidate;
+      bestSimilarity = similarity;
+    }
+  }
+
+  const targetWords = [...text.matchAll(/[\p{L}\p{N}]+(?:['’ʼ-][\p{L}\p{N}]+)*/gu)].map(
+    (match) => ({
+      start: match.index,
+      end: match.index + match[0].length,
+    }),
+  );
+  const userWords = prepareText(userInput, false).split(" ").filter(Boolean);
+  const expectedWords = prepareText(text, false).split(" ").filter(Boolean);
+  const highlights = diffTokens(userInput, text)
+    .flatMap((step) => {
+      if (step.type === "same" || step.type === "extra") return [];
+      const target = targetWords[step.expectedIndex];
+      if (!target) return [];
+      if (step.type === "missing") {
+        return [{ ...target, kind: "different" as const }];
+      }
+
+      const userWord = userWords[step.userIndex];
+      const expectedWord = expectedWords[step.expectedIndex];
+      const distance = levenshteinDistance(
+        normalizeForComparison(userWord),
+        normalizeForComparison(expectedWord),
+      );
+      const similarity = comparisonSimilarity(
+        normalizeForComparison(userWord),
+        normalizeForComparison(expectedWord),
+      );
+      return [
+        {
+          ...target,
+          kind:
+            distance === 1 || similarity >= CLOSE_SIMILARITY
+              ? ("spelling" as const)
+              : ("different" as const),
+        },
+      ];
+    })
+    .slice(0, EVALUATION_CORRECTION_MAX_HIGHLIGHTS);
+
+  return { text, highlights };
 }
 
 function boundText(value: string): string {

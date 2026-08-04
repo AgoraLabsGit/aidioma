@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 
 import { EvaluationService } from "@/lib/evaluation/evaluation-service";
+import { createCorrectionPresentation } from "@/lib/evaluation/comparison";
 import { GatewayAiVerdictGenerator } from "@/lib/evaluation/gateway-evaluator";
 import {
   PracticeEvaluationRequestSchema,
@@ -47,6 +48,7 @@ export async function POST(request: Request): Promise<Response> {
   const answerGroup =
     parsed.data.direction === "en-es" ? prompt.answers.spanish : prompt.answers.english;
   const modelAnswer = parsed.data.direction === "en-es" ? prompt.spanish : prompt.english;
+  const authoritativeAnswers = acceptedPracticeAnswerTexts(modelAnswer, answerGroup.target);
   const sourceText = parsed.data.direction === "en-es" ? prompt.english : prompt.spanish;
   const outcome = await service.evaluate({
     requestId: randomUUID(),
@@ -59,7 +61,7 @@ export async function POST(request: Request): Promise<Response> {
     },
     source: {
       sourceText,
-      authoritativeAnswers: acceptedPracticeAnswerTexts(modelAnswer, answerGroup.target),
+      authoritativeAnswers,
       grammarTags: prompt.grammarTags,
       assessmentGoal: `${prompt.capability}. ${prompt.cue}`,
     },
@@ -79,12 +81,18 @@ export async function POST(request: Request): Promise<Response> {
     return json(response, 503);
   }
 
-  return json(
-    PracticeEvaluationResponseSchema.parse({
-      status: "graded",
-      ...outcome.result,
-      modelAnswer,
+  const response = {
+    status: "graded" as const,
+    score: outcome.result.score,
+    verdict: outcome.result.verdict,
+    feedback: outcome.result.feedback,
+    errorTags: outcome.result.errorTags,
+    evalSource: outcome.result.evalSource,
+    ...(outcome.result.modelUsed && { modelUsed: outcome.result.modelUsed }),
+    ...(outcome.result.verdict !== "correct" && {
+      correction: createCorrectionPresentation(parsed.data.userInput, authoritativeAnswers),
     }),
-    200,
-  );
+  };
+
+  return json(PracticeEvaluationResponseSchema.parse(response), 200);
 }

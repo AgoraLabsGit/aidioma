@@ -356,7 +356,7 @@ export class GatewayAiVerdictGenerator implements AiVerdictGenerator {
     if (!model || !this.#gatewayApiKey || !this.#generate || !user) {
       return {
         kind: "ungraded",
-        retryable: true,
+        retryable: false,
         failure: "configuration",
         metadata: baseMetadata(),
       };

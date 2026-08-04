@@ -72,4 +72,29 @@ describe("POST /api/practice/evaluate", () => {
         "Automatic grading isn’t available for this answer. Your response is still here, but retrying won’t help right now.",
     });
   });
+
+  it("builds the full correction from reviewed answers instead of provider diff text", async () => {
+    evaluateMock.mockResolvedValueOnce({
+      kind: "graded",
+      result: {
+        score: 74,
+        verdict: "close",
+        feedback: "Adjust the highlighted words.",
+        wordDiff: [
+          { text: "provider text", mark: "wrong", suggestion: "do not display this" },
+        ],
+        errorTags: [],
+        evalSource: "ai",
+      },
+    });
+
+    const response = await POST(requestForKnownPrompt());
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.correction.text).toBe(practiceSetFixtures[0].prompts[0].spanish);
+    expect(body.correction.highlights.length).toBeGreaterThan(0);
+    expect(JSON.stringify(body)).not.toContain("provider text");
+    expect(JSON.stringify(body)).not.toContain("do not display this");
+  });
 });

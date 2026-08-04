@@ -223,7 +223,7 @@ describe("GatewayAiVerdictGenerator", () => {
     expect(generate).not.toHaveBeenCalled();
     expect(outcome).toMatchObject({
       kind: "ungraded",
-      retryable: true,
+      retryable: false,
       failure: "configuration",
       metadata: { provider: "gateway" },
     });
@@ -395,7 +395,7 @@ describe("GatewayAiVerdictGenerator", () => {
     expect(generate).not.toHaveBeenCalled();
     expect(outcome).toMatchObject({
       kind: "ungraded",
-      retryable: true,
+      retryable: false,
       failure: "configuration",
     });
   });
@@ -409,7 +409,7 @@ describe("GatewayAiVerdictGenerator", () => {
     expect(generate).not.toHaveBeenCalled();
     expect(outcome).toMatchObject({
       kind: "ungraded",
-      retryable: true,
+      retryable: false,
       failure: "configuration",
     });
     expect(JSON.stringify(outcome)).not.toContain("gatewayApiKey");
@@ -427,7 +427,7 @@ describe("GatewayAiVerdictGenerator", () => {
     expect(generate).not.toHaveBeenCalled();
     expect(outcome).toMatchObject({
       kind: "ungraded",
-      retryable: true,
+      retryable: false,
       failure: "configuration",
     });
     vi.unstubAllEnvs();

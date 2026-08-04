@@ -88,8 +88,9 @@ explicit.
   separate later capability.
 - Private generated Practice Sets were assigned to a later authenticated, durable workflow whose
   database state remains product authority; current SDK/runtime details require opening validation.
-- A shipping collection contains at least 50 distinct reviewed learning units, with 100 as the
-  target. Direction and activity variants do not increase that underlying-content count.
+- `PRODUCT.md` now owns the founder-approved rule that a shipping Practice collection contains at
+  least 50 distinct reviewed underlying prompts, with 100 as the target; direction and activity
+  variants do not increase that count. This capability must enforce that rule when planned.
 
 These policies are not fully executed: L3/L4 remain pending for current lessons, lesson 5 has an
 open L2 issue, and no learner report-item workflow exists.
@@ -153,7 +154,7 @@ A planned content pipeline must define and prove:
 
 1. Should every authored hash change require a larger `contentVersion` in CI?
 2. Does the founder retain the four-layer launch bar, including full native review?
-3. Retain curated Practice Sets in the typed MVP and the 50-minimum/100-target content-depth rule?
+3. Retain curated Practice Sets in the typed MVP?
 4. Should P-007 be approved, revised, or rejected before lesson 5 continues?
 5. Which Practice content, if any, becomes canonical shared content rather than a fixture?
 6. What minimum report-item and alternate-promotion loop is required before launch?
@@ -171,7 +172,7 @@ A planned content pipeline must define and prove:
 | CG-D004 | candidate | P-007 closed-set schema widening. | unresolved |
 | CG-D005 | research | Source/license posture is evidence and must be reverified before ingestion. | retained |
 | CG-D006 | legacy-accepted | Curated reviewed Practice Sets belong in the typed MVP. | pending |
-| CG-D007 | legacy-accepted | Shipping collections use 50 reviewed units minimum and 100 as target. | pending |
+| CG-D007 | accepted | `PRODUCT.md` owns the approved 50 reviewed-prompt minimum and 100 target for shipping collections. | approved 2026-08-03 via `PRACTICE-SERVING-001` |
 | CG-D008 | legacy-accepted | Private generated Practice Sets use durable orchestration while database state remains authority. | pending |
 
 ### Canonical work and fix references
