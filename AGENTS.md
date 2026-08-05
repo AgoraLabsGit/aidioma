@@ -23,6 +23,9 @@ context.
 - Proof-first for implementation: one real path, composition/seams review, keep/revise/remove.
 - ≤3 consequential founder decisions per checkpoint. Silence is not approval.
 - Sub-agents only for bounded questions; coordinator synthesizes; Mike decides.
+- Cursor skills may be invoked per the allow-list in `Docs/System/development-system-v2.md`; they
+  advise only. Do not preload `Docs.2/`; farm relevant legacy evidence only after outcome/non-goals
+  are set.
 
 ## Commands
 
@@ -39,6 +42,8 @@ context.
   production data/config work or unrelated diff expansion.
 - `/launch` — stop stale learner-app dev servers, then `npm run app:dev`.
 - `/dashboard` — stop stale work-dashboard servers, then `npm run work:dashboard`.
+- `/system` — onboard/revise commands, System files/folders, and process best practices. Show
+  wording before writing. No product code. Large system work still uses a phase + `/run`.
 - `/feat` — **removed**; use `/run`.
 
 ## Close audits (implementation)

@@ -69,9 +69,35 @@ work registry beside the Roadmap.
 | `/close` | Phase complete | Audits → commit/PR/merge exact head → clean `main`. Human review when UI/testable. Stop stale servers. |
 | `/launch` | View the learner app | Stop stale app dev servers, then start `npm run app:dev`. |
 | `/dashboard` | View the work dashboard | Stop stale dashboard servers, then start `npm run work:dashboard`. |
+| `/system` | Evolve the development system | Onboard/revise commands, `Docs/System` files/folders, and process best practices. Show wording first. |
 | `/feat` | — | **Removed.** Use `/run`. |
 
 `/dashboard` is first-class in V2; PHASE-001 makes the UI read living Roadmap data.
+
+`/system` is meta-only: it updates process memory and structure. It is not `/plan` (product phases)
+and not a backdoor for product code. Large system deliveries still use a Roadmap phase + `/run`.
+
+### Cursor skills (helpers only)
+
+AIdioma commands may invoke listed Cursor skills as helpers. Skills advise; commands decide and
+publish. No Cursor skill becomes an AIdioma command or bypasses Roadmap/MCOO/close gates.
+
+| AIdioma command | May invoke |
+|---|---|
+| `/close` | `review-bugbot`, `review-security`, `code-review` (audit helpers) |
+| `/run` | `code-review` when useful; `split-to-prs` only with Mike’s explicit OK |
+| Any (maintenance) | `create-skill`, `create-rule` when updating our own skills/rules |
+| Worktrees | `apply-worktree` / `delete-worktree` only if **one** phase worktree remains the norm |
+
+Do not invoke Cursor `/design`, `/document`, `/cleanup`, or `/build` as substitutes for `/plan` or
+`/run`.
+
+### Legacy evidence farm (`Docs.2/`)
+
+Do **not** preload `Docs.2/` into planning context. After the phase outcome, non-goals, and MCOO cut
+list are set with Mike, a bounded sub-agent may mine **relevant** `Docs.2/` slices and return
+keep / defer / reject / conflict items for Backlog or phase Inputs. Legacy never authorizes
+implementation and must not be treated as approved design.
 
 ### Mid-phase Git
 

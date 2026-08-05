@@ -15,7 +15,8 @@
 
 ## Commands
 
-See [`System/COMMANDS.md`](System/COMMANDS.md).
+See [`System/COMMANDS.md`](System/COMMANDS.md). Use `/system` to add or revise commands and process
+files.
 
 ## Planning order (current)
 
