@@ -24,6 +24,24 @@ work:
       - Contract typecheck and 13 smoke checks passed.
       - Prototype freshness check passed; removal remains blocked until its review job is replaced.
       - Dashboard browser proof passed against canonical Docs with 29 rows and 0 issues.
+  - id: DEV-RHYTHM-001
+    title: Proof-first design and development cycle
+    area: development-system
+    status: active
+    kind: process
+    founder_approval: approved
+    summary: Operationalize design just ahead of implementation through one demonstrable learner journey, bounded founder decisions, real-path proof, mandatory composition review, and evidence-led documentation reconciliation.
+    spec: null
+    dependencies: [DEV-SYSTEM-001]
+    blocked_by: []
+    reusable_by: [all-surfaces]
+    next_slice: >-
+      Apply the cycle to /plan LEXICON-001: revise the proposed first delivery around one real assisted Restaurant Practice journey, then evaluate whether the proof improves founder confidence and whether the resulting parts remain well composed before expanding them.
+    evidence:
+      - >-
+        Founder approved codifying the proof-first development rhythm on 2026-08-04 after identifying that comprehensive up-front architecture review created information overload without enough confidence in the learner experience.
+      - >-
+        Repository rules and the reusable AIdioma development skill now assign journey selection and at most three founder decisions to /plan, complete real-path implementation and composition review to /feat, and evidence reconciliation plus keep/revise/remove decisions to /close.
   - id: REPO-CLEANUP-001
     title: Remove obsolete static prototype after replacing its review job
     area: repository
@@ -51,6 +69,56 @@ work:
     reusable_by: [content-review, lessons]
     next_slice: Decide whether the replacement belongs in apps/web or a local review workbench and prove lessons 2 and 3 render equivalently.
     evidence: []
+  - id: LEXICON-001
+    title: Reviewed word and phrase directory
+    area: lexicon
+    status: active
+    kind: system
+    founder_approval: approved
+    summary: Establish stable reviewed word/phrase meaning identity through one source-bound assisted Restaurant proof while preserving the current Practice experience and keeping learner memory and scheduling policy outside the Lexicon.
+    spec: Specs/lexicon.md
+    dependencies: [PRACTICE-SERVING-001]
+    blocked_by: []
+    reusable_by: [practice, lessons, translation, progress]
+    next_slice: >-
+      Use /close to review and publish the exact proven LEXICON-001 head. The active-prompt Word help, I don't know reveal/Continue/reinforcement, exact visit-local assistance, server projection, validators, and CI/browser proofs are implemented. Do not expand this close into global lookup, reverse indexes, learner persistence, target ranking, deployed fixture evaluation, or broad Lesson annotation.
+    evidence:
+      - >-
+        Mike authorized `/feat LEXICON-001` on 2026-08-04 after EVALUATION-FIX-002 completed and asked the primary agent to coordinate bounded sub-agent work while preserving the current Practice UI/UX.
+      - >-
+        Founder initiated /plan LEXICON-001 on 2026-08-04 and requested explicit review of type-safe Zod contracts, deterministic behavior, archived component proposals, and the MCOO principle of minimum complexity for optimal output.
+      - >-
+        Founder initially preferred a contract capable of spanning beginner-to-intermediate Lessons and Collections; proof-first review narrowed this delivery to the real intermediate Restaurant consumer while preserving later Lesson compatibility as an extension point.
+      - >-
+        Independent type-safety, learner-journey, and archive/source reviews converged on a Spanish-first reviewed entry+sense contract and a separate versioned contextual sidecar while deferring conjugation paradigms, template phrases, lexical relations, external ingestion, learner writes, and adaptive service.
+      - >-
+        A fresh adversarial audit initially blocked embedded bindings, duplicate lexical authority, underspecified lifecycle/evidence behavior, overclaimed scenarios, and broad roadmap coupling. The revised draft passed re-audit after isolating mappings from Lesson/Restaurant payloads, defining precedence and version snapshots, narrowing claims, adding a pure reader/coverage contract, relaxing dependencies, and specifying compatibility and lifecycle proof.
+      - >-
+        Founder-directed historical comparison found that entry+sense identity, repository authority, lifecycle rules, and separation from learner evidence materially improve on the older speculative knowledge schemas, while the current whole-item binding and no-UI first delivery do not yet prove contextual click-any-word assistance, phrase spans, displayed forms, or assistance attribution.
+      - >-
+        Founder chose a proof-first development rhythm on 2026-08-04: design just ahead of implementation, demonstrate each complete learner journey in the real application, review composition after each capability, and periodically review the wider codebase rather than approving the complete architecture up front.
+      - >-
+        The documentation-only revision now replaces whole-item bindings with a versioned contextual map for exact bilingual spans, reviewed surface forms, structural non-equivalence, and visit-local assistance attribution; its first acceptance proof is the real Restaurant interaction, not infrastructure alone.
+      - >-
+        On 2026-08-04 the founder delegated final judgment after requiring review of every current draft, preservation of the Practice UI/UX, and a credible future path from lexical identity to a Knowledge Profile and target-aware Practice. The reviewing agent approved only after narrowing help to named reviewed targets, protecting the default prompt/composer, defining reveal/Continue/requeue and assisted-correct precedence, checkpointing exact assistance, separating per-item and collection hashes, and keeping learner memory plus selection policy outside the Lexicon.
+      - >-
+        Fresh independent cross-spec, Practice UI, and Knowledge Profile/serving audits all returned revise-before-approval on the earlier draft and supplied the bounded corrections now incorporated into the approved spec. The resulting future flow is Profile review need -> reviewed prompt opportunity -> frozen candidate pool -> unchanged whole-prompt practice-policy-v1 scheduling.
+      - npm run work:typecheck
+      - npm run work:test (24 tests)
+      - git diff --check
+      - npm run work:validate -- --docs-root Docs (22 work, 5 fixes, 10 specs, 0 errors, 0 warnings)
+      - >-
+        Focused current-path baseline passed 72 tests across the Practice workspace, Restaurant source, serving engine, visit checkpoint, and fixture evaluation route after the final planning revisions.
+      - >-
+        A fresh final adversarial recheck of the revised cross-spec contract passed with every prior blocker resolved: assistance precedence, summary honesty, per-item hashing, default UI preservation, checkpoint state, runtime projection, deferred abstractions, target-aware selection ownership, lifecycle state, and current evidence receipts are coherent.
+      - >-
+        EVALUATION-FIX-002 completed the prerequisite browser-proof repair: the canonical localhost command now reaches deterministic and configured Gateway evaluation, while non-loopback and Vercel-deployed requests fail closed. The full 278-test app suite, production build, and 54-screenshot Practice smoke passed.
+      - >-
+        LEXICON-001 now implements three reviewed lexical entries, one exact contextual map, a strict independent schema/reader, a learner-safe server projection, quiet active-prompt help, neutral I-don't-know reveal, visit-local checkpointed assistance, and reinforcement-aware outcome handling without a database, global lookup, or source-payload change.
+      - >-
+        Final proof passed 25 Lexicon package tests, 14 repository/tooling tests, 290 application tests, typecheck, lint, production build, the unchanged 54-screenshot Practice smoke, and an eight-screenshot focused Lexicon smoke at 320px and desktop in both themes with axe, 200% text, focus recovery, no overflow, and no help-triggered grading.
+      - >-
+        Fresh composition review required and verified a sole canonical hash owner, immutable origin/main content-version comparison, direct real-adapter proof, post-commit focus restoration for ready and recovery states, and CI gates with full Git history. The implementation is ready for /close without feature expansion.
   - id: EVALUATION-001
     title: Reliable shared evaluation and feedback
     area: evaluation
@@ -69,6 +137,8 @@ work:
       - Founder authorized local reuse of the existing Gateway key for evaluation on 2026-08-04; the ignored apps/web/.env.local now explicitly configures EVALUATION_AI_GATEWAY_API_KEY without weakening the adapter's fail-closed ambient-key rule.
       - npm run prove:evaluate --workspace @aidioma/web passed development database identity, deterministic comparison, live Gateway AI grading, and no-persistence assertions.
       - Production-mode localhost returned HTTP 200 with status graded and evalSource ai for a non-exact Practice answer; a browser submission rendered learner feedback, advanced the completed count once, and showed no grading error.
+      - >-
+        EVALUATION-FIX-002 proved the canonical localhost command reaches deterministic and configured Gateway grading without a manually remembered flag. A live Vercel inventory showed the dedicated evaluation variable name already scoped to Development, Preview, and Production, but encrypted presence does not prove separate credentials or budgets. The local fixture route remains forbidden on Vercel; deployed Practice still requires the authenticated source migration owned by this work item.
       - >-
         Founder proposed breaking dense coaching into discrete bullets on 2026-08-04. Independent contract audit recommends 1-3 validated coaching points returned by the grader, never browser punctuation-splitting; this remains a planning decision because it changes shared Practice/Lesson evaluation behavior and the evaluation API.
       - >-
@@ -118,6 +188,22 @@ work:
         Founder proposed an icon-only star for saving the current prompt, likely at the feedback card's right edge, and distinct word-saving actions beside reviewed phrases. The eventual design must preserve a 44px target, pressed state, accessible name, and a clear distinction between saving a prompt and saving a word or phrase.
       - >-
         Founder wants Practice to support clarifying Spanish-learning questions. The current composer grades every submission, so the page plan must evaluate an explicit Answer versus Ask AIdioma interaction or follow-up button; a question must not advance the serving schedule or create learning evidence.
+  - id: PRACTICE-ASSISTANCE-001
+    title: Expand reviewed word and phrase assistance across Practice
+    area: practice-assistance
+    status: open
+    kind: feature
+    founder_approval: required
+    summary: Generalize the proven active-prompt assistance interaction beyond the single Lexicon proof without moving help presentation, save actions, AI fallback, or scheduling policy into lexical records.
+    spec: null
+    dependencies: [LEXICON-001, EVALUATION-001]
+    blocked_by: []
+    reusable_by: [practice, lessons]
+    next_slice: >-
+      After the assisted Restaurant proof is implemented and reviewed for composition, use /plan PRACTICE-ASSISTANCE-001 to decide broader reviewed-prompt coverage, post-feedback help, arbitrary-text fallback, save actions, and reusable Lesson interaction boundaries. Keep missing mappings as ordinary Practice and do not infer target evidence from overall prompt verdicts.
+    evidence:
+      - >-
+        LEXICON-001 deliberately owns only one active-prompt consumer proof. Cross-spec review found that universal assistance, richer presentation, AI fallback, and save behavior need a permanent Practice-interaction owner rather than expansion of LexicalEntry or the current serving engine.
   - id: PRACTICE-SERVING-001
     title: Adaptive and reinforced Practice serving
     area: practice-serving
@@ -176,11 +262,11 @@ work:
     founder_approval: required
     summary: Define a learner-owned Knowledge Profile for word and phrase evidence, attempts, saved material, session completion, review needs, and learner-visible progress without false mastery claims.
     spec: Specs/progress-and-saved-material.md
-    dependencies: [PRACTICE-SERVING-001]
+    dependencies: [PRACTICE-SERVING-001, LEXICON-001, EVALUATION-001]
     blocked_by: []
     reusable_by: [practice, lessons, home]
     next_slice: >-
-      Use /plan PROGRESS-SAVED-001 to define the first useful Knowledge Profile before choosing tables: stable word/phrase and meaning identity, recognition versus production observations, attempt and assistance facts, delayed evidence, review states, saved-word and custom-collection behavior, learner-visible list/filter views, session relationships, correction/deletion, and the minimum durable release. Treat a visual knowledge graph as a later presentation option only if it helps learners choose what to practice.
+      Use /plan PROGRESS-SAVED-001 to define the first useful Knowledge Profile before choosing tables: exact semantic target and contextual occurrence provenance; recognition versus production; direction/modality; attempt, assistance, and target-specific finding facts; delayed evidence; rebuildable review needs; saved prompt versus saved word/phrase identity; learner-visible list/filter views; correction/deletion; and the minimum durable release. Treat a visual knowledge graph as a later presentation option only if it helps learners choose what to practice.
     evidence:
       - >-
         Founder asked on 2026-08-04 whether AIdioma tracks understanding word by word and whether mastered, partly known, and struggling vocabulary could form a list or knowledge graph. Executable truth is that it does not: Practice has only visit-local results and the database has no learner word, phrase, attempt, saved-word, mastery, or durable Practice-session records.
@@ -190,6 +276,22 @@ work:
         A learner-facing wordbook or filtered evidence list is the preferred first presentation candidate because it can support a clear next practice action. A relationship graph remains optional until real relationships provide more value than list states such as Seen, Practicing, Needs review, or Strong recent evidence; Mastered must not be claimed from one answer or same-turn correction.
       - >-
         Saving a prompt, saving a contextual word or phrase, and organizing a custom collection are distinct learner jobs. Durable saved vocabulary should preserve reviewed context, meaning, form, source, direction, and evidence history rather than reducing knowledge to an isolated string.
+  - id: TRANSLATION-001
+    title: Translation and reviewed lookup surface
+    area: translation
+    status: open
+    kind: feature
+    founder_approval: required
+    summary: Define an English-to-Spanish and Spanish-to-English translation surface that uses reviewed lexical lookup where sufficient, makes AI use explicit where needed, and lets authenticated learners save useful reviewed results without turning arbitrary model output into canonical content.
+    spec: null
+    dependencies: [LEXICON-001]
+    blocked_by: []
+    reusable_by: [translation, practice, lessons, saved]
+    next_slice: >-
+      After the lexicon contract is approved, use /plan TRANSLATION-001 to define a read-only lookup/translation journey, ambiguity handling, contextual lookup, AI fallback, and review/provenance boundaries. Durable history and saving remain dependent on the later Knowledge Profile, platform, and persistence contracts.
+    evidence:
+      - >-
+        Founder requested a fast bidirectional translation page with saved translations and later study reuse; LEXICON-001 narrows the deterministic foundation to reviewed Spanish meanings plus English expressions rather than a full English ontology or live external dictionary dependency.
   - id: CONTENT-GENERATION-001
     title: Reviewed content generation and publication pipeline
     area: content
@@ -241,7 +343,11 @@ work:
     blocked_by: []
     reusable_by: [all-surfaces]
     next_slice: Plan pre-write hardening independently of the future data model.
-    evidence: []
+    evidence:
+      - >-
+        SECURITY-FIX-001 hardened the fixture Practice evaluator behind an explicit opt-in, loopback request boundary, and deployed-Vercel refusal. The canonical local command injects the flag while binding to localhost, and the environment promotion contract explicitly forbids the flag in Preview and Production.
+      - >-
+        Live `vercel env ls` on 2026-08-04 confirmed encrypted EVALUATION_AI_GATEWAY_API_KEY entries for Development, Preview, and Production without exposing values. Before production promotion, this work must still prove environment-specific credential/budget, authentication, database, and same-origin isolation rather than treating variable presence as evidence.
   - id: DATA-PERSISTENCE-001
     title: Learner session and evidence persistence
     area: data
@@ -258,6 +364,24 @@ work:
     evidence:
       - >-
         Executable audit confirmed on 2026-08-04 that the database contains only lessons and lesson_items plus the migration journal. There are no learner word records, attempt tables, saved-word tables, mastery states, or durable Practice sessions.
+  - id: ADAPTIVE-SERVING-001
+    title: Knowledge-aware target and content serving
+    area: adaptive-serving
+    status: deferred
+    kind: feature
+    founder_approval: required
+    summary: Use approved learner word/phrase evidence to choose a review target and an eligible reviewed prompt opportunity, then let the existing engine schedule complete prompts without silently changing collection scope or treating assistance as knowledge.
+    spec: null
+    dependencies: [LEXICON-001, EVALUATION-001, PROGRESS-SAVED-001, DATA-PERSISTENCE-001]
+    blocked_by: [LEXICON-001, EVALUATION-001, PROGRESS-SAVED-001, DATA-PERSISTENCE-001]
+    reusable_by: [practice, lessons, home]
+    next_slice: >-
+      Plan only after stable lexical identity, target-specific observations, an approved Knowledge Profile, and durable evidence exist. Define the reviewed practice-opportunity contract from target + occurrence/source + skill + modality + direction + assessment requirement; compare one deterministic target-aware selector with item/recency and authored-level baselines; freeze the selected prompt pool before handing it to unchanged practice-policy-v1.
+    evidence:
+      - >-
+        Founder wants Lessons and Collections served from the learner's level and knowledge. Archived adaptive proposals support a sparse shadow proof first, but their broad runtime ontology and product approval were withdrawn; current Practice remains hard-coded intermediate and visit-local.
+      - >-
+        Founder clarified on 2026-08-04 that the Practice service should eventually decide which words or phrases to revisit from learner history and performance. LEXICON-001 therefore preserves exact semantic and occurrence identity, but this work item owns the later target-priority and eligible-prompt selection rule; the current engine remains a whole-prompt within-visit scheduler.
   - id: LESSONS-001
     title: Lessons learner journey and Practice reuse
     area: lessons

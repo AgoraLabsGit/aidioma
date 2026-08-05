@@ -1,33 +1,25 @@
-# AIdioma documentation
+# AIdioma documentation (Development System V2)
 
-This is the canonical documentation root. The tested application and executable contracts remain
-authoritative for implemented behavior; draft specifications are reviewed planning inputs.
+`Docs/` is the living documentation root. Frozen pre-V2 evidence lives in `Docs.2/`.
 
 ## Authority
 
-1. `apps/web/`, `packages/lesson-schema/`, `content/`, migrations, and tests prove current behavior.
-2. `PRODUCT.md` records approved product principles after founder review.
-3. `Specs/*.md` separate implemented truth from accepted, candidate, research, and conflicting claims.
-4. `WORK.yaml` is the only roadmap, feature registry, and systemic open-work queue.
-5. `FIXES.yaml` is the bounded defect/task queue.
-6. `HANDOFF.md` is current continuity and is overwritten by `/close`; Git preserves history.
+1. `apps/web/`, packages, `content/`, migrations, and tests prove product behavior.
+2. `System/development-system-v2.md` owns the approved development process.
+3. `System/COMMANDS.md` is the command key; `System/Templates/` holds templates.
+4. `Roadmap/Roadmap.md` is the schedule SSOT; phase specs own phase contracts.
+5. `Roadmap/Backlog.md` indexes unscheduled candidates only.
+6. `Handoffs/HANDOFF.md` is the only handoff file (overwrite; keep lean).
+7. `Specs/` holds capability contracts when a phase earns them.
+8. `Docs.2/` is evidence only — never mix it as a second living root.
 
-Draft specs are not implementation authority. `/plan` moves an item from open to planned only after
-discussion, a 2-4-agent design panel, draft, independent adversarial audit, revision, and founder
-approval. `/feat` implements one approved slice. `/fix` handles bounded defects. `/status` is read
-only. `/close` validates, reconciles, publishes, cleans Git, and rewrites the handoff.
+## Commands
 
-## Recommended planning order
+See [`System/COMMANDS.md`](System/COMMANDS.md).
 
-1. Product language and authority
-2. Practice serving and reinforced scheduling
-3. Evaluation and feedback
-4. Practice page and Settings
-5. Progress, saved material, and persistence
-6. Lessons and shared capability reuse
-7. Content generation and review
-8. UI system, platform, and security
+## Planning order (current)
 
-The pre-reset documentation is preserved in Git at
-`b0fd03f7ef73b6e3b095d6190353d81f1b7aeb3a`. Historical claims retained in draft dossiers remain
-deferred until their owning `/plan` session; migration did not approve them as product behavior.
+1. Finish PHASE-000 close (process-only)
+2. PHASE-001 Dev System Dashboard
+3. PHASE-002 Target Product Design
+4. PHASE-003 Core Component Architecture

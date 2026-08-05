@@ -133,7 +133,11 @@ async function resolveDocsRoot(
   repositoryRoot: string,
   configuredDocsRoot: string | undefined,
 ): Promise<ResolvedDocsRoot> {
-  const candidates = configuredDocsRoot ? [configuredDocsRoot] : ["Docs", "Docs.next"];
+  // Living Docs/ may be V2 (no WORK.yaml). Fall back to frozen Docs.2 until PHASE-001
+  // retargets the registry. Docs.next remains a migration candidate name.
+  const candidates = configuredDocsRoot
+    ? [configuredDocsRoot]
+    : ["Docs", "Docs.next", "Docs.2"];
   const incomplete: string[] = [];
 
   for (const configuredCandidate of candidates) {

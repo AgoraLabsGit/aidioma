@@ -1,0 +1,73 @@
+version: 1
+fixes:
+  - id: EVALUATION-FIX-001
+    title: Local non-exact Practice answers remain ungraded
+    area: evaluation
+    status: complete
+    summary: A reasonable non-exact answer reaches the AI fallback and displays a retryable grading failure.
+    related_work: EVALUATION-001
+    reproduction: On the local Practice route, answer “Para cena, podría hacer la pasta sin queso por favor?” for “For dinner, could you make the pasta without cheese, please?” while that answer is absent from the deterministic set and the provider fallback is unavailable.
+    expected: The configured evaluator grades the answer; if evaluation is unavailable, the application detects and explains that state without presenting an endless retry loop.
+    actual: Before correction, the answer was preserved but remained ungraded in a retryable “Try grading again” state.
+    evidence:
+      - Reproduced the learner report against the production-mode local route; semantic comparison fell through to AI and returned HTTP 503 because the evaluation-only Gateway credential was not configured.
+      - Configuration failures are now non-retryable, so Practice preserves the answer and offers Continue without grading instead of an endless Try grading again loop.
+      - Gateway evaluator, route, and component tests passed (61 focused tests); the full app suite passed with 261 tests.
+      - The production-route Practice smoke proved fail-closed credential isolation and the learner recovery path without repurposing the ambient Gateway credential.
+      - After founder-authorized local key reuse, the live evaluation proof and production-mode Practice API/browser path graded non-exact answers through AI successfully.
+  - id: EVALUATION-FIX-002
+    title: Standard localhost Practice server rejects grading route
+    area: evaluation
+    status: complete
+    summary: The standard localhost development server shows the non-retryable automatic-grading-unavailable state because its fixture Practice evaluation route is disabled before the configured Gateway evaluator can run.
+    related_work: EVALUATION-001
+    reproduction: Start the application with `npm run app:dev`, submit a non-exact answer in Restaurant Practice at `http://localhost:3000`, or POST a valid fixture request to `/api/practice/evaluate`.
+    expected: A correctly configured local development server reaches deterministic or Gateway evaluation while the fixture route remains impossible to enable outside an explicit development boundary.
+    actual: The route returns an empty HTTP 404 because `AIDIOMA_ENABLE_LOCAL_PRACTICE_EVALUATION` is absent; the separately launched browser-proof server worked because its smoke command injected that flag.
+    evidence:
+      - Founder reported the localhost failure on 2026-08-04 and noted that grading had worked on the separately launched IP-address server.
+      - Read-only process inspection confirmed `npm run app:dev` has served `apps/web` on port 3000 since 12:05 and that `apps/web/.env.local` contains the dedicated evaluation Gateway credential but not the local Practice evaluation opt-in.
+      - A valid POST to `http://localhost:3000/api/practice/evaluate` returned an empty HTTP 404, matching the route's pre-evaluation opt-in guard and proving that the request never reached Gateway grading.
+      - >-
+        The canonical web development command now injects the fixture opt-in while binding only to `localhost`; no ignored credential file or deployed configuration was changed.
+      - >-
+        The restarted standard localhost route returned HTTP 200 with `evalSource: comparison` for an exact reviewed answer and HTTP 200 with `evalSource: ai` for a reasonable non-exact answer.
+      - >-
+        Route denial and evaluation regression coverage passed with 8 route tests and 75 focused Practice/evaluation tests; the complete app suite passed with 278 tests, plus typecheck, lint, production build, and the 54-screenshot Practice browser smoke.
+      - >-
+        Live `vercel env ls` confirmed the dedicated evaluation variable name is already scoped to Development, Preview, and Production; values remained encrypted. The local fixture opt-in is absent and forbidden in deployed environments.
+  - id: CONTENT-FIX-001
+    title: Enforce contentVersion changes when canonical content changes
+    area: content
+    status: open
+    summary: Deterministic content hashes can change without a required contentVersion increase.
+    related_work: CONTENT-GENERATION-001
+    reproduction: Modify canonical lesson content without changing contentVersion and run the current validator.
+    expected: Validation rejects a changed hash without an intentional version increase.
+    actual: The current immutable-ID snapshot does not compare prior content hash and version.
+    evidence: []
+  - id: CONTENT-SOURCES-FIX-001
+    title: Replace removed archive links in content source research
+    area: content
+    status: open
+    summary: Current source research links to files removed from the working tree during the SSOT migration.
+    related_work: CONTENT-GENERATION-001
+    reproduction: Open the relative Content-data-sources survey links in content/curriculum/SOURCES.md from the current branch.
+    expected: Current source research uses live canonical evidence or an explicit durable Git-history reference.
+    actual: Three links resolve to the removed Docs/Archive tree; the historical survey exists only at commit b0fd03f7ef73b6e3b095d6190353d81f1b7aeb3a.
+    evidence:
+      - Discovered during /plan LEXICON-001 archive and source audit on 2026-08-04.
+  - id: SECURITY-FIX-001
+    title: Make the fixture Practice evaluator explicitly local-only
+    area: platform
+    status: complete
+    summary: The unauthenticated fixture-backed Practice evaluation route relies on one opt-in flag without asserting a development environment.
+    related_work: PLATFORM-SECURITY-001
+    reproduction: Enable AIDIOMA_ENABLE_LOCAL_PRACTICE_EVALUATION outside a development runtime.
+    expected: The route refuses to start or serve outside an explicitly local development boundary.
+    actual: The opt-in flag alone admits the fixture route.
+    evidence:
+      - The fixture route now requires the explicit opt-in and a loopback request, rejects any Vercel-marked deployment, and returns an empty 404 before parsing or evaluation when denied.
+      - Tests prove missing opt-in, non-loopback origin, Vercel Preview, Vercel Production, and a deployed `VERCEL` runtime cannot reach the evaluator.
+      - The standard development command binds to `localhost`; the existing production-build browser smoke remains locally bound and passed its complete Practice journey.
+      - The web setup documentation and environment template now state that the fixture opt-in is injected only by the local command and must never be added to Vercel.

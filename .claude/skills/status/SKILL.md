@@ -1,11 +1,12 @@
 ---
 name: status
-description: Report AIdioma work, fixes, specs, Git, PR, runtime, evidence, and the best next command without making changes. Use when the operator says /status.
+description: Report AIdioma Roadmap, phase, Git, PR, runtime, and next command without making changes. Use when the operator says /status.
 ---
 
 # /status
 
-Read `AGENTS.md`, `WORK.yaml`, `FIXES.yaml`, `HANDOFF.md`, the selected spec, Git/worktree/PR state,
-and relevant localhost status. Make no changes. Report counts and rows for open, planning, planned,
-active, blocked, deferred, and complete work; every fix status; current slice; last evidence;
-repository/runtime blockers; and one recommended next command.
+Read `AGENTS.md`, `Docs/Roadmap/Roadmap.md`, active phase spec, `Docs/Handoffs/HANDOFF.md`, backlog,
+fixes if present, and Git/worktree/runtime state. Make no changes.
+
+Report: active/next phase, phase status, command key reminder, branch/worktree cleanliness, stale
+servers if visible, last evidence, and one recommended next command.

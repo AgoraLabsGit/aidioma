@@ -52,6 +52,9 @@ without fabricating proficiency, while letting them keep useful reviewed materia
 ### Candidate
 
 - Persist one authoritative learner interaction history from which summaries and derived state can rebuild.
+- Represent a word/phrase observation only with an exact semantic target, contextual occurrence and
+  source versions, requested skill, direction/modality, assistance facts, target-specific evaluation
+  finding, time, and session. Overall prompt verdicts never fan out across mapped words.
 - Let collection evidence inform review scheduling while withholding lesson-progression credit.
 - Start durable Saved as source references rather than content copies; add naming/organization only if needed.
 - Explain recommendation reasons from approved evidence without exposing grading secrets.
@@ -91,7 +94,10 @@ No derived state should become more authoritative than its source observations a
 
 ## Saved-material boundary
 
-- A saved item is a learner-owned reference to immutable source type and source ID.
+- A saved prompt is a learner-owned reference to immutable source type and source ID.
+- A saved word or phrase is a learner-owned lexical target reference plus the exact contextual-map,
+  source, surface, direction, and version snapshot that made it useful. It is not reducible to an
+  isolated spelling or to the source prompt alone.
 - Saving does not copy content, change content ownership, or alter source progress identity.
 - Direction is presentation/evidence context, not a second saved item identity.
 - Collection bookmarks and saved learning items are distinct jobs even if one page contains both.
@@ -101,6 +107,8 @@ No derived state should become more authoritative than its source observations a
 ## Reuse boundaries
 
 - Practice and Lessons produce typed observations through shared evaluation contracts.
+- `LEXICON-001` supplies reviewed semantic and occurrence identity only; it does not own learner
+  observations, weights, states, or review urgency.
 - Progress reads persisted observations and approved derived state; it does not regrade answers.
 - Serving reads scheduling facts but cannot redefine completion or mastery.
 - Saved references are reusable across Practice, Lessons, and future reviewed sources.
