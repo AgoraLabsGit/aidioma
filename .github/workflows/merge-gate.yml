@@ -1,0 +1,22 @@
+name: Merge Gate
+
+# Always-on cheap check for protected main. Path-filtered app/content/work jobs run separately
+# when their paths change; this job alone is the required status check.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  merge-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Merge gate
+        run: |
+          echo "merge-gate OK"
+          echo "Primary proof remains local /close. Path-filtered workflows run when relevant."

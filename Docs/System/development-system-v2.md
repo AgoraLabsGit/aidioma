@@ -154,6 +154,11 @@ readiness). FAIL if product/app/content behavior changed without an implementati
 - Structured validated output; fail closed with a zero-AI path.
 - Receipts without learner text or provider payloads.
 
+## CI
+
+Primary proof is local `/close`. GitHub Actions are a thin merge gate: always-on `merge-gate`, plus
+path-filtered app/content/work suites. Details: `Docs/System/ci-policy.md`.
+
 ## Migration
 
 - `Docs/` is the living documentation root for V2.

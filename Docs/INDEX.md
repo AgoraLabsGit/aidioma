@@ -6,7 +6,8 @@
 
 1. `apps/web/`, packages, `content/`, migrations, and tests prove product behavior.
 2. `System/development-system-v2.md` owns the approved development process.
-3. `System/COMMANDS.md` is the command key; `System/Templates/` holds templates.
+3. `System/COMMANDS.md` is the command key; `System/Templates/` holds templates;
+   `System/ci-policy.md` owns CI cost/quality balance.
 4. `Roadmap/Roadmap.md` is the schedule SSOT; phase specs own phase contracts.
 5. `Roadmap/Backlog.md` indexes unscheduled candidates only.
 6. `Handoffs/HANDOFF.md` is the only handoff file (overwrite; keep lean).
