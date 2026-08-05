@@ -34,7 +34,7 @@ See `Docs/System/COMMANDS.md`. Lifecycle: `/plan` `/run` `/close` `/ship`. Actio
 
 ## Application boundaries
 
-- `apps/web/` is the learner application. Keep work-dashboard/tooling out of its routes and deploy.
+- `apps/web/` is the learner application. Keep `Docs/System/dashboard` out of its routes and deploy.
 - `content/` owns authored curriculum; package schemas own executable contracts.
 - Never expose secrets, learner text, provider payloads, or internal work registries in public output.
 

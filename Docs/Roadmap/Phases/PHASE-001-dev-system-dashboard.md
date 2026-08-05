@@ -35,7 +35,7 @@ control surface is the next proof the system is usable.
 - `Docs/System/system.md` (approved V3)
 - `Docs/System/Dashboard-spec.md`
 - `Docs/System/COMMANDS.md`, schemas, templates
-- Existing `tooling/work-dashboard` and `tooling/work-registry`
+- `Docs/System/dashboard` and `Docs/System/derive`
 - Frozen `Docs.2/` as evidence only (farm after outcome/non-goals if needed)
 
 ## Plan
@@ -64,6 +64,6 @@ Filled at `/close`.
 /run PHASE-001
 
 Read .work/context.json if present, else Docs/System/system.md, Docs/System/Dashboard-spec.md,
-and this phase. Adapt tooling/work-dashboard (+ registry) to V3 Docs. Preserve lexicon stash
+and this phase. Adapt Docs/System/dashboard (+ derive) to V3 Docs. Preserve lexicon stash
 (PRESERVE.md). Prove with /dashboard. Clear stale servers.
 ```

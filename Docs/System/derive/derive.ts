@@ -22,7 +22,7 @@ import {
   type SpecFrontmatter,
 } from "./schema.js";
 
-const defaultRepositoryRoot = fileURLToPath(new URL("../..", import.meta.url));
+const defaultRepositoryRoot = fileURLToPath(new URL("../../..", import.meta.url));
 
 export type IssueSeverity = "high" | "medium" | "low";
 export type IssueKind =

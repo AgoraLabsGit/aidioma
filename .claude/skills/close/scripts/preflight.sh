@@ -83,7 +83,7 @@ git diff --cached --check
 echo
 echo "REPO DEV/PREVIEW SERVERS"
 repo_server_processes="$({ ps -axo pid=,ppid=,command= || true; } | awk -v root="$repo_family_root/" '
-  index($0, root) && ($0 ~ /node_modules\/[.]bin\/(next|vite)([[:space:]]|$)/ || $0 ~ /next-server([[:space:]]|$)/ || $0 ~ /vercel[[:space:]]+(dev|serve)([[:space:]]|$)/ || $0 ~ /tooling\/work-dashboard\/server[.]ts/) { print }
+  index($0, root) && ($0 ~ /node_modules\/[.]bin\/(next|vite)([[:space:]]|$)/ || $0 ~ /next-server([[:space:]]|$)/ || $0 ~ /vercel[[:space:]]+(dev|serve)([[:space:]]|$)/ || $0 ~ /Docs\/System\/dashboard\/server[.]ts/ || $0 ~ /tooling\/work-dashboard\/server[.]ts/) { print }
 ')"
 if [[ -n "$repo_server_processes" ]]; then
   printf '%s\n' "$repo_server_processes"

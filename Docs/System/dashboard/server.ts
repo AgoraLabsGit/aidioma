@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { derive, type DeriveIndex } from "../work-registry/derive.js";
+import { derive, type DeriveIndex } from "../derive/derive.js";
 
 const dashboardDirectory = fileURLToPath(new URL(".", import.meta.url));
 const publicDirectory = path.join(dashboardDirectory, "public");
@@ -55,7 +55,7 @@ export function isAllowedHost(host: string | undefined): boolean {
 function setSecurityHeaders(response: ServerResponse): void {
   response.setHeader(
     "Content-Security-Policy",
-    "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+    "default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
   );
   response.setHeader("Cache-Control", "no-store, max-age=0");
   response.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
@@ -81,7 +81,7 @@ function send(
 function resolveRepositoryRoot(options: DashboardServerOptions): string {
   return options.repositoryRoot
     ? path.resolve(options.repositoryRoot)
-    : path.resolve(dashboardDirectory, "../..");
+    : path.resolve(dashboardDirectory, "../../..");
 }
 
 async function findDocPath(

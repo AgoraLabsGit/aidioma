@@ -46,7 +46,7 @@ Docs/FIXES.yaml ─┼─→ chokidar ─→ debounce 300ms ─→ derive() ─�
 The dashboard watches files, re-runs `derive()`, and serves the projection. It does not invent a
 second derivation engine. Authored `Docs/` files are never written by the dashboard.
 
-- Adapt `tooling/work-dashboard/` (and registry as needed), same repo, launched by `/dashboard`
+- Lives under `Docs/System/dashboard/` with shared `Docs/System/derive/`; launched by `/dashboard`
 - Local single process, no database; stack may stay the existing server or move to Next — decide in PHASE-001
 - Parsers: frontmatter + YAML + markdown body render + `chokidar` (watch)
 - Port fixed; `/dashboard` stops stale servers before starting (V3 §7 runtime hygiene)
