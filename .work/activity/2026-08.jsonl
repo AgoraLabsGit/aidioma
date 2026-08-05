@@ -1,1 +1,2 @@
 {"ts": "2026-08-05T20:03:44Z", "type": "build", "actor": "agent", "cmd": "/run", "phase": "PHASE-001", "ref": "PHASE-001", "status": "complete", "duration_s": null, "summary": "Activated PHASE-001; derive()+dashboard Now/Roadmap against live Docs/"}
+{"ts": "2026-08-05T20:06:14Z", "type": "handoff", "actor": "agent", "cmd": "/handoff", "phase": "PHASE-001", "ref": "PHASE-001", "status": "complete", "duration_s": null, "summary": "UI polish next; do not close yet"}

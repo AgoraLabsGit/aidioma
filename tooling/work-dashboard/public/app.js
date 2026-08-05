@@ -2,16 +2,17 @@ const state = {
   index: null,
   page: "now",
   roadmapFilters: { state: "", type: "" },
+  knowledgeTab: "specs",
   selectedId: null,
   lastIndexedAt: null,
 };
 
 const panels = {
-  now: document.querySelector('#page-now'),
-  roadmap: document.querySelector('#page-roadmap'),
-  activity: document.querySelector('#page-activity'),
-  knowledge: document.querySelector('#page-knowledge'),
-  issues: document.querySelector('#page-issues'),
+  now: document.querySelector("#page-now"),
+  roadmap: document.querySelector("#page-roadmap"),
+  activity: document.querySelector("#page-activity"),
+  knowledge: document.querySelector("#page-knowledge"),
+  issues: document.querySelector("#page-issues"),
 };
 
 const indexedAt = document.querySelector("#indexed-at");
@@ -65,35 +66,56 @@ function activePhase(index) {
     ?? null;
 }
 
+function parseChecklistItem(raw) {
+  const text = String(raw).trim();
+  const match = text.match(/^[-*]\s*\[([ xX])\]\s*(.*)$/);
+  if (match) {
+    return { checked: match[1].toLowerCase() === "x", label: match[2] };
+  }
+  return { checked: false, label: text };
+}
+
+function checklistHtml(items) {
+  if (!items?.length) return "";
+  return `<ul>${items.map((item) => {
+    const parsed = parseChecklistItem(item);
+    return `<li>
+      <span class="check" data-checked="${parsed.checked}" aria-hidden="true"></span>
+      <span>${escapeHtml(parsed.label)}</span>
+    </li>`;
+  }).join("")}</ul>`;
+}
+
+function commandBlock(command) {
+  return `
+    <div class="now-command">
+      <code id="next-command">${escapeHtml(command)}</code>
+      <button type="button" data-copy="${escapeHtml(command)}">Copy</button>
+    </div>
+    <p class="now-hint">Suggestion — confirm proof before /close</p>
+  `;
+}
+
 function renderNow(index) {
   const phase = activePhase(index);
   const ready = index.phases.find((item) => item.state === "ready");
   const command = index.next_command;
-  const checklist = (index.active_proof_checklist ?? [])
-    .map((item) => `<li>${escapeHtml(item)}</li>`)
-    .join("");
+  const checklist = index.active_proof_checklist ?? [];
 
   if (!phase) {
     panels.now.innerHTML = `
-      <div class="now-grid">
-        <div class="now-block">
-          <h2>Phase</h2>
-          <p class="outcome">No active phase</p>
-          <p class="meta-line">${ready ? `Next ready: <code>${escapeHtml(ready.id)}</code> ${escapeHtml(ready.title)}` : "Nothing ready — schedule with /plan"}</p>
+      <div class="now">
+        <div class="now-hero">
+          <p class="now-meta">No active phase${ready ? ` · next ready <code>${escapeHtml(ready.id)}</code>` : ""}</p>
+          <p class="now-outcome">${ready ? escapeHtml(ready.title) : "Nothing scheduled"}</p>
+          ${commandBlock(command ?? "/plan")}
         </div>
-        <div class="now-block">
-          <h2>Next command <span class="hint">(suggestion)</span></h2>
-          <div class="command-box">
-            <code id="next-command">${escapeHtml(command ?? "/plan")}</code>
-            <button type="button" data-copy="${escapeHtml(command ?? "/plan")}">Copy</button>
-          </div>
+        <div class="now-status-row">
+          <span><strong>git</strong> ${escapeHtml(index.repo.branch)} · ${index.repo.clean ? "clean" : "dirty"} · ↑${index.repo.ahead} ↓${index.repo.behind}</span>
+          <span><strong>prod</strong> ${escapeHtml(index.in_production.release ?? "none")}</span>
         </div>
-        <div class="now-block">
-          <h2>Git</h2>
-          <p class="meta-line mono">${escapeHtml(index.repo.branch)} · ${index.repo.clean ? "clean" : "dirty"} · ahead ${index.repo.ahead} / behind ${index.repo.behind}</p>
-        </div>
-        <div class="now-block">
-          <h2>Handoff</h2>
+        <div class="now-section">
+          <h2 class="now-label">Handoff</h2>
           <pre class="handoff">${escapeHtml(index.handoff.body || "No handoff yet.")}</pre>
         </div>
       </div>
@@ -101,49 +123,49 @@ function renderNow(index) {
     return;
   }
 
+  const nonGoals = (phase.non_goals ?? [])
+    .map((item) => `<li class="muted">· ${escapeHtml(item)}</li>`)
+    .join("") || `<li class="muted">None listed</li>`;
+
   panels.now.innerHTML = `
-    <div class="now-grid">
-      <div class="now-block">
-        <h2>Phase</h2>
-        <p class="meta-line">
+    <div class="now">
+      <div class="now-hero">
+        <p class="now-meta">
           <code>${escapeHtml(phase.id)}</code>
           ${statusHtml(phase.state)}
           <span class="${phase.type === "design" ? "type-design" : ""}">${escapeHtml(phase.type)} / ${escapeHtml(phase.proof_kind)}</span>
-          <span>age ${phase.age_days}d</span>
+          <span>${phase.age_days}d</span>
         </p>
-        <p class="outcome">${escapeHtml(phase.title)}</p>
-      </div>
-      <div class="now-block">
-        <h2>Outcome</h2>
-        <p>${escapeHtml(phase.outcome)}</p>
-      </div>
-      <div class="now-block">
-        <h2>Proof</h2>
-        <p>${escapeHtml(phase.proof)}</p>
-        ${checklist ? `<ul>${checklist}</ul>` : ""}
-      </div>
-      <div class="now-block">
-        <h2>Non-goals</h2>
-        <ul>${(phase.non_goals ?? []).map((item) => `<li>${escapeHtml(item)}</li>`).join("") || "<li class='hint'>None listed</li>"}</ul>
-      </div>
-      <div class="now-block">
-        <h2>Next command <span class="hint">(suggestion)</span></h2>
+        <p class="now-title">${escapeHtml(phase.title)}</p>
+        <p class="now-outcome">${escapeHtml(phase.outcome)}</p>
         ${
           phase.state === "blocked" || !command
-            ? `<p>${escapeHtml(index.blocked_reason || "Phase blocked — no command suggested.")}</p>`
-            : `<div class="command-box">
-                <code id="next-command">${escapeHtml(command)}</code>
-                <button type="button" data-copy="${escapeHtml(command)}">Copy</button>
-              </div>`
+            ? `<p class="now-hint">${escapeHtml(index.blocked_reason || "Phase blocked — no command suggested.")}</p>`
+            : commandBlock(command)
         }
       </div>
-      <div class="now-block">
-        <h2>Git · Health · Production</h2>
-        <p class="meta-line mono">${escapeHtml(index.repo.branch)} · ${index.repo.clean ? "clean" : "dirty"} · ahead ${index.repo.ahead} / behind ${index.repo.behind}</p>
-        <p class="meta-line">Open high issues: ${index.issues.filter((issue) => issue.severity === "high").length} · In production: ${escapeHtml(index.in_production.release ?? "none")}</p>
+
+      <div class="now-split">
+        <div class="now-section">
+          <h2 class="now-label">Proof</h2>
+          <p>${escapeHtml(phase.proof)}</p>
+          ${checklistHtml(checklist)}
+        </div>
+        <div class="now-section">
+          <h2 class="now-label">Non-goals</h2>
+          <ul>${nonGoals}</ul>
+        </div>
       </div>
-      <div class="now-block">
-        <h2>Handoff ${index.handoff.updated_at ? `<span class="hint">${escapeHtml(formatAge(index.handoff.updated_at))}</span>` : ""}</h2>
+
+      <div class="now-status-row">
+        <span><strong>git</strong> ${escapeHtml(index.repo.branch)} · ${index.repo.clean ? "clean" : "dirty"} · ↑${index.repo.ahead} ↓${index.repo.behind}</span>
+        <span><strong>issues</strong> ${index.issues.filter((issue) => issue.severity === "high").length} high</span>
+        <span><strong>prod</strong> ${escapeHtml(index.in_production.release ?? "none")}</span>
+        <span><strong>check</strong> ${escapeHtml(index.last_check?.status ?? "—")}</span>
+      </div>
+
+      <div class="now-section">
+        <h2 class="now-label">Handoff ${index.handoff.updated_at ? `· ${escapeHtml(formatAge(index.handoff.updated_at))}` : ""}</h2>
         <pre class="handoff">${escapeHtml(index.handoff.body || "No handoff yet.")}</pre>
       </div>
     </div>
@@ -154,6 +176,11 @@ function stateRank(value) {
   return { active: 0, blocked: 1, ready: 2, proposed: 3, closed: 4, abandoned: 5 }[value] ?? 9;
 }
 
+function chip(name, value, current, label = value) {
+  const pressed = current === value;
+  return `<button type="button" class="chip" data-filter="${name}" data-value="${escapeHtml(value)}" aria-pressed="${pressed}">${escapeHtml(label)}</button>`;
+}
+
 function renderRoadmap(index) {
   const { state: stateFilter, type: typeFilter } = state.roadmapFilters;
   const rows = [...index.phases]
@@ -161,7 +188,7 @@ function renderRoadmap(index) {
     .filter((phase) => (!stateFilter || phase.state === stateFilter) && (!typeFilter || phase.type === typeFilter));
 
   const body = rows.map((phase) => `
-    <tr data-id="${escapeHtml(phase.id)}" ${state.selectedId === phase.id ? 'data-selected="true"' : ""}>
+    <tr data-id="${escapeHtml(phase.id)}" data-type="${escapeHtml(phase.type)}" data-state="${escapeHtml(phase.state)}" ${state.selectedId === phase.id ? 'data-selected="true"' : ""}>
       <td><code>${escapeHtml(phase.id)}</code></td>
       <td class="wrap">${escapeHtml(phase.title)}</td>
       <td class="${phase.type === "design" ? "type-design" : ""}">${escapeHtml(phase.type)}</td>
@@ -174,27 +201,24 @@ function renderRoadmap(index) {
   `).join("");
 
   panels.roadmap.innerHTML = `
-    <form class="filters" id="roadmap-filters">
-      <label>State
-        <select name="state">
-          <option value="">All states</option>
-          ${["active", "ready", "proposed", "blocked", "closed", "abandoned"].map((value) =>
-            `<option value="${value}" ${stateFilter === value ? "selected" : ""}>${value}</option>`).join("")}
-        </select>
-      </label>
-      <label>Type
-        <select name="type">
-          <option value="">All types</option>
-          <option value="implementation" ${typeFilter === "implementation" ? "selected" : ""}>implementation</option>
-          <option value="design" ${typeFilter === "design" ? "selected" : ""}>design</option>
-        </select>
-      </label>
-    </form>
+    <div class="filters" id="roadmap-filters">
+      <div class="chip-group">
+        <span class="chip-label">State</span>
+        ${chip("state", "", stateFilter, "All")}
+        ${["active", "ready", "proposed", "blocked", "closed", "abandoned"].map((value) => chip("state", value, stateFilter)).join("")}
+      </div>
+      <div class="chip-group">
+        <span class="chip-label">Type</span>
+        ${chip("type", "", typeFilter, "All")}
+        ${chip("type", "implementation", typeFilter)}
+        ${chip("type", "design", typeFilter)}
+      </div>
+    </div>
     <div class="table-frame">
       <table>
         <thead>
           <tr>
-            <th>ID</th><th>Title</th><th>Type</th><th>State</th><th>Outcome</th><th>Proof kind</th><th>Specs</th><th>Age</th>
+            <th>ID</th><th>Title</th><th>Type</th><th>State</th><th class="wrap">Outcome</th><th>Proof</th><th>Specs</th><th>Age</th>
           </tr>
         </thead>
         <tbody id="roadmap-rows">${body || `<tr><td colspan="8">No phases match.</td></tr>`}</tbody>
@@ -212,7 +236,7 @@ function renderActivity(index) {
   panels.activity.innerHTML = `
     <div class="table-frame">
       <table>
-        <thead><tr><th>Time</th><th>Type</th><th>Actor</th><th>Ref</th><th>Summary</th><th>Phase</th></tr></thead>
+        <thead><tr><th>Time</th><th>Type</th><th>Actor</th><th>Ref</th><th class="wrap">Summary</th><th>Phase</th></tr></thead>
         <tbody>
           ${events.map((event) => `
             <tr>
@@ -230,44 +254,87 @@ function renderActivity(index) {
   `;
 }
 
-function renderKnowledge(index) {
-  const specs = index.specs ?? [];
-  const decisions = index.decisions ?? [];
-  const research = index.research ?? [];
+function knowledgeTable(kind, index) {
+  if (kind === "specs") {
+    const specs = index.specs ?? [];
+    if (specs.length === 0) return `<div class="empty">No specs yet. Run <code>/design</code>.</div>`;
+    return `<div class="table-frame"><table>
+      <thead><tr><th>ID</th><th>Kind</th><th>Title</th><th>Status</th><th>Depends on</th><th>Used by</th><th>Last amended</th><th>Drift</th></tr></thead>
+      <tbody>${specs.map((spec) => `
+        <tr data-id="${escapeHtml(spec.id)}">
+          <td class="mono">${escapeHtml(spec.id)}</td>
+          <td>${escapeHtml(spec.kind)}</td>
+          <td class="wrap">${escapeHtml(spec.title)}</td>
+          <td>${statusHtml(spec.status)}</td>
+          <td class="mono">${escapeHtml((spec.depends_on ?? []).join(", ") || "—")}</td>
+          <td class="mono">${escapeHtml((spec.used_by ?? []).join(", ") || "—")}</td>
+          <td class="mono">${escapeHtml(spec.last_amended ?? "—")}</td>
+          <td>${spec.drift_days ?? "—"}</td>
+        </tr>`).join("")}</tbody></table></div>`;
+  }
+  if (kind === "decisions") {
+    const decisions = index.decisions ?? [];
+    if (decisions.length === 0) return `<div class="empty">No decisions yet. Run <code>/research</code> or <code>/design</code>.</div>`;
+    return `<div class="table-frame"><table>
+      <thead><tr><th>ID</th><th>Date</th><th>Title</th><th>Chose</th><th>Affects</th><th>Phase</th><th>From</th></tr></thead>
+      <tbody>${decisions.map((decision) => `
+        <tr>
+          <td class="mono">${escapeHtml(decision.id)}</td>
+          <td class="mono">${escapeHtml(decision.date)}</td>
+          <td class="wrap">${escapeHtml(decision.title)}</td>
+          <td class="wrap">${escapeHtml(decision.chose)}</td>
+          <td class="mono">${escapeHtml((decision.affects ?? []).join(", ") || "—")}</td>
+          <td class="mono">${escapeHtml(decision.phase ?? "—")}</td>
+          <td class="mono">${escapeHtml(decision.from ?? "—")}</td>
+        </tr>`).join("")}</tbody></table></div>`;
+  }
+  if (kind === "research") {
+    const research = index.research ?? [];
+    if (research.length === 0) return `<div class="empty">No research yet. Run <code>/research</code>.</div>`;
+    return `<div class="table-frame"><table>
+      <thead><tr><th>ID</th><th>Date</th><th>Question</th><th>Verdict</th><th>Status</th><th>Affects</th><th>Phase</th></tr></thead>
+      <tbody>${research.map((item) => `
+        <tr data-id="${escapeHtml(item.id)}">
+          <td class="mono">${escapeHtml(item.id)}</td>
+          <td class="mono">${escapeHtml(item.date)}</td>
+          <td class="wrap">${escapeHtml(item.question)}</td>
+          <td>${escapeHtml(item.verdict)}</td>
+          <td>${statusHtml(item.status)}</td>
+          <td class="mono">${escapeHtml((item.affects ?? []).join(", ") || "—")}</td>
+          <td class="mono">${escapeHtml(item.phase ?? "—")}</td>
+        </tr>`).join("")}</tbody></table></div>`;
+  }
   const releases = index.releases ?? [];
+  if (releases.length === 0) return `<div class="empty">No releases yet. Run <code>/ship</code> when ready.</div>`;
+  return `<div class="table-frame"><table>
+    <thead><tr><th>ID</th><th>Date</th><th>Phase</th><th>Summary</th></tr></thead>
+    <tbody>${releases.map((item) => `
+      <tr>
+        <td class="mono">${escapeHtml(item.id)}</td>
+        <td class="mono">${escapeHtml(item.date)}</td>
+        <td class="mono">${escapeHtml(item.phase ?? "—")}</td>
+        <td class="wrap">${escapeHtml(item.summary)}</td>
+      </tr>`).join("")}</tbody></table></div>`;
+}
+
+function renderKnowledge(index) {
+  const tab = state.knowledgeTab;
+  const tabs = [
+    ["specs", "Specs"],
+    ["decisions", "Decisions"],
+    ["research", "Research"],
+    ["releases", "Releases"],
+  ];
   panels.knowledge.innerHTML = `
-    <div class="now-block" style="margin-bottom:12px">
-      <h2>PRODUCT.md</h2>
-      <pre class="handoff">${escapeHtml(index.product.body || "No product map yet. Run /design after PHASE-002.")}</pre>
+    <div class="product-panel">
+      <h2 class="now-label">PRODUCT.md</h2>
+      <pre class="handoff">${escapeHtml(index.product?.body || "No product map yet. Run /design after PHASE-002.")}</pre>
     </div>
-    <div class="now-block" style="margin-bottom:12px">
-      <h2>Specs</h2>
-      ${specs.length === 0
-        ? `<div class="empty">No specs yet. Run <code>/design</code>.</div>`
-        : `<div class="table-frame"><table><thead><tr><th>ID</th><th>Kind</th><th>Title</th><th>Status</th><th>Depends on</th><th>Used by</th></tr></thead>
-           <tbody>${specs.map((spec) => `<tr data-id="${escapeHtml(spec.id)}"><td class="mono">${escapeHtml(spec.id)}</td><td>${escapeHtml(spec.kind)}</td><td class="wrap">${escapeHtml(spec.title)}</td><td>${statusHtml(spec.status)}</td><td class="mono">${escapeHtml((spec.depends_on ?? []).join(", ") || "—")}</td><td class="mono">${escapeHtml((spec.used_by ?? []).join(", ") || "—")}</td></tr>`).join("")}</tbody></table></div>`}
+    <div class="subtabs" role="tablist" aria-label="Knowledge tables">
+      ${tabs.map(([id, label]) =>
+        `<button type="button" class="subtab" data-knowledge="${id}"${tab === id ? ' aria-current="true"' : ""}>${label}</button>`).join("")}
     </div>
-    <div class="now-block" style="margin-bottom:12px">
-      <h2>Decisions</h2>
-      ${decisions.length === 0
-        ? `<div class="empty">No decisions yet. Run <code>/research</code> or <code>/design</code>.</div>`
-        : `<div class="table-frame"><table><thead><tr><th>ID</th><th>Date</th><th>Title</th><th>Chose</th><th>Affects</th><th>Phase</th></tr></thead>
-           <tbody>${decisions.map((decision) => `<tr><td class="mono">${escapeHtml(decision.id)}</td><td>${escapeHtml(decision.date)}</td><td class="wrap">${escapeHtml(decision.title)}</td><td class="wrap">${escapeHtml(decision.chose)}</td><td class="mono">${escapeHtml(decision.affects.join(", ") || "—")}</td><td class="mono">${escapeHtml(decision.phase ?? "—")}</td></tr>`).join("")}</tbody></table></div>`}
-    </div>
-    <div class="now-block" style="margin-bottom:12px">
-      <h2>Research</h2>
-      ${research.length === 0
-        ? `<div class="empty">No research yet. Run <code>/research</code>.</div>`
-        : `<div class="table-frame"><table><thead><tr><th>ID</th><th>Date</th><th>Question</th><th>Verdict</th><th>Status</th><th>Phase</th></tr></thead>
-           <tbody>${research.map((item) => `<tr data-id="${escapeHtml(item.id)}"><td class="mono">${escapeHtml(item.id)}</td><td>${escapeHtml(item.date)}</td><td class="wrap">${escapeHtml(item.question)}</td><td>${escapeHtml(item.verdict)}</td><td>${statusHtml(item.status)}</td><td class="mono">${escapeHtml(item.phase ?? "—")}</td></tr>`).join("")}</tbody></table></div>`}
-    </div>
-    <div class="now-block">
-      <h2>Releases</h2>
-      ${releases.length === 0
-        ? `<div class="empty">No releases yet. Run <code>/ship</code> when ready.</div>`
-        : `<div class="table-frame"><table><thead><tr><th>ID</th><th>Date</th><th>Phase</th><th>Summary</th></tr></thead>
-           <tbody>${releases.map((item) => `<tr><td class="mono">${escapeHtml(item.id)}</td><td>${escapeHtml(item.date)}</td><td class="mono">${escapeHtml(item.phase ?? "—")}</td><td class="wrap">${escapeHtml(item.summary)}</td></tr>`).join("")}</tbody></table></div>`}
-    </div>
+    <div data-knowledge-panel>${knowledgeTable(tab, index)}</div>
   `;
 }
 
@@ -278,10 +345,10 @@ function renderIssues(index) {
     return;
   }
   panels.issues.innerHTML = `
-    <p class="hint">${index.paths_scanned_at ? `Slow cycle: ${escapeHtml(formatAge(index.paths_scanned_at))}` : "Slow cycle not run yet (paths signals deferred)."}</p>
+    <p class="now-hint" style="margin-bottom:10px">${index.paths_scanned_at ? `Slow cycle: ${escapeHtml(formatAge(index.paths_scanned_at))}` : "Slow cycle not run yet (paths signals deferred)."}</p>
     <div class="table-frame">
       <table>
-        <thead><tr><th>Kind</th><th>Ref</th><th>Summary</th><th>Spec</th><th>Age</th><th>Severity</th></tr></thead>
+        <thead><tr><th>Kind</th><th>Ref</th><th class="wrap">Summary</th><th>Spec</th><th>Age</th><th>Severity</th></tr></thead>
         <tbody>
           ${issues.map((issue) => `
             <tr data-id="${escapeHtml(issue.ref)}">
@@ -290,7 +357,7 @@ function renderIssues(index) {
               <td class="wrap">${escapeHtml(issue.summary)}</td>
               <td class="mono">${escapeHtml(issue.spec ?? "—")}</td>
               <td>${issue.age_days ?? "—"}</td>
-              <td>${escapeHtml(issue.severity)}</td>
+              <td class="sev-${escapeHtml(issue.severity)}">${escapeHtml(issue.severity)}</td>
             </tr>
           `).join("")}
         </tbody>
@@ -341,7 +408,7 @@ async function openDetail(id) {
   detailTitle.textContent = id;
   detailMeta.textContent = doc.path;
   detailBody.textContent = doc.body;
-  renderRoadmap(state.index);
+  if (state.page === "roadmap") renderRoadmap(state.index);
 }
 
 async function loadIndex() {
@@ -385,24 +452,35 @@ document.querySelector("#detail-close").addEventListener("click", () => {
 document.addEventListener("click", (event) => {
   const copy = event.target.closest("[data-copy]");
   if (copy) {
-    void copyText(copy.dataset.copy);
+    void copyText(copy.dataset.copy).then(() => {
+      const previous = copy.textContent;
+      copy.textContent = "Copied";
+      setTimeout(() => {
+        copy.textContent = previous;
+      }, 900);
+    });
     return;
   }
+
+  const knowledgeTab = event.target.closest("[data-knowledge]");
+  if (knowledgeTab && state.index) {
+    state.knowledgeTab = knowledgeTab.dataset.knowledge;
+    renderKnowledge(state.index);
+    return;
+  }
+
+  const chipButton = event.target.closest("[data-filter]");
+  if (chipButton && state.index) {
+    const { filter, value } = chipButton.dataset;
+    state.roadmapFilters = { ...state.roadmapFilters, [filter]: value };
+    renderRoadmap(state.index);
+    return;
+  }
+
   const row = event.target.closest("tr[data-id]");
   if (row?.dataset.id) {
     void openDetail(row.dataset.id);
   }
-});
-
-document.addEventListener("change", (event) => {
-  const form = event.target.closest("#roadmap-filters");
-  if (!form || !state.index) return;
-  const data = new FormData(form);
-  state.roadmapFilters = {
-    state: String(data.get("state") || ""),
-    type: String(data.get("type") || ""),
-  };
-  renderRoadmap(state.index);
 });
 
 setInterval(() => {
