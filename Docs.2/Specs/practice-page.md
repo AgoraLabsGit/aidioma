@@ -212,11 +212,13 @@ No rail ships in the immediate catalog slice.
 
 ## Deferred Practice-page decisions
 
-This catalog plan does not dispose of the broader Practice-page candidates already recorded in
-`WORK.yaml`: contextual post-feedback word or phrase help, visit-only save and authored verb-form
-links, the recap's purpose and redesign or removal, a radial session-result treatment, Ask AI versus
-graded submission, and the final Settings controls. They remain unapproved follow-up discussions and
-must not be absorbed into the immediate catalog slice.
+This catalog plan does not absorb the bounded active-prompt assistance proof now approved by
+`LEXICON-001`; that proof must preserve the default prompt/composer and remains outside the immediate
+catalog slice. Expansion to additional prompts or post-feedback help belongs to
+`PRACTICE-ASSISTANCE-001`. Visit-only word save and authored verb-form links, the recap's broader
+purpose and redesign or removal, a radial session-result treatment, Ask AI versus graded submission,
+and the final Settings controls remain unapproved follow-up discussions and must not be absorbed into
+the immediate catalog slice.
 
 ## Reuse boundaries
 

@@ -59,6 +59,9 @@ attempt while preserving uncertainty, learner input, and the boundary between a 
 - Treat communicative success and demonstration of the requested form as separable evaluation concerns.
 - Normalize evaluation facts for serving and progress without forcing unlike activities into one score.
 - Record support/reveal/retry facts when persistence exists, without automatically penalizing the learner.
+- Allow optional target-specific findings only for targets explicitly allowlisted by the exact
+  resolved source/context map and requested skill. A whole-prompt verdict never marks every mapped
+  word demonstrated or missed, and a revealed target cannot receive independent-production credit.
 
 ### Research
 
@@ -110,6 +113,8 @@ attempt while preserving uncertainty, learner input, and the boundary between a 
 - Activity adapters may have specialized results; multiple choice and flashcards do not need AI translation grading.
 - UI feedback components consume learner-safe projections, never answer authority.
 - Serving consumes verdict/support facts; Progress consumes persisted evidence only after its policy is approved.
+- Assistance arrives as trusted application context separate from learner text. It may change the
+  normalized scheduling command without changing the immediate whole-answer feedback verdict.
 
 ## Migrated evidence
 
@@ -131,6 +136,8 @@ attempt while preserving uncertainty, learner input, and the boundary between a 
 - Stale results cannot update an abandoned answer, ended visit, or restarted configuration.
 - Lesson and Practice use the approved feedback vocabulary without forcing identical page composition.
 - No evaluation result alone is labeled mastery or durable proficiency.
+- Any target-specific finding identifies the exact allowlisted occurrence and requested skill;
+  revealed targets and overall correctness cannot fabricate word-level evidence.
 
 ## Open questions
 

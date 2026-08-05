@@ -157,6 +157,13 @@ The application adapter sends only these policy commands for the current offer:
 The recovery UI may retry evaluation, explicitly defer without evidence, or end the visit. Mapping
 future evaluator results remains an `EVALUATION-001` adapter decision rather than engine logic.
 
+The planned `LEXICON-001` assisted Restaurant consumer may add application-adapter precedence without
+changing this engine: after answer-relevant reviewed help is revealed, an evaluated response keeps
+its ordinary whole-answer feedback but sends `needs_reinforcement`; `I don't know` sends the same
+command only after its reveal/Continue flow and never fabricates an evaluator verdict. Unassisted
+typed verdict mapping remains exactly the implemented table above. The engine still receives no
+lexical targets, help state, learner text, or target-specific evidence.
+
 A **completed other-item transition** is an accepted `retrieved`, `needs_reinforcement`, or
 `defer_without_evidence` command for a different underlying item. Creating or displaying an offer,
 receiving an ungraded response, and invoking `repeat_now` do not satisfy miss lag. Retry due ordinals

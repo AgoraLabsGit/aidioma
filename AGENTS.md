@@ -5,58 +5,76 @@ context.
 
 ## Start here
 
-1. Resolve one `DOCS_ROOT` for the whole session. Use `Docs/` only when `INDEX.md`, `PRODUCT.md`,
-   `WORK.yaml`, `FIXES.yaml`, `HANDOFF.md`, and `Specs/` all exist there; otherwise use the complete
-   `Docs.next/` migration candidate. Never mix roots.
-2. Read `$DOCS_ROOT/INDEX.md`, `WORK.yaml`, `FIXES.yaml`, and `HANDOFF.md` completely.
-3. Inspect Git status, branch/worktrees, the selected work entry, its spec, and relevant executable
-   behavior before acting.
-4. Treat `apps/web/`, `packages/lesson-schema/`, `content/`, migrations, and tests as proof of current
-   implementation. A draft or research claim is never implementation authority.
+1. Read this file completely and the reusable AIdioma development skill.
+2. Living docs root is `Docs/`. Read `Docs/INDEX.md`, `Docs/Roadmap/Roadmap.md`,
+   `Docs/Handoffs/HANDOFF.md`, `Docs/System/development-system-v2.md`, and
+   `Docs/System/COMMANDS.md`.
+3. Treat `Docs.2/` as frozen evidence only. Never mix living `Docs/` with `Docs.2/` as dual authority.
+4. Inspect Git status, branch/worktrees (exactly one phase branch/worktree when a phase is active),
+   the active phase spec, and relevant executable behavior before acting.
+5. `apps/web/`, packages, `content/`, migrations, and tests prove product behavior.
+
+## Development System V2
+
+- One bounded phase at a time (`design` or `implementation`; optional subtypes).
+- `Docs/Roadmap/Roadmap.md` is the schedule SSOT. Phase specs own contracts. Backlog is unscheduled
+  candidates only.
+- **MCOO:** never onboard more complexity than the phase needs; excess complexity can cut scope.
+- Proof-first for implementation: one real path, composition/seams review, keep/revise/remove.
+- ≤3 consequential founder decisions per checkpoint. Silence is not approval.
+- Sub-agents only for bounded questions; coordinator synthesizes; Mike decides.
 
 ## Commands
 
-- `/plan <work-id or idea>` — discuss outcome/non-goals; audit current evidence; run an independent
-  2-4-agent design panel; write a draft spec; run a fresh adversarial audit; revise; record decisions
-  and discovered bugs at the bottom; obtain founder approval before status `planned`. Do not
-  implement product code.
-- `/feat <work-id>` — advance one planned/active work item of any kind. Require an approved spec for
-  product/system behavior; an approved process item may use `spec: null`. Implement one coherent
-  `next_slice` with tests and real-path proof.
-- `/fix <fix-id or report>` — reproduce and correct one bounded defect with regression proof. Promote
-  systemic or multi-session work to `WORK.yaml` and `/plan`.
-- `/status` — read-only counts and rows for every work/fix status, spec, Git/PR, runtime, evidence,
-  and next-command report.
-- `/close` — explicitly authorizes committing the reviewed scope, opening its PR, and merging that
-  exact unchanged head after required gates pass. It does not authorize production data/config work.
-  Reconcile SSOT, overwrite `HANDOFF.md`, validate, publish, then clean only refs contained in fetched
-  `origin/main` and return to clean `main`.
+- `/plan` — onboard a new phase onto the Roadmap (draft phase spec, `proposed`/`ready`). No product
+  code. Not the old multi-doc design ritual.
+- `/run` — start or resume the single `active` phase. Execute the whole phase outcome. May commit on
+  the phase branch. Stop for founder gates or contract breaks.
+- `/fix` — bounded defect with regression proof. Systemic work → `/plan`.
+- `/status` — read-only Roadmap, phase, Git, runtime, next command.
+- `/handoff` — end a session inside an active phase; overwrite `Docs/Handoffs/HANDOFF.md`; **no**
+  commit/PR/merge.
+- `/close` — end the phase: close audits → commit/PR/merge exact head → one clean `origin/main` +
+  local main. Human UI review when testable. Stop stale app/dashboard servers. Does not authorize
+  production data/config work or unrelated diff expansion.
+- `/launch` — stop stale learner-app dev servers, then `npm run app:dev`.
+- `/dashboard` — stop stale work-dashboard servers, then `npm run work:dashboard`.
+- `/feat` — **removed**; use `/run`.
 
-## One home per fact
+## Close audits (implementation)
 
-- `PRODUCT.md` owns durable product principles.
-- `WORK.yaml` is the only roadmap, feature registry, and systemic open-work queue.
-- `FIXES.yaml` owns bounded bugs/tasks.
-- `Specs/*.md` own reviewed capability contracts and distinguish implemented, accepted,
-  legacy-accepted, candidate, research, deferred, superseded, rejected, and conflicting claims.
-- `HANDOFF.md` owns current continuity and is overwritten; Git/merged PRs preserve history.
-- Do not create waves, numbered handoffs, parallel roadmaps, open-item logs, panel transcripts, or a
-  checked-in historical archive. Create a spec only when `/plan` begins. The one-time SSOT migration
-  may create consolidated draft dossiers as `/plan` inputs; they cannot authorize implementation.
+Always (3): Close Steward (MCOO, scope, SSOT, code-quality smells), Evidence Auditor, Publish
+Guardian. Up to 2 conditional: Learner-Surface (UI/a11y/privacy), Contract/Seams (schemas/APIs/
+shared packages/AI-boundary). FAIL blocks merge; WARN needs Mike ack.
+
+Design close: Steward + Publish + Decision Auditor; FAIL if product code shipped.
+
+## File ownership
+
+- `Docs/System/` — process contracts, `COMMANDS.md`, `Templates/`
+- `Docs/Roadmap/` — schedule, phases, backlog
+- `Docs/Handoffs/HANDOFF.md` — sole handoff file (lean; overwrite)
+- `Docs/Specs/` — capability contracts when earned
+- `Docs/FIXES.yaml` — bounded fixes when present
+- `Docs/PRODUCT.md` — durable product principles when approved
+- `Docs.2/` — frozen pre-V2 evidence
+
+Do not create parallel roadmaps, numbered handoffs, ADR/research archives, or a second living work
+registry beside the Roadmap.
 
 ## Application boundaries
 
-- `apps/web/` is the real learner application. Keep internal developer tooling out of its routes,
-  imports, and deployment output.
-- `content/` owns canonical authored curriculum; `packages/lesson-schema/` is its executable contract.
-- Design Practice engines/components for explicit Lessons reuse without erasing their different
-  progression promises or generalizing before a real second consumer.
-- Search the canonical component/token library before adding UI. Keep domain engines independent of
-  React/routes; keep pages focused on composition. Prove accessibility and responsive states.
+- `apps/web/` is the learner application. Keep internal tooling (including the work dashboard) out of
+  its routes, imports, and deployment output.
+- `content/` owns authored curriculum; package schemas own executable contracts.
+- Search the canonical component/token library before adding UI.
 - Never expose secrets, learner text, provider payloads, or internal work registries in public output.
 
-## Git and collaboration
+## Git and runtime
 
-Keep `origin/main` as the sole durable branch. Use short-lived branches and non-overlapping sub-agent
-scopes. Preserve unrelated changes, never force-push or destructively reset, publish via PR, and
-delete only clean refs proven contained in fetched `origin/main`.
+- `origin/main` is the sole durable branch.
+- One short-lived phase branch and one worktree while a phase is open.
+- Preserve unrelated changes (including dirty Lexicon work). Never force-push or destructively reset.
+- `/run` may commit on the phase branch; only `/close` merges to main.
+- `/launch` and `/dashboard` must clear their own stale servers before starting; `/close` verifies
+  phase-owned servers are stopped.

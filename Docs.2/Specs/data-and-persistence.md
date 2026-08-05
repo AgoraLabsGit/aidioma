@@ -96,6 +96,10 @@ A minimal first learner-write slice may need:
 - an authenticated user identity mapping;
 - `practice_sessions` with configuration/policy snapshot and explicit terminal state;
 - `evaluations` with one stable client submission ID, source identity/version, verdict, and session;
+- zero or more target-specific observation candidates only when `PROGRESS-SAVED-001` and
+  `EVALUATION-001` have approved their semantics; each must retain exact semantic target,
+  contextual-map/source versions or an equivalent immutable snapshot, requested skill, and
+  assistance state; and
 - only the rollup or progress state required by the accepted product behavior.
 
 Stats, saved material, generated sets, conversation transcripts, preferences, and richer progress
@@ -126,7 +130,9 @@ authorization, and recovery risks. Their table designs and completion claims are
   addressable.
 - User-owned records should be deletable under an explicit account/data policy without deleting
   shared authored content.
-- Every evaluation must identify exactly one server-resolved target and its content version.
+- Every evaluation must identify exactly one server-resolved assessed source unit and its content
+  version. Optional word/form/grammar findings are separate allowlisted target-specific facts; the
+  word “target” must not ambiguously refer to both the complete prompt and a lexical meaning.
 - A session snapshot records what was actually served; later setting or policy changes cannot rewrite
   historical evidence.
 - Derived rollups must be rebuildable from canonical observations or have explicit reconciliation.

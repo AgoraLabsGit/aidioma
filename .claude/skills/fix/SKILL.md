@@ -5,9 +5,11 @@ description: Reproduce and correct a bounded AIdioma defect with regression and 
 
 # /fix
 
-Read `AGENTS.md` and current memory files. Create/update one `FIXES.yaml` record, reproduce expected
-versus actual behavior, identify root cause, add a failing regression test when practical, implement
-the smallest coherent correction, and re-prove the same path. Update a spec only if its accepted
-contract changes. If product design, architecture, coordinated scopes, or multiple sessions are
-required, promote the issue to `WORK.yaml`, route it through `/plan`, and do not patch around it.
-Use `/close` for publication and cleanup.
+Read `AGENTS.md` and current Docs memory. Create/update one `Docs/FIXES.yaml` record when that file
+exists (otherwise record in handoff + Backlog note). Reproduce expected versus actual, find root
+cause, add a failing regression when practical, implement the smallest coherent correction, and
+re-prove the path.
+
+If product design, architecture, coordinated scopes, or multiple sessions are required, promote via
+`/plan` as a phase—do not stretch `/fix`. Use `/close` only when the fix is the active phase scope
+or Mike directs a fix-phase close.

@@ -117,10 +117,12 @@ platform guarantees.
 
 ## Conflicting local Practice endpoint
 
-`src/app/api/practice/evaluate/route.ts` is fixture-backed and unauthenticated. It is hidden unless
-`AIDIOMA_ENABLE_LOCAL_PRACTICE_EVALUATION=true`, but it does not independently assert Development or
-localhost and uses a synthetic user ID. It must be removed with prototype cleanup, replaced by the
-production authenticated source path, or hardened so it cannot be enabled in deployed environments.
+`src/app/api/practice/evaluate/route.ts` is fixture-backed, unauthenticated, and uses a synthetic user
+ID. It is now hidden unless the explicit local opt-in is present, the request URL is loopback, and
+Vercel has not marked the runtime as deployed. The canonical development command supplies the opt-in
+while binding to `localhost`; the flag is forbidden in every Vercel environment. This is temporary
+local tooling, not the Preview or Production Practice integration. It must still be removed with
+prototype cleanup or replaced by the production authenticated source path.
 In addition, the client Practice bundle imports fixtures containing accepted-answer groups and the
 Practice response contract includes `modelAnswer` and optional `modelUsed`. Prototype labeling does
 not satisfy the production rule that answer authority and provider metadata stay server-side.
