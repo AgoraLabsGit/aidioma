@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fixes.schema.json",
+  "title": "Fixes",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "summary", "status", "opened"],
+    "additionalProperties": false,
+    "properties": {
+      "id": { "type": "string", "pattern": "^FIX-[0-9]{3}$" },
+      "summary": { "type": "string", "minLength": 1 },
+      "status": { "enum": ["open", "fixed"] },
+      "spec": { "type": ["string", "null"], "pattern": "^SPEC-[FA]-[A-Z0-9-]+$" },
+      "opened": { "type": "string", "format": "date" }
+    }
+  }
+}

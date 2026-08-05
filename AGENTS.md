@@ -5,83 +5,41 @@ context.
 
 ## Start here
 
-1. Read this file completely and the reusable AIdioma development skill.
-2. Living docs root is `Docs/`. Read `Docs/INDEX.md`, `Docs/Roadmap/Roadmap.md`,
-   `Docs/Handoffs/HANDOFF.md`, `Docs/System/development-system-v2.md`, and
-   `Docs/System/COMMANDS.md`.
-3. Treat `Docs.2/` as frozen evidence only. Never mix living `Docs/` with `Docs.2/` as dual authority.
+1. Read this file and `Docs/AGENTS.md` (agent contract).
+2. Living docs root is `Docs/`. Prefer `.work/context.json` when present; else read
+   `Docs/START.md`, `Docs/System/system.md`, `Docs/System/COMMANDS.md`,
+   `Docs/Handoffs/HANDOFF.md`, and the active/next phase under `Docs/Roadmap/Phases/`.
+3. Treat `Docs.2/` as frozen evidence only (`Docs.2/FROZEN.md`). Never dual-write living state there.
 4. Inspect Git status, branch/worktrees (exactly one phase branch/worktree when a phase is active),
    the active phase spec, and relevant executable behavior before acting.
 5. `apps/web/`, packages, `content/`, migrations, and tests prove product behavior.
 
-## Development System V2
+## Development System V3
 
-- One bounded phase at a time (`design` or `implementation`; optional subtypes).
-- `Docs/Roadmap/Roadmap.md` is the schedule SSOT. Phase specs own contracts. Backlog is unscheduled
-  candidates only.
-- **MCOO:** never onboard more complexity than the phase needs; excess complexity can cut scope.
-- Proof-first for implementation: one real path, composition/seams review, keep/revise/remove.
+- Contract SSOT: `Docs/System/system.md` (approved).
+- One active phase; one branch; one worktree. Phase frontmatter is the schedule SSOT.
+- **MCOO** at `/plan` (cheap) and `/close` (binding).
+- Proof-first. Behavior change requires a spec change.
 - ≤3 consequential founder decisions per checkpoint. Silence is not approval.
-- Sub-agents only for bounded questions; coordinator synthesizes; Mike decides.
-- Cursor skills may be invoked per the allow-list in `Docs/System/development-system-v2.md`; they
-  advise only. Do not preload `Docs.2/`; farm relevant legacy evidence only after outcome/non-goals
-  are set.
+- Do not preload `Docs.2/`; farm relevant slices only after outcome/non-goals are set.
 
 ## Commands
 
-- `/plan` — onboard a new phase onto the Roadmap (draft phase spec, `proposed`/`ready`). No product
-  code. Not the old multi-doc design ritual.
-- `/run` — start or resume the single `active` phase. Execute the whole phase outcome. May commit on
-  the phase branch. Stop for founder gates or contract breaks.
-- `/fix` — bounded defect with regression proof. Systemic work → `/plan`.
-- `/status` — read-only Roadmap, phase, Git, runtime, next command.
-- `/handoff` — end a session inside an active phase; overwrite `Docs/Handoffs/HANDOFF.md`; **no**
-  commit/PR/merge.
-- `/close` — end the phase: close audits → commit/PR/merge exact head → one clean `origin/main` +
-  local main. Human UI review when testable. Stop stale app/dashboard servers. Does not authorize
-  production data/config work or unrelated diff expansion.
-- `/launch` — stop stale learner-app dev servers, then `npm run app:dev`.
-- `/dashboard` — stop stale work-dashboard servers, then `npm run work:dashboard`.
-- `/system` — onboard/revise commands, System files/folders, and process best practices. Show
-  wording before writing. No product code. Large system work still uses a phase + `/run`.
-- `/feat` — **removed**; use `/run`.
+See `Docs/System/COMMANDS.md`. Lifecycle: `/plan` `/run` `/close` `/ship`. Action: `/research`
+`/design` `/fix`. Utility: `/status` `/check` `/launch` `/dashboard` `/handoff`. Meta: `/system`.
 
-## Close audits (implementation)
-
-Always (3): Close Steward (MCOO, scope, SSOT, code-quality smells), Evidence Auditor, Publish
-Guardian. Up to 2 conditional: Learner-Surface (UI/a11y/privacy), Contract/Seams (schemas/APIs/
-shared packages/AI-boundary). FAIL blocks merge; WARN needs Mike ack.
-
-Design close: Steward + Publish + Decision Auditor; FAIL if product code shipped.
-
-## File ownership
-
-- `Docs/System/` — process contracts, `COMMANDS.md`, `Templates/`
-- `Docs/Roadmap/` — schedule, phases, backlog
-- `Docs/Handoffs/HANDOFF.md` — sole handoff file (lean; overwrite)
-- `Docs/Specs/` — capability contracts when earned
-- `Docs/FIXES.yaml` — bounded fixes when present
-- `Docs/PRODUCT.md` — durable product principles when approved
-- `Docs.2/` — frozen pre-V2 evidence
-
-Do not create parallel roadmaps, numbered handoffs, ADR/research archives, or a second living work
-registry beside the Roadmap.
+- `/run` may commit on the phase branch. Merges require audited close checks.
+- `/handoff` overwrites `Docs/Handoffs/HANDOFF.md` only — no commit/PR/merge.
+- `/system` only while no phase is `active`; writes under `Docs/System/`.
 
 ## Application boundaries
 
-- `apps/web/` is the learner application. Keep internal tooling (including the work dashboard) out of
-  its routes, imports, and deployment output.
+- `apps/web/` is the learner application. Keep work-dashboard/tooling out of its routes and deploy.
 - `content/` owns authored curriculum; package schemas own executable contracts.
-- Search the canonical component/token library before adding UI.
 - Never expose secrets, learner text, provider payloads, or internal work registries in public output.
 
 ## Git and runtime
 
-- CI: local `/close` is primary proof; GitHub uses always-on `merge-gate` plus path-filtered
-  app/content/work suites (`Docs/System/ci-policy.md`).
 - `origin/main` is the sole durable branch.
-- One short-lived phase branch and one worktree while a phase is open.
-- Preserve unrelated changes (including dirty Lexicon work). Never force-push or destructively reset.
-- `/run` may commit on the phase branch; only `/close` merges to main.
-- `/launch` and `/dashboard` must clear their own stale servers before starting; `/close` verifies
-  phase-owned servers are stopped.
+- Preserve items listed in `Docs/PRESERVE.md` (including Lexicon stash).
+- `/launch` and `/dashboard` clear their own stale servers; `/close` verifies phase-owned servers stop.

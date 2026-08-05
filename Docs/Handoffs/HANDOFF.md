@@ -1,36 +1,28 @@
-# Current handoff — ready for PHASE-001 Dashboard
+# Current handoff — PHASE-001 dashboard running
 
 **Date:** 2026-08-05
 
-**Branch:** clean `main` (`f605f79` = `origin/main`)
+**Branch:** `phase/001-dev-system-dashboard` (worktree `.worktrees/phase-001`)
 
-**Active phase:** none
+**Active phase:** PHASE-001 — Dev System Dashboard (`active`)
 
-**Next phase:** PHASE-001 — Dev System Dashboard (`ready`)
+**Next phase:** PHASE-002 — Target Product Design (`proposed`)
 
-## Done this session
+## Where I left off
 
-- PHASE-000 Development System V2 designed, approved, published (PR #13)
-- Commands: `/plan` `/run` `/fix` `/status` `/handoff` `/close` `/launch` `/dashboard` `/system`
-- Cursor-skill allow-list + Docs.2 farm-after-requirements rules (PR #14)
-- CI cost fix: path-filtered app/content; required check = `merge-gate` (PR #15)
-- `Docs/System/ci-policy.md` — local `/close` is primary proof
+- V3 Docs cutover brought onto the phase branch (living `Docs/`; `Docs.2` frozen)
+- Shared `derive()` in `tooling/work-registry` projects phases/specs/fixes/activity → `.work/index.json`
+- Dashboard adapted: shell, Now, Roadmap (+ empty Activity/Knowledge/Issues); watcher + SSE
+- Kept existing local HTTP server (no Next) — MCOO
+- Proof: `npm run work:test` green; `/dashboard` at `http://127.0.0.1:4317` shows PHASE-001 active and `/run`
+- Lexicon stash untouched (`PRESERVE.md` / `stash@{0}`)
+- Slow-cycle Issues (`paths` drift) deferred until specs declare `paths`
 
-## Preserve
-
-```text
-stash@{0}: lexicon-wip-preserved-after-phase-000
-```
-
-Restore later with a new branch from `main` + `git stash pop`. Do not drop this stash.
-
-## Next command (fresh chat)
+## Next command
 
 ```text
-/run PHASE-001
+/close
 
-Read Docs/System/development-system-v2.md, Docs/System/COMMANDS.md, Docs/System/ci-policy.md,
-and Docs/Roadmap/Phases/PHASE-001-dev-system-dashboard.md.
-Adapt tooling/work-registry + work-dashboard to Roadmap/phases/backlog/command key with
-file-projected auto-refresh (no DB). Preserve lexicon stash. Use /dashboard to launch.
+Or continue polishing Activity/Knowledge if you want them beyond empty states before close.
+Human visual review of http://127.0.0.1:4317 recommended.
 ```

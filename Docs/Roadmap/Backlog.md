@@ -1,25 +1,21 @@
----
-schema_version: 1
-updated: 2026-08-05
----
+# Backlog
 
-# Roadmap backlog
+Unscheduled candidates. Nothing here is live work.
 
-Unscheduled phase candidates only. This is not a second live registry. Promote items with `/plan`.
-Draft material, if any, lives under `Backlog/drafts/`.
+`/plan` promotes a row: creates the phase with `from_backlog: BL-XXX`, then deletes the row.
+An item is never in both places. If it is broken rather than unbuilt, it belongs in `FIXES.yaml`.
 
-Farmed from deprecated `Docs.2/WORK.yaml` (evidence only). Status here means backlog triage, not
-Roadmap phase state.
+Farmed from Docs.3 Roadmap backlog (originally Docs.2/WORK.yaml evidence).
 
-| ID | Title | Suggested type | Notes |
-|---|---|---|---|
-| LEXICON-001 | Reviewed word/phrase directory | implementation / feature | Implemented proof exists on dirty `plan/lexicon-foundation`; not closed. Re-phase when ready. |
-| EVALUATION-001 | Server-authoritative Practice evaluation | implementation | Deployed grading source migration. |
-| PRACTICE-PAGE-001 | Practice page composition | implementation | See Docs.2 specs as evidence. |
-| PROGRESS-SAVED-001 | Progress and saved material | implementation | Deferred until product map. |
-| ADAPTIVE-SERVING-001 | Target-aware serving | implementation | Depends on profile/lexicon consumers. |
-| PRACTICE-ASSISTANCE-001 | Broader practice assistance | implementation | Beyond current Lexicon proof. |
-| LESSON-REVIEW-SURFACE-001 | Replace static lesson-review surface | process | Blocks REPO-CLEANUP-001. |
-| REPO-CLEANUP-001 | Remove obsolete static prototype | process | Blocked on lesson-review surface. |
-| CONTENT-GEN-001 | Content generation pipeline | implementation | Docs.2 evidence only until scheduled. |
-| UI-SYSTEM-001 | UI system hardening | implementation | On demand. |
+| ID | Title | Type | Blocked by | Note |
+|---|---|---|---|---|
+| BL-001 | Reviewed word/phrase directory (Lexicon) | implementation | — | Proof on dirty stash; see PRESERVE.md. Re-phase when ready. |
+| BL-002 | Server-authoritative Practice evaluation | implementation | — | Deployed grading source migration. |
+| BL-003 | Practice page composition | implementation | — | Docs.2 specs as evidence. |
+| BL-004 | Progress and saved material | implementation | — | Deferred until product map. |
+| BL-005 | Target-aware adaptive serving | implementation | BL-001 | Depends on profile/lexicon consumers. |
+| BL-006 | Broader practice assistance | implementation | — | Beyond current Lexicon proof. |
+| BL-007 | Replace static lesson-review surface | design | — | Blocks BL-008. |
+| BL-008 | Remove obsolete static prototype | design | BL-007 | Repo cleanup. |
+| BL-009 | Content generation pipeline | implementation | — | Docs.2 evidence until scheduled. |
+| BL-010 | UI system hardening | implementation | — | On demand. |

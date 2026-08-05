@@ -1,228 +1,118 @@
 import { z } from "zod";
 
-const identifierSchema = z
-  .string()
-  .trim()
-  .min(1)
-  .regex(
-    /^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+$/u,
-    "must be an uppercase, hyphen-separated identifier",
-  );
-
-const titleSchema = z.string().trim().min(1);
-const areaSchema = z
-  .string()
-  .trim()
-  .min(1)
-  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u, "must be a lowercase slug");
-const descriptionSchema = z.string().trim().min(1);
-const referenceListSchema = z.array(identifierSchema);
-const evidenceListSchema = z.array(z.string().trim().min(1));
-const specPathSchema = z
-  .string()
-  .trim()
-  .min(1)
-  .regex(/^Specs\/[^/\\]+\.md$/u, "must be a Docs-relative Specs/*.md path");
-
-export const workStatusSchema = z.enum([
-  "open",
-  "planning",
-  "planned",
+export const phaseStateSchema = z.enum([
+  "proposed",
+  "ready",
   "active",
+  "closed",
   "blocked",
-  "deferred",
-  "complete",
+  "abandoned",
 ]);
 
-export const workKindSchema = z.enum(["process", "feature", "system", "research"]);
-export const founderApprovalSchema = z.enum(["required", "approved"]);
+const phaseObjectSchema = z.object({
+  id: z.string().regex(/^PHASE-[0-9]{3}$/),
+  title: z.string().min(1),
+  type: z.enum(["design", "implementation"]),
+  proof_kind: z.enum(["test", "visual", "terminal", "state", "spec"]),
+  state: phaseStateSchema,
+  order: z.number().int().nonnegative(),
+  depends_on: z.array(z.string().regex(/^PHASE-[0-9]{3}$/)),
+  from_backlog: z.union([z.string(), z.null()]).default(null),
+  owner: z.string().min(1),
+  outcome: z.string().min(1),
+  proof: z.string().min(1),
+  non_goals: z.array(z.string()),
+  amends_specs: z.array(z.string().regex(/^SPEC-[FA]-[A-Z0-9-]+$/)),
+  opened: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  closed: z.union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.null()]).default(null),
+  lessons: z.union([z.string(), z.null()]).default(null),
+});
 
-export const workItemSchema = z
-  .object({
-    id: identifierSchema,
-    title: titleSchema,
-    area: areaSchema,
-    status: workStatusSchema,
-    kind: workKindSchema,
-    founder_approval: founderApprovalSchema,
-    summary: descriptionSchema,
-    spec: specPathSchema.nullable(),
-    dependencies: referenceListSchema,
-    blocked_by: referenceListSchema,
-    reusable_by: z.array(areaSchema),
-    next_slice: descriptionSchema,
-    evidence: evidenceListSchema,
-  })
-  .strict();
-
-export const workRegistrySchema = z
-  .object({
-    version: z.literal(1),
-    work: z.array(workItemSchema),
-  })
-  .strict();
-
-export const fixStatusSchema = z.enum(["open", "active", "blocked", "complete"]);
-
-export const fixItemSchema = z
-  .object({
-    id: identifierSchema,
-    title: titleSchema,
-    area: areaSchema,
-    status: fixStatusSchema,
-    summary: descriptionSchema,
-    related_work: identifierSchema,
-    reproduction: descriptionSchema.optional(),
-    expected: descriptionSchema.optional(),
-    actual: descriptionSchema.optional(),
-    evidence: evidenceListSchema,
-  })
-  .strict();
-
-export const fixRegistrySchema = z
-  .object({
-    version: z.literal(1),
-    fixes: z.array(fixItemSchema),
-  })
-  .strict();
-
-export const specStatusSchema = z.enum([
-  "draft",
-  "review",
-  "planned",
-  "active",
-  "implemented",
-  "superseded",
-]);
-
-export const specImplementationSchema = z.enum(["none", "partial", "mixed", "implemented"]);
-export const founderReviewSchema = founderApprovalSchema;
-
-const isoDateSchema = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/u, "must use YYYY-MM-DD")
-  .refine((value) => {
-    const date = new Date(`${value}T00:00:00.000Z`);
-    return !Number.isNaN(date.valueOf()) && date.toISOString().startsWith(value);
-  }, "must be a valid calendar date");
-
-export const specFrontmatterSchema = z
-  .object({
-    id: identifierSchema,
-    title: titleSchema,
-    area: areaSchema,
-    status: specStatusSchema,
-    implementation: specImplementationSchema,
-    founder_review: founderReviewSchema,
-    updated: isoDateSchema,
-  })
-  .strict();
-
-export const productFrontmatterSchema = specFrontmatterSchema.superRefine((value, context) => {
-  if (value.id !== "PRODUCT-001") {
-    context.addIssue({ code: "custom", message: "must use id PRODUCT-001", path: ["id"] });
+export const phaseSchema = phaseObjectSchema.superRefine((value, context) => {
+  if (value.type === "design" && value.proof_kind !== "spec") {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "design phases require proof_kind: spec",
+      path: ["proof_kind"],
+    });
   }
-  if (value.area !== "product") {
-    context.addIssue({ code: "custom", message: "must use area product", path: ["area"] });
+  if (value.state === "abandoned" && (!value.lessons || value.lessons.length === 0)) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "abandoned phases require lessons",
+      path: ["lessons"],
+    });
+  }
+  if (value.state === "closed" && !value.closed) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "closed phases require closed date",
+      path: ["closed"],
+    });
   }
 });
 
-const repositoryRelativePathSchema = z
-  .string()
-  .trim()
-  .min(1)
-  .refine(
-    (value) =>
-      !value.startsWith("/") &&
-      !value.startsWith("git:") &&
-      !value.includes("\\") &&
-      !value.split("/").includes(".."),
-    "must be a contained repository-relative path",
-  );
-const gitSourceSchema = z
-  .string()
-  .regex(/^git:[0-9a-f]{40}:[^/\\][^\\]*$/u, "must use git:<40sha>:<path> syntax");
+const specObjectSchema = z.object({
+  id: z.string().regex(/^SPEC-[FA]-[A-Z0-9-]+$/),
+  kind: z.enum(["feature", "area"]),
+  title: z.string().min(1),
+  status: z.enum(["active", "superseded", "contested"]),
+  superseded_by: z.union([z.string().regex(/^SPEC-[FA]-[A-Z0-9-]+$/), z.null()]).default(null),
+  depends_on: z.array(z.string().regex(/^SPEC-A-[A-Z0-9-]+$/)).optional(),
+  vendor: z.union([z.string(), z.null()]).default(null),
+  decisions: z.array(z.string().regex(/^D-[0-9]{3}$/)),
+  built_by: z.array(z.string().regex(/^PHASE-[0-9]{3}$/)),
+  last_amended: z.union([z.string().regex(/^PHASE-[0-9]{3}$/), z.null()]).default(null),
+  research: z.array(z.string().regex(/^R-[0-9]{3}$/)),
+  paths: z.array(z.string().min(1)).min(1),
+});
 
-export const migrationSourceClassificationSchema = z.enum([
-  "implemented",
-  "legacy-accepted",
-  "candidate",
-  "research",
-  "conflicting",
-  "rejected",
-]);
-export const migrationTargetDispositionSchema = z.enum([
-  "preserve-for-disposition",
-  "preserve-deferred-for-disposition",
-  "retain-as-candidate",
-  "retain-as-planning-input",
-  "retain-as-research",
-  "retain-as-blocking-requirement",
-  "retain-implemented",
-  "retain-implemented-with-scope",
-  "retain-implemented-with-limitation",
-  "retain-implemented-with-practice-conflict",
-  "retain-implemented-prototype-behavior",
-  "register-current-conflict",
-  "correct-to-implemented-truth",
-  "reopen-policy",
-  "record-current-rejection",
-]);
-export const migrationFounderDecisionStateSchema = z.enum([
-  "pending",
-  "pending-policy-review",
-  "not-required-for-current-truth",
-  "approved",
-  "revised",
-  "deferred",
-  "rejected",
-]);
-export const migrationEntrySchema = z
-  .object({
-    id: z.string().regex(/^MIG-[0-9]{3,}$/u, "must use MIG-### syntax"),
-    domain: areaSchema,
-    claim: descriptionSchema,
-    source_classification: migrationSourceClassificationSchema,
-    target_disposition: migrationTargetDispositionSchema,
-    founder_decision_state: migrationFounderDecisionStateSchema,
-    sources: z.array(z.union([gitSourceSchema, repositoryRelativePathSchema])).min(1),
-    target: z.union([z.literal("PRODUCT.md"), specPathSchema]),
-  })
-  .strict();
-export const migrationRegistrySchema = z
-  .object({
-    temporary: z.literal(true),
-    source_commit: z.string().regex(/^[0-9a-f]{40}$/u, "must be a full 40-character commit SHA"),
-    disposition_required: z.literal("founder-review"),
-    classification_note: descriptionSchema,
-    entries: z.array(migrationEntrySchema),
-  })
-  .strict()
-  .superRefine((value, context) => {
-    const seen = new Set<string>();
-    value.entries.forEach((entry, index) => {
-      if (seen.has(entry.id)) {
-        context.addIssue({
-          code: "custom",
-          message: `duplicate migration id ${entry.id}`,
-          path: ["entries", index, "id"],
-        });
-      }
-      seen.add(entry.id);
+export const specSchema = specObjectSchema.superRefine((value, context) => {
+  if (value.kind === "feature" && value.depends_on === undefined) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "feature specs require depends_on",
+      path: ["depends_on"],
     });
-  });
+  }
+  if (value.kind === "area" && value.depends_on !== undefined) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "area specs must not declare depends_on",
+      path: ["depends_on"],
+    });
+  }
+  if (value.status === "superseded" && !value.superseded_by) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "superseded specs require superseded_by",
+      path: ["superseded_by"],
+    });
+  }
+});
 
-export type WorkStatus = z.infer<typeof workStatusSchema>;
-export type WorkKind = z.infer<typeof workKindSchema>;
-export type FounderApproval = z.infer<typeof founderApprovalSchema>;
-export type WorkItem = z.infer<typeof workItemSchema>;
-export type WorkRegistry = z.infer<typeof workRegistrySchema>;
-export type FixStatus = z.infer<typeof fixStatusSchema>;
-export type FixItem = z.infer<typeof fixItemSchema>;
-export type FixRegistry = z.infer<typeof fixRegistrySchema>;
-export type SpecStatus = z.infer<typeof specStatusSchema>;
-export type SpecImplementation = z.infer<typeof specImplementationSchema>;
-export type SpecFrontmatter = z.infer<typeof specFrontmatterSchema>;
-export type ProductFrontmatter = z.infer<typeof productFrontmatterSchema>;
-export type MigrationEntry = z.infer<typeof migrationEntrySchema>;
-export type MigrationRegistry = z.infer<typeof migrationRegistrySchema>;
+export const researchSchema = z.object({
+  id: z.string().regex(/^R-[0-9]{3}$/),
+  question: z.string().min(1),
+  verdict: z.string().min(1),
+  status: z.enum(["fresh", "stale", "superseded"]),
+  informed: z.array(z.string().regex(/^D-[0-9]{3}$/)),
+  affects: z.array(z.string().regex(/^SPEC-[FA]-[A-Z0-9-]+$/)),
+  phase: z.union([z.string().regex(/^PHASE-[0-9]{3}$/), z.null()]).default(null),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+});
+
+export const fixItemSchema = z.object({
+  id: z.string().regex(/^FIX-[0-9]{3}$/),
+  summary: z.string().min(1),
+  status: z.enum(["open", "fixed"]),
+  spec: z.union([z.string().regex(/^SPEC-[FA]-[A-Z0-9-]+$/), z.null()]).default(null),
+  opened: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+});
+
+export const fixesSchema = z.array(fixItemSchema);
+
+export type PhaseFrontmatter = z.output<typeof phaseObjectSchema>;
+export type SpecFrontmatter = z.output<typeof specObjectSchema>;
+export type ResearchFrontmatter = z.output<typeof researchSchema>;
+export type FixItem = z.output<typeof fixItemSchema>;

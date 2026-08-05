@@ -1,0 +1,4 @@
+# Open and recently closed defects. Validated against System/schemas/fixes.schema.json.
+# Log the symptom, not the diagnosis.
+# If it needs design work, move it to Roadmap/Backlog.md and delete the entry.
+[]

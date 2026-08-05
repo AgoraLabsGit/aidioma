@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "phase.schema.json",
+  "title": "Phase",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "type",
+    "proof_kind",
+    "state",
+    "order",
+    "depends_on",
+    "owner",
+    "outcome",
+    "proof",
+    "non_goals",
+    "amends_specs",
+    "opened"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^PHASE-[0-9]{3}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "enum": [
+        "design",
+        "implementation"
+      ]
+    },
+    "proof_kind": {
+      "enum": [
+        "test",
+        "visual",
+        "terminal",
+        "state",
+        "spec"
+      ]
+    },
+    "state": {
+      "enum": [
+        "proposed",
+        "ready",
+        "active",
+        "closed",
+        "blocked",
+        "abandoned"
+      ]
+    },
+    "order": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "outcome": {
+      "type": "string",
+      "minLength": 1
+    },
+    "proof": {
+      "type": "string",
+      "minLength": 1
+    },
+    "non_goals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "amends_specs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^SPEC-[FA]-[A-Z0-9-]+$"
+      }
+    },
+    "opened": {
+      "type": "string",
+      "format": "date"
+    },
+    "closed": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "lessons": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "depends_on": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^PHASE-[0-9]{3}$"
+      }
+    },
+    "from_backlog": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "abandoned"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "lessons": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "lessons"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "closed"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "closed": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": [
+          "closed"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "design"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "proof_kind": {
+            "const": "spec"
+          }
+        }
+      }
+    }
+  ]
+}
