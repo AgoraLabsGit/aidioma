@@ -2,6 +2,13 @@ name: App CI
 
 on:
   pull_request:
+    paths:
+      - "apps/web/**"
+      - "apps/prototype/index.html"
+      - "packages/lesson-schema/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/app.yml"
   push:
     branches: [main]
     paths:

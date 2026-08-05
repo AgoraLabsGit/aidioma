@@ -77,6 +77,8 @@ registry beside the Roadmap.
 
 ## Git and runtime
 
+- CI: local `/close` is primary proof; GitHub uses always-on `merge-gate` plus path-filtered
+  app/content/work suites (`Docs/System/ci-policy.md`).
 - `origin/main` is the sole durable branch.
 - One short-lived phase branch and one worktree while a phase is open.
 - Preserve unrelated changes (including dirty Lexicon work). Never force-push or destructively reset.
