@@ -19,7 +19,7 @@ Command key for agents and the dashboard. Process detail lives in `System/system
 | `/close` | Phase complete | Three checks → commit/PR → merge exact head → clean `main`; stop phase-owned servers | Merge on FAIL; expand scope silently; delete anything in `PRESERVE.md` |
 | `/ship` | Promote to production | Deploy production; append to `RELEASES.md` | Ship on a red check, an open FAIL, or a contested spec |
 
-`/close --abandon` records `lessons:`, deletes the branch, no merge.
+`/close --cancel` records `lessons:`, deletes the branch, no merge.
 `/close --dry-run` runs the three checks, changes nothing, writes findings to `FIXES.yaml` and `Backlog.md`.
 
 ## Action — one unit of work, one artifact, no phase advance

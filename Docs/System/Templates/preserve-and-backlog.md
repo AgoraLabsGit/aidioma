@@ -35,7 +35,7 @@ Unscheduled candidates. Not a second registry — nothing here is live work.
 
 | ID | Title | Type | Blocked by | Note |
 |---|---|---|---|---|
-| BL-001 | Offline mode | implementation | — | Needs sync model first |
+| BL-001 | Offline mode | build | — | Needs sync model first |
 | BL-002 | Repo cleanup | design | BL-001 | Depends on the sync decision |
 ```
 

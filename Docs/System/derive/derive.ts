@@ -43,6 +43,8 @@ export type IndexIssue = {
   spec: string | null;
   age_days: number | null;
   severity: IssueSeverity;
+  /** open = needs attention; fixed = closed FIX row still projected for history */
+  status: "open" | "fixed";
 };
 
 export type ActivityEvent = {
@@ -184,6 +186,7 @@ async function readOptional(filePath: string): Promise<string | null> {
 function addParseIssue(issues: IndexIssue[], sourcePath: string, summary: string): void {
   issues.push({
     kind: "parse_error",
+    status: "open",
     ref: sourcePath,
     summary,
     spec: null,
@@ -369,6 +372,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
           spec: data.affects[0] ?? null,
           age_days: age,
           severity: "low",
+          status: "open",
         });
       }
     } catch (error) {
@@ -397,16 +401,15 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
       const parsed = parseFixes(fixesSource, "FIXES.yaml");
       fixes = parsed.map((item) => ({ ...item, age_days: dayDiff(item.opened, now) }));
       for (const item of fixes) {
-        if (item.status === "open") {
-          issues.push({
-            kind: "fix",
-            ref: item.id,
-            summary: item.summary,
-            spec: item.spec,
-            age_days: item.age_days,
-            severity: "high",
-          });
-        }
+        issues.push({
+          kind: "fix",
+          ref: item.id,
+          summary: item.summary,
+          spec: item.spec,
+          age_days: item.age_days,
+          severity: item.status === "open" ? "high" : "low",
+          status: item.status,
+        });
       }
     } catch (error) {
       const summary =
@@ -458,7 +461,8 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
         spec: spec.id,
         age_days: null,
         severity: "high",
-      });
+          status: "open",
+        });
     }
   }
 
@@ -477,6 +481,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
           spec: null,
           age_days: phase.age_days,
           severity: "high",
+          status: "open",
         });
       }
     }
@@ -489,6 +494,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
           spec: specId,
           age_days: phase.age_days,
           severity: "high",
+          status: "open",
         });
       }
     }
@@ -500,7 +506,8 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
         spec: null,
         age_days: phase.age_days,
         severity: "high",
-      });
+          status: "open",
+        });
     }
   }
 
@@ -514,6 +521,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
           spec: spec.id,
           age_days: null,
           severity: "high",
+          status: "open",
         });
       }
     }
@@ -526,6 +534,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
           spec: spec.id,
           age_days: null,
           severity: "high",
+          status: "open",
         });
       }
     }
@@ -538,6 +547,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
           spec: spec.id,
           age_days: null,
           severity: "high",
+          status: "open",
         });
       }
     }
@@ -553,6 +563,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
           spec: specId,
           age_days: dayDiff(decision.date, now),
           severity: "high",
+          status: "open",
         });
       }
     }
@@ -645,7 +656,9 @@ export async function writeContextJson(
       : null,
     next_command: index.next_command,
     repo: index.repo,
-    open_issues: index.issues.filter((issue) => issue.severity === "high").length,
+    open_issues: index.issues.filter(
+      (issue) => issue.status === "open" && issue.severity === "high",
+    ).length,
     do_not_load: [".work/activity/**", "Docs.2/**"],
   };
   await mkdir(path.join(root, ".work"), { recursive: true });

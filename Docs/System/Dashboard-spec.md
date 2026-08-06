@@ -90,7 +90,7 @@ Pages render `index.json` and hold no logic.
   "phases": [{
     "id": "PHASE-007",
     "title": "Translation provider integration",
-    "type": "implementation",
+    "type": "build",
     "proof_kind": "visual",
     "state": "active",
     "order": 7,
@@ -216,7 +216,7 @@ Computed by the indexer; never authored.
 | Status | Colored dot **plus** text label — never color alone |
 | Chrome | Sidebar nav + table pages. No charts / analytics widgets in V1 |
 
-Status colors: active/fresh green · blocked/contested amber · abandoned/superseded grey ·
+Status colors: active/fresh green · blocked/contested amber · canceled/superseded grey ·
 failing/drift red.
 
 ---
@@ -233,7 +233,7 @@ one card per `active`/`blocked` phase so parallel phases do not collapse into on
 |---|---|
 | Header | id + title + `outcome` (state/type live in Status only) |
 | Status | Two-column glance (4+4) — left: state, type, owner, opened · right: proof_kind, git, check, issues |
-| Phase card | One card, sections: Context (+ out of scope), Plan, Proof, Dependencies (`depends_on`), Specs amended (`amends_specs`), Inputs (body), Files, Issues, Audits (stub), Tests (stub, implementation only). **Tables vs lists:** authored `\|` markdown → real `.md-table` (key→value maps like Inputs). Numbered Plan / proof checklist → row+divider lists. Out of scope → plain bullets (no table chrome). Never `display:grid`/`flex` on prose `<li>` with mixed inline nodes (breaks `code`). |
+| Phase card | One card, sections: Context (+ out of scope), Plan, Proof, Dependencies (`depends_on`), Specs amended (`amends_specs`), Inputs (body), Files, Issues, Audits (stub), Tests (stub, build only). **Tables vs lists:** authored `\|` markdown → real `.md-table` (key→value maps like Inputs). Numbered Plan / proof checklist → row+divider lists. Out of scope → plain bullets (no table chrome). Never `display:grid`/`flex` on prose `<li>` with mixed inline nodes (breaks `code`). |
 | Handoff | Below the phase stack on Active only — `HANDOFF.md` with `updated_at` |
 
 **Index vs body:** `index.json` is frontmatter-only (D-006). Named body sections load on demand via
@@ -248,21 +248,23 @@ Active UI** (founder removed the command bar / suggested-next box).
 
 ### Roadmap
 
-| ID | Title | Type | State | Outcome | Proof kind | Specs | Age |
+| ID | Title | Type | State | Proof kind | Specs | Age |
 
-- Ordered by `order`; grouped by state: active → ready → proposed → closed → abandoned
-- Design phases visually distinct from implementation
-- Abandoned rows show `lessons` inline — the highest-value column
+- Ordered by `order`; grouped by state: active → ready → proposed → closed → canceled
+- Design phases visually distinct from build
+- Canceled rows show `lessons` inline — the highest-value column
 - Blocked rows pinned below active
-- Filters: state, type
+- Filters: state, type (`design` | `build`)
 
 ### Activity
 
 | Time | Type | Actor | Ref | Summary | Phase |
 
+- Projects `.work/activity/*.jsonl` only (D-008). UI label stays **Activity**.
 - Reverse chronological, virtualized, paged by month partition
 - Filters: `type`, `actor`, `phase`, date range
 - **Agent/user toggle** — answers "what did the agent do while I was away"
+- **Ref vs Phase** — show both when they differ; merge into one cell when identical
 - **Per-feature timeline** — selecting a spec filters to its ref chain in chronological order:
   research → decision → spec → build → ship → fix
 
@@ -300,24 +302,28 @@ does.
 ### Issues
 
 One table, all signals. This page is where `paths` visibly pays off.
+**UI label is Issues** (D-007); `FIXES.yaml` remains the authored fix ledger.
 
-| Kind | Ref | Summary | Spec | Age | Severity |
+| Kind | Ref | Summary | Spec | Age | Severity | Status |
 
-| Kind | Source | Severity |
-|---|---|---|
-| `fix` | `FIXES.yaml`, open | high |
-| `blocked` | Phase `state` | high |
-| `contested` | Spec `status` | high |
-| `broken_link` | Unresolvable id reference | high |
-| `parse_error` | Malformed frontmatter/YAML | high |
-| `drift` | Code changed since `last_amended` | medium |
-| `unspecified` | File matched by no spec's `paths` | medium |
-| `dead_spec` | `paths` match no files | low |
-| `stale_research` | `Research/` older than 90 days | low |
+| Kind | Source | Severity | Status |
+|---|---|---|---|
+| `fix` | `FIXES.yaml` open | high | `open` |
+| `fix` | `FIXES.yaml` fixed | low | `fixed` (Closed filter) |
+| `blocked` | Phase `state` | high | `open` |
+| `contested` | Spec `status` | high | `open` |
+| `broken_link` | Unresolvable id reference | high | `open` |
+| `parse_error` | Malformed frontmatter/YAML | high | `open` |
+| `drift` | Code changed since `last_amended` | medium | `open` |
+| `unspecified` | File matched by no spec's `paths` | medium | `open` |
+| `dead_spec` | `paths` match no files | low | `open` |
+| `stale_research` | `Research/` older than 90 days | low | `open` |
 
 Rows from the slow cycle (`drift`, `unspecified`, `dead_spec`) display `paths_scanned_at`.
 
-Default sort: severity, then age. Filter by kind.
+Default sort: severity, then age. Filters: status (All default / Open / Closed=fixed), kind, severity.
+When Open is selected and every row is closed, show a hint to switch to Closed or All — do not look empty-broken.
+Header issue pill counts **open** high-severity only.
 
 ---
 
@@ -364,3 +370,14 @@ Steps 1–4 are independently useful. Step 7 depends on specs having populated `
 - First run on an empty repo → every page shows a named next command, no false `unspecified` rows
 - Slow cycle stale → drift column marked, page still renders
 - Roadmap answers "what is the state of this project" in three seconds, no clicks
+
+### Projection proof (PHASE-004)
+
+- Active / Roadmap / Detail fields come from phase frontmatter, `/api/doc`, or index — no hardcoded phase payloads in dashboard JS
+- Issues: open FIX rows under Open; fixed FIX rows under Closed; other kinds remain
+- Activity: events from `.work/activity/`; new command appends a line and appears after reindex
+- Time: "ago" / age columns match source timestamps (`ts`, `opened`, `indexed_at`)
+- Sort/filter chips on Roadmap, Activity, Issues change the visible rows correctly
+- `PHASE-099` appears only because its phase `.md` exists (never mocked in JS)
+- `Dashboard-spec.md` stays under `Docs/System/` until a later promote-to-`SPEC-*` decision (D-009)
+- Schema/derive module changes require restarting `/dashboard` (file watch re-derives data, not reloaded Zod enums)

@@ -42,3 +42,27 @@ Chose: `index.json` / derive = frontmatter only; UI may render named markdown bo
 Why: Same-day V3 + Dashboard-spec overclaimed “dashboard reads frontmatter only” while detail/Active need Context·Plan·Proof prose; bodies must not bloat the index
 Revisit if: On-demand body fetch makes Active slow or duplicates SSOT with frontmatter
 Supersedes: Absolute reading of system.md §5 “dashboard reads frontmatter only”
+
+## D-007 — Issues page vs FIXES.yaml
+Date: 2026-08-05 · Phase: PHASE-004 · From: — · Affects: []
+Chose: UI label **Issues**; file stays `FIXES.yaml` (one of several issue kinds)
+Why: Issues projects fixes plus blocked/parse_error/drift signals; renaming the page to Fixes would lie
+Revisit if: FIXES.yaml becomes the only issue source and other kinds move elsewhere
+
+## D-008 — Activity page vs .work/activity
+Date: 2026-08-05 · Phase: PHASE-004 · From: — · Affects: []
+Chose: UI label **Activity**; journal path stays `.work/activity/`
+Why: Page name is for humans; path is the projection source — no rename needed
+Revisit if: Activity grows a second source that is not the command journal
+
+## D-009 — Dashboard-spec stays under System/
+Date: 2026-08-05 · Phase: PHASE-004 · From: — · Affects: []
+Chose: Keep `Docs/System/Dashboard-spec.md` over promoting to `SPEC-*` now
+Why: Dev-system surface, not learner product behavior; PHASE-004 non-goal defers promotion
+Revisit if: Learner app or shared packages need to depend on dashboard contracts
+
+## D-010 — Phase vocabulary: build + canceled
+Date: 2026-08-05 · Phase: PHASE-004 · From: — · Affects: []
+Chose: Phase `type: build` (was `implementation`); state `canceled` (was `abandoned`); `/close --cancel`
+Why: Clearer founder-facing labels; same semantics
+Revisit if: External tooling still expects the old enum strings

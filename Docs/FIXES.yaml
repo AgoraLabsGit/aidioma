@@ -11,3 +11,13 @@
   status: fixed
   spec: null
   opened: 2026-08-05
+- id: FIX-003
+  summary: "Roadmap showed only design phases after type rename to build (stale dashboard process)"
+  status: fixed
+  spec: null
+  opened: 2026-08-05
+- id: FIX-004
+  summary: "Issues page looked empty when all FIX rows were closed (Open filter default)"
+  status: fixed
+  spec: null
+  opened: 2026-08-05

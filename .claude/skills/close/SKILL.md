@@ -8,7 +8,7 @@ description: Close the active AIdioma phase with audits, publish through protect
 1. Read `AGENTS.md`, `Docs/System/development-system-v2.md`, active phase spec, and handoff.
 2. Confirm close scope with Mike when the worktree contains unrelated dirty work (e.g. Lexicon).
    Do not expand the diff silently.
-3. Run the phase close-audit set (design or implementation). FAIL blocks merge; WARN needs Mike ack.
+3. Run the phase close-audit set (design or build). FAIL blocks merge; WARN needs Mike ack.
    May invoke Cursor `review-bugbot`, `review-security`, and/or `code-review` as audit helpers;
    they advise only—this command still owns publish gates.
 4. Stop stale `/launch` and `/dashboard` servers owned by this work.

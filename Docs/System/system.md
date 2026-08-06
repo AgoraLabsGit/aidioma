@@ -101,7 +101,7 @@ one place that state survives. `/close` and `/status --repair` never clean anyth
 |---|---|
 | `id` | Own namespace, not `PHASE-nnn` — it is not a phase yet |
 | `title` | Short |
-| `type` | `design` or `implementation` |
+| `type` | `design` or `build` |
 | `blocked_by` | Another backlog id, if any |
 | `note` | One line |
 
@@ -120,7 +120,7 @@ routes to a home where something checks it:
 | "Never use `any`" | A lint rule |
 | Product principles | `PRODUCT.md` |
 | Process rules | `System/` |
-| Why a killed phase was wrong | `lessons:` on the abandoned phase |
+| Why a killed phase was wrong | `lessons:` on the canceled phase |
 
 If a practice cannot become a spec rule, a decision, a lint, or a product principle, it is a
 preference — writing it down will not change behavior.
@@ -231,9 +231,9 @@ Enforced in CI. An artifact nobody finishes reading is an artifact that stops be
 ```yaml
 id: PHASE-007
 title: Translation provider integration
-type: design | implementation
+type: design | build
 proof_kind: test | visual | terminal | state | spec
-state: proposed | ready | active | closed | blocked | abandoned
+state: proposed | ready | active | closed | blocked | canceled
 order: 7
 depends_on: []                # [PHASE-005] — what must close first
 owner: founder
@@ -243,14 +243,14 @@ non_goals: [caching, offline mode]
 amends_specs: [SPEC-F-TRANSLATION, SPEC-A-AI]
 opened: 2026-08-05
 closed: null
-lessons: null          # required when state: abandoned
+lessons: null          # required when state: canceled
 ```
 
 Sections: Context · Inputs · Plan · Proof · Close record · Kickoff
 
-`type` is a **scheduling** concept. Design phases produce specs and decisions; implementation
+`type` is a **scheduling** concept. Design phases produce specs and decisions; build
 phases produce running behavior. Either may be scheduled at any point — `order` follows
-dependency, not category. A design phase commonly follows implementation when it needs evidence
+dependency, not category. A design phase commonly follows a build phase when it needs evidence
 from real behavior, and commonly precedes it when behavior must be defined first.
 
 `proof_kind` is separate: it declares what evidence closes this phase. A design phase normally
@@ -263,7 +263,7 @@ uses `proof_kind: spec` — and then app code changing is a Scope FAIL.
 | `proposed` | On the Roadmap, not yet specified enough to start |
 | `ready` | Owner has acknowledged the contract. Eligible to become active |
 | `active` | The one phase in flight |
-| `closed` / `abandoned` / `blocked` | Terminal or paused |
+| `closed` / `canceled` / `blocked` | Terminal or paused |
 
 `ready` is the approval signal. Scheduling and approval are different acts — being on the Roadmap
 does not mean the contract has been read.
@@ -502,7 +502,7 @@ under *Unassigned* on the dashboard.
 - Preview deploy verified
 - No `contested` spec among the features being shipped
 
-`/close --abandon` — records why, deletes the branch, sets `state: abandoned`, no merge. The
+`/close --cancel` — records why, deletes the branch, sets `state: canceled`, no merge. The
 honest exit. Without it, bad work gets finished out of sunk cost.
 
 Abandon **requires a one-sentence `lessons:` field** in the phase frontmatter. Abandoned phases
@@ -635,7 +635,7 @@ Capture → Plan → [Research → Decide → Spec] → Build → Prove → Clos
 | Ship | `/ship` | Production + release entry |
 | Observe | errors, feedback | `FIXES.yaml` |
 
-Maintenance work — dependency upgrades, migrations, refactors — is an implementation phase that
+Maintenance work — dependency upgrades, migrations, refactors — is a build phase that
 amends an area spec, with `proof: "behavior unchanged, tests pass"`.
 
 ---
@@ -682,7 +682,7 @@ work will always answer "no behavior changed"; a set operation will not.
 
 Files matched by no spec produce a WARN and land on the dashboard's *unspecified code* list.
 
-Design phases additionally fail if product behavior changed without an implementation phase.
+Design phases additionally fail if product behavior changed without a build phase.
 
 ---
 
@@ -770,7 +770,7 @@ detail pane on row click.
 | Page | Reads | Answers |
 |---|---|---|
 | **Now** | Active phase, `HANDOFF.md`, git, last `/check` | What am I doing, what do I type next? |
-| **Roadmap** | `Phases/*.md` frontmatter, ordered by `order` | What's scheduled, done, abandoned? |
+| **Roadmap** | `Phases/*.md` frontmatter, ordered by `order` | What's scheduled, done, canceled? |
 | **Activity** | `.work/activity/*.jsonl` | What happened, and what did the agent do? |
 | **Knowledge** | Specs, `DECISIONS.md`, `Research/` | What exists, how does it behave, why? |
 | **Issues** | `FIXES.yaml` + derived drift signals | What's broken or drifting? |
@@ -857,7 +857,7 @@ an agent loads without being asked.
 
 ```json
 {
-  "phase": {"id":"PHASE-007","state":"active","type":"implementation",
+  "phase": {"id":"PHASE-007","state":"active","type":"build",
             "outcome":"...","proof":"...","proof_kind":"visual",
             "non_goals":["caching"],"amends_specs":["SPEC-F-TRANSLATION"]},
   "specs_in_scope": [
@@ -944,7 +944,7 @@ as long as rule 1 holds.
 | Phase frontmatter is the only schedule SSOT | Removed the reconcile chore caused by two SSOTs |
 | Close audits: 5 roles → 3 checks | MCOO |
 | Phase subtypes removed | Nothing branched on them |
-| `abandoned` state added | Wrong work needed an honest exit |
+| `canceled` state (was `abandoned`) | Wrong work needed an honest exit |
 | `/spec` merged into `/design` | Deciding and writing behavior down are one act |
 | Added `/research`, `/ship`, `/check` | Real lifecycle gaps: no research home, no deploy stage, no safe test run |
 | Added `Research/`, `DECISIONS.md`, `RELEASES.md`, `START.md` | Homeless artifacts |
@@ -955,7 +955,7 @@ as long as rule 1 holds.
 | Directory prohibitions → CI allowlist lint | Negative-space rules rot; lints do not |
 | Deprecation is a status, no archive folder | A second archive gets read as current |
 | Specs unversioned; `last_amended` added | History lives in pointers and git; `last_amended` gives the drift signal |
-| `lessons:` required on abandon | The only expensive information the system wouldn't otherwise keep |
+| `lessons:` required on cancel | The only expensive information the system wouldn't otherwise keep |
 | No best-practices document | Guidance nothing checks is never followed |
 | `paths:` on every spec | Makes spec coverage, blast radius, and drift computable instead of judged |
 | `proof_kind` added; `type` kept | Design phases stay a scheduling concept; evidence is a separate axis |

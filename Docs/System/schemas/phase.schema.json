@@ -31,7 +31,7 @@
     "type": {
       "enum": [
         "design",
-        "implementation"
+        "build"
       ]
     },
     "proof_kind": {
@@ -50,7 +50,7 @@
         "active",
         "closed",
         "blocked",
-        "abandoned"
+        "canceled"
       ]
     },
     "order": {
@@ -118,7 +118,7 @@
       "if": {
         "properties": {
           "state": {
-            "const": "abandoned"
+            "const": "canceled"
           }
         },
         "required": [

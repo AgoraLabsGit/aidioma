@@ -6,13 +6,13 @@ export const phaseStateSchema = z.enum([
   "active",
   "closed",
   "blocked",
-  "abandoned",
+  "canceled",
 ]);
 
 const phaseObjectSchema = z.object({
   id: z.string().regex(/^PHASE-[0-9]{3}$/),
   title: z.string().min(1),
-  type: z.enum(["design", "implementation"]),
+  type: z.enum(["design", "build"]),
   proof_kind: z.enum(["test", "visual", "terminal", "state", "spec"]),
   state: phaseStateSchema,
   order: z.number().int().nonnegative(),
@@ -36,10 +36,10 @@ export const phaseSchema = phaseObjectSchema.superRefine((value, context) => {
       path: ["proof_kind"],
     });
   }
-  if (value.state === "abandoned" && (!value.lessons || value.lessons.length === 0)) {
+  if (value.state === "canceled" && (!value.lessons || value.lessons.length === 0)) {
     context.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "abandoned phases require lessons",
+      message: "canceled phases require lessons",
       path: ["lessons"],
     });
   }

@@ -1,4 +1,4 @@
-# Current handoff — after PHASE-001 close
+# Current handoff — after PHASE-004 close
 
 **Date:** 2026-08-05
 
@@ -6,19 +6,19 @@
 **Worktree:** none for an active phase
 
 **Active phase:** none
-**Next:** PHASE-004 — Dashboard Projection Proof (`proposed`)
+**Next:** PHASE-002 — Target Product Design (`proposed`)
 
-## Done (PHASE-001)
+## Done (PHASE-004)
 
-- `derive()` + local dashboard under `Docs/System/`
-- Pages: Active · Roadmap · Activity · Knowledge · Issues
-- Shared Active/Detail phase layout; index frontmatter-only (D-006); body via `/api/doc`
-- Scheduled PHASE-004 + MOCK PHASE-099; Backlog BL-011 (parallel actives)
+- Dashboard projection proof (Issues open+closed, Activity, filters/time)
+- D-007..D-010 (Issues/Activity naming; Dashboard-spec in System/; `build` + `canceled`)
+- FIX-003, FIX-004 fixed
+- Deferred (not blocking): Activity date-range, per-feature timeline; Backlog dashboard cue
 
 ## Not done / next
 
-- Mark PHASE-004 `ready` when Mike approves, then `/run PHASE-004`
-- Projection audit, Issues open+closed, time/sort/filter audit, Activity Ref vs Phase
+- Mark PHASE-002 `ready` when Mike approves contract, then `/run PHASE-002`
+- Optional later: Backlog page/cue; Activity date-range + feature timeline (BL or phase)
 
 ## Preserve
 
@@ -27,7 +27,7 @@
 ## Next command
 
 ```text
-# Approve scope, then:
-# edit PHASE-004 state: ready
-/run PHASE-004
+# Approve PHASE-002 scope, then:
+# edit PHASE-002 state: ready
+/run PHASE-002
 ```

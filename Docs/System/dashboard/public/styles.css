@@ -1061,7 +1061,7 @@ tbody tr[data-type="design"] .type-design {
   font-style: italic;
   color: var(--text-muted);
 }
-tbody tr[data-state="abandoned"],
+tbody tr[data-state="canceled"],
 tbody tr[data-state="closed"] {
   color: var(--text-subtle);
 }
@@ -1136,7 +1136,7 @@ code,
 .status[data-state="proposed"],
 .status[data-state="closed"],
 .status[data-state="superseded"],
-.status[data-state="abandoned"] {
+.status[data-state="canceled"] {
   --tone: var(--text-muted);
   --tone-soft: var(--surface-subtle);
 }
@@ -1148,7 +1148,7 @@ code,
 .status[data-state="active"]::before {
   box-shadow: 0 0 0 3px var(--success-soft);
 }
-.status[data-state="abandoned"] {
+.status[data-state="canceled"] {
   text-decoration: line-through;
   text-decoration-thickness: 1px;
 }

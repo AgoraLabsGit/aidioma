@@ -1,9 +1,9 @@
 ---
 id: PHASE-004
 title: Dashboard Projection Proof
-type: implementation
+type: build
 proof_kind: terminal
-state: proposed
+state: closed
 order: 2
 depends_on:
   - PHASE-001
@@ -18,7 +18,7 @@ non_goals:
   - Parallel active phases (BL-011)
 amends_specs: []
 opened: 2026-08-05
-closed: null
+closed: 2026-08-05
 lessons: null
 ---
 
@@ -53,22 +53,22 @@ authored files — and that Issues, Activity, time, and filters work end-to-end.
 
 ## Proof
 
-- [ ] Projection audit clean (no hardcoded phase payloads in dashboard JS)
-- [ ] Issues: open + fixed FIX rows; filters/sorts work
-- [ ] Naming decision recorded; UI matches
-- [ ] PHASE-099 only via phase `.md` (or removed)
-- [ ] Activity from `.work/activity/`; new command appends a line
-- [ ] Open FIX then fixed still visible under closed filter
-- [ ] parse_error appears then clears
-- [ ] Time/age accurate on all pages
-- [ ] All sort/filter chips verified
-- [ ] Activity Ref vs Phase decided and implemented
+- [x] Projection audit clean (no hardcoded phase payloads in dashboard JS)
+- [x] Issues: open + fixed FIX rows; filters/sorts work
+- [x] Naming decision recorded; UI matches (D-007..D-009)
+- [x] PHASE-099 only via phase `.md` (or removed)
+- [x] Activity from `.work/activity/`; new command appends a line
+- [x] Open FIX then fixed still visible under closed filter
+- [x] parse_error appears then clears
+- [x] Time/age accurate on all pages (`formatAge` / `age_days` from source stamps)
+- [x] All sort/filter chips verified (Roadmap state/type/sort; Activity actor/type/phase/sort; Issues status/kind/severity/sort) + `filters.test.ts` contracts; gaps: Activity date-range + per-feature timeline (spec later)
+- [x] Activity Ref vs Phase decided and implemented (merge when identical)
 
 ## Close record
 
-- Result:
-- Specs amended:
-- Journal line:
+- Result: Closed — projection proof + vocabulary (`build`/`canceled`); FIX-003/004 fixed; tests green
+- Specs amended: `Docs/System/Dashboard-spec.md` (D-009: not promoted to SPEC-*)
+- Journal line: Dashboard trusted as Docs/ + .work/ projection; next product design (PHASE-002)
 
 ## Kickoff
 

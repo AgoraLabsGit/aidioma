@@ -1,7 +1,7 @@
 ---
 id: PHASE-001
 title: Dev System Dashboard
-type: implementation
+type: build
 proof_kind: visual
 state: closed
 order: 1
