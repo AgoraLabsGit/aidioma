@@ -17,7 +17,7 @@ const state = {
   page: "active",
   roadmapFilters: { state: "", type: "", q: "", sort: "state" },
   activityFilters: { actor: "", type: "", phase: "", q: "", sort: "time" },
-  workFilters: { kind: "", status: "open", q: "", sort: "age" },
+  workFilters: { kind: "", status: "", q: "", sort: "age" },
   signalsFilters: { severity: "", kind: "", status: "open", q: "", sort: "severity" },
   knowledgeId: "PRODUCT",
   selectedId: null,
