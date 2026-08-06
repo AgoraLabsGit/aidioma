@@ -3,7 +3,7 @@ id: PHASE-004
 title: Dashboard Projection Proof
 type: build
 proof_kind: terminal
-state: active
+state: closed
 order: 2
 depends_on:
   - PHASE-001
@@ -18,7 +18,7 @@ non_goals:
   - Parallel active phases (BL-011)
 amends_specs: []
 opened: 2026-08-05
-closed: null
+closed: 2026-08-05
 lessons: null
 ---
 
@@ -66,9 +66,9 @@ authored files — and that Issues, Activity, time, and filters work end-to-end.
 
 ## Close record
 
-- Result: Pending `/close` — terminal proof green on phase branch
-- Specs amended: `Docs/System/Dashboard-spec.md` (projection proof §8; Issues/Activity naming)
-- Journal line:
+- Result: Closed — projection proof + vocabulary (`build`/`canceled`); FIX-003/004 fixed; tests green
+- Specs amended: `Docs/System/Dashboard-spec.md` (D-009: not promoted to SPEC-*)
+- Journal line: Dashboard trusted as Docs/ + .work/ projection; next product design (PHASE-002)
 
 ## Kickoff
 

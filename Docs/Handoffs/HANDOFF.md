@@ -1,26 +1,33 @@
-# Current handoff — PHASE-004 vocabulary + proof
+# Current handoff — after PHASE-004 close
 
 **Date:** 2026-08-05
 
-**Branch:** `phase/004-dashboard-projection-proof`
-**Worktree:** `/Users/mike/Documents/Coding/Projects/AIdioma-phase-004`
+**Branch:** `main` (phase branch deleted after merge)
+**Worktree:** none for an active phase
 
-**Active phase:** PHASE-004 — Dashboard Projection Proof (`type: build`)
-**Next:** Optional UI skim → `/close`
+**Active phase:** none
+**Next:** PHASE-002 — Target Product Design (`proposed`)
 
-## Done
+## Done (PHASE-004)
 
-- D-007..D-010 (naming + vocabulary: `build`, `canceled`)
-- Issues open+fixed; Activity Ref/Phase merge; Roadmap without Outcome
-- Filter contracts in `filters.test.ts`; known gaps: Activity date-range + per-feature timeline
-- `/dashboard` must run from this worktree to see live Active
+- Dashboard projection proof (Issues open+closed, Activity, filters/time)
+- D-007..D-010 (Issues/Activity naming; Dashboard-spec in System/; `build` + `canceled`)
+- FIX-003, FIX-004 fixed
+- Deferred (not blocking): Activity date-range, per-feature timeline; Backlog dashboard cue
+
+## Not done / next
+
+- Mark PHASE-002 `ready` when Mike approves contract, then `/run PHASE-002`
+- Optional later: Backlog page/cue; Activity date-range + feature timeline (BL or phase)
 
 ## Preserve
 
-- Lexicon stash: `stash@{0}: lexicon-wip-preserved-after-phase-000`
+- Lexicon stash: `stash@{0}: lexicon-wip-preserved-after-phase-000` (PRESERVE.md / BL-001)
 
 ## Next command
 
 ```text
-/close
+# Approve PHASE-002 scope, then:
+# edit PHASE-002 state: ready
+/run PHASE-002
 ```
