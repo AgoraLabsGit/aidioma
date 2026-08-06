@@ -1136,12 +1136,36 @@ code,
 .status[data-state="proposed"],
 .status[data-state="closed"],
 .status[data-state="superseded"],
-.status[data-state="canceled"] {
+.status[data-state="canceled"],
+.status[data-state="done"],
+.status[data-state="promoted"],
+.status[data-state="fixed"] {
   --tone: var(--text-muted);
   --tone-soft: var(--surface-subtle);
 }
+/* Work ledger statuses */
+.status[data-state="open"] {
+  --tone: var(--warning);
+  --tone-soft: var(--warning-soft);
+}
+.status[data-state="dropped"] {
+  --tone: var(--danger);
+  --tone-soft: var(--danger-soft);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.status[data-state="promoted"] {
+  --tone: var(--accent);
+  --tone-soft: var(--accent-soft);
+}
+.status[data-state="done"] {
+  --tone: var(--success);
+  --tone-soft: var(--success-soft);
+  opacity: 0.85;
+}
 .status[data-state="ready"]::before,
-.status[data-state="proposed"]::before {
+.status[data-state="proposed"]::before,
+.status[data-state="open"]::before {
   background: transparent;
   border: 1.5px solid var(--tone);
 }

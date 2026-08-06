@@ -17,7 +17,7 @@ const state = {
   page: "active",
   roadmapFilters: { state: "", type: "", q: "", sort: "state" },
   activityFilters: { actor: "", type: "", phase: "", q: "", sort: "time" },
-  workFilters: { kind: "", status: "", q: "", sort: "age" },
+  workFilters: { kind: "", status: "", q: "", sort: "open-first" },
   signalsFilters: { severity: "", kind: "", status: "open", q: "", sort: "severity" },
   knowledgeId: "PRODUCT",
   selectedId: null,
@@ -993,11 +993,26 @@ function renderWork(index) {
         q,
       ));
 
+  const openRank = (row) => (workBucket(row.status) === "open" ? 0 : 1);
   rows = [...rows].sort((left, right) => {
-    if (sort === "kind") return left.kind.localeCompare(right.kind) || (right.age_days ?? 0) - (left.age_days ?? 0);
-    if (sort === "status") return left.status.localeCompare(right.status) || (right.age_days ?? 0) - (left.age_days ?? 0);
-    if (sort === "id") return left.id.localeCompare(right.id);
-    return (right.age_days ?? 0) - (left.age_days ?? 0);
+    if (sort === "kind") {
+      return openRank(left) - openRank(right)
+        || left.kind.localeCompare(right.kind)
+        || (right.age_days ?? 0) - (left.age_days ?? 0);
+    }
+    if (sort === "status") {
+      return openRank(left) - openRank(right)
+        || left.status.localeCompare(right.status)
+        || (right.age_days ?? 0) - (left.age_days ?? 0);
+    }
+    if (sort === "id") {
+      return openRank(left) - openRank(right) || left.id.localeCompare(right.id);
+    }
+    if (sort === "age") {
+      return (right.age_days ?? 0) - (left.age_days ?? 0);
+    }
+    // open-first (default): open/active above closed, then newer first
+    return openRank(left) - openRank(right) || (right.age_days ?? 0) - (left.age_days ?? 0);
   });
 
   const kinds = [...new Set(source.map((row) => row.kind))].sort();
@@ -1028,7 +1043,7 @@ function renderWork(index) {
           ${chip("work-kind", "", kind, "All")}
           ${kinds.map((value) => chip("work-kind", value, kind)).join("")}
         </div>
-        ${sortSelect("work-sort", sort, [["age", "Age"], ["kind", "Kind"], ["status", "Status"], ["id", "ID"]])}
+        ${sortSelect("work-sort", sort, [["open-first", "Open first"], ["age", "Age"], ["kind", "Kind"], ["status", "Status"], ["id", "ID"]])}
       </div>
     </div>
     <p class="table-meta">Showing ${rows.length} of ${source.length} · Docs/WORK.yaml</p>

@@ -11,3 +11,9 @@
 {"ts":"2026-08-06T13:18:00Z","type":"plan","actor":"agent","cmd":"/plan","phase":"PHASE-005","ref":"PHASE-005","status":"complete","summary":"Onboarded Work Ledger and Routing (proposed); next before PHASE-002; WORK.yaml; Work≠Signals"}
 {"ts":"2026-08-06T16:25:00Z","type":"build","actor":"agent","cmd":"/run","phase":"PHASE-005","ref":"PHASE-005","status":"complete","summary":"Work ledger + Work/Signals pages + /log /triage /task + agent routing; tests green"}
 {"ts":"2026-08-06T16:25:10Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-016","status":"complete","summary":"Logged W-016 fix — Knowledge D-xxx /api/doc gap"}
+{"ts":"2026-08-06T16:45:00Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-017","status":"complete","summary":"Logged W-017 proposal — audit/test infra in phase workflows"}
+{"ts":"2026-08-06T16:45:01Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-018","status":"complete","summary":"Logged W-018 proposal — kind-prefixed work ids"}
+{"ts":"2026-08-06T16:45:02Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-019","status":"complete","summary":"Logged W-019 proposal — column-header sort"}
+{"ts":"2026-08-06T16:45:03Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-020","status":"complete","summary":"Logged W-020 question — feature/area before specs exist"}
+{"ts":"2026-08-06T16:45:04Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"W-022","status":"complete","summary":"Fixed W-022 — open-first Work sort"}
+{"ts":"2026-08-06T16:45:05Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"W-023","status":"complete","summary":"Fixed W-023 — Work status chip colors"}

@@ -184,3 +184,80 @@
   blocked_by: null
   note: null
   opened: 2026-08-06
+- id: W-017
+  kind: proposal
+  summary: "Wire audit and test infra into phase workflows (Active stubs → real /check and close checks)"
+  status: open
+  feature: null
+  area: null
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  opened: 2026-08-06
+- id: W-018
+  kind: proposal
+  summary: "Kind-prefixed work ids (F-/T-/P-/Q-/R-) instead of single W- namespace"
+  status: open
+  feature: null
+  area: null
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  opened: 2026-08-06
+- id: W-019
+  kind: proposal
+  summary: "Clickable column-header sort on all dashboard tables"
+  status: open
+  feature: null
+  area: null
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  opened: 2026-08-06
+- id: W-020
+  kind: question
+  summary: "How to tag Work feature/area before SPEC-F/SPEC-A files exist (provisional tags vs wait for PHASE-002/003)?"
+  status: open
+  feature: null
+  area: null
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  opened: 2026-08-06
+- id: W-021
+  kind: task
+  summary: "Assign feature/area on Work rows once tagging rule is decided"
+  status: open
+  feature: null
+  area: null
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: W-020
+  note: null
+  opened: 2026-08-06
+- id: W-022
+  kind: fix
+  summary: "Work page: open/active rows sort first by default"
+  status: done
+  feature: null
+  area: null
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  opened: 2026-08-06
+- id: W-023
+  kind: fix
+  summary: "Work status chips need distinct colors (open/active/done/promoted/dropped)"
+  status: done
+  feature: null
+  area: null
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  opened: 2026-08-06

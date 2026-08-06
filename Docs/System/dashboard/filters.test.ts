@@ -69,6 +69,13 @@ function filterWork(
     );
 }
 
+function sortWorkOpenFirst(rows: Work[]): Work[] {
+  const openRank = (row: Work) => (workBucket(row.status) === "open" ? 0 : 1);
+  return [...rows].sort(
+    (left, right) => openRank(left) - openRank(right) || right.age_days - left.age_days,
+  );
+}
+
 const phases: Phase[] = [
   { id: "PHASE-004", title: "Dash", type: "build", state: "active", order: 2, age_days: 1 },
   { id: "PHASE-002", title: "Product", type: "design", state: "proposed", order: 3, age_days: 1 },
@@ -149,5 +156,9 @@ describe("Work filters", () => {
     ]);
     expect(filterWork(work, { kind: "", status: "closed", q: "" }).map((w) => w.id)).toEqual(["W-001"]);
     expect(filterWork(work, { kind: "proposal", status: "", q: "" }).map((w) => w.id)).toEqual(["W-004"]);
+  });
+
+  it("open-first sort puts open/active above done", () => {
+    expect(sortWorkOpenFirst(work).map((w) => w.id)).toEqual(["W-003", "W-004", "W-001"]);
   });
 });
