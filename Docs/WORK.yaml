@@ -15,7 +15,7 @@
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "migrated from FIX-001"
+  note: null
   opened: 2026-08-05
 - id: W-002
   kind: fix
@@ -26,7 +26,7 @@
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "migrated from FIX-002"
+  note: null
   opened: 2026-08-05
 - id: W-003
   kind: fix
@@ -37,7 +37,7 @@
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "migrated from FIX-003"
+  note: null
   opened: 2026-08-05
 - id: W-004
   kind: fix
@@ -48,7 +48,7 @@
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "migrated from FIX-004"
+  note: null
   opened: 2026-08-05
 
 # Migrated from Roadmap/Backlog.md (BL-001..011) as proposals
@@ -61,7 +61,7 @@
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "migrated from BL-001; proof on dirty stash; see PRESERVE.md"
+  note: null
   opened: 2026-08-05
 - id: W-006
   kind: proposal
@@ -72,7 +72,7 @@
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "migrated from BL-002"
+  note: null
   opened: 2026-08-05
 - id: W-007
   kind: proposal
@@ -83,7 +83,7 @@
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "migrated from BL-003"
+  note: null
   opened: 2026-08-05
 - id: W-008
   kind: proposal
@@ -94,7 +94,7 @@
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "migrated from BL-004; deferred until product map"
+  note: null
   opened: 2026-08-05
 - id: W-009
   kind: proposal
@@ -105,7 +105,7 @@
   phase: null
   promoted_to: null
   blocked_by: W-005
-  note: "migrated from BL-005"
+  note: null
   opened: 2026-08-05
 - id: W-010
   kind: proposal
@@ -116,7 +116,7 @@
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "migrated from BL-006"
+  note: null
   opened: 2026-08-05
 - id: W-011
   kind: proposal
@@ -127,7 +127,7 @@
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "migrated from BL-007; blocks W-012"
+  note: null
   opened: 2026-08-05
 - id: W-012
   kind: proposal
@@ -138,7 +138,7 @@
   phase: null
   promoted_to: null
   blocked_by: W-011
-  note: "migrated from BL-008"
+  note: null
   opened: 2026-08-05
 - id: W-013
   kind: proposal
@@ -149,7 +149,7 @@
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "migrated from BL-009"
+  note: null
   opened: 2026-08-05
 - id: W-014
   kind: proposal
@@ -160,7 +160,7 @@
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "migrated from BL-010"
+  note: null
   opened: 2026-08-05
 - id: W-015
   kind: proposal
@@ -171,7 +171,7 @@
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "migrated from BL-011; process contract change"
+  note: null
   opened: 2026-08-05
 - id: W-016
   kind: fix
@@ -182,5 +182,5 @@
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
-  note: "Logged during PHASE-005; /api/doc findDocPath gap"
+  note: null
   opened: 2026-08-06

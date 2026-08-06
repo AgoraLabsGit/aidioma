@@ -1043,7 +1043,7 @@ function renderWork(index) {
             <tr data-id="${escapeHtml(row.id)}" data-status="${escapeHtml(row.status)}">
               <td class="mono">${escapeHtml(row.id)}</td>
               <td>${escapeHtml(row.kind)}</td>
-              <td class="wrap"><span class="cell-primary">${escapeHtml(row.summary)}</span>${row.note ? `<span class="cell-secondary">${escapeHtml(row.note)}</span>` : ""}</td>
+              <td class="wrap"><span class="cell-primary">${escapeHtml(row.summary)}</span></td>
               <td class="mono">${escapeHtml(row.feature ?? "—")}</td>
               <td class="mono">${escapeHtml(row.area ?? "—")}</td>
               <td>${statusHtml(row.status)}</td>
@@ -1190,6 +1190,59 @@ function applyDetailWidth(width) {
   writeStored(DETAIL_WIDTH_KEY, String(clamped));
 }
 
+function renderWorkDetail(row) {
+  const fields = [
+    ["Kind", row.kind],
+    ["Status", row.status],
+    ["Opened", row.opened],
+    ["Age", row.age_days == null ? "—" : `${row.age_days}d`],
+    ["Feature", row.feature ?? "—"],
+    ["Area", row.area ?? "—"],
+    ["Phase", row.phase ?? "—"],
+    ["Blocked by", row.blocked_by ?? "—"],
+    ["Promoted to", row.promoted_to ?? "—"],
+  ];
+  return `
+    <div class="phase-card">
+      <p class="cell-primary" style="margin:0 0 1rem">${escapeHtml(row.summary)}</p>
+      <dl class="glance-grid">
+        ${fields.map(([label, value]) => `
+          <div class="glance-cell">
+            <dt>${escapeHtml(label)}</dt>
+            <dd class="mono">${escapeHtml(String(value))}</dd>
+          </div>
+        `).join("")}
+      </dl>
+      ${row.note ? `<p class="muted" style="margin-top:1rem">${escapeHtml(row.note)}</p>` : ""}
+      <p class="muted" style="margin-top:1rem">Ledger row in <code>Docs/WORK.yaml</code> — not a separate markdown ticket.</p>
+    </div>
+  `;
+}
+
+function renderSignalDetail(issue) {
+  const fields = [
+    ["Kind", issue.kind],
+    ["Status", issueStatus(issue)],
+    ["Severity", issue.severity],
+    ["Spec", issue.spec ?? "—"],
+    ["Age", issue.age_days == null ? "—" : `${issue.age_days}d`],
+  ];
+  return `
+    <div class="phase-card">
+      <p class="cell-primary" style="margin:0 0 1rem">${escapeHtml(issue.summary)}</p>
+      <dl class="glance-grid">
+        ${fields.map(([label, value]) => `
+          <div class="glance-cell">
+            <dt>${escapeHtml(label)}</dt>
+            <dd class="mono">${escapeHtml(String(value))}</dd>
+          </div>
+        `).join("")}
+      </dl>
+      <p class="muted" style="margin-top:1rem">Derived signal — not an authored Work row.</p>
+    </div>
+  `;
+}
+
 async function openDetail(id) {
   state.selectedId = id;
   detail.hidden = false;
@@ -1198,6 +1251,9 @@ async function openDetail(id) {
   applyDetailWidth(Number(readStored(DETAIL_WIDTH_KEY)) || 560);
 
   const phase = state.index?.phases?.find((item) => item.id === id);
+  const work = state.index?.work?.find((item) => item.id === id);
+  const signal = state.index?.issues?.find((item) => item.ref === id);
+
   if (phase) {
     detailMeta.textContent = phase.sourcePath ? `Docs/${phase.sourcePath}` : "";
     detailFrontmatter.hidden = true;
@@ -1208,9 +1264,27 @@ async function openDetail(id) {
       compact: true,
     });
     await hydratePhaseDocs(detailBody);
+  } else if (work) {
+    detailMeta.textContent = "Docs/WORK.yaml";
+    detailFrontmatter.hidden = true;
+    detailFrontmatter.innerHTML = "";
+    detailBody.className = "doc-body";
+    detailBody.innerHTML = renderWorkDetail(work);
+  } else if (signal) {
+    detailMeta.textContent = "derived signal";
+    detailFrontmatter.hidden = true;
+    detailFrontmatter.innerHTML = "";
+    detailBody.className = "doc-body";
+    detailBody.innerHTML = renderSignalDetail(signal);
   } else {
     const response = await fetch(`/api/doc?id=${encodeURIComponent(id)}`);
-    if (!response.ok) return;
+    if (!response.ok) {
+      detailMeta.textContent = "";
+      detailFrontmatter.hidden = true;
+      detailBody.className = "doc-body";
+      detailBody.innerHTML = `<p class="muted">No detail for ${escapeHtml(id)}.</p>`;
+      return;
+    }
     const doc = await response.json();
     detailBody.className = "doc-body prose";
     renderDocInto(doc, {
