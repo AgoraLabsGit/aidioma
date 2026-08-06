@@ -7,7 +7,8 @@ import { describe, expect, it } from "vitest";
 
 type Phase = { id: string; title: string; type: string; state: string; order: number; age_days: number; outcome?: string };
 type Event = { ts: string; type: string; actor: string; phase: string | null; ref: string | null; summary: string; cmd?: string };
-type Issue = { kind: string; ref: string; summary: string; spec: string | null; severity: string; status: string; age_days: number | null };
+type Signal = { kind: string; ref: string; summary: string; spec: string | null; severity: string; status: string; age_days: number | null };
+type Work = { id: string; kind: string; summary: string; status: string; feature: string | null; area: string | null; age_days: number };
 
 function matchesQuery(haystack: string, q: string): boolean {
   if (!q) return true;
@@ -36,16 +37,35 @@ function filterEvents(
     );
 }
 
-function filterIssues(
-  issues: Issue[],
+function filterSignals(
+  signals: Signal[],
   filters: { severity: string; kind: string; status: string; q: string },
-): Issue[] {
-  return issues
+): Signal[] {
+  return signals
     .filter((issue) => !filters.severity || issue.severity === filters.severity)
     .filter((issue) => !filters.kind || issue.kind === filters.kind)
     .filter((issue) => !filters.status || issue.status === filters.status)
     .filter((issue) =>
       matchesQuery(`${issue.kind} ${issue.ref} ${issue.summary} ${issue.spec ?? ""} ${issue.status}`, filters.q),
+    );
+}
+
+function workBucket(status: string): "open" | "closed" {
+  return status === "open" || status === "active" ? "open" : "closed";
+}
+
+function filterWork(
+  rows: Work[],
+  filters: { kind: string; status: string; q: string },
+): Work[] {
+  return rows
+    .filter((row) => !filters.kind || row.kind === filters.kind)
+    .filter((row) => !filters.status || workBucket(row.status) === filters.status)
+    .filter((row) =>
+      matchesQuery(
+        `${row.id} ${row.kind} ${row.summary} ${row.status} ${row.feature ?? ""} ${row.area ?? ""}`,
+        filters.q,
+      ),
     );
 }
 
@@ -61,10 +81,16 @@ const events: Event[] = [
   { ts: "2026-08-05T12:00:00Z", type: "close", actor: "user", phase: "PHASE-001", ref: "PHASE-001", summary: "Closed" },
 ];
 
-const issues: Issue[] = [
-  { kind: "fix", ref: "FIX-001", summary: "A", spec: null, severity: "low", status: "fixed", age_days: 1 },
-  { kind: "fix", ref: "FIX-003", summary: "B", spec: null, severity: "high", status: "open", age_days: 0 },
+const signals: Signal[] = [
   { kind: "parse_error", ref: "x.md", summary: "bad", spec: null, severity: "high", status: "open", age_days: null },
+  { kind: "drift", ref: "SPEC-F-X", summary: "drifted", spec: "SPEC-F-X", severity: "medium", status: "open", age_days: 2 },
+  { kind: "broken_link", ref: "PHASE-001", summary: "missing", spec: null, severity: "high", status: "open", age_days: 1 },
+];
+
+const work: Work[] = [
+  { id: "W-001", kind: "fix", summary: "A", status: "done", feature: null, area: null, age_days: 1 },
+  { id: "W-003", kind: "task", summary: "B", status: "open", feature: null, area: null, age_days: 0 },
+  { id: "W-004", kind: "proposal", summary: "C", status: "active", feature: null, area: null, age_days: 0 },
 ];
 
 describe("Roadmap filters", () => {
@@ -93,22 +119,35 @@ describe("Activity filters", () => {
   });
 });
 
-describe("Issues filters", () => {
-  it("All shows open+fixed; Closed maps to status fixed", () => {
-    expect(filterIssues(issues, { severity: "", kind: "", status: "", q: "" }).map((i) => i.ref)).toEqual([
-      "FIX-001",
-      "FIX-003",
+describe("Signals filters", () => {
+  it("filters severity, kind, status (derived health only)", () => {
+    expect(filterSignals(signals, { severity: "", kind: "", status: "", q: "" }).map((i) => i.ref)).toEqual([
       "x.md",
+      "SPEC-F-X",
+      "PHASE-001",
     ]);
-    expect(filterIssues(issues, { severity: "", kind: "", status: "open", q: "" }).map((i) => i.ref)).toEqual([
-      "FIX-003",
+    expect(filterSignals(signals, { severity: "high", kind: "", status: "open", q: "" }).map((i) => i.ref)).toEqual([
       "x.md",
+      "PHASE-001",
     ]);
-    expect(filterIssues(issues, { severity: "", kind: "", status: "fixed", q: "" }).map((i) => i.ref)).toEqual([
-      "FIX-001",
+    expect(filterSignals(signals, { severity: "", kind: "drift", status: "", q: "" }).map((i) => i.ref)).toEqual([
+      "SPEC-F-X",
     ]);
-    expect(filterIssues(issues, { severity: "high", kind: "fix", status: "open", q: "" }).map((i) => i.ref)).toEqual([
-      "FIX-003",
+  });
+});
+
+describe("Work filters", () => {
+  it("Open includes open+active; Closed includes done/promoted/dropped", () => {
+    expect(filterWork(work, { kind: "", status: "", q: "" }).map((w) => w.id)).toEqual([
+      "W-001",
+      "W-003",
+      "W-004",
     ]);
+    expect(filterWork(work, { kind: "", status: "open", q: "" }).map((w) => w.id)).toEqual([
+      "W-003",
+      "W-004",
+    ]);
+    expect(filterWork(work, { kind: "", status: "closed", q: "" }).map((w) => w.id)).toEqual(["W-001"]);
+    expect(filterWork(work, { kind: "proposal", status: "", q: "" }).map((w) => w.id)).toEqual(["W-004"]);
   });
 });

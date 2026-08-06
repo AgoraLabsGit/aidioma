@@ -36,7 +36,7 @@ Two-way control is a separate product.
 
 ```
 Docs/**/*.md ─┐
-Docs/FIXES.yaml ─┼─→ chokidar ─→ debounce 300ms ─→ derive() ─→ projection
+Docs/WORK.yaml ─┼─→ chokidar ─→ debounce 300ms ─→ derive() ─→ projection
 .work/activity/*.jsonl ─┘                                              │
                                                                        ▼
                                          dashboard UI ←── SSE /api/events
@@ -137,10 +137,10 @@ Pages render `index.json` and hold no logic.
     "date": "2026-08-05", "age_days": 0
   }],
 
-  "fixes": [{
-    "id": "FIX-031", "summary": "Practice page crashes on empty input",
-    "status": "open", "spec": "SPEC-F-TRANSLATION",
-    "opened": "2026-08-05", "age_days": 0
+  "work": [{
+    "id": "W-031", "kind": "fix", "summary": "Practice page crashes on empty input",
+    "status": "open", "feature": "SPEC-F-TRANSLATION", "area": null,
+    "phase": null, "opened": "2026-08-05", "age_days": 0
   }],
 
   "releases": [{
@@ -183,7 +183,8 @@ Computed by the indexer; never authored.
 | `file_count` | Files matching `paths` |
 | `age_days` | Today minus `opened` / `date` |
 | `activity_count` | Events with matching `phase` |
-| `issues[]` | Union of `FIXES.yaml` plus derived signals (see §5 Issues) |
+| `work[]` | Authored `WORK.yaml` ledger |
+| `issues[]` | Derived health signals only (see §5 Signals) |
 | `next_command` | From active phase state (see §5) |
 | `in_production` | Last `ship` event / last `RELEASES.md` entry |
 
@@ -193,7 +194,7 @@ Computed by the indexer; never authored.
 
 ```
 ┌────────┬─────────────────────────────────────────────────┐
-│ AIdioma│ Active · Roadmap · Activity · Knowledge · Issues │
+│ AIdioma│ Active · Roadmap · Activity · Knowledge · Work · Signals │
 │ Active │                          indexed 3s ago [Refresh]│
 │ Roadmap├─────────────────────────────────────────────────┤
 │ …      │ search + filters (one row) · sortable table      │
@@ -299,17 +300,24 @@ Four tables on one page, tab-switched. Hold the line at four.
 `PRODUCT.md` renders as a header panel above the tabs — who it's for, what it does, what it never
 does.
 
-### Issues
+### Work
 
-One table, all signals. This page is where `paths` visibly pays off.
-**UI label is Issues** (D-007); `FIXES.yaml` remains the authored fix ledger.
+Authored ledger from `WORK.yaml`. Separate from Signals (D-011).
+
+| ID | Kind | Summary | Feature | Area | Status | Age |
+
+Kinds: `fix` · `task` · `proposal` · `research` · `question`.
+Status filters: Open = `open`+`active`; Closed = `done`+`promoted`+`dropped`.
+
+### Signals
+
+Derived health only. This page is where `paths` visibly pays off.
+**UI label is Signals** (supersedes D-007 Issues-for-everything).
 
 | Kind | Ref | Summary | Spec | Age | Severity | Status |
 
 | Kind | Source | Severity | Status |
 |---|---|---|---|
-| `fix` | `FIXES.yaml` open | high | `open` |
-| `fix` | `FIXES.yaml` fixed | low | `fixed` (Closed filter) |
 | `blocked` | Phase `state` | high | `open` |
 | `contested` | Spec `status` | high | `open` |
 | `broken_link` | Unresolvable id reference | high | `open` |
@@ -321,9 +329,8 @@ One table, all signals. This page is where `paths` visibly pays off.
 
 Rows from the slow cycle (`drift`, `unspecified`, `dead_spec`) display `paths_scanned_at`.
 
-Default sort: severity, then age. Filters: status (All default / Open / Closed=fixed), kind, severity.
-When Open is selected and every row is closed, show a hint to switch to Closed or All — do not look empty-broken.
-Header issue pill counts **open** high-severity only.
+Default sort: severity, then age. Filters: status (All / Open / Closed=fixed), kind, severity.
+Header pill counts **open** high-severity signals only.
 
 ---
 

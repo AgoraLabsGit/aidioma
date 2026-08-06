@@ -6,10 +6,12 @@ import {
   phaseSchema,
   researchSchema,
   specSchema,
+  workSchema,
   type FixItem,
   type PhaseFrontmatter,
   type ResearchFrontmatter,
   type SpecFrontmatter,
+  type WorkItem,
 } from "./schema.js";
 
 export class ParseError extends Error {
@@ -107,6 +109,13 @@ export function parseResearchFrontmatter(
     .data;
 }
 
+export function parseWork(source: string, sourcePath = "WORK.yaml"): WorkItem[] {
+  const trimmed = source.trim();
+  if (trimmed.length === 0 || trimmed === "[]") return [];
+  return parseYamlValue(source, sourcePath, workSchema as ZodType<WorkItem[]>);
+}
+
+/** @deprecated Use parseWork */
 export function parseFixes(source: string, sourcePath = "FIXES.yaml"): FixItem[] {
   const trimmed = source.trim();
   if (trimmed.length === 0 || trimmed === "[]") return [];

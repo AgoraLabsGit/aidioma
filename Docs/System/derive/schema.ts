@@ -26,6 +26,10 @@ const phaseObjectSchema = z.object({
   opened: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   closed: z.union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.null()]).default(null),
   lessons: z.union([z.string(), z.null()]).default(null),
+  feature: z
+    .union([z.string().regex(/^SPEC-F-[A-Z0-9-]+$/), z.null()])
+    .default(null),
+  area: z.union([z.string().regex(/^SPEC-A-[A-Z0-9-]+$/), z.null()]).default(null),
 });
 
 export const phaseSchema = phaseObjectSchema.superRefine((value, context) => {
@@ -102,6 +106,41 @@ export const researchSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 
+export const workKindSchema = z.enum([
+  "fix",
+  "task",
+  "proposal",
+  "research",
+  "question",
+]);
+
+export const workStatusSchema = z.enum([
+  "open",
+  "active",
+  "done",
+  "promoted",
+  "dropped",
+]);
+
+export const workItemSchema = z.object({
+  id: z.string().regex(/^W-[0-9]{3}$/),
+  kind: workKindSchema,
+  summary: z.string().min(1),
+  status: workStatusSchema,
+  feature: z
+    .union([z.string().regex(/^SPEC-F-[A-Z0-9-]+$/), z.null()])
+    .default(null),
+  area: z.union([z.string().regex(/^SPEC-A-[A-Z0-9-]+$/), z.null()]).default(null),
+  phase: z.union([z.string().regex(/^PHASE-[0-9]{3}$/), z.null()]).default(null),
+  promoted_to: z.union([z.string(), z.null()]).default(null),
+  blocked_by: z.union([z.string().regex(/^W-[0-9]{3}$/), z.null()]).default(null),
+  note: z.union([z.string(), z.null()]).default(null),
+  opened: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+});
+
+export const workSchema = z.array(workItemSchema);
+
+/** @deprecated Use workItemSchema — kept for test fixtures during migration */
 export const fixItemSchema = z.object({
   id: z.string().regex(/^FIX-[0-9]{3}$/),
   summary: z.string().min(1),
@@ -115,4 +154,5 @@ export const fixesSchema = z.array(fixItemSchema);
 export type PhaseFrontmatter = z.output<typeof phaseObjectSchema>;
 export type SpecFrontmatter = z.output<typeof specObjectSchema>;
 export type ResearchFrontmatter = z.output<typeof researchSchema>;
+export type WorkItem = z.output<typeof workItemSchema>;
 export type FixItem = z.output<typeof fixItemSchema>;

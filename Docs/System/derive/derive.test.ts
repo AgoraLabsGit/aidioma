@@ -67,7 +67,7 @@ title: Broken
     options.malformedPhase
       ? writeFile(path.join(docsRoot, "Roadmap", "Phases", "PHASE-BAD.md"), badPhase)
       : Promise.resolve(),
-    writeFile(path.join(docsRoot, "FIXES.yaml"), "[]\n"),
+    writeFile(path.join(docsRoot, "WORK.yaml"), "[]\n"),
     writeFile(path.join(docsRoot, "DECISIONS.md"), "# Decisions\n"),
     writeFile(path.join(docsRoot, "RELEASES.md"), "# Releases\n"),
     writeFile(path.join(docsRoot, "PRODUCT.md"), "# Product\n"),
@@ -105,19 +105,31 @@ describe("derive", () => {
     expect(index.issues.some((issue) => issue.kind === "parse_error")).toBe(true);
   });
 
-  it("projects open and fixed FIX rows on Issues", async () => {
+  it("projects Work ledger rows separately from Signals", async () => {
     const repositoryRoot = await createDocsFixture();
     await writeFile(
-      path.join(repositoryRoot, "Docs", "FIXES.yaml"),
-      `- id: FIX-001
+      path.join(repositoryRoot, "Docs", "WORK.yaml"),
+      `- id: W-001
+  kind: fix
   summary: "Open defect"
   status: open
-  spec: null
+  feature: null
+  area: null
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
   opened: 2026-08-05
-- id: FIX-002
-  summary: "Closed defect"
-  status: fixed
-  spec: null
+- id: W-002
+  kind: task
+  summary: "Done chore"
+  status: done
+  feature: null
+  area: null
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
   opened: 2026-08-04
 `,
     );
@@ -128,10 +140,12 @@ describe("derive", () => {
       now: () => new Date("2026-08-05T12:00:00.000Z"),
     });
 
-    const openFix = index.issues.find((issue) => issue.ref === "FIX-001");
-    const fixedFix = index.issues.find((issue) => issue.ref === "FIX-002");
-    expect(openFix).toMatchObject({ kind: "fix", status: "open", severity: "high" });
-    expect(fixedFix).toMatchObject({ kind: "fix", status: "fixed", severity: "low" });
-    expect(index.fixes).toHaveLength(2);
+    expect(index.work).toHaveLength(2);
+    expect(index.work.find((row) => row.id === "W-001")).toMatchObject({
+      kind: "fix",
+      status: "open",
+    });
+    expect(index.issues.some((issue) => issue.ref === "W-001")).toBe(false);
   });
 });
+

@@ -66,3 +66,16 @@ Date: 2026-08-05 · Phase: PHASE-004 · From: — · Affects: []
 Chose: Phase `type: build` (was `implementation`); state `canceled` (was `abandoned`); `/close --cancel`
 Why: Clearer founder-facing labels; same semantics
 Revisit if: External tooling still expects the old enum strings
+
+## D-011 — Work page vs Signals page
+Date: 2026-08-06 · Phase: PHASE-005 · From: — · Affects: []
+Chose: Separate dashboard pages — **Work** (`WORK.yaml`) and **Signals** (derived health)
+Why: Triage authored work is not the same question as indexer alarms; mixing them confused /triage
+Revisit if: Nav cost outweighs clarity and a single page with default ledger filter is preferred
+Supersedes: D-007 claim that one Issues page should house FIXES plus all derived kinds
+
+## D-012 — Work ledger replaces FIXES + Backlog
+Date: 2026-08-06 · Phase: PHASE-005 · From: — · Affects: []
+Chose: Single `Docs/WORK.yaml` with kinds fix|task|proposal|research|question over `FIXES.yaml` + `Backlog.md`
+Why: One capture/do-now home; phases remain schedule SSOT; no second Roadmap
+Revisit if: Ledger becomes a competing schedule (add order fields, dual-write phases)

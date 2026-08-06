@@ -76,10 +76,11 @@ anticipation.
 | Decision | Why did we choose this | `DECISIONS.md` | Permanent, append-only |
 | Research | What are the options | `Research/` | Until stale or superseded |
 | Phase | What are we doing now | `Roadmap/Phases/` | Dies at close |
-| Backlog item | What might we do | `Roadmap/Backlog.md` | Until planned or dropped |
-| Fix | What is broken | `FIXES.yaml` | Until fixed |
+| Work item | Parked or do-now non-phase work | `WORK.yaml` | Until done / promoted / dropped |
 | Release | What went live | `RELEASES.md` | Permanent, append-only |
 | Handoff | Where did I leave off | `Handoffs/HANDOFF.md` | Overwritten each session |
+
+`Roadmap/Backlog.md` and `FIXES.yaml` are **retired** (PHASE-005). Their contents live in `WORK.yaml`.
 
 Every question has exactly one home. If a new artifact type is proposed, it must displace one
 of these or be rejected.
@@ -93,20 +94,23 @@ would release it.
 Handoffs are overwritten, so anything recorded only there is lost at the next session. This is the
 one place that state survives. `/close` and `/status --repair` never clean anything listed here.
 
-### Backlog rows
+### Work rows
 
-`Backlog.md` is a table, not prose. One row per candidate.
+`WORK.yaml` is a YAML array. One row per item.
 
 | Field | Meaning |
 |---|---|
-| `id` | Own namespace, not `PHASE-nnn` — it is not a phase yet |
-| `title` | Short |
-| `type` | `design` or `build` |
-| `blocked_by` | Another backlog id, if any |
-| `note` | One line |
+| `id` | `W-nnn` |
+| `kind` | `fix` \| `task` \| `proposal` \| `research` \| `question` |
+| `status` | `open` \| `active` \| `done` \| `promoted` \| `dropped` |
+| `feature` / `area` | Nullable org tags (`SPEC-F-*` / `SPEC-A-*`) — not amend intent |
+| `phase` | Nullable phase id if tied mid-flight |
+| `promoted_to` | Phase or research id when promoted |
+| `blocked_by` | Another `W-nnn`, if any |
+| `note` | Optional one line |
 
-`/plan` promotes a row to a phase and carries `from_backlog: <id>` in the phase frontmatter, so
-the trail survives. The row is then deleted — an item is never in both places.
+`/log` parks (`open`). `/fix` and `/task` do-now (`active`→`done`). `/triage` sorts.
+`/plan` may promote a `proposal` (`promoted` + `from_backlog: W-nnn` on the phase).
 
 ### Where practices and principles go
 
@@ -135,7 +139,7 @@ Docs/
   PRODUCT.md                  PRD — who, what, never
   DECISIONS.md                append-only decision log
   RELEASES.md                 append-only release log
-  FIXES.yaml                  broken things
+  WORK.yaml                   work ledger (fix/task/proposal/research/question)
   PRESERVE.md                 stashes, branches, and WIP that must never be deleted
   Specs/
     INDEX.md                  generated
@@ -144,7 +148,7 @@ Docs/
   Research/                   R-*.md
   Roadmap/
     Roadmap.md                generated view
-    Backlog.md                unbuilt things
+    Backlog.md                retired stub → WORK.yaml
     Phases/                   PHASE-*.md
   Handoffs/
     HANDOFF.md
@@ -184,7 +188,7 @@ Three, chosen by access pattern. Not one.
 |---|---|---|
 | Specs, phases, product, decisions, research | Markdown + YAML frontmatter | Read in the IDE by humans and agents; meaningful git diffs. The SSOT. |
 | Activity log | JSONL | Append-only, one line per event, conflict-free merges |
-| Fixes | YAML | Small, order-independent, edited by hand and by agents |
+| Work ledger | YAML | Small, order-independent, edited by hand and by agents |
 | Agent manifest | JSON (`.work/context.json`) | Boot scope. Rebuilt, never authored. Gitignored. |
 | Schemas | JSON Schema | Validate frontmatter in CI |
 
@@ -415,8 +419,8 @@ Four classes. The class determines what a command is allowed to do.
 | Class | Commands | Phase state | Git | Logged |
 |---|---|---|---|---|
 | **Lifecycle** | `/plan` `/run` `/close` `/ship` | Mutates | Yes | Full |
-| **Action** | `/research` `/design` `/fix` | No | Commits; `/fix` may publish via reduced checks | Full |
-| **Utility** | `/status` `/check` `/launch` `/dashboard` `/handoff` | No | No | Light |
+| **Action** | `/research` `/design` `/fix` `/task` | No | Commits; `/fix`/`/task` may publish via reduced checks | Full |
+| **Utility** | `/log` `/triage` `/status` `/check` `/launch` `/dashboard` `/handoff` | No | No | Light |
 | **Meta** | `/system` | No | Yes | Full |
 
 Utility commands are safe to run at any time and cannot damage state. Lifecycle commands are
@@ -429,11 +433,14 @@ Slash commands remain available for anyone who wants them.
 
 | The user says | Agent fires | Because |
 |---|---|---|
-| "button x is too large" | `/fix` | Bounded defect, no design needed |
+| "button x is too large" | `/fix` | Bounded defect, do now |
 | "the API isn't working" | `/fix` | Something is broken |
+| "rename this label" | `/task` | Small intentional work |
+| "park this for later" | `/log` | Capture without doing |
+| "triage the work list" | `/triage` | Sort open Work rows |
 | "which translation API should we use?" | `/research` | Choice between external options |
 | "how should the practice page behave?" | `/design` | Behavior undefined |
-| "let's add offline mode" | `/plan` | New work, not on the Roadmap |
+| "someday add offline mode" | `/log` `proposal` | Or confirm `/plan` if scheduling now |
 | "where are we?" | `/status` | Read-only |
 | "is it green?" | `/check` | Tests |
 | "push it live" | `/ship` | Production |
@@ -498,7 +505,7 @@ under *Unassigned* on the dashboard.
 `/ship` preconditions — all four, or it refuses:
 
 - Last `/check` green on current `main`
-- No open FAIL in `FIXES.yaml`
+- No open high-severity Work `fix` that blocks ship (founder judgment)
 - Preview deploy verified
 - No `contested` spec among the features being shipped
 
@@ -510,8 +517,8 @@ are the only source of expensive information the system doesn't otherwise captur
 learned from work that shipped is already encoded in a spec, decision, or test. Captured at the
 moment of maximum honesty, it costs one line.
 
-`/close --dry-run` — runs the three checks, changes nothing, writes findings to `FIXES.yaml` and
-`Backlog.md`. This is the standalone audit; there is no `/audit` command.
+`/close --dry-run` — runs the three checks, changes nothing, writes findings to `WORK.yaml`.
+This is the standalone audit; there is no `/audit` command.
 
 ### Action
 
@@ -522,11 +529,11 @@ One unit of real work, one durable artifact, one event. Actions do not advance t
 |---|---|---|---|
 | `/research` | `Research/R-*.md` + optional decision | A choice between ≥2 external options blocks progress | Anytime, phase or no phase |
 | `/design` | Decisions and/or a spec | Behavior is undefined, or ≥3 decisions are open | Anytime |
-| `/fix` | Patch + proof + `FIXES.yaml` entry | Defect is bounded and needs no design | Anytime |
+| `/fix` | Patch + proof + `WORK.yaml` `kind: fix` | Defect is bounded and needs no design | Anytime |
+| `/task` | Patch/docs + proof + `WORK.yaml` `kind: task` | Intentional small work, not a defect | Anytime |
 
-**`/fix` is deliberately unconstrained.** UI/UX problems and bugs surface whenever they surface,
-and the phase model must not stand in the way. It never needs an active phase and never needs
-planning first.
+**`/fix` and `/task` are deliberately unconstrained** for bounded do-now work. They never need an
+active phase. `/log` parks; `/triage` sorts.
 
 | Situation | Behavior |
 |---|---|
@@ -544,13 +551,15 @@ balloon exactly what the phase container is meant to prevent.
 Agents must be told when to reach for these. Users may fire any of them directly. There are no
 hidden sub-commands.
 
-If `/fix` turns out to need design work, it moves to `Backlog.md` and becomes a phase. One-way
-door — an item is never in both `FIXES.yaml` and `Backlog.md`.
+If `/fix` or `/task` needs design or multi-session scope, `/log` as `proposal` (or confirm
+`/plan`). One-way door for promotion.
 
 ### Utility
 
 | Cmd | Does | Must not |
 |---|---|---|
+| `/log` | Append `WORK.yaml` row (`open`); auto-classify kind | Implement the work |
+| `/triage` | Propose do/plan/drop/leave for open Work; apply statuses | Implement product changes |
 | `/status` | Print a brief: active phase, git, runtime, suggested next command; refresh `context.json` | Change any authored file |
 | `/check` | Run tests and lint | Fix what it finds |
 | `/launch` | Stop stale app servers, start the app | Touch production |
@@ -577,8 +586,8 @@ fixes it.
 All generated state comes from one function. `/status` is a caller, not the owner.
 
 ```
-derive()  →  { phase, specs, decisions, research, fixes, releases,
-               activity, issues, git, next_command }
+derive()  →  { phase, specs, decisions, research, work, releases,
+               activity, issues (signals), git, next_command }
 ```
 
 | Caller | Uses it for |
@@ -625,7 +634,7 @@ Capture → Plan → [Research → Decide → Spec] → Build → Prove → Clos
 
 | Stage | Command | Output |
 |---|---|---|
-| Capture | append to `Backlog.md` | Backlog item |
+| Capture | `/log` → `WORK.yaml` | Work item |
 | Plan | `/plan` | Phase file |
 | Research | `/research` | R-file + decision |
 | Decide / Spec | `/design` | Decisions + spec |
@@ -633,7 +642,7 @@ Capture → Plan → [Research → Decide → Spec] → Build → Prove → Clos
 | Prove | `/run` | Evidence in the phase file |
 | Close | `/close` | Merge to `main` |
 | Ship | `/ship` | Production + release entry |
-| Observe | errors, feedback | `FIXES.yaml` |
+| Observe | errors, feedback | `WORK.yaml` (`/fix` or `/log`) |
 
 Maintenance work — dependency upgrades, migrations, refactors — is a build phase that
 amends an area spec, with `proof: "behavior unchanged, tests pass"`.
@@ -754,7 +763,7 @@ Docs/ + .work/ → chokidar (300ms debounce) → full reindex → index.json →
 - **Debounce is required.** A branch switch changes hundreds of files; without it you fire
   hundreds of rebuilds.
 - **Per-file try/catch.** One malformed frontmatter block must not kill the index. Surface it as
-  a parse error on Issues.
+  a parse error on Signals.
 - **Validate on index.** Unresolvable `depends_on` and `decisions` ids surface as broken links.
   The indexer is the integrity checker; no separate lint needed.
 - **Heartbeat.** Display `indexed_at` plus a manual reindex button. File watchers die silently;
@@ -764,22 +773,23 @@ All derived values — reversed area→feature edges, blast radius, drift, unspe
 per-feature timelines, Roadmap ordering — are computed once by the indexer. Pages render
 `index.json` and hold no logic of their own.
 
-Five pages. Each reads a defined source. Every page is a table — one row per artifact — with a
+Six pages. Each reads a defined source. Every page is a table — one row per artifact — with a
 detail pane on row click.
 
 | Page | Reads | Answers |
 |---|---|---|
 | **Now** | Active phase, `HANDOFF.md`, git, last `/check` | What am I doing, what do I type next? |
-| **Roadmap** | `Phases/*.md` frontmatter, ordered by `order` | What's scheduled, done, canceled? |
+| **Roadmap** | `Phases/*.md` frontmatter (incl. feature/area), ordered by `order` | What's scheduled, done, canceled? |
 | **Activity** | `.work/activity/*.jsonl` | What happened, and what did the agent do? |
 | **Knowledge** | Specs, `DECISIONS.md`, `Research/` | What exists, how does it behave, why? |
-| **Issues** | `FIXES.yaml` + derived drift signals | What's broken or drifting? |
+| **Work** | `WORK.yaml` | What's parked, in flight, or done outside/alongside phases? |
+| **Signals** | Derived health only | What's drifting, broken-linked, or parse-failing? |
 
 Handoffs is a card on **Now**, not a page — it is one overwritten file.
 
-Issues mixes logged fixes with derived signals (drift, unspecified code, dead specs, stale
-research, contested specs, parse errors) because they are one question: what needs attention.
-Five of those six exist only because specs carry `paths`.
+**Work** is authored. **Signals** are derived (drift, unspecified code, dead specs, stale
+research, contested specs, parse errors, blocked phases). Do not mix them — triage is not the
+same as health alarms. Most signals exist only because specs carry `paths`.
 
 **Derived, not stored:**
 
@@ -815,8 +825,8 @@ action that reaches users.
 
 Adding Spanish translation, start to finish.
 
-1. Idea arrives mid-phase → appended to `Backlog.md`. *Event: `capture`.*
-2. `/plan "translation"` → creates `PHASE-007` with outcome, proof, non-goals. *Event: `plan`.*
+1. Idea arrives mid-phase → `/log` as `proposal` in `WORK.yaml`. *Event: `log`.*
+2. `/plan "translation"` → creates `PHASE-007`, promotes the Work row. *Event: `plan`.*
 3. `/research "best EN→ES translation API"` → writes `R-004`, verdict DeepL. *Event: `research`.*
 4. `/design` → appends `D-012` (provider choice, lives on the area spec), amends `SPEC-A-AI`,
    creates `SPEC-F-TRANSLATION` with `depends_on: [SPEC-A-AI, SPEC-A-API]`. *Events: `decide`,

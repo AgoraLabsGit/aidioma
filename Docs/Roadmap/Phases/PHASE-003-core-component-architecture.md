@@ -4,7 +4,7 @@ title: Core Component Architecture
 type: design
 proof_kind: spec
 state: proposed
-order: 4
+order: 5
 depends_on:
   - PHASE-002
 from_backlog: null

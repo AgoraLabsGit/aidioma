@@ -57,7 +57,7 @@ lessons: null
 # PHASE-001
 `,
     ),
-    writeFile(path.join(docsRoot, "FIXES.yaml"), "[]\n"),
+    writeFile(path.join(docsRoot, "WORK.yaml"), "[]\n"),
     writeFile(path.join(docsRoot, "DECISIONS.md"), "# Decisions\n"),
     writeFile(path.join(docsRoot, "RELEASES.md"), "# Releases\n"),
     writeFile(path.join(docsRoot, "PRODUCT.md"), "# Product\n"),

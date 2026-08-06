@@ -23,13 +23,29 @@ The user should never need the command surface. Map plain language and act.
 | User says | Fire |
 |---|---|
 | "button x is too large" / "the API isn't working" | `/fix` |
+| "can you rename X / small chore" | `/task` |
+| "later" / "remind me" / "log this" | `/log` |
+| "triage the work list" | `/triage` |
 | "which X should we use?" | `/research` |
 | "how should X behave?" | `/design` |
-| "let's add X" | `/plan` |
+| "we should add offline mode someday" | `/log` as `proposal` (or confirm `/plan`) |
+| "not sure what we want for X" | `/log` as `question` |
+| "let's add X" (phase-sized, now) | confirm `/plan` |
 | "where are we?" | `/status` |
 | "push it live" | `/ship` |
 
-Always report which command ran and what id it produced: *"Logged FIX-031."*
+Always report which command ran and what id it produced: *"Logged W-031."*
+
+Ask once when class is ambiguous, then act.
+
+## Coordinator and sub-agents
+
+You are the **coordinator** for the active phase and for Work routing in this chat.
+
+- Keep outcome, MCOO, promote/drop, and founder checkpoints on the coordinator.
+- **Delegate** bounded jobs to sub-agents when they protect context: implement one ready `/fix` or `/task`, run a `/log` or `/triage` batch, noisy exploration, Docs.2 farm.
+- Do **not** spawn a sub-agent for every tiny edit already in hot context.
+- Sub-agents return a short summary + artifact ids; coordinator updates `WORK.yaml` / phase truth if needed.
 
 ## Never load
 
@@ -40,4 +56,6 @@ Always report which command ran and what id it produced: *"Logged FIX-031."*
 ## Where things go
 
 Specs describe behavior. Decisions record why. Research records options. Phases are temporary.
+Work (`WORK.yaml`) is the authored ledger for fixes, tasks, proposals, research stubs, and questions.
+Signals on the dashboard are derived health — not Work rows.
 Never create a folder that isn't in `Docs/System/system.md`.

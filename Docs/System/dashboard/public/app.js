@@ -3,7 +3,8 @@ const PAGE_META = {
   roadmap: { title: "Roadmap", subtitle: "Phases by state and order" },
   activity: { title: "Activity", subtitle: "Command journal (.work/activity)" },
   knowledge: { title: "Knowledge", subtitle: "Specs, decisions, research, releases" },
-  issues: { title: "Issues", subtitle: "FIXES.yaml + derived signals" },
+  work: { title: "Work", subtitle: "WORK.yaml ledger — fix, task, proposal, research, question" },
+  signals: { title: "Signals", subtitle: "Derived health (drift, parse errors, broken links…)" },
 };
 
 const DETAIL_WIDTH_KEY = "aidioma-detail-width";
@@ -16,7 +17,8 @@ const state = {
   page: "active",
   roadmapFilters: { state: "", type: "", q: "", sort: "state" },
   activityFilters: { actor: "", type: "", phase: "", q: "", sort: "time" },
-  issuesFilters: { severity: "", kind: "", status: "", q: "", sort: "severity" },
+  workFilters: { kind: "", status: "open", q: "", sort: "age" },
+  signalsFilters: { severity: "", kind: "", status: "open", q: "", sort: "severity" },
   knowledgeId: "PRODUCT",
   selectedId: null,
   lastIndexedAt: null,
@@ -28,7 +30,8 @@ const panels = {
   roadmap: document.querySelector("#page-roadmap"),
   activity: document.querySelector("#page-activity"),
   knowledge: document.querySelector("#page-knowledge"),
-  issues: document.querySelector("#page-issues"),
+  work: document.querySelector("#page-work"),
+  signals: document.querySelector("#page-signals"),
 };
 
 const indexedAt = document.querySelector("#indexed-at");
@@ -389,10 +392,17 @@ function gitGlance(index) {
   return `${repo.branch ?? "—"} · ${repo.clean ? "clean" : "dirty"} · ↑${repo.ahead ?? 0} ↓${repo.behind ?? 0}`;
 }
 
-function issuesGlance(index, relatedIssues) {
-  if (relatedIssues.length) return `${relatedIssues.length} related`;
+function signalsGlance(index, relatedSignals) {
+  if (relatedSignals.length) return `${relatedSignals.length} related`;
   const high = (index.issues ?? []).filter((issue) => issue.severity === "high").length;
   return `${high} high / ${(index.issues ?? []).length} total`;
+}
+
+function workGlance(index, phaseId) {
+  const related = (index.work ?? []).filter((row) => row.phase === phaseId);
+  if (related.length) return `${related.length} related`;
+  const open = (index.work ?? []).filter((row) => row.status === "open" || row.status === "active").length;
+  return `${open} open / ${(index.work ?? []).length} total`;
 }
 
 function glanceCellHtml(label, value, { mono = false } = {}) {
@@ -420,7 +430,11 @@ function glanceTwoColHtml(phase, index, relatedIssues) {
     ],
     [
       ["Opened", escapeHtml(phase.opened)],
-      ["Issues", escapeHtml(issuesGlance(index, relatedIssues))],
+      ["Work", escapeHtml(workGlance(index, phase.id))],
+    ],
+    [
+      ["Signals", escapeHtml(signalsGlance(index, relatedIssues))],
+      ["Amends", escapeHtml(specsLabel(phase)), { mono: true }],
     ],
   ];
 
@@ -472,12 +486,23 @@ function pathsBlockHtml(specPaths) {
 }
 
 function relatedIssuesHtml(relatedIssues) {
-  if (!relatedIssues.length) return `<p class="muted">No related issues.</p>`;
+  if (!relatedIssues.length) return `<p class="muted">No related signals.</p>`;
   return `<ul>${relatedIssues.map((issue) => `
     <li>
       <span class="status" data-state="${escapeHtml(issue.severity)}">${escapeHtml(issue.severity)}</span>
       <code>${escapeHtml(issue.ref)}</code>
       <span>${escapeHtml(issue.summary)}</span>
+    </li>`).join("")}</ul>`;
+}
+
+function relatedWorkHtml(index, phaseId) {
+  const rows = (index.work ?? []).filter((row) => row.phase === phaseId);
+  if (!rows.length) return `<p class="muted">No work tagged to this phase.</p>`;
+  return `<ul>${rows.map((row) => `
+    <li>
+      <code>${escapeHtml(row.id)}</code>
+      <span>${escapeHtml(row.kind)}</span>
+      <span>${escapeHtml(row.summary)}</span>
     </li>`).join("")}</ul>`;
 }
 
@@ -561,7 +586,9 @@ function renderPhaseView(phase, index, { primary = false, compact = false } = {}
         </div>
 
         <div class="phase-card-section">
-          <h3 class="now-label">Issues</h3>
+          <h3 class="now-label">Work</h3>
+          ${relatedWorkHtml(index, phase.id)}
+          <h3 class="now-label">Signals</h3>
           ${relatedIssuesHtml(relatedIssues)}
         </div>
 
@@ -686,6 +713,8 @@ function renderRoadmap(index) {
       </td>
       <td class="${phase.type === "design" ? "type-design" : ""}">${escapeHtml(typeLabel(phase.type))}</td>
       <td>${statusHtml(phase.state)}</td>
+      <td class="mono wrap">${escapeHtml(phase.feature ?? "—")}</td>
+      <td class="mono wrap">${escapeHtml(phase.area ?? "—")}</td>
       <td>${escapeHtml(phase.proof_kind)}</td>
       <td class="mono wrap">${escapeHtml(specsLabel(phase))}</td>
       <td title="opened ${escapeHtml(phase.opened ?? "")}">${phase.age_days}d</td>
@@ -710,15 +739,15 @@ function renderRoadmap(index) {
         ${sortSelect("roadmap-sort", sort, [["state", "State"], ["order", "Order"], ["age", "Age"], ["title", "Title"]])}
       </div>
     </div>
-    <p class="table-meta">Showing ${rows.length} of ${index.phases.length} · columns: ID, Title, Type, State, Proof, Specs, Age</p>
+    <p class="table-meta">Showing ${rows.length} of ${index.phases.length} · Feature/Area are org tags (not amends_specs)</p>
     <div class="table-frame">
       <table>
         <thead>
           <tr>
-            <th>ID</th><th>Title</th><th>Type</th><th>State</th><th>Proof</th><th>Specs</th><th>Age</th>
+            <th>ID</th><th>Title</th><th>Type</th><th>State</th><th>Feature</th><th>Area</th><th>Proof</th><th>Amends</th><th>Age</th>
           </tr>
         </thead>
-        <tbody>${body || `<tr><td colspan="7">No phases match.</td></tr>`}</tbody>
+        <tbody>${body || `<tr><td colspan="9">No phases match.</td></tr>`}</tbody>
       </table>
     </div>
   `;
@@ -943,11 +972,96 @@ function issueStatus(issue) {
   return issue.status ?? "open";
 }
 
-function renderIssues(index) {
-  const { severity, kind, status, q, sort } = state.issuesFilters;
+function workBucket(status) {
+  return status === "open" || status === "active" ? "open" : "closed";
+}
+
+function renderWork(index) {
+  const { kind, status, q, sort } = state.workFilters;
+  const source = index.work ?? [];
+  if (source.length === 0) {
+    panels.work.innerHTML = `<div class="empty">No work yet. Run <code>/log</code> or <code>/fix</code>.</div>`;
+    return;
+  }
+
+  let rows = source
+    .filter((row) => !kind || row.kind === kind)
+    .filter((row) => !status || workBucket(row.status) === status)
+    .filter((row) =>
+      matchesQuery(
+        `${row.id} ${row.kind} ${row.summary} ${row.status} ${row.feature ?? ""} ${row.area ?? ""} ${row.note ?? ""}`,
+        q,
+      ));
+
+  rows = [...rows].sort((left, right) => {
+    if (sort === "kind") return left.kind.localeCompare(right.kind) || (right.age_days ?? 0) - (left.age_days ?? 0);
+    if (sort === "status") return left.status.localeCompare(right.status) || (right.age_days ?? 0) - (left.age_days ?? 0);
+    if (sort === "id") return left.id.localeCompare(right.id);
+    return (right.age_days ?? 0) - (left.age_days ?? 0);
+  });
+
+  const kinds = [...new Set(source.map((row) => row.kind))].sort();
+  const openCount = source.filter((row) => workBucket(row.status) === "open").length;
+  const closedCount = source.filter((row) => workBucket(row.status) === "closed").length;
+  const emptyFiltered = rows.length === 0
+    ? (
+      status === "open" && closedCount > 0
+        ? `No open work. ${closedCount} closed — choose Closed or All.`
+        : status === "closed" && openCount > 0
+          ? `No closed work. ${openCount} open — choose Open or All.`
+          : "No work matches these filters."
+    )
+    : null;
+
+  panels.work.innerHTML = `
+    <div class="page-toolbar">
+      ${searchInput("work-q", q, "Search work…")}
+      <div class="filters">
+        <div class="chip-group">
+          <span class="chip-label">Status</span>
+          ${chip("work-status", "", status, "All")}
+          ${chip("work-status", "open", status, `Open${openCount ? ` (${openCount})` : ""}`)}
+          ${chip("work-status", "closed", status, `Closed${closedCount ? ` (${closedCount})` : ""}`)}
+        </div>
+        <div class="chip-group">
+          <span class="chip-label">Kind</span>
+          ${chip("work-kind", "", kind, "All")}
+          ${kinds.map((value) => chip("work-kind", value, kind)).join("")}
+        </div>
+        ${sortSelect("work-sort", sort, [["age", "Age"], ["kind", "Kind"], ["status", "Status"], ["id", "ID"]])}
+      </div>
+    </div>
+    <p class="table-meta">Showing ${rows.length} of ${source.length} · Docs/WORK.yaml</p>
+    <div class="table-frame">
+      <table>
+        <thead><tr><th>ID</th><th>Kind</th><th class="wrap">Summary</th><th>Feature</th><th>Area</th><th>Status</th><th>Age</th></tr></thead>
+        <tbody>
+          ${
+            emptyFiltered
+              ? `<tr><td colspan="7">${escapeHtml(emptyFiltered)}</td></tr>`
+              : rows.map((row) => `
+            <tr data-id="${escapeHtml(row.id)}" data-status="${escapeHtml(row.status)}">
+              <td class="mono">${escapeHtml(row.id)}</td>
+              <td>${escapeHtml(row.kind)}</td>
+              <td class="wrap"><span class="cell-primary">${escapeHtml(row.summary)}</span>${row.note ? `<span class="cell-secondary">${escapeHtml(row.note)}</span>` : ""}</td>
+              <td class="mono">${escapeHtml(row.feature ?? "—")}</td>
+              <td class="mono">${escapeHtml(row.area ?? "—")}</td>
+              <td>${statusHtml(row.status)}</td>
+              <td title="${row.age_days == null ? "" : `${row.age_days} day(s)`}">${row.age_days == null ? "—" : `${row.age_days}d`}</td>
+            </tr>
+          `).join("")
+          }
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderSignals(index) {
+  const { severity, kind, status, q, sort } = state.signalsFilters;
   const source = index.issues ?? [];
   if (source.length === 0) {
-    panels.issues.innerHTML = `<div class="empty">No issues. Empty is a valid state.</div>`;
+    panels.signals.innerHTML = `<div class="empty">No signals. Empty is a valid state.</div>`;
     return;
   }
 
@@ -972,39 +1086,39 @@ function renderIssues(index) {
   const emptyFiltered = issues.length === 0
     ? (
       status === "open" && closedCount > 0
-        ? `No open issues. ${closedCount} closed — choose Closed or All.`
+        ? `No open signals. ${closedCount} closed — choose Closed or All.`
         : status === "fixed" && openCount > 0
-          ? `No closed issues. ${openCount} open — choose Open or All.`
-          : "No issues match these filters."
+          ? `No closed signals. ${openCount} open — choose Open or All.`
+          : "No signals match these filters."
     )
     : null;
 
-  panels.issues.innerHTML = `
+  panels.signals.innerHTML = `
     <div class="page-toolbar">
-      ${searchInput("issues-q", q, "Search issues…")}
+      ${searchInput("signals-q", q, "Search signals…")}
       <div class="filters">
         <div class="chip-group">
           <span class="chip-label">Status</span>
-          ${chip("status", "", status, "All")}
-          ${chip("status", "open", status, `Open${openCount ? ` (${openCount})` : ""}`)}
-          ${chip("status", "fixed", status, `Closed${closedCount ? ` (${closedCount})` : ""}`)}
+          ${chip("signal-status", "", status, "All")}
+          ${chip("signal-status", "open", status, `Open${openCount ? ` (${openCount})` : ""}`)}
+          ${chip("signal-status", "fixed", status, `Closed${closedCount ? ` (${closedCount})` : ""}`)}
         </div>
         <div class="chip-group">
           <span class="chip-label">Severity</span>
-          ${chip("severity", "", severity, "All")}
-          ${chip("severity", "high", severity)}
-          ${chip("severity", "medium", severity)}
-          ${chip("severity", "low", severity)}
+          ${chip("signal-severity", "", severity, "All")}
+          ${chip("signal-severity", "high", severity)}
+          ${chip("signal-severity", "medium", severity)}
+          ${chip("signal-severity", "low", severity)}
         </div>
         <div class="chip-group">
           <span class="chip-label">Kind</span>
-          ${chip("kind", "", kind, "All")}
-          ${kinds.map((value) => chip("kind", value, kind)).join("")}
+          ${chip("signal-kind", "", kind, "All")}
+          ${kinds.map((value) => chip("signal-kind", value, kind)).join("")}
         </div>
-        ${sortSelect("issues-sort", sort, [["severity", "Severity"], ["age", "Age"], ["kind", "Kind"], ["status", "Status"]])}
+        ${sortSelect("signals-sort", sort, [["severity", "Severity"], ["age", "Age"], ["kind", "Kind"], ["status", "Status"]])}
       </div>
     </div>
-    <p class="table-meta">${index.paths_scanned_at ? `Slow cycle ${formatAge(index.paths_scanned_at)} · ` : ""}Showing ${issues.length} of ${source.length} · FIXES open+fixed + derived signals</p>
+    <p class="table-meta">${index.paths_scanned_at ? `Slow cycle ${formatAge(index.paths_scanned_at)} · ` : ""}Showing ${issues.length} of ${source.length} · derived health only</p>
     <div class="table-frame">
       <table>
         <thead><tr><th>Kind</th><th>Ref</th><th class="wrap">Summary</th><th>Spec</th><th>Age</th><th>Severity</th><th>Status</th></tr></thead>
@@ -1038,7 +1152,7 @@ function updateChrome(index) {
   ).length;
   if (high > 0) {
     issuePill.hidden = false;
-    issuePill.textContent = `● ${high} issue${high === 1 ? "" : "s"}`;
+    issuePill.textContent = `● ${high} signal${high === 1 ? "" : "s"}`;
   } else {
     issuePill.hidden = true;
   }
@@ -1051,7 +1165,8 @@ function renderAll() {
   renderRoadmap(state.index);
   renderActivity(state.index);
   renderKnowledge(state.index);
-  renderIssues(state.index);
+  renderWork(state.index);
+  renderSignals(state.index);
 }
 
 function showPage(page) {
@@ -1106,7 +1221,8 @@ async function openDetail(id) {
   }
 
   if (state.page === "roadmap") renderRoadmap(state.index);
-  if (state.page === "issues") renderIssues(state.index);
+  if (state.page === "work") renderWork(state.index);
+  if (state.page === "signals") renderSignals(state.index);
 }
 
 async function loadIndex() {
@@ -1170,7 +1286,8 @@ document.querySelector("#detail-close").addEventListener("click", () => {
   state.selectedId = null;
   if (state.index) {
     if (state.page === "roadmap") renderRoadmap(state.index);
-    if (state.page === "issues") renderIssues(state.index);
+    if (state.page === "work") renderWork(state.index);
+    if (state.page === "signals") renderSignals(state.index);
   }
 });
 
@@ -1240,9 +1357,21 @@ document.addEventListener("click", (event) => {
     ) {
       state.activityFilters = { ...state.activityFilters, [filter]: value };
       renderActivity(state.index);
-    } else if (filter === "severity" || filter === "kind" || filter === "status") {
-      state.issuesFilters = { ...state.issuesFilters, [filter]: value };
-      renderIssues(state.index);
+    } else if (filter === "work-status") {
+      state.workFilters = { ...state.workFilters, status: value };
+      renderWork(state.index);
+    } else if (filter === "work-kind") {
+      state.workFilters = { ...state.workFilters, kind: value };
+      renderWork(state.index);
+    } else if (filter === "signal-status") {
+      state.signalsFilters = { ...state.signalsFilters, status: value };
+      renderSignals(state.index);
+    } else if (filter === "signal-severity") {
+      state.signalsFilters = { ...state.signalsFilters, severity: value };
+      renderSignals(state.index);
+    } else if (filter === "signal-kind") {
+      state.signalsFilters = { ...state.signalsFilters, kind: value };
+      renderSignals(state.index);
     }
     return;
   }
@@ -1261,9 +1390,12 @@ document.addEventListener("change", (event) => {
   } else if (select.name === "activity-sort") {
     state.activityFilters = { ...state.activityFilters, sort: select.value };
     renderActivity(state.index);
-  } else if (select.name === "issues-sort") {
-    state.issuesFilters = { ...state.issuesFilters, sort: select.value };
-    renderIssues(state.index);
+  } else if (select.name === "work-sort") {
+    state.workFilters = { ...state.workFilters, sort: select.value };
+    renderWork(state.index);
+  } else if (select.name === "signals-sort") {
+    state.signalsFilters = { ...state.signalsFilters, sort: select.value };
+    renderSignals(state.index);
   }
 });
 
@@ -1287,10 +1419,14 @@ document.addEventListener("input", (event) => {
     state.activityFilters = { ...state.activityFilters, q: input.value };
     renderActivity(state.index);
     restore(panels.activity, "activity-q");
-  } else if (input.name === "issues-q") {
-    state.issuesFilters = { ...state.issuesFilters, q: input.value };
-    renderIssues(state.index);
-    restore(panels.issues, "issues-q");
+  } else if (input.name === "work-q") {
+    state.workFilters = { ...state.workFilters, q: input.value };
+    renderWork(state.index);
+    restore(panels.work, "work-q");
+  } else if (input.name === "signals-q") {
+    state.signalsFilters = { ...state.signalsFilters, q: input.value };
+    renderSignals(state.index);
+    restore(panels.signals, "signals-q");
   } else if (input.name === "knowledge-q") {
     const q = input.value.toLowerCase();
     for (const item of document.querySelectorAll(".toc-item")) {

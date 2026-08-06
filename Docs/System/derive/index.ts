@@ -6,10 +6,10 @@ export type {
   IndexIssue,
   IssueKind,
   IssueSeverity,
-  ProjectedFix,
   ProjectedPhase,
   ProjectedResearch,
   ProjectedSpec,
+  ProjectedWork,
 } from "./derive.js";
 export { readGitStatus } from "./git.js";
 export type { GitStatus } from "./git.js";
@@ -23,6 +23,7 @@ export {
   parseReleases,
   parseResearchFrontmatter,
   parseSpecFrontmatter,
+  parseWork,
   parseYamlValue,
 } from "./parser.js";
 export type { DecisionEntry, ReleaseEntry } from "./parser.js";
@@ -33,10 +34,13 @@ export {
   phaseStateSchema,
   researchSchema,
   specSchema,
+  workItemSchema,
+  workSchema,
 } from "./schema.js";
 export type {
   FixItem,
   PhaseFrontmatter,
   ResearchFrontmatter,
   SpecFrontmatter,
+  WorkItem,
 } from "./schema.js";

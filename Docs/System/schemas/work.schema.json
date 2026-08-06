@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "work.schema.json",
+  "title": "Work ledger",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "kind", "summary", "status", "opened"],
+    "additionalProperties": false,
+    "properties": {
+      "id": { "type": "string", "pattern": "^W-[0-9]{3}$" },
+      "kind": {
+        "enum": ["fix", "task", "proposal", "research", "question"]
+      },
+      "summary": { "type": "string", "minLength": 1 },
+      "status": {
+        "enum": ["open", "active", "done", "promoted", "dropped"]
+      },
+      "feature": {
+        "type": ["string", "null"],
+        "pattern": "^SPEC-F-[A-Z0-9-]+$"
+      },
+      "area": {
+        "type": ["string", "null"],
+        "pattern": "^SPEC-A-[A-Z0-9-]+$"
+      },
+      "phase": {
+        "type": ["string", "null"],
+        "pattern": "^PHASE-[0-9]{3}$"
+      },
+      "promoted_to": {
+        "type": ["string", "null"]
+      },
+      "blocked_by": {
+        "type": ["string", "null"],
+        "pattern": "^W-[0-9]{3}$"
+      },
+      "note": {
+        "type": ["string", "null"]
+      },
+      "opened": { "type": "string", "format": "date" }
+    }
+  }
+}

@@ -6,27 +6,27 @@ import { readGitStatus, type GitStatus } from "./git.js";
 import {
   ParseError,
   parseDecisions,
-  parseFixes,
   parseFrontmatter,
   parseReleases,
   parseResearchFrontmatter,
   parseSpecFrontmatter,
+  parseWork,
   type DecisionEntry,
   type ReleaseEntry,
 } from "./parser.js";
 import {
   phaseSchema,
-  type FixItem,
   type PhaseFrontmatter,
   type ResearchFrontmatter,
   type SpecFrontmatter,
+  type WorkItem,
 } from "./schema.js";
 
 const defaultRepositoryRoot = fileURLToPath(new URL("../../..", import.meta.url));
 
 export type IssueSeverity = "high" | "medium" | "low";
+/** Derived health signals only — authored work lives in `work[]`. */
 export type IssueKind =
-  | "fix"
   | "blocked"
   | "contested"
   | "broken_link"
@@ -43,7 +43,6 @@ export type IndexIssue = {
   spec: string | null;
   age_days: number | null;
   severity: IssueSeverity;
-  /** open = needs attention; fixed = closed FIX row still projected for history */
   status: "open" | "fixed";
 };
 
@@ -78,7 +77,7 @@ export type ProjectedResearch = ResearchFrontmatter & {
   sourcePath: string;
 };
 
-export type ProjectedFix = FixItem & {
+export type ProjectedWork = WorkItem & {
   age_days: number;
 };
 
@@ -90,13 +89,14 @@ export type DeriveIndex = {
   specs: ProjectedSpec[];
   decisions: DecisionEntry[];
   research: ProjectedResearch[];
-  fixes: ProjectedFix[];
+  work: ProjectedWork[];
   releases: ReleaseEntry[];
   activity: {
     current_month: ActivityEvent[];
     months: string[];
     total: number;
   };
+  /** Derived health signals (not the Work ledger). */
   issues: IndexIssue[];
   handoff: { updated_at: string | null; body: string };
   last_check: { status: string | null; ts: string | null };
@@ -287,7 +287,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
   const specs: ProjectedSpec[] = [];
   const research: ProjectedResearch[] = [];
   let decisions: DecisionEntry[] = [];
-  let fixes: ProjectedFix[] = [];
+  let work: ProjectedWork[] = [];
   let releases: ReleaseEntry[] = [];
   let handoffBody = "";
   let handoffUpdatedAt: string | null = null;
@@ -395,22 +395,11 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
     }
   }
 
-  const fixesSource = await readOptional(path.join(docsRoot, "FIXES.yaml"));
-  if (fixesSource !== null) {
+  const workSource = await readOptional(path.join(docsRoot, "WORK.yaml"));
+  if (workSource !== null) {
     try {
-      const parsed = parseFixes(fixesSource, "FIXES.yaml");
-      fixes = parsed.map((item) => ({ ...item, age_days: dayDiff(item.opened, now) }));
-      for (const item of fixes) {
-        issues.push({
-          kind: "fix",
-          ref: item.id,
-          summary: item.summary,
-          spec: item.spec,
-          age_days: item.age_days,
-          severity: item.status === "open" ? "high" : "low",
-          status: item.status,
-        });
-      }
+      const parsed = parseWork(workSource, "WORK.yaml");
+      work = parsed.map((item) => ({ ...item, age_days: dayDiff(item.opened, now) }));
     } catch (error) {
       const summary =
         error instanceof ParseError
@@ -418,7 +407,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
           : error instanceof Error
             ? error.message
             : "Unknown parse error";
-      addParseIssue(issues, "FIXES.yaml", summary);
+      addParseIssue(issues, "WORK.yaml", summary);
     }
   }
 
@@ -498,6 +487,28 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
         });
       }
     }
+    if (phase.feature && !specIds.has(phase.feature)) {
+      issues.push({
+        kind: "broken_link",
+        ref: phase.id,
+        summary: `${phase.id} feature missing ${phase.feature}`,
+        spec: phase.feature,
+        age_days: phase.age_days,
+        severity: "high",
+        status: "open",
+      });
+    }
+    if (phase.area && !specIds.has(phase.area)) {
+      issues.push({
+        kind: "broken_link",
+        ref: phase.id,
+        summary: `${phase.id} area missing ${phase.area}`,
+        spec: phase.area,
+        age_days: phase.age_days,
+        severity: "high",
+        status: "open",
+      });
+    }
     if (phase.state === "blocked") {
       issues.push({
         kind: "blocked",
@@ -569,6 +580,43 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
     }
   }
 
+  const workIds = new Set(work.map((item) => item.id));
+  for (const item of work) {
+    if (item.feature && !specIds.has(item.feature)) {
+      issues.push({
+        kind: "broken_link",
+        ref: item.id,
+        summary: `${item.id} feature missing ${item.feature}`,
+        spec: item.feature,
+        age_days: item.age_days,
+        severity: "high",
+        status: "open",
+      });
+    }
+    if (item.area && !specIds.has(item.area)) {
+      issues.push({
+        kind: "broken_link",
+        ref: item.id,
+        summary: `${item.id} area missing ${item.area}`,
+        spec: item.area,
+        age_days: item.age_days,
+        severity: "high",
+        status: "open",
+      });
+    }
+    if (item.blocked_by && !workIds.has(item.blocked_by)) {
+      issues.push({
+        kind: "broken_link",
+        ref: item.id,
+        summary: `${item.id} blocked_by missing ${item.blocked_by}`,
+        spec: null,
+        age_days: item.age_days,
+        severity: "high",
+        status: "open",
+      });
+    }
+  }
+
   const activity = await loadActivity(repositoryRoot, now);
   const activityByPhase = new Map<string, number>();
   for (const event of activity.current_month) {
@@ -601,7 +649,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
     specs,
     decisions,
     research,
-    fixes,
+    work,
     releases,
     activity,
     issues,
@@ -665,4 +713,4 @@ export async function writeContextJson(
   await writeFile(path.join(root, ".work", "context.json"), `${JSON.stringify(context, null, 2)}\n`);
 }
 
-export type { PhaseFrontmatter, SpecFrontmatter, ResearchFrontmatter, FixItem };
+export type { PhaseFrontmatter, SpecFrontmatter, ResearchFrontmatter, WorkItem };
