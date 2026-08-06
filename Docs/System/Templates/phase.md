@@ -51,6 +51,9 @@ What will be captured, and where it will live.
 - [ ] <evidence item>
 - [ ] <evidence item>
 
+<!-- Dashboard stubs (not frontmatter): Audits always; Tests when type: implementation.
+     Projection TBD — sections exist so we do not forget them. -->
+
 ## Close record
 
 Filled at `/close`. Leave empty until then.

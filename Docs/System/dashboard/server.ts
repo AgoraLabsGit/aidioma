@@ -55,7 +55,7 @@ export function isAllowedHost(host: string | undefined): boolean {
 function setSecurityHeaders(response: ServerResponse): void {
   response.setHeader(
     "Content-Security-Policy",
-    "default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+    "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
   );
   response.setHeader("Cache-Control", "no-store, max-age=0");
   response.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");

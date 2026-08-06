@@ -35,3 +35,10 @@ Date: 2026-08-05 · Phase: PHASE-001 · From: — · Affects: []
 Chose: PHASE-001 dashboard after process install, before target product design
 Why: Founder needs a readable control surface before more product design sprawl
 Revisit if: Dashboard V1 cannot project phase state without a second registry
+
+## D-006 — Dashboard index vs body
+Date: 2026-08-05 · Phase: PHASE-001 · From: — · Affects: []
+Chose: `index.json` / derive = frontmatter only; UI may render named markdown bodies on demand via `/api/doc`
+Why: Same-day V3 + Dashboard-spec overclaimed “dashboard reads frontmatter only” while detail/Active need Context·Plan·Proof prose; bodies must not bloat the index
+Revisit if: On-demand body fetch makes Active slow or duplicates SSOT with frontmatter
+Supersedes: Absolute reading of system.md §5 “dashboard reads frontmatter only”

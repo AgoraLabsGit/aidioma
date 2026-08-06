@@ -192,20 +192,16 @@ Computed by the indexer; never authored.
 ## 4. Shell
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│ AIdioma   Now · Roadmap · Activity · Knowledge · Issues   │
-│                              indexed 3s ago ⟳   ● 2 issues│
-├──────────────────────────────────────────────────────────┤
-│ [filter chips]                                            │
-├──────────────────────────────────────────────────────────┤
-│                                                           │
-│  TABLE — one row per artifact                             │
-│                                                           │
-└──────────────────────────────────────────────────────────┘
-        detail pane slides from right on row click
+┌────────┬─────────────────────────────────────────────────┐
+│ AIdioma│ Active · Roadmap · Activity · Knowledge · Issues │
+│ Active │                          indexed 3s ago [Refresh]│
+│ Roadmap├─────────────────────────────────────────────────┤
+│ …      │ search + filters (one row) · sortable table      │
+└────────┴─────────────────────────────────────────────────┘
+        detail pane (resizable) slides from right on row click
 ```
 
-- Every page except **Now** is a table. Learn the interface once.
+- Every page except **Active** is a table (Knowledge is a document viewer).
 - Row click → detail pane: frontmatter fields on top, markdown body fetched and rendered on
   demand via `/api/doc?id=`. Bodies are never embedded in `index.json`.
 - Cross-links: any id in any cell is clickable and routes to its artifact.
@@ -218,7 +214,7 @@ Computed by the indexer; never authored.
 | Type | System sans for UI, monospace for ids, paths, timestamps |
 | Density | ~32px rows, no card padding, table-first |
 | Status | Colored dot **plus** text label — never color alone |
-| Chrome | Minimal. No sidebars, no charts, no widgets in V1 |
+| Chrome | Sidebar nav + table pages. No charts / analytics widgets in V1 |
 
 Status colors: active/fresh green · blocked/contested amber · abandoned/superseded grey ·
 failing/drift red.
@@ -227,38 +223,28 @@ failing/drift red.
 
 ## 5. Pages
 
-### Now
+### Active
 
-The only non-table page. Opened every morning.
+The only non-table overview page (formerly Now). Opened every morning. Layout stacks
+one card per `active`/`blocked` phase so parallel phases do not collapse into one hero.
+**Active and the Roadmap detail pane share one `renderPhaseView` layout.**
 
 | Block | Content |
 |---|---|
-| Phase | id, title, state, `type`/`proof_kind`, age |
-| Outcome | Full text, prominent |
-| Proof | Declared proof + checklist of what's demonstrated so far |
-| Non-goals | Listed — the scope guard, visible while working |
-| Next command | Large, with copy button |
-| Git | Branch, clean/dirty, ahead/behind |
-| Health | Last `/check`, open fix count, what's in production |
-| Handoff | `HANDOFF.md` rendered, with `updated_at` |
+| Header | id + title + `outcome` (state/type live in Status only) |
+| Status | Two-column glance (4+4) — left: state, type, owner, opened · right: proof_kind, git, check, issues |
+| Phase card | One card, sections: Context (+ out of scope), Plan, Proof, Dependencies (`depends_on`), Specs amended (`amends_specs`), Inputs (body), Files, Issues, Audits (stub), Tests (stub, implementation only). **Tables vs lists:** authored `\|` markdown → real `.md-table` (key→value maps like Inputs). Numbered Plan / proof checklist → row+divider lists. Out of scope → plain bullets (no table chrome). Never `display:grid`/`flex` on prose `<li>` with mixed inline nodes (breaks `code`). |
+| Handoff | Below the phase stack on Active only — `HANDOFF.md` with `updated_at` |
+
+**Index vs body:** `index.json` is frontmatter-only (D-006). Named body sections load on demand via
+`/api/doc`. Do not show empty Audits/Tests slots until derive projects them. Schema heading
+renames wait until real phase + spec data exists.
 
 **Blocked phases** show their reason (from the phase file's Context) in place of the next
 command, and also appear on Issues as `kind: blocked`, severity high.
 
-**`next_command` is a suggestion, labelled as such.** The indexer cannot know whether a
-screenshot was taken, so `/close` appears only when git is clean *and* the phase declares its
-proof captured. Otherwise it suggests `/run`.
-
-**Derivation:**
-
-| Condition | Shows |
-|---|---|
-| No phase `active`, a `ready` phase exists | `/run` |
-| No phase `active`, none `ready` | `/plan` |
-| Phase `active`, git clean, proof declared captured | `/close` |
-| Phase `active`, otherwise | `/run` |
-| Phase `blocked` | Blocked reason shown; no command suggested |
-| `main` clean, unshipped release | `/ship` |
+`next_command` remains in `index.json` for `/status` and agents. **It is not shown in the
+Active UI** (founder removed the command bar / suggested-next box).
 
 ### Roadmap
 

@@ -1,27 +1,33 @@
-# Current handoff — PHASE-001 dashboard under Docs/System
+# Current handoff — after PHASE-001 close
 
 **Date:** 2026-08-05
 
-**Branch:** `phase/001-dev-system-dashboard`  
-**Worktree:** `.worktrees/phase-001`
+**Branch:** `main` (phase branch deleted after merge)
+**Worktree:** none for an active phase
 
-**Active phase:** PHASE-001 — Dev System Dashboard (`active`)
+**Active phase:** none
+**Next:** PHASE-004 — Dashboard Projection Proof (`proposed`)
 
-## Done
+## Done (PHASE-001)
 
-- V3 derive + dashboard steps 1–4; UI polish
-- Relocated out of `tooling/` into system:
-  - `Docs/System/dashboard/` — UI + server
-  - `Docs/System/derive/` — shared `derive()` indexer
-- Live at `http://127.0.0.1:4317`
+- `derive()` + local dashboard under `Docs/System/`
+- Pages: Active · Roadmap · Activity · Knowledge · Issues
+- Shared Active/Detail phase layout; index frontmatter-only (D-006); body via `/api/doc`
+- Scheduled PHASE-004 + MOCK PHASE-099; Backlog BL-011 (parallel actives)
 
-## Not done
+## Not done / next
 
-- Founder visual OK (gate before `/close`)
+- Mark PHASE-004 `ready` when Mike approves, then `/run PHASE-004`
+- Projection audit, Issues open+closed, time/sort/filter audit, Activity Ref vs Phase
+
+## Preserve
+
+- Lexicon stash: `stash@{0}: lexicon-wip-preserved-after-phase-000` (PRESERVE.md / BL-001)
 
 ## Next command
 
 ```text
-# Mike: review http://127.0.0.1:4317 — if look is good:
-/close
+# Approve scope, then:
+# edit PHASE-004 state: ready
+/run PHASE-004
 ```

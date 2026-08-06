@@ -170,8 +170,11 @@ Allowlist enforced by CI. Any other directory under `Docs/` fails the merge gate
 
 ## 5. Schemas
 
-Frontmatter is the machine-readable contract. Prose below it is for humans. The dashboard reads
-frontmatter only.
+Frontmatter is the machine-readable contract. Prose below it is for humans.
+
+**Projection rule:** `derive()` / `index.json` read **frontmatter only** (plus tiny derived
+fields). The dashboard UI may fetch and render **named body sections on demand** (detail pane,
+Active phase card, Knowledge viewer). Bodies are never embedded in the index. See D-006.
 
 ### Formats
 
@@ -243,7 +246,7 @@ closed: null
 lessons: null          # required when state: abandoned
 ```
 
-Sections: Context · Inputs · Plan · Proof · Close record
+Sections: Context · Inputs · Plan · Proof · Close record · Kickoff
 
 `type` is a **scheduling** concept. Design phases produce specs and decisions; implementation
 phases produce running behavior. Either may be scheduled at any point — `order` follows

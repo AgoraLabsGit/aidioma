@@ -4,7 +4,7 @@ title: Target Product Design
 type: design
 proof_kind: spec
 state: proposed
-order: 2
+order: 3
 depends_on:
   - PHASE-001
 from_backlog: null

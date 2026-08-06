@@ -131,7 +131,7 @@ describe("work dashboard", () => {
       req.end();
     });
     expect(html).toContain("AIdioma");
-    expect(html).toContain('data-page="now"');
+    expect(html).toContain('data-page="active"');
     expect(html).toContain('data-page="roadmap"');
   });
 });

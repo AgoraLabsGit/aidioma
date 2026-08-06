@@ -19,3 +19,4 @@ Farmed from Docs.3 Roadmap backlog (originally Docs.2/WORK.yaml evidence).
 | BL-008 | Remove obsolete static prototype | design | BL-007 | Repo cleanup. |
 | BL-009 | Content generation pipeline | implementation | — | Docs.2 evidence until scheduled. |
 | BL-010 | UI system hardening | implementation | — | On demand. |
+| BL-011 | Parallel active phases | design | PHASE-001+ | Lift one-active / one-branch / one-worktree rule; dashboard Active stack + agent routing; process contract change in system.md. |
