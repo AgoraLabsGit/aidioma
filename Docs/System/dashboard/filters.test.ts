@@ -94,7 +94,12 @@ describe("Activity filters", () => {
 });
 
 describe("Issues filters", () => {
-  it("defaults conceptually to open; closed maps to status fixed", () => {
+  it("All shows open+fixed; Closed maps to status fixed", () => {
+    expect(filterIssues(issues, { severity: "", kind: "", status: "", q: "" }).map((i) => i.ref)).toEqual([
+      "FIX-001",
+      "FIX-003",
+      "x.md",
+    ]);
     expect(filterIssues(issues, { severity: "", kind: "", status: "open", q: "" }).map((i) => i.ref)).toEqual([
       "FIX-003",
       "x.md",

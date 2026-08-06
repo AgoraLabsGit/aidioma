@@ -16,7 +16,7 @@ const state = {
   page: "active",
   roadmapFilters: { state: "", type: "", q: "", sort: "state" },
   activityFilters: { actor: "", type: "", phase: "", q: "", sort: "time" },
-  issuesFilters: { severity: "", kind: "", status: "open", q: "", sort: "severity" },
+  issuesFilters: { severity: "", kind: "", status: "", q: "", sort: "severity" },
   knowledgeId: "PRODUCT",
   selectedId: null,
   lastIndexedAt: null,
@@ -967,7 +967,17 @@ function renderIssues(index) {
   });
 
   const kinds = [...new Set(source.map((issue) => issue.kind))].sort();
+  const openCount = source.filter((issue) => issueStatus(issue) === "open").length;
   const closedCount = source.filter((issue) => issueStatus(issue) === "fixed").length;
+  const emptyFiltered = issues.length === 0
+    ? (
+      status === "open" && closedCount > 0
+        ? `No open issues. ${closedCount} closed — choose Closed or All.`
+        : status === "fixed" && openCount > 0
+          ? `No closed issues. ${openCount} open — choose Open or All.`
+          : "No issues match these filters."
+    )
+    : null;
 
   panels.issues.innerHTML = `
     <div class="page-toolbar">
@@ -976,7 +986,7 @@ function renderIssues(index) {
         <div class="chip-group">
           <span class="chip-label">Status</span>
           ${chip("status", "", status, "All")}
-          ${chip("status", "open", status, "Open")}
+          ${chip("status", "open", status, `Open${openCount ? ` (${openCount})` : ""}`)}
           ${chip("status", "fixed", status, `Closed${closedCount ? ` (${closedCount})` : ""}`)}
         </div>
         <div class="chip-group">
@@ -999,7 +1009,10 @@ function renderIssues(index) {
       <table>
         <thead><tr><th>Kind</th><th>Ref</th><th class="wrap">Summary</th><th>Spec</th><th>Age</th><th>Severity</th><th>Status</th></tr></thead>
         <tbody>
-          ${issues.map((issue) => `
+          ${
+            emptyFiltered
+              ? `<tr><td colspan="7">${escapeHtml(emptyFiltered)}</td></tr>`
+              : issues.map((issue) => `
             <tr data-id="${escapeHtml(issue.ref)}" data-status="${escapeHtml(issueStatus(issue))}">
               <td>${escapeHtml(issue.kind)}</td>
               <td class="mono">${escapeHtml(issue.ref)}</td>
@@ -1009,7 +1022,8 @@ function renderIssues(index) {
               <td class="sev-${escapeHtml(issue.severity)}">${escapeHtml(issue.severity)}</td>
               <td>${statusHtml(issueStatus(issue))}</td>
             </tr>
-          `).join("") || `<tr><td colspan="7">No issues match.</td></tr>`}
+          `).join("")
+          }
         </tbody>
       </table>
     </div>

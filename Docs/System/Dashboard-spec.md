@@ -321,7 +321,8 @@ One table, all signals. This page is where `paths` visibly pays off.
 
 Rows from the slow cycle (`drift`, `unspecified`, `dead_spec`) display `paths_scanned_at`.
 
-Default sort: severity, then age. Filters: status (Open default / Closed=fixed / All), kind, severity.
+Default sort: severity, then age. Filters: status (All default / Open / Closed=fixed), kind, severity.
+When Open is selected and every row is closed, show a hint to switch to Closed or All — do not look empty-broken.
 Header issue pill counts **open** high-severity only.
 
 ---
