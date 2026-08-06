@@ -19,8 +19,8 @@ non_goals:
   - Learner-app / product design (PHASE-002+)
   - Promoting Dashboard-spec to SPEC-*
 amends_specs: []
-feature: null
-area: null
+feature: SPEC-F-DEV-DASHBOARD
+area: SPEC-A-DEVSYSTEM
 opened: 2026-08-06
 closed: null
 lessons: null

@@ -10,8 +10,8 @@
   kind: fix
   summary: "Proof checklist showed checkmark-in-circle glyphs and misaligned status dots"
   status: done
-  feature: null
-  area: null
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
   phase: null
   promoted_to: null
   blocked_by: null
@@ -21,8 +21,8 @@
   kind: fix
   summary: "Phase Plan/Inputs list text overlapped inline code (table-style CSS grid on li)"
   status: done
-  feature: null
-  area: null
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
   phase: null
   promoted_to: null
   blocked_by: null
@@ -32,8 +32,8 @@
   kind: fix
   summary: "Roadmap showed only design phases after type rename to build (stale dashboard process)"
   status: done
-  feature: null
-  area: null
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
   phase: null
   promoted_to: null
   blocked_by: null
@@ -43,8 +43,8 @@
   kind: fix
   summary: "Issues page looked empty when all FIX rows were closed (Open filter default)"
   status: done
-  feature: null
-  area: null
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
   phase: null
   promoted_to: null
   blocked_by: null
@@ -56,8 +56,8 @@
   kind: proposal
   summary: "Reviewed word/phrase directory (Lexicon)"
   status: open
-  feature: null
-  area: null
+  feature: SPEC-F-LEXICON
+  area: SPEC-A-CONTENT
   phase: null
   promoted_to: null
   blocked_by: null
@@ -67,8 +67,8 @@
   kind: proposal
   summary: "Server-authoritative Practice evaluation"
   status: open
-  feature: null
-  area: null
+  feature: SPEC-F-PRACTICE
+  area: SPEC-A-LEARNER
   phase: null
   promoted_to: null
   blocked_by: null
@@ -78,8 +78,8 @@
   kind: proposal
   summary: "Practice page composition"
   status: open
-  feature: null
-  area: null
+  feature: SPEC-F-PRACTICE
+  area: SPEC-A-LEARNER
   phase: null
   promoted_to: null
   blocked_by: null
@@ -89,8 +89,8 @@
   kind: proposal
   summary: "Progress and saved material"
   status: open
-  feature: null
-  area: null
+  feature: SPEC-F-PROGRESS
+  area: SPEC-A-LEARNER
   phase: null
   promoted_to: null
   blocked_by: null
@@ -100,8 +100,8 @@
   kind: proposal
   summary: "Target-aware adaptive serving"
   status: open
-  feature: null
-  area: null
+  feature: SPEC-F-LEXICON
+  area: SPEC-A-CONTENT
   phase: null
   promoted_to: null
   blocked_by: W-005
@@ -111,8 +111,8 @@
   kind: proposal
   summary: "Broader practice assistance"
   status: open
-  feature: null
-  area: null
+  feature: SPEC-F-PRACTICE
+  area: SPEC-A-LEARNER
   phase: null
   promoted_to: null
   blocked_by: null
@@ -122,8 +122,8 @@
   kind: proposal
   summary: "Replace static lesson-review surface"
   status: open
-  feature: null
-  area: null
+  feature: SPEC-F-PRACTICE
+  area: SPEC-A-LEARNER
   phase: null
   promoted_to: null
   blocked_by: null
@@ -133,8 +133,8 @@
   kind: proposal
   summary: "Remove obsolete static prototype"
   status: open
-  feature: null
-  area: null
+  feature: SPEC-F-PRACTICE
+  area: SPEC-A-LEARNER
   phase: null
   promoted_to: null
   blocked_by: W-011
@@ -145,7 +145,7 @@
   summary: "Content generation pipeline"
   status: open
   feature: null
-  area: null
+  area: SPEC-A-CONTENT
   phase: null
   promoted_to: null
   blocked_by: null
@@ -155,8 +155,8 @@
   kind: proposal
   summary: "UI system hardening"
   status: open
-  feature: null
-  area: null
+  feature: SPEC-F-PRACTICE
+  area: SPEC-A-LEARNER
   phase: null
   promoted_to: null
   blocked_by: null
@@ -167,7 +167,7 @@
   summary: "Parallel active phases"
   status: open
   feature: null
-  area: null
+  area: SPEC-A-DEVSYSTEM
   phase: null
   promoted_to: null
   blocked_by: null
@@ -177,8 +177,8 @@
   kind: fix
   summary: "Knowledge page cannot load decision bodies (/api/doc resolves DECISIONS only, not D-xxx)"
   status: open
-  feature: null
-  area: null
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -188,8 +188,8 @@
   kind: proposal
   summary: "Wire audit and test infra into phase workflows (Active stubs → real /check and close checks)"
   status: open
-  feature: null
-  area: null
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
   phase: null
   promoted_to: null
   blocked_by: null
@@ -199,8 +199,8 @@
   kind: proposal
   summary: "Kind-prefixed work ids (F-/T-/P-/Q-/R-) instead of single W- namespace"
   status: open
-  feature: null
-  area: null
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
   phase: null
   promoted_to: null
   blocked_by: null
@@ -210,8 +210,8 @@
   kind: proposal
   summary: "Clickable column-header sort on all dashboard tables"
   status: open
-  feature: null
-  area: null
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
   phase: null
   promoted_to: null
   blocked_by: null
@@ -220,9 +220,9 @@
 - id: W-020
   kind: question
   summary: "How to tag Work feature/area before SPEC-F/SPEC-A files exist (provisional tags vs wait for PHASE-002/003)?"
-  status: open
-  feature: null
-  area: null
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -231,9 +231,9 @@
 - id: W-021
   kind: task
   summary: "Assign feature/area on Work rows once tagging rule is decided"
-  status: open
-  feature: null
-  area: null
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
   phase: PHASE-005
   promoted_to: null
   blocked_by: W-020
@@ -243,8 +243,8 @@
   kind: fix
   summary: "Work page: open/active rows sort first by default"
   status: done
-  feature: null
-  area: null
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -254,8 +254,31 @@
   kind: fix
   summary: "Work status chips need distinct colors (open/active/done/promoted/dropped)"
   status: done
-  feature: null
-  area: null
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  opened: 2026-08-06
+
+- id: W-024
+  kind: proposal
+  summary: "Cap summary length (chars/words) so all dashboard table rows stay 1–2 lines"
+  status: open
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  opened: 2026-08-06
+- id: W-025
+  kind: task
+  summary: "Show Age with hours (not days-only) on dashboard tables"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
   phase: PHASE-005
   promoted_to: null
   blocked_by: null

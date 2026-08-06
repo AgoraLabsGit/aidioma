@@ -86,7 +86,18 @@ function formatAge(iso) {
   if (minutes < 60) return `${minutes}m ago`;
   const hours = Math.floor(minutes / 60);
   if (hours < 48) return `${hours}h ago`;
-  return `${Math.floor(hours / 24)}d ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 14) return `${days}d ${hours % 24}h ago`;
+  return `${days}d ago`;
+}
+
+/** Table Age from a date-only field (YYYY-MM-DD) — shows hours when under 48h. */
+function formatOpenedAge(opened) {
+  if (!opened) return "—";
+  if (/^\d{4}-\d{2}-\d{2}$/u.test(opened)) {
+    return formatAge(`${opened}T00:00:00.000Z`);
+  }
+  return formatAge(opened);
 }
 
 function copyText(text) {
@@ -717,7 +728,7 @@ function renderRoadmap(index) {
       <td class="mono wrap">${escapeHtml(phase.area ?? "—")}</td>
       <td>${escapeHtml(phase.proof_kind)}</td>
       <td class="mono wrap">${escapeHtml(specsLabel(phase))}</td>
-      <td title="opened ${escapeHtml(phase.opened ?? "")}">${phase.age_days}d</td>
+      <td title="opened ${escapeHtml(phase.opened ?? "")}">${escapeHtml(formatOpenedAge(phase.opened))}</td>
     </tr>
   `).join("");
 
@@ -1062,7 +1073,7 @@ function renderWork(index) {
               <td class="mono">${escapeHtml(row.feature ?? "—")}</td>
               <td class="mono">${escapeHtml(row.area ?? "—")}</td>
               <td>${statusHtml(row.status)}</td>
-              <td title="${row.age_days == null ? "" : `${row.age_days} day(s)`}">${row.age_days == null ? "—" : `${row.age_days}d`}</td>
+              <td title="${escapeHtml(row.opened ?? "")}">${escapeHtml(formatOpenedAge(row.opened))}</td>
             </tr>
           `).join("")
           }
@@ -1147,7 +1158,13 @@ function renderSignals(index) {
               <td class="mono">${escapeHtml(issue.ref)}</td>
               <td class="wrap"><span class="cell-primary">${escapeHtml(issue.summary)}</span></td>
               <td class="mono">${escapeHtml(issue.spec ?? "—")}</td>
-              <td title="${issue.age_days == null ? "" : `${issue.age_days} day(s)`}">${issue.age_days == null ? "—" : `${issue.age_days}d`}</td>
+              <td title="${issue.age_days == null ? "" : `${issue.age_days} day(s)`}">${
+                issue.age_days == null
+                  ? "—"
+                  : issue.age_days === 0
+                    ? "&lt;24h"
+                    : escapeHtml(`${issue.age_days}d`)
+              }</td>
               <td class="sev-${escapeHtml(issue.severity)}">${escapeHtml(issue.severity)}</td>
               <td>${statusHtml(issueStatus(issue))}</td>
             </tr>
@@ -1210,7 +1227,7 @@ function renderWorkDetail(row) {
     ["Kind", row.kind],
     ["Status", row.status],
     ["Opened", row.opened],
-    ["Age", row.age_days == null ? "—" : `${row.age_days}d`],
+    ["Age", formatOpenedAge(row.opened)],
     ["Feature", row.feature ?? "—"],
     ["Area", row.area ?? "—"],
     ["Phase", row.phase ?? "—"],
@@ -1240,7 +1257,7 @@ function renderSignalDetail(issue) {
     ["Status", issueStatus(issue)],
     ["Severity", issue.severity],
     ["Spec", issue.spec ?? "—"],
-    ["Age", issue.age_days == null ? "—" : `${issue.age_days}d`],
+    ["Age", issue.age_days == null ? "—" : issue.age_days === 0 ? "<24h" : `${issue.age_days}d`],
   ];
   return `
     <div class="phase-card">

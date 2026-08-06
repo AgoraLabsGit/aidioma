@@ -17,3 +17,6 @@
 {"ts":"2026-08-06T16:45:03Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-020","status":"complete","summary":"Logged W-020 question — feature/area before specs exist"}
 {"ts":"2026-08-06T16:45:04Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"W-022","status":"complete","summary":"Fixed W-022 — open-first Work sort"}
 {"ts":"2026-08-06T16:45:05Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"W-023","status":"complete","summary":"Fixed W-023 — Work status chip colors"}
+{"ts":"2026-08-06T16:50:00Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-024","status":"complete","summary":"Logged W-024 proposal — summary length caps for tables"}
+{"ts":"2026-08-06T16:50:01Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-005","ref":"W-025","status":"complete","summary":"Age columns show hours via formatOpenedAge"}
+{"ts":"2026-08-06T16:50:02Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-005","ref":"W-021","status":"complete","summary":"Assigned feature/area tags; D-013 thin SPEC stubs (choice C)"}

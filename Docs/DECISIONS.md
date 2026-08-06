@@ -79,3 +79,10 @@ Date: 2026-08-06 · Phase: PHASE-005 · From: — · Affects: []
 Chose: Single `Docs/WORK.yaml` with kinds fix|task|proposal|research|question over `FIXES.yaml` + `Backlog.md`
 Why: One capture/do-now home; phases remain schedule SSOT; no second Roadmap
 Revisit if: Ledger becomes a competing schedule (add order fields, dual-write phases)
+
+## D-013 — Thin SPEC stubs for Work feature/area tags
+Date: 2026-08-06 · Phase: PHASE-005 · From: W-020 · Affects: [SPEC-A-DEVSYSTEM, SPEC-A-LEARNER, SPEC-A-CONTENT, SPEC-F-DEV-DASHBOARD, SPEC-F-PRACTICE, SPEC-F-LEXICON, SPEC-F-PROGRESS]
+Chose: Create thin SPEC-A/SPEC-F stubs now so Work and phases can tag feature/area (option C)
+Why: Org spine needs real ids; waiting for PHASE-002 left every Work row null
+Revisit if: Stubs drift from approved PRODUCT.md map and need supersede/merge
+Supersedes: Strict reading of “do not create empty areas in anticipation” for tagging-only stubs
