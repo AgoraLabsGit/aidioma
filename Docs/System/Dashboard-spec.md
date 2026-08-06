@@ -379,3 +379,4 @@ Steps 1–4 are independently useful. Step 7 depends on specs having populated `
 - Sort/filter chips on Roadmap, Activity, Issues change the visible rows correctly
 - `PHASE-099` appears only because its phase `.md` exists (never mocked in JS)
 - `Dashboard-spec.md` stays under `Docs/System/` until a later promote-to-`SPEC-*` decision (D-009)
+- Schema/derive module changes require restarting `/dashboard` (file watch re-derives data, not reloaded Zod enums)
