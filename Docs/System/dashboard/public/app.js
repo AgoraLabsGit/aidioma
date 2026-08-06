@@ -340,7 +340,9 @@ function checklistHtml(items) {
 }
 
 function typeLabel(type) {
-  return type === "design" ? "Design / Plan" : "Implementation";
+  if (type === "design") return "Design";
+  if (type === "build") return "Build";
+  return type ?? "—";
 }
 
 function phaseRelatedIssues(index, phaseId) {
@@ -569,7 +571,7 @@ function renderPhaseView(phase, index, { primary = false, compact = false } = {}
         </div>
 
         ${
-          phase.type === "implementation"
+          phase.type === "build"
             ? `<div class="phase-card-section phase-stub">
                 <h3 class="now-label">Tests</h3>
                 <p class="muted">Not projected yet — test runs tied to this phase will land here.</p>
@@ -655,7 +657,7 @@ function renderActive(index) {
 }
 
 function stateRank(value) {
-  return { active: 0, blocked: 1, ready: 2, proposed: 3, closed: 4, abandoned: 5 }[value] ?? 9;
+  return { active: 0, blocked: 1, ready: 2, proposed: 3, closed: 4, canceled: 5 }[value] ?? 9;
 }
 
 function renderRoadmap(index) {
@@ -674,8 +676,15 @@ function renderRoadmap(index) {
   const body = rows.map((phase) => `
     <tr data-id="${escapeHtml(phase.id)}" data-type="${escapeHtml(phase.type)}" data-state="${escapeHtml(phase.state)}" ${state.selectedId === phase.id ? 'data-selected="true"' : ""}>
       <td><code>${escapeHtml(phase.id)}</code></td>
-      <td class="wrap"><span class="cell-primary">${escapeHtml(phase.title)}</span></td>
-      <td class="${phase.type === "design" ? "type-design" : ""}">${escapeHtml(phase.type)}</td>
+      <td class="wrap">
+        <span class="cell-primary">${escapeHtml(phase.title)}</span>
+        ${
+          phase.state === "canceled" && phase.lessons
+            ? `<span class="cell-secondary">Lessons: ${escapeHtml(phase.lessons)}</span>`
+            : ""
+        }
+      </td>
+      <td class="${phase.type === "design" ? "type-design" : ""}">${escapeHtml(typeLabel(phase.type))}</td>
       <td>${statusHtml(phase.state)}</td>
       <td>${escapeHtml(phase.proof_kind)}</td>
       <td class="mono wrap">${escapeHtml(specsLabel(phase))}</td>
@@ -690,13 +699,13 @@ function renderRoadmap(index) {
         <div class="chip-group">
           <span class="chip-label">State</span>
           ${chip("state", "", stateFilter, "All")}
-          ${["active", "ready", "proposed", "blocked", "closed", "abandoned"].map((value) => chip("state", value, stateFilter)).join("")}
+          ${["active", "ready", "proposed", "blocked", "closed", "canceled"].map((value) => chip("state", value, stateFilter)).join("")}
         </div>
         <div class="chip-group">
           <span class="chip-label">Type</span>
           ${chip("type", "", typeFilter, "All")}
-          ${chip("type", "implementation", typeFilter)}
-          ${chip("type", "design", typeFilter)}
+          ${chip("type", "build", typeFilter, "Build")}
+          ${chip("type", "design", typeFilter, "Design")}
         </div>
         ${sortSelect("roadmap-sort", sort, [["state", "State"], ["order", "Order"], ["age", "Age"], ["title", "Title"]])}
       </div>

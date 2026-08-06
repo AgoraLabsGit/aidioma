@@ -1,7 +1,7 @@
 ---
 id: PHASE-004
 title: Dashboard Projection Proof
-type: implementation
+type: build
 proof_kind: terminal
 state: active
 order: 2
@@ -61,7 +61,7 @@ authored files — and that Issues, Activity, time, and filters work end-to-end.
 - [x] Open FIX then fixed still visible under closed filter
 - [x] parse_error appears then clears
 - [x] Time/age accurate on all pages (`formatAge` / `age_days` from source stamps)
-- [x] All sort/filter chips verified (Roadmap state/type/sort; Activity actor/type/phase/sort; Issues status/kind/severity/sort)
+- [x] All sort/filter chips verified (Roadmap state/type/sort; Activity actor/type/phase/sort; Issues status/kind/severity/sort) + `filters.test.ts` contracts; gaps: Activity date-range + per-feature timeline (spec later)
 - [x] Activity Ref vs Phase decided and implemented (merge when identical)
 
 ## Close record

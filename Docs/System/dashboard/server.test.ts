@@ -39,7 +39,7 @@ async function createFixture() {
       `---
 id: PHASE-001
 title: Dashboard
-type: implementation
+type: build
 proof_kind: visual
 state: ready
 order: 1

@@ -60,3 +60,9 @@ Date: 2026-08-05 · Phase: PHASE-004 · From: — · Affects: []
 Chose: Keep `Docs/System/Dashboard-spec.md` over promoting to `SPEC-*` now
 Why: Dev-system surface, not learner product behavior; PHASE-004 non-goal defers promotion
 Revisit if: Learner app or shared packages need to depend on dashboard contracts
+
+## D-010 — Phase vocabulary: build + canceled
+Date: 2026-08-05 · Phase: PHASE-004 · From: — · Affects: []
+Chose: Phase `type: build` (was `implementation`); state `canceled` (was `abandoned`); `/close --cancel`
+Why: Clearer founder-facing labels; same semantics
+Revisit if: External tooling still expects the old enum strings

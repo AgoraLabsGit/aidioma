@@ -90,7 +90,7 @@ Pages render `index.json` and hold no logic.
   "phases": [{
     "id": "PHASE-007",
     "title": "Translation provider integration",
-    "type": "implementation",
+    "type": "build",
     "proof_kind": "visual",
     "state": "active",
     "order": 7,
@@ -216,7 +216,7 @@ Computed by the indexer; never authored.
 | Status | Colored dot **plus** text label — never color alone |
 | Chrome | Sidebar nav + table pages. No charts / analytics widgets in V1 |
 
-Status colors: active/fresh green · blocked/contested amber · abandoned/superseded grey ·
+Status colors: active/fresh green · blocked/contested amber · canceled/superseded grey ·
 failing/drift red.
 
 ---
@@ -233,7 +233,7 @@ one card per `active`/`blocked` phase so parallel phases do not collapse into on
 |---|---|
 | Header | id + title + `outcome` (state/type live in Status only) |
 | Status | Two-column glance (4+4) — left: state, type, owner, opened · right: proof_kind, git, check, issues |
-| Phase card | One card, sections: Context (+ out of scope), Plan, Proof, Dependencies (`depends_on`), Specs amended (`amends_specs`), Inputs (body), Files, Issues, Audits (stub), Tests (stub, implementation only). **Tables vs lists:** authored `\|` markdown → real `.md-table` (key→value maps like Inputs). Numbered Plan / proof checklist → row+divider lists. Out of scope → plain bullets (no table chrome). Never `display:grid`/`flex` on prose `<li>` with mixed inline nodes (breaks `code`). |
+| Phase card | One card, sections: Context (+ out of scope), Plan, Proof, Dependencies (`depends_on`), Specs amended (`amends_specs`), Inputs (body), Files, Issues, Audits (stub), Tests (stub, build only). **Tables vs lists:** authored `\|` markdown → real `.md-table` (key→value maps like Inputs). Numbered Plan / proof checklist → row+divider lists. Out of scope → plain bullets (no table chrome). Never `display:grid`/`flex` on prose `<li>` with mixed inline nodes (breaks `code`). |
 | Handoff | Below the phase stack on Active only — `HANDOFF.md` with `updated_at` |
 
 **Index vs body:** `index.json` is frontmatter-only (D-006). Named body sections load on demand via
@@ -250,11 +250,11 @@ Active UI** (founder removed the command bar / suggested-next box).
 
 | ID | Title | Type | State | Proof kind | Specs | Age |
 
-- Ordered by `order`; grouped by state: active → ready → proposed → closed → abandoned
-- Design phases visually distinct from implementation
-- Abandoned rows show `lessons` inline — the highest-value column
+- Ordered by `order`; grouped by state: active → ready → proposed → closed → canceled
+- Design phases visually distinct from build
+- Canceled rows show `lessons` inline — the highest-value column
 - Blocked rows pinned below active
-- Filters: state, type
+- Filters: state, type (`design` | `build`)
 
 ### Activity
 

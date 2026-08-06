@@ -28,7 +28,7 @@ async function createDocsFixture(options: { malformedPhase?: boolean } = {}) {
   const goodPhase = `---
 id: PHASE-001
 title: Dev System Dashboard
-type: implementation
+type: build
 proof_kind: visual
 state: ready
 order: 1

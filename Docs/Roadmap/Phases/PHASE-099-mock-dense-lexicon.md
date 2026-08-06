@@ -1,7 +1,7 @@
 ---
 id: PHASE-099
 title: "MOCK — Dense Lexicon-style phase (UI fixture)"
-type: implementation
+type: build
 proof_kind: visual
 state: proposed
 order: 99
