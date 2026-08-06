@@ -1,24 +1,25 @@
-# Current handoff — after PHASE-001 close
+# Current handoff — PHASE-004 proof complete on branch
 
 **Date:** 2026-08-05
 
-**Branch:** `main` (phase branch deleted after merge)
-**Worktree:** none for an active phase
+**Branch:** `phase/004-dashboard-projection-proof`
+**Worktree:** `/Users/mike/Documents/Coding/Projects/AIdioma-phase-004`
 
-**Active phase:** none
-**Next:** PHASE-004 — Dashboard Projection Proof (`proposed`)
+**Active phase:** PHASE-004 — Dashboard Projection Proof
+**Next:** Human UI skim optional → `/close`
 
-## Done (PHASE-001)
+## Done
 
-- `derive()` + local dashboard under `Docs/System/`
-- Pages: Active · Roadmap · Activity · Knowledge · Issues
-- Shared Active/Detail phase layout; index frontmatter-only (D-006); body via `/api/doc`
-- Scheduled PHASE-004 + MOCK PHASE-099; Backlog BL-011 (parallel actives)
+- Naming: D-007 Issues≠FIXES rename; D-008 Activity≠path rename; D-009 Dashboard-spec stays in System/
+- derive() projects open + fixed FIX rows (`status` on issues); Closed filter
+- Activity Ref/Phase merge when identical; phase filter chips
+- Roadmap Outcome column; Dashboard-spec §8 projection proof
+- Terminal proof: projection audit, open→fixed FIX, parse_error appear/clear, `work:test` green
 
 ## Not done / next
 
-- Mark PHASE-004 `ready` when Mike approves, then `/run PHASE-004`
-- Projection audit, Issues open+closed, time/sort/filter audit, Activity Ref vs Phase
+- `/close` (merge + clean main) — not `/run`
+- Optional: visual skim of Issues Closed + Activity merge in `/dashboard`
 
 ## Preserve
 
@@ -27,7 +28,5 @@
 ## Next command
 
 ```text
-# Approve scope, then:
-# edit PHASE-004 state: ready
-/run PHASE-004
+/close
 ```

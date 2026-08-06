@@ -104,4 +104,34 @@ describe("derive", () => {
     expect(index.phases.some((phase) => phase.id === "PHASE-001")).toBe(true);
     expect(index.issues.some((issue) => issue.kind === "parse_error")).toBe(true);
   });
+
+  it("projects open and fixed FIX rows on Issues", async () => {
+    const repositoryRoot = await createDocsFixture();
+    await writeFile(
+      path.join(repositoryRoot, "Docs", "FIXES.yaml"),
+      `- id: FIX-001
+  summary: "Open defect"
+  status: open
+  spec: null
+  opened: 2026-08-05
+- id: FIX-002
+  summary: "Closed defect"
+  status: fixed
+  spec: null
+  opened: 2026-08-04
+`,
+    );
+
+    const index = await derive({
+      repositoryRoot,
+      writeIndex: false,
+      now: () => new Date("2026-08-05T12:00:00.000Z"),
+    });
+
+    const openFix = index.issues.find((issue) => issue.ref === "FIX-001");
+    const fixedFix = index.issues.find((issue) => issue.ref === "FIX-002");
+    expect(openFix).toMatchObject({ kind: "fix", status: "open", severity: "high" });
+    expect(fixedFix).toMatchObject({ kind: "fix", status: "fixed", severity: "low" });
+    expect(index.fixes).toHaveLength(2);
+  });
 });

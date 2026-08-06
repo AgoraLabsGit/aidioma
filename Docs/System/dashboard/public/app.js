@@ -1,9 +1,9 @@
 const PAGE_META = {
   active: { title: "Active", subtitle: "Phases in flight" },
   roadmap: { title: "Roadmap", subtitle: "Phases by state and order" },
-  activity: { title: "Activity", subtitle: "Command journal for this month" },
+  activity: { title: "Activity", subtitle: "Command journal (.work/activity)" },
   knowledge: { title: "Knowledge", subtitle: "Specs, decisions, research, releases" },
-  issues: { title: "Issues", subtitle: "Signals that need attention" },
+  issues: { title: "Issues", subtitle: "FIXES.yaml + derived signals" },
 };
 
 const DETAIL_WIDTH_KEY = "aidioma-detail-width";
@@ -15,8 +15,8 @@ const state = {
   index: null,
   page: "active",
   roadmapFilters: { state: "", type: "", q: "", sort: "state" },
-  activityFilters: { actor: "", type: "", q: "", sort: "time" },
-  issuesFilters: { severity: "", kind: "", q: "", sort: "severity" },
+  activityFilters: { actor: "", type: "", phase: "", q: "", sort: "time" },
+  issuesFilters: { severity: "", kind: "", status: "open", q: "", sort: "severity" },
   knowledgeId: "PRODUCT",
   selectedId: null,
   lastIndexedAt: null,
@@ -662,7 +662,7 @@ function renderRoadmap(index) {
   const { state: stateFilter, type: typeFilter, q, sort } = state.roadmapFilters;
   let rows = [...index.phases]
     .filter((phase) => (!stateFilter || phase.state === stateFilter) && (!typeFilter || phase.type === typeFilter))
-    .filter((phase) => matchesQuery(`${phase.id} ${phase.title} ${specsLabel(phase)}`, q));
+    .filter((phase) => matchesQuery(`${phase.id} ${phase.title} ${phase.outcome ?? ""} ${specsLabel(phase)}`, q));
 
   rows.sort((left, right) => {
     if (sort === "order") return left.order - right.order;
@@ -677,9 +677,10 @@ function renderRoadmap(index) {
       <td class="wrap"><span class="cell-primary">${escapeHtml(phase.title)}</span></td>
       <td class="${phase.type === "design" ? "type-design" : ""}">${escapeHtml(phase.type)}</td>
       <td>${statusHtml(phase.state)}</td>
+      <td class="wrap">${escapeHtml(phase.outcome ?? "—")}</td>
       <td>${escapeHtml(phase.proof_kind)}</td>
       <td class="mono wrap">${escapeHtml(specsLabel(phase))}</td>
-      <td>${phase.age_days}d</td>
+      <td title="opened ${escapeHtml(phase.opened ?? "")}">${phase.age_days}d</td>
     </tr>
   `).join("");
 
@@ -701,22 +702,32 @@ function renderRoadmap(index) {
         ${sortSelect("roadmap-sort", sort, [["state", "State"], ["order", "Order"], ["age", "Age"], ["title", "Title"]])}
       </div>
     </div>
-    <p class="table-meta">Showing ${rows.length} of ${index.phases.length} · columns: ID, Title, Type, State, Proof, Specs, Age</p>
+    <p class="table-meta">Showing ${rows.length} of ${index.phases.length} · columns: ID, Title, Type, State, Outcome, Proof, Specs, Age</p>
     <div class="table-frame">
       <table>
         <thead>
           <tr>
-            <th>ID</th><th>Title</th><th>Type</th><th>State</th><th>Proof</th><th>Specs</th><th>Age</th>
+            <th>ID</th><th>Title</th><th>Type</th><th>State</th><th>Outcome</th><th>Proof</th><th>Specs</th><th>Age</th>
           </tr>
         </thead>
-        <tbody>${body || `<tr><td colspan="7">No phases match.</td></tr>`}</tbody>
+        <tbody>${body || `<tr><td colspan="8">No phases match.</td></tr>`}</tbody>
       </table>
     </div>
   `;
 }
 
+function activityRefPhaseCells(event) {
+  const ref = event.ref ?? null;
+  const phase = event.phase ?? null;
+  const same = Boolean(ref && phase && ref === phase);
+  if (same) {
+    return `<td class="mono" colspan="2" title="Ref and Phase are the same">${escapeHtml(ref)}</td>`;
+  }
+  return `<td class="mono">${escapeHtml(ref ?? "—")}</td><td class="mono">${escapeHtml(phase ?? "—")}</td>`;
+}
+
 function renderActivity(index) {
-  const { actor, type, q, sort } = state.activityFilters;
+  const { actor, type, phase, q, sort } = state.activityFilters;
   const source = index.activity.current_month ?? [];
   if (source.length === 0) {
     panels.activity.innerHTML = `<div class="empty">Commands will appear here as they run.</div>`;
@@ -726,6 +737,7 @@ function renderActivity(index) {
   let events = source
     .filter((event) => !actor || event.actor === actor)
     .filter((event) => !type || event.type === type)
+    .filter((event) => !phase || event.phase === phase)
     .filter((event) => matchesQuery(`${event.type} ${event.summary} ${event.ref ?? ""} ${event.phase ?? ""} ${event.cmd ?? ""}`, q));
 
   events = [...events].sort((left, right) => {
@@ -735,6 +747,7 @@ function renderActivity(index) {
   });
 
   const types = [...new Set(source.map((event) => event.type))].sort();
+  const phases = [...new Set(source.map((event) => event.phase).filter(Boolean))].sort();
 
   panels.activity.innerHTML = `
     <div class="page-toolbar">
@@ -751,10 +764,15 @@ function renderActivity(index) {
           ${chip("type", "", type, "All")}
           ${types.map((value) => chip("type", value, type)).join("")}
         </div>
+        <div class="chip-group">
+          <span class="chip-label">Phase</span>
+          ${chip("phase", "", phase, "All")}
+          ${phases.map((value) => chip("phase", value, phase)).join("")}
+        </div>
         ${sortSelect("activity-sort", sort, [["time", "Time"], ["type", "Type"], ["phase", "Phase"]])}
       </div>
     </div>
-    <p class="table-meta">Showing ${events.length} of ${source.length} · columns: Time, Type, Actor, Summary, Ref, Phase, Status</p>
+    <p class="table-meta">Showing ${events.length} of ${source.length} · Ref+Phase merge when identical · source .work/activity</p>
     <div class="table-frame">
       <table>
         <thead><tr><th>Time</th><th>Type</th><th>Actor</th><th class="wrap">Summary</th><th>Ref</th><th>Phase</th><th>Status</th></tr></thead>
@@ -765,8 +783,7 @@ function renderActivity(index) {
               <td>${escapeHtml(event.type)}</td>
               <td>${escapeHtml(event.actor)}</td>
               <td class="wrap"><span class="cell-primary">${escapeHtml(event.summary)}</span></td>
-              <td class="mono">${escapeHtml(event.ref ?? "—")}</td>
-              <td class="mono">${escapeHtml(event.phase ?? "—")}</td>
+              ${activityRefPhaseCells(event)}
               <td>${statusHtml(event.status ?? "complete")}</td>
             </tr>
           `).join("") || `<tr><td colspan="7">No events match.</td></tr>`}
@@ -914,8 +931,12 @@ function renderKnowledge(index) {
   void loadKnowledgeDoc(state.knowledgeId);
 }
 
+function issueStatus(issue) {
+  return issue.status ?? "open";
+}
+
 function renderIssues(index) {
-  const { severity, kind, q, sort } = state.issuesFilters;
+  const { severity, kind, status, q, sort } = state.issuesFilters;
   const source = index.issues ?? [];
   if (source.length === 0) {
     panels.issues.innerHTML = `<div class="empty">No issues. Empty is a valid state.</div>`;
@@ -926,21 +947,30 @@ function renderIssues(index) {
   let issues = source
     .filter((issue) => !severity || issue.severity === severity)
     .filter((issue) => !kind || issue.kind === kind)
-    .filter((issue) => matchesQuery(`${issue.kind} ${issue.ref} ${issue.summary} ${issue.spec ?? ""}`, q));
+    .filter((issue) => !status || issueStatus(issue) === status)
+    .filter((issue) => matchesQuery(`${issue.kind} ${issue.ref} ${issue.summary} ${issue.spec ?? ""} ${issueStatus(issue)}`, q));
 
   issues = [...issues].sort((left, right) => {
     if (sort === "age") return (right.age_days ?? 0) - (left.age_days ?? 0);
     if (sort === "kind") return left.kind.localeCompare(right.kind);
+    if (sort === "status") return issueStatus(left).localeCompare(issueStatus(right)) || (right.age_days ?? 0) - (left.age_days ?? 0);
     return (severityRank[left.severity] ?? 9) - (severityRank[right.severity] ?? 9)
       || (right.age_days ?? 0) - (left.age_days ?? 0);
   });
 
   const kinds = [...new Set(source.map((issue) => issue.kind))].sort();
+  const closedCount = source.filter((issue) => issueStatus(issue) === "fixed").length;
 
   panels.issues.innerHTML = `
     <div class="page-toolbar">
       ${searchInput("issues-q", q, "Search issues…")}
       <div class="filters">
+        <div class="chip-group">
+          <span class="chip-label">Status</span>
+          ${chip("status", "", status, "All")}
+          ${chip("status", "open", status, "Open")}
+          ${chip("status", "fixed", status, `Closed${closedCount ? ` (${closedCount})` : ""}`)}
+        </div>
         <div class="chip-group">
           <span class="chip-label">Severity</span>
           ${chip("severity", "", severity, "All")}
@@ -953,24 +983,25 @@ function renderIssues(index) {
           ${chip("kind", "", kind, "All")}
           ${kinds.map((value) => chip("kind", value, kind)).join("")}
         </div>
-        ${sortSelect("issues-sort", sort, [["severity", "Severity"], ["age", "Age"], ["kind", "Kind"]])}
+        ${sortSelect("issues-sort", sort, [["severity", "Severity"], ["age", "Age"], ["kind", "Kind"], ["status", "Status"]])}
       </div>
     </div>
-    <p class="table-meta">${index.paths_scanned_at ? `Slow cycle ${formatAge(index.paths_scanned_at)} · ` : ""}Showing ${issues.length} of ${source.length} · columns: Kind, Ref, Summary, Spec, Age, Severity</p>
+    <p class="table-meta">${index.paths_scanned_at ? `Slow cycle ${formatAge(index.paths_scanned_at)} · ` : ""}Showing ${issues.length} of ${source.length} · FIXES open+fixed + derived signals</p>
     <div class="table-frame">
       <table>
-        <thead><tr><th>Kind</th><th>Ref</th><th class="wrap">Summary</th><th>Spec</th><th>Age</th><th>Severity</th></tr></thead>
+        <thead><tr><th>Kind</th><th>Ref</th><th class="wrap">Summary</th><th>Spec</th><th>Age</th><th>Severity</th><th>Status</th></tr></thead>
         <tbody>
           ${issues.map((issue) => `
-            <tr data-id="${escapeHtml(issue.ref)}">
+            <tr data-id="${escapeHtml(issue.ref)}" data-status="${escapeHtml(issueStatus(issue))}">
               <td>${escapeHtml(issue.kind)}</td>
               <td class="mono">${escapeHtml(issue.ref)}</td>
               <td class="wrap"><span class="cell-primary">${escapeHtml(issue.summary)}</span></td>
               <td class="mono">${escapeHtml(issue.spec ?? "—")}</td>
-              <td>${issue.age_days ?? "—"}</td>
+              <td title="${issue.age_days == null ? "" : `${issue.age_days} day(s)`}">${issue.age_days == null ? "—" : `${issue.age_days}d`}</td>
               <td class="sev-${escapeHtml(issue.severity)}">${escapeHtml(issue.severity)}</td>
+              <td>${statusHtml(issueStatus(issue))}</td>
             </tr>
-          `).join("") || `<tr><td colspan="6">No issues match.</td></tr>`}
+          `).join("") || `<tr><td colspan="7">No issues match.</td></tr>`}
         </tbody>
       </table>
     </div>
@@ -980,7 +1011,9 @@ function renderIssues(index) {
 function updateChrome(index) {
   state.lastIndexedAt = index.indexed_at;
   indexedAt.textContent = `indexed ${formatAge(index.indexed_at)}`;
-  const high = index.issues.filter((issue) => issue.severity === "high").length;
+  const high = index.issues.filter(
+    (issue) => issueStatus(issue) === "open" && issue.severity === "high",
+  ).length;
   if (high > 0) {
     issuePill.hidden = false;
     issuePill.textContent = `● ${high} issue${high === 1 ? "" : "s"}`;
@@ -1178,10 +1211,14 @@ document.addEventListener("click", (event) => {
     if (["state", "type"].includes(filter) && state.page === "roadmap") {
       state.roadmapFilters = { ...state.roadmapFilters, [filter]: value };
       renderRoadmap(state.index);
-    } else if (filter === "actor" || (filter === "type" && state.page === "activity")) {
+    } else if (
+      filter === "actor"
+      || filter === "phase"
+      || (filter === "type" && state.page === "activity")
+    ) {
       state.activityFilters = { ...state.activityFilters, [filter]: value };
       renderActivity(state.index);
-    } else if (filter === "severity" || filter === "kind") {
+    } else if (filter === "severity" || filter === "kind" || filter === "status") {
       state.issuesFilters = { ...state.issuesFilters, [filter]: value };
       renderIssues(state.index);
     }
