@@ -18,6 +18,8 @@ non_goals:
   - Database-backed lexicon
   - Changing default prompt/composer chrome
 amends_specs: []
+feature: SPEC-F-LEXICON
+area: SPEC-A-CONTENT
 opened: 2026-08-05
 closed: null
 lessons: null

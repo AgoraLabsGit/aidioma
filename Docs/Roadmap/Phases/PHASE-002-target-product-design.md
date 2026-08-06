@@ -17,6 +17,8 @@ non_goals:
   - Product-code changes
   - Lexicon publish
 amends_specs: []
+feature: null
+area: SPEC-A-LEARNER
 opened: 2026-08-05
 closed: null
 lessons: null

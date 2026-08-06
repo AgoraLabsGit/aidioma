@@ -115,6 +115,24 @@ function statusHtml(value) {
   return `<span class="status" data-state="${escapeHtml(value)}">${escapeHtml(value)}</span>`;
 }
 
+/** Display SPEC-F-FOO / SPEC-A-BAR as FOO / BAR in tables. Full id in title. */
+function shortSpecId(id) {
+  if (id == null || id === "") return "—";
+  return String(id).replace(/^SPEC-F-/u, "").replace(/^SPEC-A-/u, "");
+}
+
+function shortSpecCell(id) {
+  if (id == null || id === "") return "—";
+  return `<span class="mono" title="${escapeHtml(id)}">${escapeHtml(shortSpecId(id))}</span>`;
+}
+
+function featureAreaFromSpecId(specId) {
+  if (!specId) return { feature: null, area: null };
+  if (String(specId).startsWith("SPEC-A-")) return { feature: null, area: specId };
+  if (String(specId).startsWith("SPEC-F-")) return { feature: specId, area: null };
+  return { feature: specId, area: null };
+}
+
 function chip(name, value, current, label = value) {
   return `<button type="button" class="chip" data-filter="${name}" data-value="${escapeHtml(value)}" aria-pressed="${current === value}">${escapeHtml(label || "All")}</button>`;
 }
@@ -713,7 +731,8 @@ function renderRoadmap(index) {
 
   const body = rows.map((phase) => `
     <tr data-id="${escapeHtml(phase.id)}" data-type="${escapeHtml(phase.type)}" data-state="${escapeHtml(phase.state)}" ${state.selectedId === phase.id ? 'data-selected="true"' : ""}>
-      <td><code>${escapeHtml(phase.id)}</code></td>
+      <td class="mono">${escapeHtml(phase.id)}</td>
+      <td class="${phase.type === "design" ? "type-design" : ""}">${escapeHtml(typeLabel(phase.type))}</td>
       <td class="wrap">
         <span class="cell-primary">${escapeHtml(phase.title)}</span>
         ${
@@ -722,12 +741,9 @@ function renderRoadmap(index) {
             : ""
         }
       </td>
-      <td class="${phase.type === "design" ? "type-design" : ""}">${escapeHtml(typeLabel(phase.type))}</td>
+      <td>${shortSpecCell(phase.feature)}</td>
+      <td>${shortSpecCell(phase.area)}</td>
       <td>${statusHtml(phase.state)}</td>
-      <td class="mono wrap">${escapeHtml(phase.feature ?? "—")}</td>
-      <td class="mono wrap">${escapeHtml(phase.area ?? "—")}</td>
-      <td>${escapeHtml(phase.proof_kind)}</td>
-      <td class="mono wrap">${escapeHtml(specsLabel(phase))}</td>
       <td title="opened ${escapeHtml(phase.opened ?? "")}">${escapeHtml(formatOpenedAge(phase.opened))}</td>
     </tr>
   `).join("");
@@ -750,15 +766,15 @@ function renderRoadmap(index) {
         ${sortSelect("roadmap-sort", sort, [["state", "State"], ["order", "Order"], ["age", "Age"], ["title", "Title"]])}
       </div>
     </div>
-    <p class="table-meta">Showing ${rows.length} of ${index.phases.length} · Feature/Area are org tags (not amends_specs)</p>
+    <p class="table-meta">Showing ${rows.length} of ${index.phases.length} · columns: ID, Kind, Summary, Feature, Area, Status, Age</p>
     <div class="table-frame">
       <table>
         <thead>
           <tr>
-            <th>ID</th><th>Title</th><th>Type</th><th>State</th><th>Feature</th><th>Area</th><th>Proof</th><th>Amends</th><th>Age</th>
+            <th>ID</th><th>Kind</th><th class="wrap">Summary</th><th>Feature</th><th>Area</th><th>Status</th><th>Age</th>
           </tr>
         </thead>
-        <tbody>${body || `<tr><td colspan="9">No phases match.</td></tr>`}</tbody>
+        <tbody>${body || `<tr><td colspan="7">No phases match.</td></tr>`}</tbody>
       </table>
     </div>
   `;
@@ -820,21 +836,27 @@ function renderActivity(index) {
         ${sortSelect("activity-sort", sort, [["time", "Time"], ["type", "Type"], ["phase", "Phase"]])}
       </div>
     </div>
-    <p class="table-meta">Showing ${events.length} of ${source.length} · Ref+Phase merge when identical · source .work/activity</p>
+    <p class="table-meta">Showing ${events.length} of ${source.length} · columns: ID, Kind, Summary, Feature, Area, Status, Age</p>
     <div class="table-frame">
       <table>
-        <thead><tr><th>Time</th><th>Type</th><th>Actor</th><th class="wrap">Summary</th><th>Ref</th><th>Phase</th><th>Status</th></tr></thead>
+        <thead><tr><th>ID</th><th>Kind</th><th class="wrap">Summary</th><th>Feature</th><th>Area</th><th>Status</th><th>Age</th></tr></thead>
         <tbody>
-          ${events.map((event) => `
+          ${events.map((event) => {
+            const idLabel = event.ref ?? event.phase ?? "—";
+            const phaseNote = event.phase && event.ref && event.phase !== event.ref
+              ? event.phase
+              : null;
+            return `
             <tr>
-              <td class="mono" title="${escapeHtml(event.ts)}">${escapeHtml(formatAge(event.ts))}</td>
+              <td class="mono" title="${escapeHtml([event.ref, event.phase].filter(Boolean).join(" · "))}">${escapeHtml(idLabel)}${phaseNote ? `<span class="cell-secondary">${escapeHtml(phaseNote)}</span>` : ""}</td>
               <td>${escapeHtml(event.type)}</td>
-              <td>${escapeHtml(event.actor)}</td>
-              <td class="wrap"><span class="cell-primary">${escapeHtml(event.summary)}</span></td>
-              ${activityRefPhaseCells(event)}
+              <td class="wrap"><span class="cell-primary">${escapeHtml(event.summary)}</span><span class="cell-secondary">${escapeHtml(event.actor)}</span></td>
+              <td>—</td>
+              <td>—</td>
               <td>${statusHtml(event.status ?? "complete")}</td>
-            </tr>
-          `).join("") || `<tr><td colspan="7">No events match.</td></tr>`}
+              <td class="mono" title="${escapeHtml(event.ts)}">${escapeHtml(formatAge(event.ts))}</td>
+            </tr>`;
+          }).join("") || `<tr><td colspan="7">No events match.</td></tr>`}
         </tbody>
       </table>
     </div>
@@ -854,7 +876,7 @@ function knowledgeItems(index) {
       items: (index.specs ?? []).map((spec) => ({
         id: spec.id,
         title: spec.title,
-        secondary: `${spec.id} · ${spec.status}`,
+        secondary: `${shortSpecId(spec.id)} · ${spec.status}`,
       })),
     },
     {
@@ -1070,8 +1092,8 @@ function renderWork(index) {
               <td class="mono">${escapeHtml(row.id)}</td>
               <td>${escapeHtml(row.kind)}</td>
               <td class="wrap"><span class="cell-primary">${escapeHtml(row.summary)}</span></td>
-              <td class="mono">${escapeHtml(row.feature ?? "—")}</td>
-              <td class="mono">${escapeHtml(row.area ?? "—")}</td>
+              <td>${shortSpecCell(row.feature)}</td>
+              <td>${shortSpecCell(row.area)}</td>
               <td>${statusHtml(row.status)}</td>
               <td title="${escapeHtml(row.opened ?? "")}">${escapeHtml(formatOpenedAge(row.opened))}</td>
             </tr>
@@ -1144,31 +1166,32 @@ function renderSignals(index) {
         ${sortSelect("signals-sort", sort, [["severity", "Severity"], ["age", "Age"], ["kind", "Kind"], ["status", "Status"]])}
       </div>
     </div>
-    <p class="table-meta">${index.paths_scanned_at ? `Slow cycle ${formatAge(index.paths_scanned_at)} · ` : ""}Showing ${issues.length} of ${source.length} · derived health only</p>
+    <p class="table-meta">${index.paths_scanned_at ? `Slow cycle ${formatAge(index.paths_scanned_at)} · ` : ""}Showing ${issues.length} of ${source.length} · columns: ID, Kind, Summary, Feature, Area, Status, Age</p>
     <div class="table-frame">
       <table>
-        <thead><tr><th>Kind</th><th>Ref</th><th class="wrap">Summary</th><th>Spec</th><th>Age</th><th>Severity</th><th>Status</th></tr></thead>
+        <thead><tr><th>ID</th><th>Kind</th><th class="wrap">Summary</th><th>Feature</th><th>Area</th><th>Status</th><th>Age</th></tr></thead>
         <tbody>
           ${
             emptyFiltered
               ? `<tr><td colspan="7">${escapeHtml(emptyFiltered)}</td></tr>`
-              : issues.map((issue) => `
-            <tr data-id="${escapeHtml(issue.ref)}" data-status="${escapeHtml(issueStatus(issue))}">
-              <td>${escapeHtml(issue.kind)}</td>
-              <td class="mono">${escapeHtml(issue.ref)}</td>
-              <td class="wrap"><span class="cell-primary">${escapeHtml(issue.summary)}</span></td>
-              <td class="mono">${escapeHtml(issue.spec ?? "—")}</td>
-              <td title="${issue.age_days == null ? "" : `${issue.age_days} day(s)`}">${
-                issue.age_days == null
+              : issues.map((issue) => {
+                const tags = featureAreaFromSpecId(issue.spec);
+                const ageLabel = issue.age_days == null
                   ? "—"
                   : issue.age_days === 0
-                    ? "&lt;24h"
-                    : escapeHtml(`${issue.age_days}d`)
-              }</td>
-              <td class="sev-${escapeHtml(issue.severity)}">${escapeHtml(issue.severity)}</td>
+                    ? "<24h"
+                    : `${issue.age_days}d`;
+                return `
+            <tr data-id="${escapeHtml(issue.ref)}" data-status="${escapeHtml(issueStatus(issue))}">
+              <td class="mono">${escapeHtml(issue.ref)}</td>
+              <td>${escapeHtml(issue.kind)}</td>
+              <td class="wrap"><span class="cell-primary">${escapeHtml(issue.summary)}</span><span class="cell-secondary sev-${escapeHtml(issue.severity)}">${escapeHtml(issue.severity)}</span></td>
+              <td>${shortSpecCell(tags.feature)}</td>
+              <td>${shortSpecCell(tags.area)}</td>
               <td>${statusHtml(issueStatus(issue))}</td>
-            </tr>
-          `).join("")
+              <td title="${issue.age_days == null ? "" : `${issue.age_days} day(s)`}">${escapeHtml(ageLabel)}</td>
+            </tr>`;
+              }).join("")
           }
         </tbody>
       </table>
@@ -1228,8 +1251,8 @@ function renderWorkDetail(row) {
     ["Status", row.status],
     ["Opened", row.opened],
     ["Age", formatOpenedAge(row.opened)],
-    ["Feature", row.feature ?? "—"],
-    ["Area", row.area ?? "—"],
+    ["Feature", shortSpecId(row.feature)],
+    ["Area", shortSpecId(row.area)],
     ["Phase", row.phase ?? "—"],
     ["Blocked by", row.blocked_by ?? "—"],
     ["Promoted to", row.promoted_to ?? "—"],

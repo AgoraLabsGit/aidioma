@@ -284,3 +284,36 @@
   blocked_by: null
   note: null
   opened: 2026-08-06
+- id: W-026
+  kind: fix
+  summary: "Hide SPEC-F-/SPEC-A- prefixes in dashboard table Feature/Area cells"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  opened: 2026-08-06
+- id: W-027
+  kind: fix
+  summary: "Tag proposed/closed phases with feature/area org fields"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  opened: 2026-08-06
+- id: W-028
+  kind: fix
+  summary: "Standardize table columns to ID, Kind, Summary, Feature, Area, Status, Age"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  opened: 2026-08-06

@@ -15,6 +15,8 @@ non_goals:
   - Target product or component architecture decisions
   - Production or env changes
 amends_specs: []
+feature: SPEC-F-DEV-DASHBOARD
+area: SPEC-A-DEVSYSTEM
 opened: 2026-08-05
 closed: 2026-08-05
 lessons: null

@@ -17,6 +17,8 @@ non_goals:
   - Scheduling implementation before Mike approves order
   - A living Architecture/ folder or architecture bible
 amends_specs: []
+feature: null
+area: SPEC-A-LEARNER
 opened: 2026-08-05
 closed: null
 lessons: null

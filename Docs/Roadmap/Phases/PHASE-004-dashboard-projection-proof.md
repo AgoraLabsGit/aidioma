@@ -17,6 +17,8 @@ non_goals:
   - Promoting Dashboard-spec to SPEC-* (optional later)
   - Parallel active phases (BL-011)
 amends_specs: []
+feature: SPEC-F-DEV-DASHBOARD
+area: SPEC-A-DEVSYSTEM
 opened: 2026-08-05
 closed: 2026-08-05
 lessons: null
