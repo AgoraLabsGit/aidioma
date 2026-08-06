@@ -662,7 +662,7 @@ function renderRoadmap(index) {
   const { state: stateFilter, type: typeFilter, q, sort } = state.roadmapFilters;
   let rows = [...index.phases]
     .filter((phase) => (!stateFilter || phase.state === stateFilter) && (!typeFilter || phase.type === typeFilter))
-    .filter((phase) => matchesQuery(`${phase.id} ${phase.title} ${phase.outcome ?? ""} ${specsLabel(phase)}`, q));
+    .filter((phase) => matchesQuery(`${phase.id} ${phase.title} ${specsLabel(phase)}`, q));
 
   rows.sort((left, right) => {
     if (sort === "order") return left.order - right.order;
@@ -677,7 +677,6 @@ function renderRoadmap(index) {
       <td class="wrap"><span class="cell-primary">${escapeHtml(phase.title)}</span></td>
       <td class="${phase.type === "design" ? "type-design" : ""}">${escapeHtml(phase.type)}</td>
       <td>${statusHtml(phase.state)}</td>
-      <td class="wrap">${escapeHtml(phase.outcome ?? "—")}</td>
       <td>${escapeHtml(phase.proof_kind)}</td>
       <td class="mono wrap">${escapeHtml(specsLabel(phase))}</td>
       <td title="opened ${escapeHtml(phase.opened ?? "")}">${phase.age_days}d</td>
@@ -702,15 +701,15 @@ function renderRoadmap(index) {
         ${sortSelect("roadmap-sort", sort, [["state", "State"], ["order", "Order"], ["age", "Age"], ["title", "Title"]])}
       </div>
     </div>
-    <p class="table-meta">Showing ${rows.length} of ${index.phases.length} · columns: ID, Title, Type, State, Outcome, Proof, Specs, Age</p>
+    <p class="table-meta">Showing ${rows.length} of ${index.phases.length} · columns: ID, Title, Type, State, Proof, Specs, Age</p>
     <div class="table-frame">
       <table>
         <thead>
           <tr>
-            <th>ID</th><th>Title</th><th>Type</th><th>State</th><th>Outcome</th><th>Proof</th><th>Specs</th><th>Age</th>
+            <th>ID</th><th>Title</th><th>Type</th><th>State</th><th>Proof</th><th>Specs</th><th>Age</th>
           </tr>
         </thead>
-        <tbody>${body || `<tr><td colspan="8">No phases match.</td></tr>`}</tbody>
+        <tbody>${body || `<tr><td colspan="7">No phases match.</td></tr>`}</tbody>
       </table>
     </div>
   `;

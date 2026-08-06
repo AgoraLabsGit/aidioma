@@ -248,7 +248,7 @@ Active UI** (founder removed the command bar / suggested-next box).
 
 ### Roadmap
 
-| ID | Title | Type | State | Outcome | Proof kind | Specs | Age |
+| ID | Title | Type | State | Proof kind | Specs | Age |
 
 - Ordered by `order`; grouped by state: active → ready → proposed → closed → abandoned
 - Design phases visually distinct from implementation
