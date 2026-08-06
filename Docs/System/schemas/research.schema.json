@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "research.schema.json",
+  "title": "Research",
+  "type": "object",
+  "required": ["id", "question", "verdict", "status", "informed", "affects", "date"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^R-[0-9]{3}$" },
+    "question": { "type": "string", "minLength": 1 },
+    "verdict": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["fresh", "stale", "superseded"] },
+    "informed": { "type": "array", "items": { "type": "string", "pattern": "^D-[0-9]{3}$" } },
+    "affects": { "type": "array", "items": { "type": "string", "pattern": "^SPEC-[FA]-[A-Z0-9-]+$" } },
+    "phase": { "type": ["string", "null"], "pattern": "^PHASE-[0-9]{3}$" },
+    "date": { "type": "string", "format": "date" }
+  }
+}

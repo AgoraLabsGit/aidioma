@@ -1,42 +1,56 @@
 ---
-schema_version: 1
+schema_version: 3
+generated_from: System/system.md
 updated: 2026-08-05
 ---
 
-# Development System V2 — commands
+# Commands
 
-Authoritative command list for agents and the dashboard command key. Process details live in
-`development-system-v2.md`.
+Command key for agents and the dashboard. Process detail lives in `System/system.md`.
+
+**Staging:** hand-edited until the `/system` generator ships, then locked as a build artifact.
+
+## Lifecycle — mutates phase state, touches git, gated
 
 | Cmd | When | Does | Must not |
 |---|---|---|---|
-| `/plan` | New work not on Roadmap | Draft phase spec; add to Roadmap as `proposed`/`ready` | Product code; old multi-doc design ritual |
-| `/run` | Start/resume the one `active` phase | Execute the whole phase outcome; may commit on phase branch | Merge to `main` |
-| `/fix` | Bounded defect | Reproduce → patch → prove | Stretch into new product design |
-| `/status` | Anytime | Read-only Roadmap/phase/Git/runtime + next command | Change files |
-| `/handoff` | Mid-phase session end | Overwrite `Docs/Handoffs/HANDOFF.md` | Commit / PR / merge |
-| `/close` | Phase complete | Audits → commit/PR/merge → clean `main`; stop stale servers | Prod data/config; silent scope expansion |
-| `/launch` | View learner app | Stop stale app servers; `npm run app:dev` | Deploy / prod |
-| `/dashboard` | View work dashboard | Stop stale dashboard servers; `npm run work:dashboard` | Run in production |
-| `/system` | Evolve the dev system | Onboard/revise commands, System files/folders, process best practices | Product code; silent sprawl; skip founder wording review |
-| `/feat` | — | **Removed** → use `/run` | — |
+| `/plan` | New work not on the Roadmap | Create a phase file; name the complexity cost; cut/defer is a valid outcome | Write product code; build unconsumed foundations |
+| `/run` | Start or resume the one active phase | Execute the phase outcome; commit on the phase branch | Merge; expand scope horizontally; continue past a broken contract |
+| `/close` | Phase complete | Three checks → commit/PR → merge exact head → clean `main`; stop phase-owned servers | Merge on FAIL; expand scope silently; delete anything in `PRESERVE.md` |
+| `/ship` | Promote to production | Deploy production; append to `RELEASES.md` | Ship on a red check, an open FAIL, or a contested spec |
 
-## Cursor skills
+`/close --abandon` records `lessons:`, deletes the branch, no merge.
+`/close --dry-run` runs the three checks, changes nothing, writes findings to `FIXES.yaml` and `Backlog.md`.
 
-Helpers only (advise; do not replace commands). See `development-system-v2.md`: `/close` may use
-review-bugbot / review-security / code-review; `/run` may use code-review (and split-to-prs with
-Mike’s OK).
+## Action — one unit of work, one artifact, no phase advance
 
-## Legacy docs (`Docs.2/`)
+| Cmd | Produces | Fires when | Must not |
+|---|---|---|---|
+| `/research` | `Research/R-*.md` + optional decision | A choice between ≥2 external options blocks progress | Commit code; end without a verdict |
+| `/design` | Decisions and/or a spec | Behavior is undefined, or ≥3 decisions are open | Change app behavior; decide more than three things at once |
+| `/fix` | Patch + proof + `FIXES.yaml` entry | Defect is bounded and needs no design | Stretch into design work — that goes to `Backlog.md` |
 
-Do not preload. After outcome/non-goals are set, a bounded sub-agent may farm relevant slices as
-keep/defer/reject evidence only.
+## Utility — safe anytime, cannot damage state
 
-## Git rule
+| Cmd | Does | Must not |
+|---|---|---|
+| `/status` | Print a brief: active phase, git, runtime, suggested next command; refresh `context.json` | Change any authored file |
+| `/check` | Run tests and lint | Fix what it finds |
+| `/launch` | Stop stale app servers, start the app | Touch production |
+| `/dashboard` | Stop stale dashboard servers, start the dashboard | Run in production |
+| `/handoff` | Overwrite `Handoffs/HANDOFF.md` | Commit, PR, or merge |
 
-`/run` may commit on the phase branch. Only `/close` merges to `origin/main`.
+`/status --repair` reconciles phase state against git and cleans orphans.
 
-## Runtime hygiene
+## Meta
 
-`/launch` and `/dashboard` clear their own stale servers before start. `/close` verifies phase-owned
-servers are stopped.
+| Cmd | Does | Must not |
+|---|---|---|
+| `/system` | Edit the framework: `System/` files, templates, schemas, command definitions | Run while a phase is active; write outside `System/`; touch product code |
+
+## Rules
+
+- **Audited main** — nothing merges without the three close checks. `/close` runs them for a phase; a standalone `/fix` runs them in reduced form.
+- **One active phase** — one branch, one worktree.
+- **Implementation work never happens without a phase.**
+- Utility commands are cheap to add. Lifecycle commands are not. New verbs default to utility.

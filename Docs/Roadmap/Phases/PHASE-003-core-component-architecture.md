@@ -1,74 +1,56 @@
 ---
-schema_version: 1
 id: PHASE-003
 title: Core Component Architecture
-phase_type: design
-subtype: architecture
-status: proposed
+type: design
+proof_kind: spec
+state: proposed
+order: 4
 depends_on:
   - PHASE-002
-founder_approval: required
-updated: 2026-08-05
+from_backlog: null
+owner: founder
+outcome: "Mike approves the minimum logical component/area set required by the Phase 002 product map."
+proof: "Approved thin area/feature boundary records (Specs/ and/or DECISIONS) with coverage and first implementation order."
+non_goals:
+  - Detailed component PRDs
+  - Implementation / product code
+  - Scheduling implementation before Mike approves order
+  - A living Architecture/ folder or architecture bible
+amends_specs: []
+opened: 2026-08-05
+closed: null
+lessons: null
 ---
 
 # PHASE-003 — Core Component Architecture
 
-## Outcome
-
-Derive and approve the minimum logical component set required by the Phase 002 target product.
-
-## Why now
+## Context
 
 Boundaries follow an approved product map, not a feature inventory or frozen architecture draft.
 
 ## Inputs
 
-- Approved `Docs/PRODUCT.md` from Phase 002
+- Approved `Docs/PRODUCT.md` from PHASE-002
 - Executable app behavior
 - Frozen `Docs.2/ARCHITECTURE.md` as evidence only
 
-## In scope
+## Plan
 
-- Component responsibilities, ownership, boundaries, AI use, failure, consumers, first proof
-- Keep / merge / split / rename / remove
-- Feature-to-component coverage
-- Recommended order for later implementation phases
+One boundary at a time; ≤3 decisions per checkpoint. Keep / merge / split / rename / remove.
+Deliverables live in Specs (Features/Areas) and DECISIONS — not a parallel Architecture root.
 
-## Out of scope
+**Complexity cost:** minimum set with a real consumer each. No unconsumed foundations.
 
-- Detailed component PRDs
-- Implementation / product code
-- Scheduling implementation before Mike approves order
+## Proof
 
-## Founder checkpoints
+- [ ] Every unit has distinct value and one authority
+- [ ] Every target capability covered; no unit without a consumer
+- [ ] Mike approves the minimal set and first implementation order
 
-One boundary at a time; ≤3 decisions per checkpoint; show charters before writing.
+## Close record
 
-## Strategic review
+Filled at `/close`.
 
-Bounded boundary questions only; no delegated whole-architecture design.
+## Kickoff
 
-## Deliverables
-
-- Concise `Docs/COMPONENTS.md` (or equivalent thin charter file—not an architecture bible)
-- Coverage map + first implementation order
-
-## Proof and exit criteria
-
-- Every component has distinct value and one authority
-- Every target feature covered; no component without a consumer
-- Mike approves the minimal set and first implementation order
-
-## Close audits
-
-Design close: Steward + Publish + Decision Auditor + MCOO.
-
-## Decisions
-
-| ID | Decision | Date |
-|---|---|---|
-| D-001 | Scheduled after Target Product Design | 2026-08-05 |
-
-## Fresh-session kickoff
-
-Do not start before Phase 002 completes.
+Do not start before PHASE-002 completes.

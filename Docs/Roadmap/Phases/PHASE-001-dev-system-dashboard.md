@@ -1,92 +1,88 @@
 ---
-schema_version: 1
 id: PHASE-001
 title: Dev System Dashboard
-phase_type: implementation
-subtype: process
-status: ready
+type: implementation
+proof_kind: visual
+state: closed
+order: 1
 depends_on:
   - PHASE-000
-founder_approval: approved
-updated: 2026-08-05
+from_backlog: null
+owner: founder
+outcome: "Mike can see phases, activity, knowledge, and issues in a local dashboard without parsing Docs by hand."
+proof: "Running /dashboard against live Docs/ showing Active + Roadmap at minimum; acceptance checks in Dashboard-spec."
+non_goals:
+  - Target product decisions
+  - Component architecture
+  - Lexicon product publish
+  - Production hosting of the dashboard
+  - Two-way command execution from the UI
+  - Renaming phase body headings / schema redesign before real data exists
+amends_specs: []
+opened: 2026-08-05
+closed: 2026-08-05
+lessons: null
 ---
 
 # PHASE-001 — Dev System Dashboard
 
-## Outcome
+## Context
 
-Mike can see Roadmap phases, backlog, fixes, command key, and active-phase status in a local web UI
-without parsing markdown/YAML by hand—by adapting `tooling/work-dashboard` and `tooling/work-registry`
-to Development System V2.
+After Docs.2 sprawl, V3 installed the process contract (`system.md`) but the founder still
+could not answer “what am I doing?” without opening many markdown files. That disconnection is
+the failure mode this phase closes: a local read-only projection of live `Docs/` + `.work/`.
 
-## Why now
-
-Disconnection from hard-to-read or ballooning docs was a founder failure mode. The process is
-approved; the readable control surface is the next proof that the system is usable.
+PHASE-000 closed the process. This phase proves the process is usable. Schema/UI renaming waits
+until phases and at least one real spec with `paths` exist — optimize against real data, not stubs.
 
 ## Inputs
 
-- `Docs/System/development-system-v2.md`
-- `Docs/Roadmap/**`
-- Existing `tooling/work-dashboard` and `tooling/work-registry` (currently WORK.yaml-oriented)
-- Frozen `Docs.2/` as migration evidence only
+| Input | Notes |
+| --- | --- |
+| Decisions | D-004 (V3 approved), D-005 (dashboard before product design), D-006 (index vs body) |
+| Specs | none yet — `amends_specs` stays empty until a dashboard/system surface earns a SPEC |
+| Docs | `Docs/System/system.md`, `Dashboard-spec.md`, `COMMANDS.md`, schemas, templates |
+| Code | `Docs/System/dashboard`, `Docs/System/derive` |
+| Frozen | `Docs.2/` only as evidence after outcome/non-goals were set (not preloaded) |
 
-## In scope
+## Plan
 
-- Registry/parser/validation for Roadmap + phase specs + backlog (+ fixes when present)
-- Dashboard UI: phase schedule, active phase, backlog, command key/legend, validation issues
-- `/dashboard` launch path and stale-server hygiene alignment
-- Keep the dashboard local-only (loopback), not part of the learner app
+1. Shared `derive()` over phase/spec/fix/research frontmatter → `.work/index.json`
+2. Local dashboard server: watch Docs, SSE refresh, `/api/doc` for on-demand bodies
+3. Shell: sidebar pages Active · Roadmap · Activity · Knowledge · Issues
+4. Active + Roadmap detail: one shared phase layout (status, body sections, dependencies, files)
+5. Issues from `FIXES.yaml` + broken links / parse errors; slow path signals when specs have `paths`
+6. Densify this phase file; correct “dashboard reads frontmatter only” overclaim in `system.md`
+7. Visual proof via `/dashboard`; then `/close` (no schema rename in this close)
 
-## Out of scope
+**Complexity cost:** local projection UI + parsers. No learner-app coupling. No DB. No command
+execution from the UI.
 
-- Target product decisions
-- Component architecture
-- Lexicon product changes or publishing the Lexicon branch
-- Production hosting of the dashboard
+## Proof
 
-## Founder checkpoints
+What closes the phase: founder can operate from the dashboard for morning orientation.
 
-- ≤3 UI/information-architecture decisions per checkpoint
-- Show proposed dashboard information architecture before large UI rewrites
+- [x] `/dashboard` launches; stale servers cleared
+- [x] Active shows live phase frontmatter (next_command stays in index for agents; not shown in UI)
+- [x] Roadmap lists phases ordered by `order`
+- [x] Malformed frontmatter → `parse_error`, UI still renders
+- [x] Learner app unchanged (except unrelated preserved work)
+- [x] Detail pane loads phase body via `/api/doc` without embedding bodies in `index.json`
+- [x] Active/Detail shared layout readable against this densified phase (founder visual OK via `/close`)
+- [x] `system.md` states: index = frontmatter; UI may render named body sections on demand
 
-## Strategic review
+## Close record
 
-Bounded sub-agents for schema/validation and UI clarity only after founder direction.
+- Result: PASS (Scope WARN: `Docs/System/dashboard/**` + `derive/**` unmatched by any SPEC `paths` — intentional; no product SPEC yet; System `Dashboard-spec.md` remains the design contract)
+- Specs amended: none (`amends_specs: []`)
+- Journal line: Local derive()+dashboard under Docs/System; Active/Roadmap/Activity/Knowledge/Issues project live Docs; founder closed on visual proof.
 
-## Deliverables
-
-- Updated work-registry schemas/loaders for V2 docs
-- Dashboard showing Roadmap truth + command key
-- `npm run work:dashboard` / `/dashboard` working against `Docs/`
-- Validation command green for the V2 root
-
-## Proof and exit criteria
-
-- Mike can open the dashboard and see active/next phase, backlog, and commands without opening raw files
-- Validation fails closed on invalid Roadmap/phase metadata
-- Stale dashboard servers are cleared by `/dashboard` and `/close` hygiene
-- Learner app unchanged except unrelated preserved work
-- `/close` → clean `origin/main` for this phase scope only
-
-## Close audits
-
-Always: Close Steward (incl. MCOO), Evidence, Publish Guardian.  
-Conditional: Learner-Surface if any shared UI patterns; Contract/Seams for registry schema changes.
-
-## Decisions
-
-| ID | Decision | Date |
-|---|---|---|
-| D-001 | Dashboard is the next phase after Dev System V2 approval | 2026-08-05 |
-
-## Fresh-session kickoff
+## Kickoff
 
 ```text
-Start PHASE-001 — Dev System Dashboard with /run.
+/run PHASE-001
 
-Read Docs/System/development-system-v2.md, Docs/Roadmap/Roadmap.md, and this phase spec.
-Preserve the dirty Lexicon worktree; do not publish or expand Lexicon.
-Adapt tooling/work-registry and tooling/work-dashboard to Roadmap/phases/backlog/command key.
-Prove with npm run work:dashboard and validation. Use /dashboard to launch; clear stale servers.
+Read .work/context.json if present, else Docs/System/system.md, Docs/System/Dashboard-spec.md,
+and this phase. Work only in .worktrees/phase-001. Densify real phase content before schema
+renames. Prove with /dashboard. Preserve lexicon stash (PRESERVE.md). Clear stale servers.
 ```

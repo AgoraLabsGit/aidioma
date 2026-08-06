@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <title>AIdioma</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <aside class="sidebar" aria-label="Primary">
+      <div class="sidebar-brand">
+        <span class="brand-mark" aria-hidden="true">A</span>
+        <strong class="brand">AIdioma</strong>
+      </div>
+      <nav class="tabs" aria-label="Dashboard pages">
+        <button type="button" class="tab" data-page="active" aria-current="page">
+          <span class="tab-icon" aria-hidden="true">◉</span>
+          Active
+        </button>
+        <button type="button" class="tab" data-page="roadmap">
+          <span class="tab-icon" aria-hidden="true">▦</span>
+          Roadmap
+        </button>
+        <button type="button" class="tab" data-page="activity">
+          <span class="tab-icon" aria-hidden="true">☰</span>
+          Activity
+        </button>
+        <button type="button" class="tab" data-page="knowledge">
+          <span class="tab-icon" aria-hidden="true">▣</span>
+          Knowledge
+        </button>
+        <button type="button" class="tab" data-page="issues">
+          <span class="tab-icon" aria-hidden="true">⚠</span>
+          Issues
+        </button>
+      </nav>
+      <div class="sidebar-foot">
+        <span id="issue-pill" class="issue-pill" hidden>● 0 issues</span>
+        <button
+          id="theme-toggle"
+          type="button"
+          class="theme-btn"
+          title="Toggle light and dark theme"
+          aria-label="Toggle light and dark theme"
+          aria-pressed="false"
+        >
+          ◐ Theme
+        </button>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div class="topbar-left">
+          <h1 id="page-title">Active</h1>
+          <p id="page-subtitle" class="page-subtitle">Phases in flight</p>
+        </div>
+        <div class="topbar-right">
+          <div class="heartbeat">
+            <span id="indexed-at">indexed —</span>
+          </div>
+          <button id="reindex" type="button" class="reindex-btn" title="Reindex" aria-label="Reindex now">
+            <span aria-hidden="true">⟳</span>
+            Refresh
+          </button>
+        </div>
+      </header>
+
+      <main id="main">
+        <section id="page-active" class="page" data-page-panel="active"></section>
+        <section id="page-roadmap" class="page" data-page-panel="roadmap" hidden></section>
+        <section id="page-activity" class="page" data-page-panel="activity" hidden></section>
+        <section id="page-knowledge" class="page page-knowledge" data-page-panel="knowledge" hidden></section>
+        <section id="page-issues" class="page" data-page-panel="issues" hidden></section>
+      </main>
+    </div>
+
+    <aside id="detail" class="detail" hidden>
+      <div class="detail-resize" data-resize="detail" title="Drag to resize"></div>
+      <div class="detail-header">
+        <h2 id="detail-title">Detail</h2>
+        <div class="detail-actions">
+          <button id="detail-collapse" type="button" class="icon-btn" title="Collapse panel">⟩</button>
+          <button id="detail-close" type="button" class="icon-btn">Close</button>
+        </div>
+      </div>
+      <p id="detail-meta" class="doc-path"></p>
+      <div id="detail-frontmatter" class="doc-meta-slot" hidden></div>
+      <article id="detail-body" class="doc-body prose"></article>
+    </aside>
+
+    <noscript>This dashboard requires JavaScript.</noscript>
+  </body>
+</html>

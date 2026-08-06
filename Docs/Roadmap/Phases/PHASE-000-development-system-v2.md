@@ -1,70 +1,56 @@
 ---
-schema_version: 1
 id: PHASE-000
 title: Development System V2
-phase_type: design
-subtype: process
-status: closed
+type: design
+proof_kind: spec
+state: closed
+order: 0
 depends_on: []
-founder_approval: approved
-updated: 2026-08-05
+from_backlog: null
+owner: founder
+outcome: "Phase-based Development System V2 installed: Roadmap, commands, audits, handoffs, MCOO, Docs.2 frozen."
+proof: "Approved V2 process docs, COMMANDS, templates, agent memory, and clean main after process-only close."
+non_goals:
+  - Lexicon product publish
+  - Target product or component architecture decisions
+  - Production or env changes
+amends_specs: []
+opened: 2026-08-05
+closed: 2026-08-05
+lessons: null
 ---
 
 # PHASE-000 — Development System V2
 
-## Outcome
+## Context
 
-Design and install a phase-based Development System V2: Roadmap SSOT, commands, audits, handoffs,
-MCOO, migration from frozen `Docs.2/`, and Phase 001 (Dev System Dashboard) readiness.
+Needed a single living process after Docs.2 sprawl. Designed and published V2 (PR #13+), then
+superseded by V3 (`Docs/System/system.md`).
 
-## Status
+## Inputs
 
-Closed on 2026-08-05. Founder approved and authorized process-only publish. Lexicon product work was
-explicitly excluded from this close and remains preserved on a dirty follow-up branch.
+- Frozen `Docs.2/` as migration evidence
+- Prior rhythm / WORK.yaml lessons
 
-## Deliverables
+## Plan
 
-- [x] `Docs/System/development-system-v2.md`
-- [x] Phase template at `Docs/System/Templates/phase-spec.md`
-- [x] `Docs/System/COMMANDS.md`
-- [x] Roadmap + Backlog + reordered phases (Dashboard → Product → Components)
-- [x] `Docs/Handoffs/HANDOFF.md` + `Docs/INDEX.md`
-- [x] `AGENTS.md` + command skills + AIdioma development skill aligned to V2
-- [x] Process-only `/close` with design audits + Docs.2 registry fallback for legacy validate
+Process-only design: install Roadmap SSOT, command surface, close audits, freeze Docs.2.
 
-## Decisions
+**Complexity cost:** new process docs and agent memory only — no learner product surface.
 
-| ID | Decision | Date |
-|---|---|---|
-| D-001 | Phase = bounded testable outcome (not only software components) | 2026-08-05 |
-| D-002 | Types: design \| implementation; subtypes optional | 2026-08-05 |
-| D-003 | Roadmap.md is schedule SSOT; WORK.yaml deprecated as living registry | 2026-08-05 |
-| D-004 | Commands: /plan /run /fix /status /handoff /close /launch /dashboard; /feat removed | 2026-08-05 |
-| D-005 | /run may commit on phase branch; only /close merges to main | 2026-08-05 |
-| D-006 | /handoff updates Docs/Handoffs/HANDOFF.md; no commit | 2026-08-05 |
-| D-007 | One active phase; one branch; one worktree | 2026-08-05 |
-| D-008 | Close audits: 3 always + ≤2 conditional; MCOO required | 2026-08-05 |
-| D-009 | Docs/ living; Docs.2/ frozen evidence; thin Backlog index | 2026-08-05 |
-| D-010 | Next phase = Dev System Dashboard; then Target Product; then Components | 2026-08-05 |
-| D-011 | /launch and /dashboard clear stale servers; /close includes server hygiene | 2026-08-05 |
+## Proof
 
-## Out of scope (still)
+- [x] V2 system spec + templates + COMMANDS
+- [x] Roadmap + Backlog + phases
+- [x] Agent memory aligned
+- [x] Process-only `/close` → clean `main` (Lexicon preserved)
 
-- Lexicon product publish/merge
-- Target product or component architecture decisions
-- Production/env changes
+## Close record
 
-## Proof and exit criteria
+- Result: PASS
+- Specs amended: none (process-only)
+- Journal line: V2 shipped; Lexicon left on stash; next was dashboard.
 
-- System spec + templates + agent memory installed
-- Phase 001 marked `ready` with kickoff
-- Mike runs `/close` for process-only scope → clean main (Lexicon preserved or explicitly handled)
-- No learner product behavior changes in this phase’s close diff
+## Kickoff
 
-## Fresh-session kickoff (until closed)
-
-```text
-Continue PHASE-000. V2 is approved and written under Docs/.
-Read Docs/System/development-system-v2.md, Roadmap.md, and Handoffs/HANDOFF.md.
-Preserve Lexicon dirty work. Next: /close for process-only publish, or /run PHASE-001 after close.
-```
+Closed. Historical only.

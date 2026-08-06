@@ -26,13 +26,14 @@
     "prototype:export": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts",
     "prototype:check": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts --check",
     "practice:candidates": "npm run practice:candidates --workspace @aidioma/web --",
-    "work:validate": "tsx tooling/work-registry/validate.ts",
-    "work:typecheck": "tsc -p tooling/work-registry/tsconfig.json",
-    "work:test": "vitest run tooling/work-registry tooling/work-dashboard",
-    "work:dashboard": "tsx tooling/work-dashboard/server.ts"
+    "work:validate": "tsx Docs/System/derive/validate.ts",
+    "work:typecheck": "tsc -p Docs/System/derive/tsconfig.json",
+    "work:test": "vitest run Docs/System/derive Docs/System/dashboard",
+    "work:dashboard": "tsx Docs/System/dashboard/server.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",
+    "chokidar": "^4.0.3",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
     "vitest": "4.1.10",

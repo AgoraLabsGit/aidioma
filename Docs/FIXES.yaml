@@ -1,0 +1,13 @@
+# Open and recently closed defects. Validated against System/schemas/fixes.schema.json.
+# Log the symptom, not the diagnosis.
+# If it needs design work, move it to Roadmap/Backlog.md and delete the entry.
+- id: FIX-001
+  summary: "Proof checklist showed checkmark-in-circle glyphs and misaligned status dots"
+  status: fixed
+  spec: null
+  opened: 2026-08-05
+- id: FIX-002
+  summary: "Phase Plan/Inputs list text overlapped inline code (table-style CSS grid on li)"
+  status: fixed
+  spec: null
+  opened: 2026-08-05
