@@ -129,3 +129,4 @@
 {"ts": "2026-08-07T17:56:55Z", "type": "task", "cmd": "/task", "summary": "T-018 \u2014 /design activity active flush at start", "ref": "T-018", "phase": null, "status": "active", "actor": "agent"}
 {"ts": "2026-08-07T17:57:12Z", "type": "task", "cmd": "/task", "summary": "T-018 \u2014 /design activity active flush at start", "ref": "T-018", "phase": null, "status": "complete", "actor": "agent"}
 {"ts":"2026-08-07T17:57:59Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":null,"status":"complete","summary":"lanes: work — typecheck+test+validate for reduced /close"}
+{"ts":"2026-08-07T17:59:41Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-27","status":"complete","summary":"Reduced close: merged PR #27 (dashboard UX session); CI green; docs/ssot @ 7dfedc5"}
