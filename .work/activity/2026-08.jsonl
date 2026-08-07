@@ -70,3 +70,5 @@
 {"ts":"2026-08-07T16:05:00Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-002","status":"complete","summary":"path-lens-map.md for /close Proof lenses"}
 {"ts":"2026-08-07T16:05:01Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-003","status":"complete","summary":"reduced-close.md for standalone /fix /task publish"}
 {"ts":"2026-08-07T16:05:02Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"P-001","status":"complete","summary":"D-020 Docs home pin + work:docs-home; overlay interim if absent"}
+{"ts":"2026-08-07T16:03:30Z","type":"dashboard","actor":"agent","cmd":"/dashboard","phase":null,"ref":null,"status":"complete","summary":"Docs home ensured; dashboard on 4317"}
+{"ts":"2026-08-07T16:06:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-004","status":"complete","summary":"Restored status pill+chip colors from stash onto post-007 branch"}

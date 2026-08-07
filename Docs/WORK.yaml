@@ -640,3 +640,16 @@
   open_questions: null
   done_summary: "Skill text: product/learner→generic; Mike→founder; Docs.2→frozen legacy. Lane scripts stay as project adapter paths until adapters/<project>.md. Verify: rg AIdioma|learner|Mike .claude/skills → empty."
   opened: 2026-08-07
+- id: F-004
+  kind: fix
+  summary: "Restore status pill + filter chip colors lost when stashed off task/t-002 (not merged with PHASE-007)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Was stash@{1} status-colors; id collision with PHASE-007 F-003/T-002/T-003 avoided via F-004."
+  open_questions: null
+  done_summary: "Reapplied unique phase hues + Work/Signals/severity chip tones to styles.css; Dashboard-spec register updated. Recovered from stash on task/post-007-handoff-residuals."
+  opened: 2026-08-07

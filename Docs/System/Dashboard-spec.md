@@ -244,8 +244,14 @@ Computed by the indexer; never authored.
 | Status | Colored dot **plus** text label — never color alone |
 | Chrome | Sidebar nav + table pages. No charts / analytics widgets in V1 |
 
-Status colors: active/fresh green · blocked/contested amber · canceled/superseded grey ·
-failing/drift red.
+Phase state colors (Status pills + Roadmap State chips; unique hues):
+active blue · ready cyan · proposed amber · blocked purple · closed green · canceled red.
+
+Other statuses: done/complete/ok/fixed/fresh green · open/contested/stale amber ·
+failed/dropped red · superseded grey · promoted blue.
+
+Status/severity filter chips use the same hues: Work Open amber / Closed green;
+Signals Open amber / Closed(fixed) green; severity high red · medium amber · low muted.
 
 ---
 
