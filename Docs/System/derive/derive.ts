@@ -195,6 +195,45 @@ function addParseIssue(issues: IndexIssue[], sourcePath: string, summary: string
   });
 }
 
+/**
+ * Roadmap order: dependency depth first, then `order` within a tier, then id.
+ * Matches system.md — inserting a phase must not require renumbering peers.
+ */
+export function sortPhasesForRoadmap<T extends PhaseFrontmatter>(phases: T[]): T[] {
+  const byId = new Map(phases.map((phase) => [phase.id, phase]));
+  const depth = new Map<string, number>();
+  const visiting = new Set<string>();
+
+  const walk = (id: string): number => {
+    const cached = depth.get(id);
+    if (cached != null) return cached;
+    if (visiting.has(id)) {
+      depth.set(id, 0);
+      return 0;
+    }
+    visiting.add(id);
+    const phase = byId.get(id);
+    let value = 0;
+    if (phase) {
+      for (const dep of phase.depends_on) {
+        value = Math.max(value, walk(dep) + 1);
+      }
+    }
+    visiting.delete(id);
+    depth.set(id, value);
+    return value;
+  };
+
+  for (const phase of phases) walk(phase.id);
+
+  return [...phases].sort((left, right) => {
+    const depthDelta = (depth.get(left.id) ?? 0) - (depth.get(right.id) ?? 0);
+    if (depthDelta !== 0) return depthDelta;
+    if (left.order !== right.order) return left.order - right.order;
+    return left.id.localeCompare(right.id);
+  });
+}
+
 function suggestNextCommand(
   phases: PhaseFrontmatter[],
   git: GitStatus,
@@ -629,7 +668,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
   }
 
   const repo = await readGitStatus(repositoryRoot);
-  const sortedPhases = [...phases].sort((left, right) => left.order - right.order);
+  const sortedPhases = sortPhasesForRoadmap(phases);
   const next_command = suggestNextCommand(sortedPhases, repo, blockedReason);
   const latestRelease = [...releases].sort((left, right) => right.date.localeCompare(left.date))[0];
 

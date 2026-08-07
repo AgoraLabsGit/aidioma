@@ -7,10 +7,19 @@ description: Park a non-phase work item in Docs/WORK.yaml with auto-classified k
 
 Utility. Does not implement work.
 
-1. Read `.work/context.json` and `Docs/WORK.yaml`.
-2. Auto-classify `kind`: `fix` | `task` | `proposal` | `research` | `question`. Ask once if ambiguous.
-3. Append a row: next `W-nnn`, `status: open`, nullable `feature`/`area` if known, `phase` if spotted mid-phase.
-4. Append `.work/activity` event. Report: *"Logged W-0nn (kind)."*
-5. Prefer a sub-agent when the coordinator context is heavy; otherwise write directly.
+1. Read `Docs/WORK.yaml`.
+2. Classify `kind` (ask once if ambiguous):
+   - `fix` — broken/wrong behavior
+   - `task` — one-session intentional chore (default for small UI/docs polish)
+   - `proposal` — phase-sized / needs `/plan`
+   - `research` — options choice
+   - `question` — standalone uncertainty with **no** target Work row
+   - `audit` — prefer `/audit` instead of `/log`
+3. Prefer `task` over `proposal` when one session can finish it.
+4. Append row with **next kind-prefixed id** (`F/T/P/R/Q/A-nnn` via `nextWorkId` / max+1 for
+   that prefix). Do not rename legacy `W-*`. `status: open`, tags if known,
+   `phase: <active PHASE-id>` when mid-phase, `open_questions`/`done_summary`: null.
+5. Activity event. Report: *"Logged T-001 (task) — summary."*
 
-Must not: implement the item, open a phase, or invent a feature/area spec to satisfy tags.
+Must not: implement; open a phase; invent feature/area specs; log clarifications for an existing
+row as a new `question` — append `open_questions` on that row instead.

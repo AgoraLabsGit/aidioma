@@ -194,10 +194,11 @@ Computed by the indexer; never authored.
 
 ```
 ┌────────┬─────────────────────────────────────────────────┐
-│ AIdioma│ Active · Roadmap · Activity · Knowledge · Work · Signals │
-│ Active │                          indexed 3s ago [Refresh]│
-│ Roadmap├─────────────────────────────────────────────────┤
-│ …      │ search + filters (one row) · sortable table      │
+│ AIdioma│ Active · Work · Roadmap · Activity · Knowledge   │
+│ Active │                    indexed 3s ago [⟳]            │
+│ Work   ├─────────────────────────────────────────────────┤
+│ …      │ search + filters (one row) · table (header + Sort) │
+│ ● N    │  ← foot pill opens Signals (not in main nav)     │
 └────────┴─────────────────────────────────────────────────┘
         detail pane (resizable) slides from right on row click
 ```
@@ -207,6 +208,7 @@ Computed by the indexer; never authored.
   demand via `/api/doc?id=`. Bodies are never embedded in `index.json`.
 - Cross-links: any id in any cell is clickable and routes to its artifact.
 - Stale heartbeat (>60s) turns the indicator amber.
+- **Signals** is not a main-nav tab. Open it from the sidebar-foot status pill.
 
 ### Visual register
 
@@ -249,27 +251,24 @@ Active UI** (founder removed the command bar / suggested-next box).
 
 ### Roadmap
 
-| ID | Title | Type | State | Proof kind | Specs | Age |
+| ID | Order | Kind | Summary | Feature | Area | Status | Age |
 
-- Ordered by `order`; grouped by state: active → ready → proposed → closed → canceled
+- **Order** = 1-based schedule step from `depends_on` depth → frontmatter `order` → id (not the raw `order` field)
+- **Default sort: schedule** — same ranking; click ID or Order to restore it
+- Status / Kind / Age column headers still sort
 - Design phases visually distinct from build
-- Canceled rows show `lessons` inline — the highest-value column
-- Blocked rows pinned below active
+- Canceled rows show `lessons` inline
 - Filters: state, type (`design` | `build`)
 
 ### Activity
 
-| Time | Type | Actor | Ref | Summary | Phase |
+| ID | Kind | Summary | Feature | Area | Status | Age |
 
 - Projects `.work/activity/*.jsonl` only (D-008). UI label stays **Activity**.
-- Reverse chronological, virtualized, paged by month partition
-- Filters: `type`, `actor`, `phase`, date range
-- **Agent/user toggle** — answers "what did the agent do while I was away"
-- **Ref vs Phase** — show both when they differ; merge into one cell when identical
-- **Per-feature timeline** — selecting a spec filters to its ref chain in chronological order:
-  research → decision → spec → build → ship → fix
-
-The per-feature timeline is the view that justifies the event log.
+- Reverse chronological; toolbar = search + Type chips on one row (no Actor/Phase filters; no Sort select)
+- Summary is plain text (no actor sub-line); capped at 80 chars with full tooltip
+- Clickable column headers sort (Kind, Age); ID shows ref (phase as secondary when different)
+- **Per-feature timeline** — later: selecting a spec filters its ref chain
 
 ### Knowledge
 
@@ -306,13 +305,18 @@ Authored ledger from `WORK.yaml`. Separate from Signals (D-011).
 
 | ID | Kind | Summary | Feature | Area | Status | Age |
 
-Kinds: `fix` · `task` · `proposal` · `research` · `question`.
+Kinds: `fix` · `task` · `proposal` · `research` · `question` · `audit`.
 Status filters: Open = `open`+`active`; Closed = `done`+`promoted`+`dropped`.
+Table summaries capped at 80 chars (tooltip = full). Sort via column headers (no Sort select).
+
+Detail pane: glance fields + optional `note` + **Open questions** (`open_questions`) + **Done
+summary** (`done_summary`). Clarifications live on the row — not as sibling `question` rows.
 
 ### Signals
 
 Derived health only. This page is where `paths` visibly pays off.
 **UI label is Signals** (supersedes D-007 Issues-for-everything).
+**Entry:** sidebar-foot pill only (not main nav). Always visible; alert style when open high-severity > 0.
 
 | Kind | Ref | Summary | Spec | Age | Severity | Status |
 
@@ -330,7 +334,7 @@ Derived health only. This page is where `paths` visibly pays off.
 Rows from the slow cycle (`drift`, `unspecified`, `dead_spec`) display `paths_scanned_at`.
 
 Default sort: severity, then age. Filters: status (All / Open / Closed=fixed), kind, severity.
-Header pill counts **open** high-severity signals only.
+Foot pill label: `● Signals` when no open high-severity; `● N signal(s)` when N > 0.
 
 ---
 
@@ -384,7 +388,7 @@ Steps 1–4 are independently useful. Step 7 depends on specs having populated `
 - Issues: open FIX rows under Open; fixed FIX rows under Closed; other kinds remain
 - Activity: events from `.work/activity/`; new command appends a line and appears after reindex
 - Time: "ago" / age columns match source timestamps (`ts`, `opened`, `indexed_at`)
-- Sort/filter chips on Roadmap, Activity, Issues change the visible rows correctly
+- Sort/filter chips and clickable column headers on Roadmap, Activity, Work, Signals change the visible rows correctly
 - `PHASE-099` appears only because its phase `.md` exists (never mocked in JS)
 - `Dashboard-spec.md` stays under `Docs/System/` until a later promote-to-`SPEC-*` decision (D-009)
 - Schema/derive module changes require restarting `/dashboard` (file watch re-derives data, not reloaded Zod enums)

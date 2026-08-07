@@ -6,7 +6,7 @@ proof_kind: visual            # test | visual | terminal | state | spec
 state: proposed               # proposed | ready | active | closed | blocked | canceled
 order: 0
 depends_on: []                # [PHASE-005] — phases that must close first
-from_backlog: null            # W-nnn work id, if promoted from WORK.yaml
+from_backlog: null            # work id (P-nnn / W-nnn / …), if promoted from WORK.yaml
 owner: founder
 outcome: "<one sentence. Observable. A person could confirm it is true.>"
 proof: "<the specific artifact that will demonstrate it>"

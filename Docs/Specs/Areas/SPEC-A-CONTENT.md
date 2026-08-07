@@ -5,10 +5,10 @@ title: Content and curriculum
 status: active
 superseded_by: null
 vendor: null
-decisions: []
+decisions: [D-014]
 built_by: []
-last_amended: null
-research: []
+last_amended: PHASE-005
+research: [R-001]
 paths:
   - content/**
 ---
@@ -22,6 +22,7 @@ Authored lessons, lexicon material, and content pipelines that feed the learner 
 ## Behavior
 
 - Rule: Curriculum source of truth is under `content/`
+- Rule: Downloadable Spanish dictionary seed for Lexicon authoring is Kaikki Wiktextract (D-014)
 - Failure mode: Missing content → practice/features degrade or empty
 
 ## Boundaries

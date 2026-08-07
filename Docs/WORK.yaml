@@ -1,9 +1,10 @@
 # Work ledger — authored non-phase and do-now items.
 # Validated against System/schemas/work.schema.json.
-# Kinds: fix | task | proposal | research | question
+# Kinds: fix | task | proposal | research | question | audit
+# Ids: new rows F/T/P/R/Q/A-nnn by kind; legacy W-nnn kept (never renamed).
 # Status: open | active | done | promoted | dropped
 # feature/area: nullable SPEC-F-* / SPEC-A-* affiliation (org tags, not amend intent).
-# /log parks; /fix /task do-now; /triage sorts; /plan promotes proposals.
+# /log parks; /fix /task /audit do-now; /triage executes; /plan promotes proposals.
 
 # Migrated from FIXES.yaml (FIX-001..004)
 - id: W-001
@@ -171,51 +172,60 @@
   phase: null
   promoted_to: null
   blocked_by: null
-  note: null
+  note: "2026-08-06 triage: leave; proposal+adversarial farmed; soft-parallel Rejected as mislabeled hard multi-active; next /research (schema-valid) after PHASE-005 close, then /system — not while a phase is active"
   opened: 2026-08-05
 - id: W-016
   kind: fix
   summary: "Knowledge page cannot load decision bodies (/api/doc resolves DECISIONS only, not D-xxx)"
-  status: open
+  status: done
   feature: SPEC-F-DEV-DASHBOARD
   area: SPEC-A-DEVSYSTEM
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
   note: null
+  open_questions: null
+  done_summary: "/api/doc?id=D-xxx now slices the matching ## D-nnn block from Docs/DECISIONS.md (still the only home). Verify: Knowledge → Decisions → pick D-001; body loads; or GET /api/doc?id=D-001 returns that section only. Regression: npm run work:test."
   opened: 2026-08-06
 - id: W-017
   kind: proposal
   summary: "Wire audit and test infra into phase workflows (Active stubs → real /check and close checks)"
-  status: open
+  status: promoted
   feature: SPEC-F-DEV-DASHBOARD
   area: SPEC-A-DEVSYSTEM
   phase: null
-  promoted_to: null
+  promoted_to: PHASE-007
   blocked_by: null
-  note: null
+  note: "Promoted into PHASE-007 Command & System Audit Matrix"
   opened: 2026-08-06
 - id: W-018
-  kind: proposal
+  kind: task
   summary: "Kind-prefixed work ids (F-/T-/P-/Q-/R-) instead of single W- namespace"
-  status: open
+  status: done
   feature: SPEC-F-DEV-DASHBOARD
   area: SPEC-A-DEVSYSTEM
-  phase: null
+  phase: PHASE-005
   promoted_to: null
   blocked_by: null
   note: null
+  open_questions:
+    - q: "Migrate existing W-nnn ids in place, or dual-write aliases?"
+      answer: "Neither full migrate nor dual-write — forward-only kind prefixes (F/T/P/R/Q/A); legacy W-* kept forever"
+      asked: 2026-08-06
+  done_summary: "Schema/Zod accept F|T|P|R|Q|A|W-nnn; nextWorkId(kind); /log+skills assign kind-prefixed ids for new rows; no rename of existing W-*. Tests green."
   opened: 2026-08-06
 - id: W-019
-  kind: proposal
+  kind: task
   summary: "Clickable column-header sort on all dashboard tables"
-  status: open
+  status: done
   feature: SPEC-F-DEV-DASHBOARD
   area: SPEC-A-DEVSYSTEM
-  phase: null
+  phase: PHASE-005
   promoted_to: null
   blocked_by: null
-  note: null
+  note: "2026-08-06 reclassified proposal→task (small UI chore, not phase-sized)"
+  open_questions: null
+  done_summary: "Clickable th sort on Work/Roadmap/Activity/Signals via shared tableHeaders + applyTableSort; Sort select kept; filters.test.ts covers header→key maps; Dashboard-spec proof line updated. npm run work:test green."
   opened: 2026-08-06
 - id: W-020
   kind: question
@@ -261,17 +271,21 @@
   blocked_by: null
   note: null
   opened: 2026-08-06
-
 - id: W-024
-  kind: proposal
+  kind: task
   summary: "Cap summary length (chars/words) so all dashboard table rows stay 1–2 lines"
-  status: open
+  status: done
   feature: SPEC-F-DEV-DASHBOARD
   area: SPEC-A-DEVSYSTEM
-  phase: null
+  phase: PHASE-005
   promoted_to: null
   blocked_by: null
   note: null
+  open_questions:
+    - q: "What character/word cap for Work/table summaries?"
+      answer: "80 chars display truncate in table cells; full text in title tooltip"
+      asked: 2026-08-06
+  done_summary: "Table summary cells truncate at 80 chars via truncateSummary; full string in title. Dashboard-spec updated."
   opened: 2026-08-06
 - id: W-025
   kind: task
@@ -317,3 +331,238 @@
   blocked_by: null
   note: null
   opened: 2026-08-06
+- id: W-029
+  kind: task
+  summary: "Agent questions about Work/phases must include a concise summary (not bare ids like W-015)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  done_summary: "AGENTS.md + COMMANDS.md + /triage|/log skills require id + one-line summary in every Work/phase mention."
+  open_questions: null
+  opened: 2026-08-06
+- id: W-030
+  kind: task
+  summary: "Move Work nav below Active and above Roadmap"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  opened: 2026-08-06
+- id: W-031
+  kind: proposal
+  summary: "Work routing v2: executing /triage, Work open_questions field, /audit kind+command, agent-context size discipline"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: PHASE-005
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "PHASE-005 expanded: schema open_questions+done_summary+audit kind; executing /triage; /audit skill; AGENTS/COMMANDS/skills+context budget; Work detail shows questions/done_summary. Proof: /triage Devsystem did W-016+W-019; work:test 19/19."
+  opened: 2026-08-06
+- id: W-032
+  kind: audit
+  summary: "Agent-context audit: AGENTS.md, COMMANDS.md, skills size and routing fit"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Lens: agent-context size/fit. AGENTS.md 79 lines (cap ~120 OK); COMMANDS.md 69 (tables OK); skills ≤23 lines. Gaps closed this pass: executing triage, /audit, open_questions-on-row, id+summary cite, proposal≠task classifier. Residual: system.md still large SSOT (OK); feat skill deprecated stub remains; close skill still says Steward naming vs Proof/Scope/Publish — follow-up polish."
+  opened: 2026-08-06
+- id: W-033
+  kind: fix
+  summary: "Work page blank / parse_error when kind audit (stale derive enum)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Root cause: stale dashboard process had old Zod workKind without audit → parse_error emptied work[]. Schema already includes audit; restarted dashboard from current tree; derive.test covers kind audit."
+  opened: 2026-08-06
+- id: W-034
+  kind: task
+  summary: "Activity: drop Actor/Phase filters; filters on same row as search; drop actor sub-line"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Activity toolbar: Type chips only beside search; removed Actor/Phase filters and actor sub-line under summary."
+  opened: 2026-08-06
+- id: W-035
+  kind: task
+  summary: "Remove Sort select on table pages that have clickable column headers"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Removed Sort select from Roadmap/Activity/Work/Signals; column headers own sort (Roadmap ID→order)."
+  opened: 2026-08-06
+- id: W-036
+  kind: audit
+  summary: "Confirm summaries are capped on all dashboard tables"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Audit: summaries were NOT capped. Implemented SUMMARY_CAP=80 truncateSummary on Roadmap/Activity/Work/Signals; answered W-024 open_question; full text in title tooltip."
+  opened: 2026-08-06
+- id: W-037
+  kind: question
+  summary: "What is Signals for, and should it leave main nav for a warning icon/panel?"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions:
+    - q: "Keep Signals as a main nav page, or collapse to warning pill/panel?"
+      answer: "Founder 2026-08-07: remove Signals from main nav; open page from sidebar-foot status pill."
+      asked: 2026-08-06
+  done_summary: "Signals = derived health only. Placement: foot pill entry (not main nav) — implemented F-001."
+  opened: 2026-08-06
+- id: W-038
+  kind: task
+  summary: "Phase-scoped /triage via sub-agent; /close hygiene before audits"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Updated triage/close/log skills + AGENTS/COMMANDS/system.md: active-phase /triage spawns sub-agent for phase: rows only; /close runs that before audits/reviews/tests. /log sets phase when mid-phase. Ran /triage PHASE-005 (empty open set)."
+  opened: 2026-08-06
+- id: W-039
+  kind: proposal
+  summary: "Knowledge page overhaul with mock-spec fixtures (PHASE-006)"
+  status: promoted
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: PHASE-006
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: null
+  opened: 2026-08-07
+- id: W-040
+  kind: proposal
+  summary: "Research panel to refine Feature/Area/Product/Phase/Research artifact molds"
+  status: promoted
+  feature: null
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: PHASE-008
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: null
+  opened: 2026-08-07
+- id: W-041
+  kind: fix
+  summary: "Phase insert forced order renumbering; derive sorted by order only (contract says depends_on first)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "sortPhasesForRoadmap: dependency depth → order → id. /plan skill: never renumber peers; ids are creation labels. Test covers insert without renumber. system.md restated."
+  opened: 2026-08-07
+- id: W-042
+  kind: task
+  summary: "Remove Refresh text from dashboard reindex button (icon only)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "index.html reindex button is icon-only (⟳); aria-label/title Reindex now. Dashboard-spec topbar note updated."
+  opened: 2026-08-07
+- id: W-043
+  kind: fix
+  summary: "Reindex icon too small in icon-only button; Roadmap default sorted by state not schedule"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "reindex-btn 40×40, icon 22px. Roadmap default sort=schedule (depends_on depth); ID header restores it. Status sort still available. PHASE-002 depends_on PHASE-008 so product design follows artifact research."
+  opened: 2026-08-07
+- id: T-001
+  kind: task
+  summary: "Roadmap Order column — 1-based schedule step right of phase ID"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Roadmap columns ID | Order | Kind | …; Order = 1-based schedule rank (depends_on→order→id); tooltip shows frontmatter order."
+  opened: 2026-08-07
+- id: F-001
+  kind: fix
+  summary: "Dashboard: reindex icon centering; Work empty from T-001 parse_error [43]; Signals via foot pill"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: "Signal summary was '[43].id: Invalid' — row index 43 = T-001 rejected by stale W-only schema in long-lived dashboard process."
+  open_questions: null
+  done_summary: "SVG reindex icon 20px centered in 36px btn. Restarted dashboard with kind-prefixed id schema → work=45, issues=[]. Signals removed from main nav; foot pill opens Signals. Dashboard-spec + server.test updated. work:test 21/21."
+  opened: 2026-08-07
+- id: F-002
+  kind: fix
+  summary: "Clear 15 Signals: SPEC last_amended dates broke Lexicon/Content parse → broken_link cascade"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-005
+  promoted_to: null
+  blocked_by: null
+  note: "parse_error on SPEC-F-LEXICON + SPEC-A-CONTENT (last_amended must be PHASE-*|null); cascade to PHASE-099, W-005/009/013, D-013/014/015."
+  open_questions: null
+  done_summary: "Set last_amended: null on SPEC-F-LEXICON + SPEC-A-CONTENT (dates invalid; schema wants PHASE-*|null). Open signals 15→0; both specs in index."
+  opened: 2026-08-07

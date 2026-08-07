@@ -14,6 +14,7 @@ built_by:
   - PHASE-005
 last_amended: PHASE-005
 research: []
+
 paths:
   - Docs/System/dashboard/**
   - Docs/System/derive/**
@@ -30,10 +31,14 @@ Lets the founder see phases, Work, Signals, and Knowledge projected from Docs/.
 
 - Rule: Dashboard is read-only projection of Docs/ and `.work/`
 - Rule: Work page shows `WORK.yaml`; Signals shows derived health only
+- Rule: Work detail surfaces `open_questions` and `done_summary` when present
+- Rule: Table summaries truncate at 80 chars (full text in tooltip); column headers own sort
+- Rule: Signals entry is the sidebar-foot status pill (not a main-nav item)
 
 ## Boundaries
 
 Does not fire commands or edit artifacts from the UI (V1).
+
 
 ## Dependencies
 

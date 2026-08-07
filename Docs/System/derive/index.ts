@@ -1,4 +1,4 @@
-export { derive, writeContextJson } from "./derive.js";
+export { derive, sortPhasesForRoadmap, writeContextJson } from "./derive.js";
 export type {
   ActivityEvent,
   DeriveIndex,
@@ -28,13 +28,17 @@ export {
 } from "./parser.js";
 export type { DecisionEntry, ReleaseEntry } from "./parser.js";
 export {
+  WORK_KIND_ID_PREFIX,
   fixItemSchema,
   fixesSchema,
+  nextWorkId,
   phaseSchema,
   phaseStateSchema,
   researchSchema,
   specSchema,
+  workIdSchema,
   workItemSchema,
+  workKindSchema,
   workSchema,
 } from "./schema.js";
 export type {

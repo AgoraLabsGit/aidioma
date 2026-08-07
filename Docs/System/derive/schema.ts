@@ -112,7 +112,23 @@ export const workKindSchema = z.enum([
   "proposal",
   "research",
   "question",
+  "audit",
 ]);
+
+/** Legacy W-nnn or kind-prefixed F/T/P/R/Q/A-nnn. */
+export const workIdSchema = z.string().regex(/^(W|F|T|P|R|Q|A)-[0-9]{3}$/);
+
+export const WORK_KIND_ID_PREFIX: Record<
+  z.infer<typeof workKindSchema>,
+  "F" | "T" | "P" | "R" | "Q" | "A"
+> = {
+  fix: "F",
+  task: "T",
+  proposal: "P",
+  research: "R",
+  question: "Q",
+  audit: "A",
+};
 
 export const workStatusSchema = z.enum([
   "open",
@@ -122,8 +138,14 @@ export const workStatusSchema = z.enum([
   "dropped",
 ]);
 
+export const workOpenQuestionSchema = z.object({
+  q: z.string().min(1),
+  answer: z.union([z.string(), z.null()]).default(null),
+  asked: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+});
+
 export const workItemSchema = z.object({
-  id: z.string().regex(/^W-[0-9]{3}$/),
+  id: workIdSchema,
   kind: workKindSchema,
   summary: z.string().min(1),
   status: workStatusSchema,
@@ -133,12 +155,31 @@ export const workItemSchema = z.object({
   area: z.union([z.string().regex(/^SPEC-A-[A-Z0-9-]+$/), z.null()]).default(null),
   phase: z.union([z.string().regex(/^PHASE-[0-9]{3}$/), z.null()]).default(null),
   promoted_to: z.union([z.string(), z.null()]).default(null),
-  blocked_by: z.union([z.string().regex(/^W-[0-9]{3}$/), z.null()]).default(null),
+  blocked_by: z.union([workIdSchema, z.null()]).default(null),
   note: z.union([z.string(), z.null()]).default(null),
+  open_questions: z
+    .union([z.array(workOpenQuestionSchema), z.null()])
+    .default(null),
+  done_summary: z.union([z.string(), z.null()]).default(null),
   opened: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 
 export const workSchema = z.array(workItemSchema);
+
+/** Next kind-prefixed id (F/T/P/R/Q/A). Legacy W-* ids are ignored for the series. */
+export function nextWorkId(
+  kind: z.infer<typeof workKindSchema>,
+  existingIds: readonly string[],
+): string {
+  const prefix = WORK_KIND_ID_PREFIX[kind];
+  let max = 0;
+  const pattern = new RegExp(`^${prefix}-([0-9]{3})$`);
+  for (const id of existingIds) {
+    const match = pattern.exec(id);
+    if (match) max = Math.max(max, Number(match[1]));
+  }
+  return `${prefix}-${String(max + 1).padStart(3, "0")}`;
+}
 
 /** @deprecated Use workItemSchema — kept for test fixtures during migration */
 export const fixItemSchema = z.object({

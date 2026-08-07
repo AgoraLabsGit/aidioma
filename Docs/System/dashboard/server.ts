@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { derive, type DeriveIndex } from "../derive/derive.js";
+import { extractDecisionSection } from "../derive/parser.js";
 
 const dashboardDirectory = fileURLToPath(new URL(".", import.meta.url));
 const publicDirectory = path.join(dashboardDirectory, "public");
@@ -99,6 +100,29 @@ async function findDocPath(
   if (id === "HANDOFF") return path.join(docsRoot, "Handoffs", "HANDOFF.md");
   if (id === "PRODUCT") return path.join(docsRoot, "PRODUCT.md");
   if (id === "DECISIONS") return path.join(docsRoot, "DECISIONS.md");
+  return null;
+}
+
+async function resolveDocBody(
+  index: DeriveIndex,
+  repositoryRoot: string,
+  id: string,
+): Promise<{ relativePath: string; body: string } | null> {
+  const docsRoot = path.join(repositoryRoot, "Docs");
+  const docPath = await findDocPath(index, repositoryRoot, id);
+  if (docPath) {
+    return {
+      relativePath: path.relative(repositoryRoot, docPath),
+      body: await readFile(docPath, "utf8"),
+    };
+  }
+  if (/^D-\d{3}$/u.test(id) && index.decisions.some((decision) => decision.id === id)) {
+    const decisionsPath = path.join(docsRoot, "DECISIONS.md");
+    const source = await readFile(decisionsPath, "utf8");
+    const body = extractDecisionSection(source, id);
+    if (!body) return null;
+    return { relativePath: path.join("Docs", "DECISIONS.md"), body };
+  }
   return null;
 }
 
@@ -298,8 +322,8 @@ export function createDashboardServer(options: DashboardServerOptions = {}): Ser
       }
       try {
         const index = cachedIndex ?? (await rebuild());
-        const docPath = await findDocPath(index, repositoryRoot, id);
-        if (!docPath) {
+        const resolved = await resolveDocBody(index, repositoryRoot, id);
+        if (!resolved) {
           send(
             request,
             response,
@@ -309,13 +333,12 @@ export function createDashboardServer(options: DashboardServerOptions = {}): Ser
           );
           return;
         }
-        const body = await readFile(docPath, "utf8");
         send(
           request,
           response,
           200,
           "application/json; charset=utf-8",
-          JSON.stringify({ id, path: path.relative(repositoryRoot, docPath), body }),
+          JSON.stringify({ id, path: resolved.relativePath, body: resolved.body }),
         );
       } catch (error) {
         options.onError?.(error);

@@ -8,9 +8,13 @@
     "required": ["id", "kind", "summary", "status", "opened"],
     "additionalProperties": false,
     "properties": {
-      "id": { "type": "string", "pattern": "^W-[0-9]{3}$" },
+      "id": {
+        "type": "string",
+        "pattern": "^(W|F|T|P|R|Q|A)-[0-9]{3}$",
+        "description": "Legacy W-nnn or kind-prefixed F/T/P/R/Q/A-nnn (new rows)"
+      },
       "kind": {
-        "enum": ["fix", "task", "proposal", "research", "question"]
+        "enum": ["fix", "task", "proposal", "research", "question", "audit"]
       },
       "summary": { "type": "string", "minLength": 1 },
       "status": {
@@ -33,9 +37,25 @@
       },
       "blocked_by": {
         "type": ["string", "null"],
-        "pattern": "^W-[0-9]{3}$"
+        "pattern": "^(W|F|T|P|R|Q|A)-[0-9]{3}$"
       },
       "note": {
+        "type": ["string", "null"]
+      },
+      "open_questions": {
+        "type": ["array", "null"],
+        "items": {
+          "type": "object",
+          "required": ["q", "asked"],
+          "additionalProperties": false,
+          "properties": {
+            "q": { "type": "string", "minLength": 1 },
+            "answer": { "type": ["string", "null"] },
+            "asked": { "type": "string", "format": "date" }
+          }
+        }
+      },
+      "done_summary": {
         "type": ["string", "null"]
       },
       "opened": { "type": "string", "format": "date" }

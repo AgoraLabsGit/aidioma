@@ -5,12 +5,13 @@ description: Reproduce and correct a bounded AIdioma defect with regression and 
 
 # /fix
 
-1. Upsert `Docs/WORK.yaml` `kind: fix` (`status: active`). Log the symptom, not the diagnosis.
-2. Reproduce expected versus actual; load path-owning specs before edits.
-3. Smallest coherent correction + failing regression when practical; re-prove.
-4. Mark row `status: done`. Activity event. Report W-id.
-5. If design / multi-session / phase-sized → `/log` as `proposal` or confirm `/plan`. One-way door.
+Action. Bounded defect → Work `kind: fix`.
 
-Phase-scoped fixes commit on the phase branch. Unrelated fixes use a short-lived branch and reduced close checks.
+1. Upsert `WORK.yaml` `kind: fix`, `status: active` (new ids: `F-nnn`; leave legacy `W-*`).
+2. Reproduce on a real path; load owning specs before edits.
+3. If clarification needed — ask; append `open_questions` on **this** row; pause.
+4. Patch + regression/proof when practical.
+5. `status: done` + `done_summary`. Activity event. Report W-id.
+6. If design/multi-session — stop; `/log` `proposal` or confirm `/plan`.
 
-Coordinator may delegate implementation to a sub-agent; keep routing and status on the coordinator.
+Standalone publish uses reduced Proof/Scope/Publish checks. Prefer a sub-agent for bounded fixes.

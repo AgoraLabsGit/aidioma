@@ -100,17 +100,30 @@ one place that state survives. `/close` and `/status --repair` never clean anyth
 
 | Field | Meaning |
 |---|---|
-| `id` | `W-nnn` |
-| `kind` | `fix` \| `task` \| `proposal` \| `research` \| `question` |
+| `id` | Kind-prefixed `F/T/P/R/Q/A-nnn` for new rows; legacy `W-nnn` still valid |
+| `kind` | `fix` \| `task` \| `proposal` \| `research` \| `question` \| `audit` |
 | `status` | `open` \| `active` \| `done` \| `promoted` \| `dropped` |
 | `feature` / `area` | Nullable org tags (`SPEC-F-*` / `SPEC-A-*`) — not amend intent |
 | `phase` | Nullable phase id if tied mid-flight |
 | `promoted_to` | Phase or research id when promoted |
-| `blocked_by` | Another `W-nnn`, if any |
-| `note` | Optional one line |
+| `blocked_by` | Another work id, if any |
+| `note` | Optional short misc line |
+| `open_questions` | Clarifications for **this** row (`[{q, answer, asked}]`); not a new Work row |
+| `done_summary` | What shipped + evidence when `done` |
 
-`/log` parks (`open`). `/fix` and `/task` do-now (`active`→`done`). `/triage` sorts.
-`/plan` may promote a `proposal` (`promoted` + `from_backlog: W-nnn` on the phase).
+`/log` parks (`open`). `/fix` `/task` `/audit` do-now (`active`→`done` + `done_summary`).
+`/triage [PHASE|area|feature]` classifies and **executes** clear do-now work; confirms drop/plan/lifecycle.
+When a phase is active or named, triage **must** spawn a sub-agent limited to Work with
+`phase: <that id>` only. `/close` runs that phase-scoped triage **before** audits/reviews/tests.
+`/plan` may promote a `proposal` (`promoted` + `from_backlog: <work-id>` on the phase).
+New Work ids use kind prefixes (`F-` fix, `T-` task, `P-` proposal, `R-` research, `Q-`
+question, `A-` audit). Existing `W-*` rows are never renamed.
+
+**Kind classifier (for `/log`):** `fix` = broken behavior; `task` = small intentional chore that
+fits one session; `proposal` = phase-sized or needs `/plan`; `research` = options choice;
+`question` = parked standalone uncertainty with no target row; `audit` = scheduled/fired review.
+When executing a row needs clarification → ask the founder and append `open_questions` on that
+row — never spawn a sibling `question` row for the same item.
 
 ### Where practices and principles go
 
@@ -139,7 +152,7 @@ Docs/
   PRODUCT.md                  PRD — who, what, never
   DECISIONS.md                append-only decision log
   RELEASES.md                 append-only release log
-  WORK.yaml                   work ledger (fix/task/proposal/research/question)
+  WORK.yaml                   work ledger (fix/task/proposal/research/question/audit)
   PRESERVE.md                 stashes, branches, and WIP that must never be deleted
   Specs/
     INDEX.md                  generated
@@ -273,9 +286,10 @@ uses `proof_kind: spec` — and then app code changing is a Scope FAIL.
 does not mean the contract has been read.
 
 `depends_on` is the real constraint; `order` is a hint for presenting equals. `derive()`
-topologically sorts by `depends_on` first, then `order` within a tier, so inserting a phase never
-requires renumbering. A `ready` phase whose dependency is not `closed` is flagged **blocked by
-dependency** rather than offered as next.
+(`sortPhasesForRoadmap`) sorts by dependency depth first, then `order` within a tier, then id —
+inserting a phase must **never** renumber peers. `/plan` assigns the next free `PHASE-nnn` id and
+sets `depends_on` + a local `order` tie-break only. A `ready` phase whose dependency is not
+`closed` is flagged **blocked by dependency** rather than offered as next.
 
 **Sizing — a guideline, not a gate.** The hard rule is *one outcome*. Aiming for a closeable
 session-sized slice is advice that prevents the most common failure, but a phase is a container
@@ -419,8 +433,8 @@ Four classes. The class determines what a command is allowed to do.
 | Class | Commands | Phase state | Git | Logged |
 |---|---|---|---|---|
 | **Lifecycle** | `/plan` `/run` `/close` `/ship` | Mutates | Yes | Full |
-| **Action** | `/research` `/design` `/fix` `/task` | No | Commits; `/fix`/`/task` may publish via reduced checks | Full |
-| **Utility** | `/log` `/triage` `/status` `/check` `/launch` `/dashboard` `/handoff` | No | No | Light |
+| **Action** | `/research` `/design` `/fix` `/task` `/audit` | No | Commits; `/fix`/`/task`/`/audit` may publish via reduced checks | Full |
+| **Utility** | `/log` `/triage` `/status` `/check` `/launch` `/dashboard` `/handoff` | No | Triage may commit via delegated `/fix`/`/task` | Light |
 | **Meta** | `/system` | No | Yes | Full |
 
 Utility commands are safe to run at any time and cannot damage state. Lifecycle commands are
@@ -437,7 +451,8 @@ Slash commands remain available for anyone who wants them.
 | "the API isn't working" | `/fix` | Something is broken |
 | "rename this label" | `/task` | Small intentional work |
 | "park this for later" | `/log` | Capture without doing |
-| "triage the work list" | `/triage` | Sort open Work rows |
+| "triage the work list" / "triage Devsystem" | `/triage` | Classify + execute clear Work |
+| "audit the command files" | `/audit` | Review a scope; Work `kind: audit` |
 | "which translation API should we use?" | `/research` | Choice between external options |
 | "how should the practice page behave?" | `/design` | Behavior undefined |
 | "someday add offline mode" | `/log` `proposal` | Or confirm `/plan` if scheduling now |
@@ -499,7 +514,7 @@ under *Unassigned* on the dashboard.
 |---|---|---|---|
 | `/plan` | New work not on the Roadmap | Create a phase file; name the complexity cost; cut/defer is a valid outcome | Write product code; build unconsumed foundations |
 | `/run` | Start or resume the one active phase | Execute the phase outcome; commit on the phase branch | Merge; expand scope horizontally; continue past a broken contract |
-| `/close` | Phase complete | Three checks → commit/PR → merge exact head → clean `main`; stop phase-owned servers | Merge on FAIL; expand scope silently; delete anything in `PRESERVE.md` |
+| `/close` | Phase complete | Phase-scoped `/triage` first, then three checks → commit/PR → merge exact head → clean `main`; stop phase-owned servers | Merge on FAIL; skip phase triage; expand scope silently; delete anything in `PRESERVE.md` |
 | `/ship` | Promote to production | Deploy production; append to `RELEASES.md` | Ship on a red check, an open FAIL, or a contested spec |
 
 `/ship` preconditions — all four, or it refuses:
@@ -517,8 +532,9 @@ are the only source of expensive information the system doesn't otherwise captur
 learned from work that shipped is already encoded in a spec, decision, or test. Captured at the
 moment of maximum honesty, it costs one line.
 
-`/close --dry-run` — runs the three checks, changes nothing, writes findings to `WORK.yaml`.
-This is the standalone audit; there is no `/audit` command.
+`/close --dry-run` — runs the three close checks (Proof / Scope / Publish), changes nothing,
+writes findings to `WORK.yaml`. `/audit` is the general action for scoped reviews (including
+agent-context and specs); close checks remain the merge gate.
 
 ### Action
 
@@ -529,11 +545,12 @@ One unit of real work, one durable artifact, one event. Actions do not advance t
 |---|---|---|---|
 | `/research` | `Research/R-*.md` + optional decision | A choice between ≥2 external options blocks progress | Anytime, phase or no phase |
 | `/design` | Decisions and/or a spec | Behavior is undefined, or ≥3 decisions are open | Anytime |
-| `/fix` | Patch + proof + `WORK.yaml` `kind: fix` | Defect is bounded and needs no design | Anytime |
-| `/task` | Patch/docs + proof + `WORK.yaml` `kind: task` | Intentional small work, not a defect | Anytime |
+| `/fix` | Patch + proof + `WORK.yaml` `kind: fix` + `done_summary` | Defect is bounded and needs no design | Anytime |
+| `/task` | Patch/docs + proof + `WORK.yaml` `kind: task` + `done_summary` | Intentional small work, not a defect | Anytime |
+| `/audit` | Findings + `WORK.yaml` `kind: audit` + `done_summary` | Scoped review of feature/area/spec/agent-context/process | Anytime |
 
-**`/fix` and `/task` are deliberately unconstrained** for bounded do-now work. They never need an
-active phase. `/log` parks; `/triage` sorts.
+**`/fix`, `/task`, and `/audit` are deliberately unconstrained** for bounded do-now work. They
+never need an active phase. `/log` parks; `/triage` classifies and executes clear do-now rows.
 
 | Situation | Behavior |
 |---|---|
@@ -559,7 +576,7 @@ If `/fix` or `/task` needs design or multi-session scope, `/log` as `proposal` (
 | Cmd | Does | Must not |
 |---|---|---|
 | `/log` | Append `WORK.yaml` row (`open`); auto-classify kind | Implement the work |
-| `/triage` | Propose do/plan/drop/leave for open Work; apply statuses | Implement product changes |
+| `/triage` | Optional `[PHASE\|area\|feature]`; active/named phase → **sub-agent on `phase:` rows only**; classify; auto-run clear `/fix`/`/task`; confirm drop/plan; ask→`open_questions` | Mix other phases or `phase: null` into a phase pass; expand into unplanned phases |
 | `/status` | Print a brief: active phase, git, runtime, suggested next command; refresh `context.json` | Change any authored file |
 | `/check` | Run tests and lint | Fix what it finds |
 | `/launch` | Stop stale app servers, start the app | Touch production |
@@ -613,10 +630,14 @@ two derivation engines would be two drift surfaces.
 - Bumps `schema_version`, appends to `System/CHANGELOG.md`.
 - Shows proposed wording before writing.
 - **Blocked while a phase is `active`.** Changing the rules mid-phase invalidates the close audit.
+  (An **active phase** may still amend System files when that is the phase outcome.)
 - **Generates** `COMMANDS.md`, `AGENTS.md`, and Cursor skill files from this document. Command
   definitions living in four hand-maintained places is guaranteed drift.
   **Staging:** hand-edit these until the generator ships, then they become build artifacts and
   are locked. The contract holds now; the mechanism follows.
+- **Context budget:** Prefer one SSOT (`system.md`) + thin views. Caps: `AGENTS.md` ≤~120 lines;
+  each skill ≤~60 lines; `COMMANDS.md` = tables only. Cut examples before rules. Do not duplicate
+  full rituals — point at `system.md`. Growing past a cap requires a cut in the same change.
 
 ---
 
@@ -732,7 +753,7 @@ append-only files do conflict the resolution is always "keep both lines."
 | `plan` | `/plan` |
 | `build` | `/run` |
 | `fix` | `/fix` |
-| `audit` | `/close` (carries verdict) |
+| `audit` | `/audit` or `/close` (carries verdict) |
 | `ship` | `/ship` |
 
 Low-noise: `check`, `handoff`, `system`.
@@ -779,10 +800,10 @@ detail pane on row click.
 | Page | Reads | Answers |
 |---|---|---|
 | **Now** | Active phase, `HANDOFF.md`, git, last `/check` | What am I doing, what do I type next? |
+| **Work** | `WORK.yaml` | What's parked, in flight, or done outside/alongside phases? |
 | **Roadmap** | `Phases/*.md` frontmatter (incl. feature/area), ordered by `order` | What's scheduled, done, canceled? |
 | **Activity** | `.work/activity/*.jsonl` | What happened, and what did the agent do? |
 | **Knowledge** | Specs, `DECISIONS.md`, `Research/` | What exists, how does it behave, why? |
-| **Work** | `WORK.yaml` | What's parked, in flight, or done outside/alongside phases? |
 | **Signals** | Derived health only | What's drifting, broken-linked, or parse-failing? |
 
 Handoffs is a card on **Now**, not a page — it is one overwritten file.
