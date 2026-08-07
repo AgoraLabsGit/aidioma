@@ -11,14 +11,54 @@ const DETAIL_WIDTH_KEY = "aidioma-detail-width";
 const TOC_WIDTH_KEY = "aidioma-toc-width";
 const TOC_COLLAPSED_KEY = "aidioma-toc-collapsed";
 const THEME_KEY = "aidioma-dashboard-theme";
+const PAGE_KEY = "aidioma-dashboard-page";
+const FILTER_KEYS = {
+  roadmap: "aidioma-filters-roadmap",
+  activity: "aidioma-filters-activity",
+  work: "aidioma-filters-work",
+  signals: "aidioma-filters-signals",
+};
+
+const DEFAULT_FILTERS = {
+  roadmap: { state: "", type: "", q: "", sort: "schedule" },
+  activity: { type: "", q: "", sort: "time" },
+  work: { kind: "", status: "", q: "", sort: "open-first" },
+  signals: { severity: "", kind: "", status: "open", q: "", sort: "severity" },
+};
+
+function loadFilters(key, defaults) {
+  const raw = readStored(key);
+  if (!raw) return { ...defaults };
+  try {
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return { ...defaults };
+    return { ...defaults, ...parsed };
+  } catch {
+    return { ...defaults };
+  }
+}
+
+function persistPageFilters(page) {
+  const pair = {
+    roadmap: [FILTER_KEYS.roadmap, () => state.roadmapFilters],
+    activity: [FILTER_KEYS.activity, () => state.activityFilters],
+    work: [FILTER_KEYS.work, () => state.workFilters],
+    signals: [FILTER_KEYS.signals, () => state.signalsFilters],
+  }[page];
+  if (!pair) return;
+  writeStored(pair[0], JSON.stringify(pair[1]()));
+}
+
+const storedPage = readStored(PAGE_KEY);
+const initialPage = storedPage && PAGE_META[storedPage] ? storedPage : "active";
 
 const state = {
   index: null,
-  page: "active",
-  roadmapFilters: { state: "", type: "", q: "", sort: "schedule" },
-  activityFilters: { type: "", q: "", sort: "time" },
-  workFilters: { kind: "", status: "", q: "", sort: "open-first" },
-  signalsFilters: { severity: "", kind: "", status: "open", q: "", sort: "severity" },
+  page: initialPage,
+  roadmapFilters: loadFilters(FILTER_KEYS.roadmap, DEFAULT_FILTERS.roadmap),
+  activityFilters: loadFilters(FILTER_KEYS.activity, DEFAULT_FILTERS.activity),
+  workFilters: loadFilters(FILTER_KEYS.work, DEFAULT_FILTERS.work),
+  signalsFilters: loadFilters(FILTER_KEYS.signals, DEFAULT_FILTERS.signals),
   knowledgeId: "PRODUCT",
   selectedId: null,
   lastIndexedAt: null,
@@ -211,15 +251,19 @@ function applyTableSort(page, sortKey) {
   if (!state.index) return;
   if (page === "roadmap") {
     state.roadmapFilters = { ...state.roadmapFilters, sort: sortKey };
+    persistPageFilters("roadmap");
     renderRoadmap(state.index);
   } else if (page === "activity") {
     state.activityFilters = { ...state.activityFilters, sort: sortKey };
+    persistPageFilters("activity");
     renderActivity(state.index);
   } else if (page === "work") {
     state.workFilters = { ...state.workFilters, sort: sortKey };
+    persistPageFilters("work");
     renderWork(state.index);
   } else if (page === "signals") {
     state.signalsFilters = { ...state.signalsFilters, sort: sortKey };
+    persistPageFilters("signals");
     renderSignals(state.index);
   }
 }
@@ -1427,6 +1471,7 @@ function renderAll() {
 
 function showPage(page) {
   state.page = page;
+  writeStored(PAGE_KEY, page);
   const meta = PAGE_META[page] ?? PAGE_META.active;
   pageTitle.textContent = meta.title;
   pageSubtitle.textContent = meta.subtitle;
@@ -1733,24 +1778,31 @@ document.addEventListener("click", (event) => {
     const { filter, value } = chipButton.dataset;
     if (["state", "type"].includes(filter) && state.page === "roadmap") {
       state.roadmapFilters = { ...state.roadmapFilters, [filter]: value };
+      persistPageFilters("roadmap");
       renderRoadmap(state.index);
     } else if (filter === "type" && state.page === "activity") {
       state.activityFilters = { ...state.activityFilters, type: value };
+      persistPageFilters("activity");
       renderActivity(state.index);
     } else if (filter === "work-status") {
       state.workFilters = { ...state.workFilters, status: value };
+      persistPageFilters("work");
       renderWork(state.index);
     } else if (filter === "work-kind") {
       state.workFilters = { ...state.workFilters, kind: value };
+      persistPageFilters("work");
       renderWork(state.index);
     } else if (filter === "signal-status") {
       state.signalsFilters = { ...state.signalsFilters, status: value };
+      persistPageFilters("signals");
       renderSignals(state.index);
     } else if (filter === "signal-severity") {
       state.signalsFilters = { ...state.signalsFilters, severity: value };
+      persistPageFilters("signals");
       renderSignals(state.index);
     } else if (filter === "signal-kind") {
       state.signalsFilters = { ...state.signalsFilters, kind: value };
+      persistPageFilters("signals");
       renderSignals(state.index);
     }
     return;
@@ -1775,18 +1827,22 @@ document.addEventListener("input", (event) => {
 
   if (input.name === "roadmap-q") {
     state.roadmapFilters = { ...state.roadmapFilters, q: input.value };
+    persistPageFilters("roadmap");
     renderRoadmap(state.index);
     restore(panels.roadmap, "roadmap-q");
   } else if (input.name === "activity-q") {
     state.activityFilters = { ...state.activityFilters, q: input.value };
+    persistPageFilters("activity");
     renderActivity(state.index);
     restore(panels.activity, "activity-q");
   } else if (input.name === "work-q") {
     state.workFilters = { ...state.workFilters, q: input.value };
+    persistPageFilters("work");
     renderWork(state.index);
     restore(panels.work, "work-q");
   } else if (input.name === "signals-q") {
     state.signalsFilters = { ...state.signalsFilters, q: input.value };
+    persistPageFilters("signals");
     renderSignals(state.index);
     restore(panels.signals, "signals-q");
   } else if (input.name === "knowledge-q") {
@@ -1829,7 +1885,7 @@ setInterval(() => {
 
 applyTheme(readStored(THEME_KEY) === "light" ? "light" : "dark");
 applyDetailWidth(Number(readStored(DETAIL_WIDTH_KEY)) || 520);
-showPage("active");
+showPage(state.page);
 void loadIndex().then(connectEvents).catch((error) => {
   panels.active.innerHTML = `<div class="empty">Dashboard failed to load: ${escapeHtml(error.message)}</div>`;
 });

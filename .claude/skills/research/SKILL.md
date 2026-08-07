@@ -7,7 +7,7 @@ description: Choose among external options; write Research/R-*.md and optional d
 
 1. Name the question and ≥2 real options.
 2. Write `Docs/Research/R-nnn.md` from the template (verdict required).
-3. **Required Adv:** follow `Docs/System/adv-protocol.md` on options/verdict; revise or record blockers.
+3. **Required Adv:** follow `Docs/System/protocols/adv-protocol.md` on options/verdict; revise or record blockers.
 4. Optional: append decision to `DECISIONS.md` when the verdict locks a choice.
 5. Activity `type: research`. Report R-id.
 

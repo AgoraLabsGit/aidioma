@@ -27,8 +27,8 @@ Thin key. Detail: `System/system.md`. Staging: hand-edited until `/system` gener
 |---|---|---|---|
 | `/research` | `Research/R-*.md` + optional decision | **Required Adv** + verdict | Adv sub-agent; optional `/design` if behavior locks |
 | `/design` | Decisions and/or a spec | Review Research first; **Required Adv** | `/research` if missing; Adv sub-agent |
-| `/fix` | Patch + proof + Work `fix` + `done_summary` | Required proof; [reduced-close.md](reduced-close.md) if publishing | `/check` before publish; optional `/audit`; `/log`/`/plan` if stretches |
-| `/task` | Patch/docs + proof + Work `task` + `done_summary` | Required proof (light); [reduced-close.md](reduced-close.md) if publishing | `/check` before publish; optional `/audit`; `/log`/`/plan` if stretches |
+| `/fix` | Patch + proof + Work `fix` + `done_summary` | Required proof; [reduced-close.md](protocols/reduced-close.md) if publishing | `/check` before publish; optional `/audit`; `/log`/`/plan` if stretches |
+| `/task` | Patch/docs + proof + Work `task` + `done_summary` | Required proof (light); [reduced-close.md](protocols/reduced-close.md) if publishing | `/check` before publish; optional `/audit`; `/log`/`/plan` if stretches |
 | `/audit` | Findings + Work `audit` + `done_summary` | Is the audit (not merge gate) | Review sub-agent |
 
 ## Utility
@@ -55,10 +55,10 @@ Thin key. Detail: `System/system.md`. Staging: hand-edited until `/system` gener
 
 | Protocol | When | Home |
 |---|---|---|
-| **Required Adv** | `/research`, `/design`, `/close` claims | [`adv-protocol.md`](adv-protocol.md) |
-| **MCOO** | `/plan` (cheap) · `/close` Scope (binding FAIL list) | [`mcoo-checklist.md`](mcoo-checklist.md) |
-| **Path → lens** | `/close` Proof (conditional) | [`path-lens-map.md`](path-lens-map.md) |
-| **Reduced close** | Standalone `/fix` `/task` publish | [`reduced-close.md`](reduced-close.md) |
+| **Required Adv** | `/research`, `/design`, `/close` claims | [`adv-protocol.md`](protocols/adv-protocol.md) |
+| **MCOO** | `/plan` (cheap) · `/close` Scope (binding FAIL list) | [`mcoo-checklist.md`](protocols/mcoo-checklist.md) |
+| **Path → lens** | `/close` Proof (conditional) | [`path-lens-map.md`](protocols/path-lens-map.md) |
+| **Reduced close** | Standalone `/fix` `/task` publish | [`reduced-close.md`](protocols/reduced-close.md) |
 
 ## Close lenses (nested under Proof / Scope / Publish)
 
@@ -66,7 +66,7 @@ Thin key. Detail: `System/system.md`. Staging: hand-edited until `/system` gener
 |---|---|---|
 | Outcome evidence | Proof | always |
 | Adversarial phase claims | Proof | always |
-| Security / privacy / a11y / AI tokens / perf / migration | Proof | path-triggered — [`path-lens-map.md`](path-lens-map.md) |
+| Security / privacy / a11y / AI tokens / perf / migration | Proof | path-triggered — [`path-lens-map.md`](protocols/path-lens-map.md) |
 | path→spec | Scope | always (computed) |
 | MCOO | Scope | always |
 | Seams / composability | Scope | build with code; broader every ~2–3 caps |

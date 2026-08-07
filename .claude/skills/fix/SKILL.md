@@ -9,7 +9,7 @@ description: Reproduce and correct a bounded defect with regression and real-pat
 2. Reproduce on a real path; load owning specs before edits.
 3. Clarifications → `open_questions` on **this** row; pause.
 4. Patch + regression/proof when practical.
-5. Before standalone publish → `/check` (path-aware). Then `Docs/System/reduced-close.md` (Proof/Scope/Publish mini).
+5. Before standalone publish → `/check` (path-aware). Then `Docs/System/protocols/reduced-close.md` (Proof/Scope/Publish mini).
 6. `status: done` + `done_summary`. Activity. Report id.
 7. If design/multi-session → `/log` `proposal` or confirm `/plan`.
 

@@ -36,7 +36,7 @@ The choice and the one or two reasons that actually decided it. If no option is 
 
 ## Adv
 
-`ADV: PASS | WARN | FAIL` — per `System/adv-protocol.md`. Blockers or none.
+`ADV: PASS | WARN | FAIL` — per `System/protocols/adv-protocol.md`. Blockers or none.
 
 ## Revisit if
 

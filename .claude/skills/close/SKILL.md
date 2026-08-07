@@ -8,8 +8,8 @@ description: Close the active phase with audits, publish through protected main,
 1. Read `AGENTS.md`, active phase, handoff. Confirm scope if unrelated dirty work.
 2. **Phase `/triage`** (sub-agent; this phase only) — before audits/tests.
 3. **`/check`** (path-aware) — FAIL blocks close.
-4. **Proof** — outcome evidence; **Required Adv** on phase claims via `Docs/System/adv-protocol.md`; path-triggered lenses per `Docs/System/path-lens-map.md`.
-5. **Scope** — path→spec; **MCOO** via `Docs/System/mcoo-checklist.md` (binding FAIL list); seams/composability (build); code quality if code in diff. Design: no product-code change.
+4. **Proof** — outcome evidence; **Required Adv** on phase claims via `Docs/System/protocols/adv-protocol.md`; path-triggered lenses per `Docs/System/protocols/path-lens-map.md`.
+5. **Scope** — path→spec; **MCOO** via `Docs/System/protocols/mcoo-checklist.md` (binding FAIL list); seams/composability (build); code quality if code in diff. Design: no product-code change.
    On FAIL: May invoke `/run` (cut), `/design`, `/research` with founder confirm — do not merge.
 6. **Publish** — PR contained, servers stopped, orphans cleaned; every **started** CI check green (`ci-policy.md`).
 7. Helpers (Bugbot / security-review / code-review) advise only — this command owns PASS/WARN/FAIL.

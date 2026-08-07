@@ -253,6 +253,8 @@ failed/dropped red · superseded grey · promoted blue.
 Status/severity filter chips use the same hues: Work Open amber / Closed green;
 Signals Open amber / Closed(fixed) green; severity high red · medium amber · low muted.
 
+Preferences (localStorage): last page; each table page’s filters + sort (survive refresh).
+
 ---
 
 ## 5. Pages
@@ -422,5 +424,5 @@ Steps 1–4 are independently useful. Step 7 depends on specs having populated `
 - Time: "ago" / age columns match source timestamps (`ts`, `opened`, `indexed_at`)
 - Sort/filter chips and clickable column headers on Roadmap, Activity, Work, Signals change the visible rows correctly
 - `PHASE-099` appears only because its phase `.md` exists (never mocked in JS)
-- `Dashboard-spec.md` stays under `Docs/System/` until a later promote-to-`SPEC-*` decision (D-009)
+- `specs/Dashboard-spec.md` stays under `Docs/System/` until a later promote-to-`SPEC-*` decision (D-009)
 - Schema/derive module changes require restarting `/dashboard` (file watch re-derives data, not reloaded Zod enums)
