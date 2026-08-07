@@ -38,7 +38,8 @@ Lets the founder see phases, Work, Signals, and Knowledge projected from Docs/.
 - Rule: Work page shows outcome ledger `WORK.yaml`; Signals shows derived health only
 - Rule: Activity **page** lists process/ops allowlist only (D-023): default `handoff`/`close`/`check`/`ship`; optional chips `launch`/`dashboard`/`status`/`triage`/`system`; no outcome-type rows or chips
 - Rule: Activity Status / Feature / Area join `WORK.yaml` when `ref` is a Work id (ledger SSOT); phase-linked events still use phase tags
-- Rule: Work kinds include `design` (`S-nnn`); `/design` upserts `status: active` before other edits
+- Rule: Work kinds include `design` (`S-nnn`); UI shows human kind labels (e.g. Design); `D-nnn` remains decisions only (not Work ids); `/design` upserts `status: active` before other edits
+- Rule: Work / Roadmap / Activity ID cells include a copy control; Activity copies `ts type ref` (no durable event id)
 - Rule: Work/Phase detail section labels (D-024): **Brief** = authored intent (Work `note`; Phase `## Brief` if present else `## Context`); **Context** = declared `context_paths` (honest empty if none); **Files** = ownership trees (ledger/spec homes + spec `paths` / phase `amends_specs`)
 - Rule: Work detail also surfaces `open_questions`, `done_summary`, and derived **Activity** trail (`ref === id`, including outcome types)
 - Rule: `context_paths` are declared (nullable); never presented as a complete automatic read set; do not invent paths from tool traces
@@ -46,6 +47,7 @@ Lets the founder see phases, Work, Signals, and Knowledge projected from Docs/.
 - Rule: Durable outcome commands appear as Work rows; activity.jsonl remains the append-only journal (D-022); Activity page is not the full journal (D-023)
 
 - Rule: Table summaries truncate at 80 chars (full text in tooltip); column headers own sort
+- Rule: Work table defaults to Age newest-first; Roadmap schedule sort pins active phase(s) first, then Order; user sort/filter prefs persist until changed or Reset
 - Rule: Age (and Activity time) columns default to newest-first on first click; second click toggles
 - Rule: No page subtitles under the topbar title; no table “Showing N of M / columns…” meta bylines
 - Rule: Feature/Area filters live in a Filters pop-up panel (not primary chip row); Reset clears filters/sort/search per table page; Filters badge is a small count chip

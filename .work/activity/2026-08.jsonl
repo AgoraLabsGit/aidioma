@@ -147,3 +147,13 @@
 {"ts":"2026-08-07T18:20:54Z","type":"spec","actor":"agent","cmd":"/design","phase":null,"ref":"SPEC-F-DEV-DASHBOARD","status":"complete","summary":"D-024 Brief/Context/Files rules"}
 {"ts":"2026-08-07T18:21:54Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":null,"status":"complete","summary":"work lane: typecheck+test 32/32+validate issues=0"}
 {"ts":"2026-08-07T18:23:12Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-29","status":"complete","summary":"Reduced close: D-022–D-024 Work/Activity separation + Brief/Context; merged 3991e17"}
+{"ts":"2026-08-07T18:32:53Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-020","status":"active","summary":"Implement D-024 context_paths + Brief/Context UI"}
+{"ts":"2026-08-07T18:33:44Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-020","status":"complete","summary":"Ship D-024 context_paths + Brief/Context/Files UI"}
+{"ts":"2026-08-07T18:35:22Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-021","status":"active","summary":"Work newest-first + Roadmap active-first defaults"}
+{"ts":"2026-08-07T18:36:36Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-021","status":"complete","summary":"Work Age newest-first; Roadmap schedule pins active then Order"}
+{"ts":"2026-08-07T18:38:29Z","type":"design","actor":"agent","cmd":"/design","phase":null,"ref":"S-003","status":"complete","summary":"Re-close S-003; Adv WARN acked (was lost before publish)"}
+{"ts":"2026-08-07T18:44:21Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-022","status":"active","summary":"Copy IDs + Design kind labels"}
+{"ts":"2026-08-07T18:44:37Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-022","status":"active","summary":"Copy IDs + Design kind labels"}
+{"ts":"2026-08-07T18:45:26Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-022","status":"complete","summary":"Copy IDs + humanize Work kind labels"}
+{"ts":"2026-08-07T18:46:00Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":null,"status":"failed","summary":"work:typecheck FAIL — PhaseFrontmatter fixtures missing context_paths"}
+{"ts":"2026-08-07T18:46:20Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":null,"status":"complete","summary":"work lane: typecheck+test 35/35+validate issues=0"}

@@ -281,7 +281,7 @@ one card per `active`/`blocked` phase so parallel phases do not collapse into on
 |---|---|
 | Header | id + title + `outcome` (state/type live in Status only) |
 | Status | Two-column glance (4+4) — left: state, type, owner, opened · right: proof_kind, git, check, issues |
-| Phase card | One card, sections: Context (+ out of scope), Plan, Proof, Dependencies (`depends_on`), Specs amended (`amends_specs`), Inputs (body), Files, Work/Signals, **Activity** (events with phase/ref), **Audits** (latest `/audit` activity for phase or honest “not run”), **Tests** (`last_check` or “not run”; build always, design when a check exists). **Tables vs lists:** authored `\|` markdown → real `.md-table`. Numbered Plan / proof checklist → row+divider lists. Out of scope → plain bullets. |
+| Phase card | One card, sections: **Brief** (`## Brief` else `## Context` + out of scope), **Context** (`context_paths`, honest empty), Plan, Proof, Dependencies (`depends_on`), Specs amended (`amends_specs`), Inputs (body), Files (ownership trees), Work/Signals, **Activity** (events with phase/ref), **Audits** (latest `/audit` activity for phase or honest “not run”), **Tests** (`last_check` or “not run”; build always, design when a check exists). **Tables vs lists:** authored `\|` markdown → real `.md-table`. Numbered Plan / proof checklist → row+divider lists. Out of scope → plain bullets. (D-024) |
 | Commands panel | Header icon **left of** reindex opens a read-only command map (class + does + May invoke). Copy-to-clipboard cmd names only — no run buttons (D-019). |
 | Handoff | Below the phase stack on Active only — `HANDOFF.md` with `updated_at` |
 
@@ -300,7 +300,8 @@ Active UI** (founder removed the command bar / suggested-next box).
 | ID | Order | Kind | Summary | Feature | Area | Status | Age |
 
 - **Order** = 1-based schedule step from `depends_on` depth → frontmatter `order` → id (not the raw `order` field)
-- **Default sort: schedule** — same ranking; click ID or Order to restore it
+- **Default sort: schedule** — **active phase(s) first**, then remaining phases by that Order
+  ranking; click ID or Order to restore it
 - **Sortable headers:** every column except Summary (ID, Order, Kind, Feature, Area, Status, Age)
 - Design phases visually distinct from build
 - Canceled rows show `lessons` inline
@@ -368,9 +369,10 @@ process spine (D-023). Plan/design/research/audit are outcome work (correct home
 
 Kinds: `fix` · `task` · `proposal` · `research` · `question` · `audit` · `design` (`S-nnn`).
 Status filters: Open = `open`+`active`; Closed = `done`+`promoted`+`dropped`.
-Table summaries capped at 80 chars (tooltip = full). **Sortable headers:** every column except
-Summary (ID, Kind, Feature, Area, Status, Age). Click toggles **asc/desc** (▴/▾); persists with
-filters. No Sort select.
+Table summaries capped at 80 chars (tooltip = full). **Default sort: Age newest-first**
+(`sort: age`, `sortDir: desc`). **Sortable headers:** every column except Summary (ID, Kind,
+Feature, Area, Status, Age). Click toggles **asc/desc** (▴/▾); persists with filters until the
+user changes them or Reset. No Sort select.
 **Age:** prefer `opened` as UTC ISO datetime (real relative time). Date-only `YYYY-MM-DD`
 (legacy) shows calendar days (`today` / `Nd ago`) — never hours-from-midnight.
 `/fix` `/task` `/audit` `/research` `/design` write `status: active` + ISO `opened` **before** other edits.

@@ -130,10 +130,10 @@ function filterWork(
 }
 
 const DEFAULT_FILTERS = {
-  roadmap: { state: "", type: "", feature: "", area: "", q: "", sort: "schedule" },
-  activity: { type: "", feature: "", area: "", q: "", sort: "time" },
-  work: { kind: "", status: "", feature: "", area: "", q: "", sort: "open-first" },
-  signals: { severity: "", kind: "", status: "open", feature: "", area: "", q: "", sort: "severity" },
+  roadmap: { state: "", type: "", feature: "", area: "", q: "", sort: "schedule", sortDir: "asc" },
+  activity: { type: "", feature: "", area: "", q: "", sort: "time", sortDir: "desc" },
+  work: { kind: "", status: "", feature: "", area: "", q: "", sort: "age", sortDir: "desc" },
+  signals: { severity: "", kind: "", status: "open", feature: "", area: "", q: "", sort: "severity", sortDir: "asc" },
 } as const;
 
 function filtersAreDefault(page: keyof typeof DEFAULT_FILTERS, filters: Record<string, string>): boolean {
@@ -145,25 +145,28 @@ function workBucketRank(status: string): number {
   return workBucket(status) === "open" ? 0 : 1;
 }
 
-function sortWork(rows: Work[], sort: string): Work[] {
+/** Asc = older first via age_days (higher age_days = older). orient(desc) ⇒ newest first. */
+function sortWork(rows: Work[], sort: string, sortDir = "asc"): Work[] {
+  const orient = (cmp: number) => (cmp === 0 ? 0 : sortDir === "asc" ? cmp : -cmp);
   return [...rows].sort((left, right) => {
+    let cmp = 0;
     if (sort === "kind") {
-      return workBucketRank(left.status) - workBucketRank(right.status)
+      cmp = workBucketRank(left.status) - workBucketRank(right.status)
         || left.kind.localeCompare(right.kind)
         || right.age_days - left.age_days;
-    }
-    if (sort === "status") {
-      return workBucketRank(left.status) - workBucketRank(right.status)
+    } else if (sort === "status") {
+      cmp = workBucketRank(left.status) - workBucketRank(right.status)
         || left.status.localeCompare(right.status)
         || right.age_days - left.age_days;
+    } else if (sort === "id") {
+      cmp = workBucketRank(left.status) - workBucketRank(right.status) || left.id.localeCompare(right.id);
+    } else if (sort === "age") {
+      cmp = right.age_days - left.age_days;
+    } else {
+      // open-first legacy
+      cmp = workBucketRank(left.status) - workBucketRank(right.status) || right.age_days - left.age_days;
     }
-    if (sort === "id") {
-      return workBucketRank(left.status) - workBucketRank(right.status) || left.id.localeCompare(right.id);
-    }
-    if (sort === "age") {
-      return right.age_days - left.age_days;
-    }
-    return workBucketRank(left.status) - workBucketRank(right.status) || right.age_days - left.age_days;
+    return orient(cmp);
   });
 }
 
@@ -173,6 +176,11 @@ function stateRank(value: string): number {
 
 function sortPhases(rows: Phase[], sort: string): Phase[] {
   return [...rows].sort((left, right) => {
+    if (sort === "schedule") {
+      const leftActive = left.state === "active" ? 0 : 1;
+      const rightActive = right.state === "active" ? 0 : 1;
+      return leftActive - rightActive || left.order - right.order || left.id.localeCompare(right.id);
+    }
     if (sort === "order") return left.order - right.order;
     if (sort === "age") return right.age_days - left.age_days;
     if (sort === "title") return left.title.localeCompare(right.title);
@@ -350,7 +358,13 @@ describe("Work filters", () => {
     expect(filterWork(work, { kind: "proposal", status: "", q: "" }).map((w) => w.id)).toEqual(["W-004"]);
   });
 
-  it("open-first sort puts open/active above done", () => {
+  it("default Age desc is newest-first", () => {
+    expect(DEFAULT_FILTERS.work.sort).toBe("age");
+    expect(DEFAULT_FILTERS.work.sortDir).toBe("desc");
+    expect(sortWork(work, "age", "desc").map((w) => w.id)).toEqual(["W-003", "W-004", "W-001"]);
+  });
+
+  it("open-first legacy puts open/active above done", () => {
     expect(sortWork(work, "open-first").map((w) => w.id)).toEqual(["W-003", "W-004", "W-001"]);
   });
 
@@ -365,7 +379,7 @@ describe("Work filters", () => {
     });
     expect(sortWork(work, TABLE_SORT_KEYS.work.id).map((w) => w.id)).toEqual(["W-003", "W-004", "W-001"]);
     expect(sortWork(work, TABLE_SORT_KEYS.work.kind).map((w) => w.kind)).toEqual(["proposal", "task", "fix"]);
-    expect(sortWork(work, TABLE_SORT_KEYS.work.age).map((w) => w.id)).toEqual(["W-001", "W-003", "W-004"]);
+    expect(sortWork(work, TABLE_SORT_KEYS.work.age, "asc").map((w) => w.id)).toEqual(["W-001", "W-003", "W-004"]);
   });
 });
 
@@ -390,6 +404,16 @@ describe("Column-header sort keys", () => {
       "active",
       "proposed",
       "closed",
+    ]);
+  });
+
+  it("Roadmap schedule default pins active first, then Order", () => {
+    expect(DEFAULT_FILTERS.roadmap.sort).toBe("schedule");
+    // active PHASE-004 (order 2) before closed PHASE-001 (order 1) and proposed PHASE-002 (order 3)
+    expect(sortPhases(phases, "schedule").map((p) => p.id)).toEqual([
+      "PHASE-004",
+      "PHASE-001",
+      "PHASE-002",
     ]);
   });
 

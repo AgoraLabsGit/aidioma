@@ -16,7 +16,8 @@ Scoped review — **not** the `/close` merge gate.
 3. Clarifications → `open_questions` on this row.
 4. Run review via **sub-agent** (fresh context). Coordinator only if scope is already fully
    loaded and trivial. Findings → `done_summary`.
-5. `status: done`. Activity `type: audit`. Report id.
+5. `status: done` + `done_summary`. Set `context_paths` when material paths informed the audit
+   (`null` ok). Activity `type: audit`. Report id.
 
 **May invoke:** review sub-agent (default).  
 **Must not:** merge to main; replace `/close`; write application code unless founder asked for fixes (then `/fix`/`/task`).

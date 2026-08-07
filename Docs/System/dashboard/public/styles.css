@@ -446,6 +446,30 @@ body {
   text-decoration: underline;
 }
 
+.id-cell {
+  white-space: nowrap;
+}
+.id-cell-text {
+  margin-right: 0.25rem;
+}
+.id-copy {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-subtle);
+  cursor: pointer;
+  padding: 0 0.2rem;
+  font: inherit;
+  font-size: var(--fs-2xs);
+  line-height: 1;
+  border-radius: var(--radius-sm);
+  vertical-align: middle;
+}
+.id-copy:hover {
+  color: var(--accent);
+  border-color: var(--accent-border);
+  background: var(--surface-hover);
+}
+
 .workspace {
   position: relative;
 }

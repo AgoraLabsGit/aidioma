@@ -4,7 +4,10 @@ Append only. Every `/system` change adds one line.
 
 | Date | schema_version | Change |
 |---|---|---|
-| 2026-08-07 | 3 | D-024/S-003: Brief vs Context labels; declared context_paths (Adv WARN pending ack) |
+| 2026-08-07 | 3 | T-022: Copy ID on Work/Roadmap/Activity; humanize Work kind labels; keep D-/S- |
+| 2026-08-07 | 3 | T-021: Work default Age newest-first; Roadmap schedule pins active then Order |
+| 2026-08-07 | 3 | T-020: Ship D-024 — `context_paths` schema; Brief/Context/Files UI; skills fill at done |
+| 2026-08-07 | 3 | D-024/S-003: Brief vs Context labels; declared context_paths (Adv WARN acked) |
 | 2026-08-07 | 3 | D-023: Work = outcomes; Activity page = process spine allowlist (keep both) |
 | 2026-08-07 | 3 | F-014: Work detail Context + Files (Phase parity) |
 | 2026-08-07 | 3 | F-015: Work kind `design` (`S-nnn`) in schema/Zod |

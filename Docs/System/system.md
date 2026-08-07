@@ -109,7 +109,8 @@ one place that state survives. `/close` and `/status --repair` never clean anyth
 | `phase` | Nullable phase id if tied mid-flight |
 | `promoted_to` | Phase or research id when promoted |
 | `blocked_by` | Another work id, if any |
-| `note` | Optional short misc line |
+| `note` | Optional Brief (authored intent) |
+| `context_paths` | Optional declared paths that informed the work (D-024); fill at `done` — not a tool-read log |
 | `open_questions` | Clarifications for **this** row (`[{q, answer, asked}]`); not a new Work row |
 | `done_summary` | What shipped + evidence when `done` |
 
