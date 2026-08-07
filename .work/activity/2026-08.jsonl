@@ -87,3 +87,4 @@
 {"ts":"2026-08-07T16:34:23Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-005","status":"active","summary":"Work Age broken (date-only→fake hours); active-first logging"}
 {"ts":"2026-08-07T16:35:06Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-005","status":"complete","summary":"Work Age: ISO opened + date-only calendar age; active-first flush required"}
 {"ts":"2026-08-07T16:38:00Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"T-010","status":"complete","summary":"work lane: typecheck+test(29)+validate issues=0"}
+{"ts":"2026-08-07T16:41:30Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-23","status":"complete","summary":"Reduced close: merged PR #23 (T-010 Filters panel, T-007/8/9, F-005 Age, A-002/3/4); CI green; docs/ssot @ b2e5282"}
