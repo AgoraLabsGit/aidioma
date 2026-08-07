@@ -3,9 +3,10 @@ schema_version: 3
 updated: 2026-08-07
 ---
 
-# Reduced close (standalone `/fix` · `/task`)
+# Reduced close (`/close` with no active phase)
 
-Mini checklist when publishing outside `/close`. Full phase close stays in `system.md` §10.
+Invoked by **`/close`** when no phase is `active` (task/fix/research sessions). Same operator
+verb as phase close. Full phase close stays in `system.md` §10 / close skill path A.
 
 ## Order
 

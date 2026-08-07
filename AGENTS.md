@@ -30,6 +30,7 @@ See `Docs/System/COMMANDS.md`. Lifecycle: `/plan` `/run` `/close` `/ship`. Actio
 `/handoff`. Meta: `/system`.
 
 - `/run` may commit on the phase branch. Merges require audited close checks.
+- `/close` always: active phase → full close; no phase → reduced close (D-021).
 - `/handoff` overwrites `Docs/Handoffs/HANDOFF.md` only — no commit/PR/merge.
 - `/system` only while no phase is `active`; writes under `Docs/System/`.
 

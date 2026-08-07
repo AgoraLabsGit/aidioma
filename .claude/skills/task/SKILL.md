@@ -9,8 +9,8 @@ description: Do intentional small work that is not a defect and not phase-sized;
 2. Load path-owning specs before edits; never invent specs.
 3. Blocked on a decision → `open_questions` on **this** row; pause.
 4. Smallest coherent change + proof when practical.
-5. Before standalone publish → `/check`. Then `Docs/System/protocols/reduced-close.md` if publishing.
-6. `status: done` + `done_summary`. Activity. Report id.
+5. `status: done` + `done_summary`. Activity. Report id.
+6. To publish → operator `/close` (no phase ⇒ reduced close). Do not invent a separate publish ritual.
 7. Needs design/multi-session → `/log` `proposal` or confirm `/plan`.
 
 **May invoke:** `/check` before publish; optional `/audit`; `/log` / `/plan` if stretches.  

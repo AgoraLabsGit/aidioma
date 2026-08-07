@@ -679,3 +679,16 @@
   open_questions: null
   done_summary: "Moved adv/mcoo/path-lens/reduced-close → protocols/; Dashboard-spec → specs/; updated COMMANDS, system.md layout, skills. Root keeps system/COMMANDS/CHANGELOG/ci-policy."
   opened: 2026-08-07
+- id: T-006
+  kind: task
+  summary: "/close dispatches reduced close when no phase active (D-021)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "close skill path A/B; COMMANDS/AGENTS/system/reduced-close/fix/task skills; D-021. Reduced-close executed on PR #21."
+  opened: 2026-08-07

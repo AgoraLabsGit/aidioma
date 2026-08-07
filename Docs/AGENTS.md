@@ -65,8 +65,9 @@ On `done`, set `done_summary` (what shipped + evidence pointers).
   `/research` `/design` `/fix` `/task` `/audit` `/check` (see COMMANDS).
 - **`/triage`:** active phase → that `phase:` only. No phase → unassigned batch; after material
   batch → `/check` (+ `/audit` if risky).
-- **`/close`:** phase `/triage` → **`/check`** → Proof/Scope/Publish (nested lenses) → merge.
-  Never skip triage or `/check`.
+- **`/close`:** always. **Active phase** → triage → `/check` → full lenses → merge.
+  **No phase** → reduced close (`protocols/reduced-close.md`) → merge. Never skip `/check`.
+  Never refuse `/close` for lack of a phase.
 
 ## Coordinator + sub-agents
 

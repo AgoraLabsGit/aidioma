@@ -14,10 +14,12 @@ Thin key. Detail: `System/system.md`. Staging: hand-edited until `/system` gener
 |---|---|---|---|---|
 | `/plan` | New work not on Roadmap | Phase file; MCOO; may promote Work proposal | Contract named; Adv optional if contested | `/research` (if options open); `/log` |
 | `/run` | Start/resume the one active phase | Execute outcome; commit on phase branch | Start phase `/triage`; proof + seams; Adv at `/close` | `/triage`, `/research`, `/design`, `/fix`, `/task`, `/audit`, `/check`, `/log`, `/status`, `/handoff`, `/launch`, `/dashboard` |
-| `/close` | Phase complete | Triage → `/check` → Proof/Scope/Publish → PR → merge | Nested lenses + Adv claims; `/check` required | `/triage`, `/check`, `/audit`, Bugbot/security/code-review helpers |
+| `/close` | End session / publish | **Active phase:** triage → `/check` → full Proof/Scope/Publish → merge. **No phase:** [reduced-close.md](protocols/reduced-close.md) → merge | Phase: Adv + nested lenses. Standalone: reduced; `/check` always | `/triage` (phase), `/check`, `/audit`, review helpers |
 | `/ship` | Promote to production | Deploy + `RELEASES.md` | Preconditions incl. last `/check` green | `/check` |
 
-`/close --cancel` → `canceled`, no merge. `/close --dry-run` → triage + `/check` + three checks, findings → `WORK.yaml`.
+`/close --cancel` → phase `canceled`, no merge (phase path only).  
+`/close --dry-run` → checks only; findings → `WORK.yaml`.  
+Never refuse `/close` because no phase is active — run reduced close.
 
 **Must precede:** `/plan` and `/design` review relevant `Research/R-*` (run `/research` first if options are open) before locking a phase or decisions.
 
@@ -27,8 +29,8 @@ Thin key. Detail: `System/system.md`. Staging: hand-edited until `/system` gener
 |---|---|---|---|
 | `/research` | `Research/R-*.md` + optional decision | **Required Adv** + verdict | Adv sub-agent; optional `/design` if behavior locks |
 | `/design` | Decisions and/or a spec | Review Research first; **Required Adv** | `/research` if missing; Adv sub-agent |
-| `/fix` | Patch + proof + Work `fix` + `done_summary` | Required proof; [reduced-close.md](protocols/reduced-close.md) if publishing | `/check` before publish; optional `/audit`; `/log`/`/plan` if stretches |
-| `/task` | Patch/docs + proof + Work `task` + `done_summary` | Required proof (light); [reduced-close.md](protocols/reduced-close.md) if publishing | `/check` before publish; optional `/audit`; `/log`/`/plan` if stretches |
+| `/fix` | Patch + proof + Work `fix` + `done_summary` | Required proof; publish via `/close` (reduced) | `/check`; `/close` to publish; optional `/audit`; `/log`/`/plan` if stretches |
+| `/task` | Patch/docs + proof + Work `task` + `done_summary` | Required proof (light); publish via `/close` (reduced) | `/check`; `/close` to publish; optional `/audit`; `/log`/`/plan` if stretches |
 | `/audit` | Findings + Work `audit` + `done_summary` | Is the audit (not merge gate) | Review sub-agent |
 
 ## Utility
@@ -58,7 +60,7 @@ Thin key. Detail: `System/system.md`. Staging: hand-edited until `/system` gener
 | **Required Adv** | `/research`, `/design`, `/close` claims | [`adv-protocol.md`](protocols/adv-protocol.md) |
 | **MCOO** | `/plan` (cheap) · `/close` Scope (binding FAIL list) | [`mcoo-checklist.md`](protocols/mcoo-checklist.md) |
 | **Path → lens** | `/close` Proof (conditional) | [`path-lens-map.md`](protocols/path-lens-map.md) |
-| **Reduced close** | Standalone `/fix` `/task` publish | [`reduced-close.md`](protocols/reduced-close.md) |
+| **Reduced close** | `/close` when no phase active (also end of `/fix`/`/task` publish) | [`reduced-close.md`](protocols/reduced-close.md) |
 
 ## Close lenses (nested under Proof / Scope / Publish)
 
