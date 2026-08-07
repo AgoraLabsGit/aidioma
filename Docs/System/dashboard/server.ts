@@ -4,11 +4,18 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { derive, type DeriveIndex } from "../derive/derive.js";
+import {
+  derive,
+  resolvePrimaryWorktreeRoot,
+  type DeriveIndex,
+} from "../derive/derive.js";
+import type { GitWorktree } from "../derive/worktrees.js";
 import { extractDecisionSection } from "../derive/parser.js";
 
 const dashboardDirectory = fileURLToPath(new URL(".", import.meta.url));
 const publicDirectory = path.join(dashboardDirectory, "public");
+/** Package lives at Docs/System/dashboard — repo root is three levels up. */
+const packageRepositoryRoot = path.resolve(dashboardDirectory, "../../..");
 const DEFAULT_PORT = 4317;
 const DEBOUNCE_MS = 300;
 
@@ -24,6 +31,8 @@ export type DashboardServerOptions = {
   docsRoot?: string;
   onError?: (error: unknown) => void;
   watch?: boolean;
+  /** Test injection for worktree overlay (D-018). */
+  worktrees?: GitWorktree[];
 };
 
 type SseClient = ServerResponse;
@@ -79,68 +88,148 @@ function send(
   else response.end(body);
 }
 
-function resolveRepositoryRoot(options: DashboardServerOptions): string {
-  return options.repositoryRoot
-    ? path.resolve(options.repositoryRoot)
-    : path.resolve(dashboardDirectory, "../../..");
+async function resolveRepositoryRoot(options: DashboardServerOptions): Promise<string> {
+  if (options.repositoryRoot) return path.resolve(options.repositoryRoot);
+  // Always root at the primary git worktree (D-018), even when started from a phase worktree.
+  return resolvePrimaryWorktreeRoot(packageRepositoryRoot);
+}
+
+function docsRootForRelative(index: DeriveIndex, relativeDocsPath: string): string {
+  const overlay = index.projection_roots?.overlay;
+  if (overlay && (index.overlay_doc_paths ?? []).includes(relativeDocsPath)) {
+    return path.join(overlay, "Docs");
+  }
+  return path.join(index.projection_roots.primary, "Docs");
 }
 
 async function findDocPath(
   index: DeriveIndex,
-  repositoryRoot: string,
   id: string,
-): Promise<string | null> {
-  const docsRoot = path.join(repositoryRoot, "Docs");
+): Promise<{ absolutePath: string; relativePath: string } | null> {
   const phase = index.phases.find((item) => item.id === id);
-  if (phase) return path.join(docsRoot, phase.sourcePath);
+  if (phase) {
+    const relativePath = phase.sourcePath;
+    return {
+      absolutePath: path.join(docsRootForRelative(index, relativePath), relativePath),
+      relativePath: path.join("Docs", relativePath),
+    };
+  }
   const spec = index.specs.find((item) => item.id === id);
-  if (spec) return path.join(docsRoot, spec.sourcePath);
+  if (spec) {
+    const relativePath = spec.sourcePath;
+    return {
+      absolutePath: path.join(docsRootForRelative(index, relativePath), relativePath),
+      relativePath: path.join("Docs", relativePath),
+    };
+  }
   const research = index.research.find((item) => item.id === id);
-  if (research) return path.join(docsRoot, research.sourcePath);
-  if (id === "HANDOFF") return path.join(docsRoot, "Handoffs", "HANDOFF.md");
-  if (id === "PRODUCT") return path.join(docsRoot, "PRODUCT.md");
-  if (id === "DECISIONS") return path.join(docsRoot, "DECISIONS.md");
+  if (research) {
+    const relativePath = research.sourcePath;
+    return {
+      absolutePath: path.join(docsRootForRelative(index, relativePath), relativePath),
+      relativePath: path.join("Docs", relativePath),
+    };
+  }
+  if (id === "HANDOFF") {
+    const relativePath = "Handoffs/HANDOFF.md";
+    return {
+      absolutePath: path.join(docsRootForRelative(index, relativePath), relativePath),
+      relativePath: path.join("Docs", relativePath),
+    };
+  }
+  if (id === "PRODUCT") {
+    return {
+      absolutePath: path.join(index.projection_roots.primary, "Docs", "PRODUCT.md"),
+      relativePath: path.join("Docs", "PRODUCT.md"),
+    };
+  }
+  if (id === "DECISIONS") {
+    return {
+      absolutePath: path.join(index.projection_roots.primary, "Docs", "DECISIONS.md"),
+      relativePath: path.join("Docs", "DECISIONS.md"),
+    };
+  }
   return null;
 }
 
 async function resolveDocBody(
   index: DeriveIndex,
-  repositoryRoot: string,
   id: string,
 ): Promise<{ relativePath: string; body: string } | null> {
-  const docsRoot = path.join(repositoryRoot, "Docs");
-  const docPath = await findDocPath(index, repositoryRoot, id);
+  const docPath = await findDocPath(index, id);
   if (docPath) {
     return {
-      relativePath: path.relative(repositoryRoot, docPath),
-      body: await readFile(docPath, "utf8"),
+      relativePath: docPath.relativePath,
+      body: await readFile(docPath.absolutePath, "utf8"),
     };
   }
   if (/^D-\d{3}$/u.test(id) && index.decisions.some((decision) => decision.id === id)) {
-    const decisionsPath = path.join(docsRoot, "DECISIONS.md");
+    const relativePath = "DECISIONS.md";
+    const decisionsPath = path.join(docsRootForRelative(index, relativePath), relativePath);
     const source = await readFile(decisionsPath, "utf8");
-    const body = extractDecisionSection(source, id);
+    let body = extractDecisionSection(source, id);
+    if (!body && index.projection_roots.overlay) {
+      const primaryPath = path.join(index.projection_roots.primary, "Docs", relativePath);
+      const primarySource = await readFile(primaryPath, "utf8");
+      body = extractDecisionSection(primarySource, id);
+      if (body) {
+        return { relativePath: path.join("Docs", relativePath), body };
+      }
+    }
     if (!body) return null;
-    return { relativePath: path.join("Docs", "DECISIONS.md"), body };
+    return { relativePath: path.join("Docs", relativePath), body };
   }
   return null;
 }
 
 export function createDashboardServer(options: DashboardServerOptions = {}): Server {
   assertDashboardEnvironment();
-  const repositoryRoot = resolveRepositoryRoot(options);
   const sseClients = new Set<SseClient>();
   let cachedIndex: DeriveIndex | null = null;
   let debounceTimer: NodeJS.Timeout | null = null;
   let watcher: FSWatcher | null = null;
+  let watchedRoots = new Set<string>();
+  let repositoryRootPromise: Promise<string> | null = null;
   let rebuilding = false;
   let rebuildQueued = false;
+
+  const getRepositoryRoot = (): Promise<string> => {
+    repositoryRootPromise ??= resolveRepositoryRoot(options);
+    return repositoryRootPromise;
+  };
 
   const broadcast = (index: DeriveIndex): void => {
     const payload = `event: index\ndata: ${JSON.stringify({ indexed_at: index.indexed_at })}\n\n`;
     for (const client of sseClients) {
       client.write(payload);
     }
+  };
+
+  const syncWatches = (index: DeriveIndex): void => {
+    if (options.watch === false) return;
+    const roots = [
+      path.join(index.projection_roots.primary, "Docs"),
+      path.join(index.projection_roots.primary, ".work", "activity"),
+    ];
+    if (index.projection_roots.overlay) {
+      roots.push(
+        path.join(index.projection_roots.overlay, "Docs"),
+        path.join(index.projection_roots.overlay, ".work", "activity"),
+      );
+    }
+    const next = new Set(roots);
+    const same =
+      next.size === watchedRoots.size && [...next].every((root) => watchedRoots.has(root));
+    if (same && watcher) return;
+
+    void watcher?.close();
+    watchedRoots = next;
+    watcher = watch([...next], {
+      ignoreInitial: true,
+      awaitWriteFinish: { stabilityThreshold: 100, pollInterval: 50 },
+    });
+    watcher.on("all", () => scheduleRebuild());
+    watcher.on("error", (error) => options.onError?.(error));
   };
 
   const rebuild = async (): Promise<DeriveIndex> => {
@@ -154,11 +243,15 @@ export function createDashboardServer(options: DashboardServerOptions = {}): Ser
     rebuilding = true;
     rebuildQueued = false;
     try {
+      const repositoryRoot = await getRepositoryRoot();
       cachedIndex = await derive({
         repositoryRoot,
         docsRoot: options.docsRoot,
         writeIndex: true,
+        overlayWorktrees: true,
+        worktrees: options.worktrees,
       });
+      syncWatches(cachedIndex);
       broadcast(cachedIndex);
       return cachedIndex;
     } finally {
@@ -176,17 +269,6 @@ export function createDashboardServer(options: DashboardServerOptions = {}): Ser
       void rebuild().catch((error) => options.onError?.(error));
     }, DEBOUNCE_MS);
   };
-
-  if (options.watch !== false) {
-    const docsPath = path.join(repositoryRoot, "Docs");
-    const activityPath = path.join(repositoryRoot, ".work", "activity");
-    watcher = watch([docsPath, activityPath], {
-      ignoreInitial: true,
-      awaitWriteFinish: { stabilityThreshold: 100, pollInterval: 50 },
-    });
-    watcher.on("all", () => scheduleRebuild());
-    watcher.on("error", (error) => options.onError?.(error));
-  }
 
   void rebuild().catch((error) => options.onError?.(error));
 
@@ -322,7 +404,7 @@ export function createDashboardServer(options: DashboardServerOptions = {}): Ser
       }
       try {
         const index = cachedIndex ?? (await rebuild());
-        const resolved = await resolveDocBody(index, repositoryRoot, id);
+        const resolved = await resolveDocBody(index, id);
         if (!resolved) {
           send(
             request,

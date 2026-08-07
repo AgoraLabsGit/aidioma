@@ -6,18 +6,19 @@ generated_from: Docs/System/system.md
 # Agent contract
 
 **Staging:** hand-edited until the `/system` generator ships, then locked.
-Detail: `Docs/System/system.md`. Command key: `Docs/System/COMMANDS.md`.
+Detail: `Docs/System/system.md`. Command key: `Docs/System/COMMANDS.md` (audit bars + **May invoke**).
 
 ## Boot
 
 1. Read `.work/context.json` first.
-2. Know the command map (below). Prefer plain-language routing over asking the user for a slash.
+2. Know the command map + **May invoke / Must precede** in `COMMANDS.md`. Prefer plain-language routing.
 3. Before editing a file — load the owning spec. Never invent one.
 4. Before choosing among ≥2 external options — `/research`.
-5. Lifecycle (`/plan` `/run` `/close` `/ship`) — confirm first. Action/utility — act.
-6. ≤3 consequential decisions per checkpoint.
-7. After any command — append one `.work/activity/YYYY-MM.jsonl` event. Never edit past events.
-8. Cite Work/phases as **`W-015 — Parallel active phases`** (id + one-line summary). Never bare ids.
+5. `/plan` and `/design` — review relevant `Research/R-*` first (run `/research` if missing).
+6. Lifecycle (`/plan` `/run` `/close` `/ship`) — confirm first. Action/utility — act.
+7. ≤3 consequential decisions per checkpoint.
+8. After any command — append one `.work/activity/YYYY-MM.jsonl` event. Never edit past events.
+9. Cite Work/phases as **`id — summary`** (example: `W-015 — Parallel active phases`). Never bare ids.
 
 ## Commands (fit)
 
@@ -58,22 +59,20 @@ New Work ids: `F/T/P/R/Q/A-nnn` by kind; legacy `W-*` kept (never rename).
 Do **not** create a new `question` Work item for the same concern.
 On `done`, set `done_summary` (what shipped + evidence pointers).
 
-## `/triage`
+## `/run` / `/triage` / `/close`
 
-Filters: phase id · area · feature. Classify: do / blocked / plan / drop / leave.
-**Auto-execute** clear `/fix`/`/task` via sub-agents. **Confirm** only drop/`/plan`/lifecycle.
-Clarifications → `open_questions` on that row.
-
-**Phase-scoped:** If a phase is active (or `/triage PHASE-nnn`), **spawn a sub-agent** that only
-considers open/active Work with `phase: <that id>`. Do not mix in `phase: null` or other phases.
-
-**Close hygiene:** `/close` runs that phase-scoped `/triage` **before** audits, code review, or tests.
+- **`/run`:** start with phase-scoped `/triage` via **sub-agent** (phase id implicit). May invoke
+  `/research` `/design` `/fix` `/task` `/audit` `/check` (see COMMANDS).
+- **`/triage`:** active phase → that `phase:` only. No phase → unassigned batch; after material
+  batch → `/check` (+ `/audit` if risky).
+- **`/close`:** phase `/triage` → **`/check`** → Proof/Scope/Publish (nested lenses) → merge.
+  Never skip triage or `/check`.
 
 ## Coordinator + sub-agents
 
 One coordinator owns phase outcome + Work routing. Delegate bounded `/fix` `/task` `/audit` and
 **phase-scoped `/triage`** batches to sub-agents. Sub-agents return summary + ids; coordinator
-updates `WORK.yaml`.
+updates `WORK.yaml`. Follow skill **May invoke** lists — do not invent silent chains.
 
 ## Never load
 

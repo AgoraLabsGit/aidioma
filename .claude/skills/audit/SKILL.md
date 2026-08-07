@@ -5,13 +5,13 @@ description: Run a scoped review of a feature, area, spec, agent-context, or pro
 
 # /audit
 
-Action. Scoped review — not the `/close` merge gate (Proof/Scope/Publish still own merges).
+Scoped review — **not** the `/close` merge gate.
 
-1. Upsert `WORK.yaml` `kind: audit`, `status: active` (new ids: `A-nnn`). Scope = feature/area/spec/path/process named by user.
-2. Ask once if needed: **best audit lens for this scope?** Offer close-related lenses when relevant:
-   Proof · Scope · Publish · agent-context size/fit · classifier/routing gaps · schema drift.
-3. Record any clarification on the audit row's `open_questions`.
-4. Run the review (sub-agent OK). Findings → `done_summary` (concise; link paths).
-5. `status: done`. Activity `type: audit`. Report W-id.
+1. Upsert `WORK.yaml` `kind: audit`, `status: active` (ids: `A-nnn`).
+2. Ask once if needed: best lens? Offer: Proof · Scope · Publish · Adv claims · MCOO · seams · security · agent-context · classifier/routing · schema drift.
+3. Clarifications → `open_questions` on this row.
+4. Run review (sub-agent OK). Findings → `done_summary`.
+5. `status: done`. Activity `type: audit`. Report id.
 
-Must not: merge to main; replace `/close`; write product/learner code unless the audit scope is that code and founder asked for fixes (then `/fix`/`/task` separately).
+**May invoke:** review sub-agent.  
+**Must not:** merge to main; replace `/close`; write application code unless founder asked for fixes (then `/fix`/`/task`).

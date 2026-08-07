@@ -1,32 +1,24 @@
-# Current handoff — after PHASE-005 close
+# Current handoff — after PHASE-007
 
 **Date:** 2026-08-07
 
-**Branch:** `main` (after `/close` merge)
-**Worktree:** primary repo only
+**Branch:** `main` (after close)
 **Active phase:** none
-**Runtime:** dashboard stopped at close
+**Preserved:** primary may still be on `task/t-002-*` with Lexicon/DeepL dirty — leave alone
 
 ## Done
 
-- PHASE-005 closed — Work ledger + routing v2 + `/audit` + executing/phase-scoped `/triage`
-- Lexicon research included on close (R-001/R-002, D-014/D-015) with founder Scope WARN ack
-- Proposed next: PHASE-007 (audit matrix), PHASE-006 (Knowledge), PHASE-008 (artifact research)
+- PHASE-007 closed: D-018 interim overlay, D-019 audit bars + `/check` + May-invoke, D-020 Docs home approved (implement = P-001)
+- Adv protocol + MCOO checklist; skills project-agnostic
+- Commands panel (static COMMAND_MAP V1); Active Audits/Tests + `last_check`
 
-## Open (not this phase)
+## Open
 
-- W-015 — Parallel active phases (`phase: null`; `/research` later)
-- Product proposals W-005–W-014 — leave until PHASE-002+
-
-## Preserve
-
-- Lexicon stash per `Docs/PRESERVE.md`
+- P-001 — Implement D-020 Docs home; retire D-018 overlay
+- Residual from A-001: path→lens map; reduced-close mini checklist
 
 ## Next command
 
 ```text
-/run PHASE-007
-
-Read .work/context.json and Docs/Handoffs/HANDOFF.md.
-Design: command audit matrix, Active Audits/Tests wiring, Commands header panel.
+/plan Docs home (P-001 / D-020)
 ```

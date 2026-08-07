@@ -376,6 +376,79 @@ body {
   opacity: 0.7;
 }
 
+.commands-panel {
+  position: absolute;
+  top: var(--topbar-height, 56px);
+  right: var(--space-4);
+  z-index: 40;
+  width: min(520px, calc(100vw - 2rem));
+  max-height: min(70vh, 640px);
+  overflow: auto;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--text) 12%, transparent);
+}
+.commands-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+.commands-panel-header h2 {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+.commands-panel-body {
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+.commands-group + .commands-group {
+  margin-top: var(--space-4);
+}
+.commands-group h3 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-subtle);
+}
+.commands-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-2xs);
+}
+.commands-table th,
+.commands-table td {
+  text-align: left;
+  vertical-align: middle;
+  padding: 0.28rem 0.4rem;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.25;
+}
+.commands-table th {
+  color: var(--text-subtle);
+  font-weight: 600;
+  padding: 0.2rem 0.4rem;
+  line-height: 1.2;
+}
+.cmd-copy {
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+.cmd-copy:hover {
+  text-decoration: underline;
+}
+
+.workspace {
+  position: relative;
+}
+
 main {
   flex: 1;
   min-height: 0;

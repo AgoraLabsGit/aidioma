@@ -98,3 +98,58 @@ Date: 2026-08-07 · Phase: — · From: R-002 · Affects: [SPEC-F-LEXICON, SPEC-
 Chose: Keep frozen Lexicon posture — Kaikki offline QA/seed only; DeepL for later Translation/AI fallback; maps own lesson/collection binding
 Why: Different jobs; Kaikki has no stable sense ids or phrase/curriculum authority; Lexicon already uses `lex-*` + contextual maps
 Revisit if: A measured import pipeline publishes reviewed Kaikki candidates into `content/lexicon/` with receipt schema
+
+## D-018 — Main-rooted dashboard with active worktree overlay
+Date: 2026-08-07 · Phase: PHASE-007 · From: R-003 · Affects: [SPEC-F-DEV-DASHBOARD, SPEC-A-DEVSYSTEM]
+Chose: One `/dashboard` always rooted at the primary git worktree; `derive()` overlays the single active-phase worktree’s phases, HANDOFF, Research, WORK.yaml, and activity — over dual-writing `state: active` onto main or a separate live-mirror file
+Why: Founder needs live phase/work/activity on one main-rooted dashboard before `/close` merges; phase branch remains schedule SSOT for audited main
+Revisit if: Overlay merge rules drift from Docs SSOT, or parallel active phase worktrees become real (W-015)
+
+## D-019 — Command audit bars, /check protocol, and May-invoke links
+Date: 2026-08-07 · Phase: PHASE-007 · From: R-003 · Affects: [SPEC-A-DEVSYSTEM, SPEC-F-DEV-DASHBOARD]
+Chose: Nest close lenses under Proof/Scope/Publish; required Adv on `/research` `/design` `/close` claims; `/run` starts with implicit phase `/triage` (sub-agent) and no mandatory Adv; path-aware `/check` inside `/close` and standalone; explicit May-invoke / Must-precede links on every command (incl. `/plan`/`/design` review Research first)
+Why: Thin optional `/audit` failed founder intent; agents must chain commands from instructions, not invent workflow
+Revisit if: Required Adv on every `/run` coding slice becomes the default, or May-invoke tables drift from skills
+
+## D-020 — Docs+System home worktree (multi-agent SSOT)
+Date: 2026-08-07 · Phase: PHASE-007 · From: — · Affects: [SPEC-A-DEVSYSTEM, SPEC-F-DEV-DASHBOARD]
+Chose: Permanent **Docs home** worktree as the only writable SSOT for `Docs/**` (including `Docs/System/`) and `.work/**`; phase/task worktrees are for product code; `/dashboard` always roots at the Docs home — over D-018 primary+overlay and over dual-writing Docs across agent worktrees
+Why: Founder runs parallel agents (phase + tasks/fixes/research). Overlay still assumes one “live” Docs writer and merges trees; separate agent checkouts of `Docs/` diverge (`state: proposed` vs `active`). One Docs home gives one camera and one ledger without inventing multi-root truth.
+Revisit if: Docs-home merge lag blocks phase close, or two agents editing the same Docs-home files thrash `WORK.yaml` worse than overlay did
+Supersedes: D-018 — Main-rooted dashboard with active worktree overlay
+
+### Shape
+
+| | Docs home | Phase / task worktree |
+|---|---|---|
+| Branch | `docs/ssot` (merged to `main` via audited path) | `phase/*`, `task/*`, … |
+| Worktree path | `.worktrees/docs` (always present) | `.worktrees/phase-NNN`, etc. |
+| Writable | `Docs/**` (incl. `Docs/System/**`), `.work/**` | `apps/`, `packages/`, `content/`, product tests — **not** Docs/System/`.work` |
+| Dashboard | Always `cwd` / derive root = Docs home | May hold dashboard *code* during a System phase; still serves Docs home data |
+| Phase schedule | Phase files + `state:` live only here | Code commits only; do not flip `state:` here |
+
+**Not a new top-level `System/` folder.** System stays `Docs/System/` per layout allowlist.
+
+### Agent rules
+
+1. Before writing `Docs/` or `.work/` — `cd` Docs home (or open that worktree). Never write those paths on `phase/*` / `task/*`.
+2. `/dashboard` starts from Docs home only; refuse or stop servers rooted elsewhere.
+3. `/run` creates/uses the phase **code** worktree; activation (`state: active`) is committed on Docs home.
+4. `/close` = Docs-home schedule/spec/System commits (already on `docs/ssot` → `main`) + phase code PR. No requirement that phase branch carry Docs diffs.
+5. Parallel agents OK: phase agent on code tree; task/fix/research agents on Docs home (or code tree for code-only fixes).
+
+### Process surface (skills / AGENTS.md)
+
+**In** Docs home writable set (founder ack 2026-08-07): root `AGENTS.md`, `CLAUDE.md`,
+`.claude/skills/**` — same multi-agent drift class as System.
+
+### Non-goals
+
+- Multi-root derive overlay (D-018) as long-term SSOT
+- Top-level `System/` outside `Docs/`
+- Multiple active phase worktrees (W-015 unchanged)
+- File locking inside Docs home (two agents editing `WORK.yaml` still serialize in git)
+
+### Implement via
+
+Amend `system.md` §1/§4/§7/§12, `COMMANDS.md`, `AGENTS.md`, `/dashboard` `/run` `/close` `/task` `/fix` skills; remove or idle D-018 overlay once Docs home ships. Prefer `/plan` follow-on or absorb into PHASE-007 only with founder ack (overlay already coded).

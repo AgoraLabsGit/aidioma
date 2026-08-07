@@ -34,6 +34,10 @@ Keep this table tight. The comparison is fuel, not the output.
 The choice and the one or two reasons that actually decided it. If no option is acceptable, set
 `verdict: none` — a negative result is still a result.
 
+## Adv
+
+`ADV: PASS | WARN | FAIL` — per `System/adv-protocol.md`. Blockers or none.
+
 ## Revisit if
 
 The condition that would change this answer. Concrete and checkable — a price, a latency, a

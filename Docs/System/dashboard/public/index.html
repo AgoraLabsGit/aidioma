@@ -71,6 +71,14 @@
           <div class="heartbeat">
             <span id="indexed-at">indexed —</span>
           </div>
+          <button id="commands-panel-btn" type="button" class="reindex-btn" title="Commands" aria-label="Open commands panel" aria-expanded="false" aria-controls="commands-panel">
+            <svg class="reindex-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+              <path
+                fill="currentColor"
+                d="M4 6h16v2H4V6zm0 5h10v2H4v-2zm0 5h16v2H4v-2z"
+              />
+            </svg>
+          </button>
           <button id="reindex" type="button" class="reindex-btn" title="Reindex" aria-label="Reindex now">
             <svg class="reindex-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
               <path
@@ -81,6 +89,13 @@
           </button>
         </div>
       </header>
+      <aside id="commands-panel" class="commands-panel" hidden>
+        <div class="commands-panel-header">
+          <h2>Commands</h2>
+          <button type="button" id="commands-panel-close" class="reindex-btn" title="Close" aria-label="Close commands panel">×</button>
+        </div>
+        <div id="commands-panel-body" class="commands-panel-body"></div>
+      </aside>
 
       <main id="main">
         <section id="page-active" class="page" data-page-panel="active"></section>

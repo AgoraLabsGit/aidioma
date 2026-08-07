@@ -154,6 +154,8 @@ describe("work dashboard", () => {
     expect(html).toContain('id="page-signals"');
     expect(html).not.toMatch(/class="tab"[^>]*data-page="signals"/);
     expect(html).toContain('class="reindex-icon"');
+    expect(html).toContain('id="commands-panel-btn"');
+    expect(html).toContain('id="commands-panel"');
     const activeAt = html.indexOf('data-page="active"');
     const workAt = html.indexOf('data-page="work"');
     const roadmapAt = html.indexOf('data-page="roadmap"');
@@ -181,5 +183,67 @@ describe("work dashboard", () => {
     const { status, body } = await getJson(port, "/api/doc?id=D-999");
     expect(status).toBe(404);
     expect(body).toMatchObject({ error: "Document not found." });
+  });
+
+  it("overlays active phase docs from a linked worktree onto primary-rooted index", async () => {
+    const primary = await createFixture();
+    const overlay = await mkdtemp(path.join(tmpdir(), "aidioma-dash-overlay-"));
+    temporaryDirectories.push(overlay);
+    await mkdir(path.join(overlay, "Docs", "Roadmap", "Phases"), { recursive: true });
+    await mkdir(path.join(overlay, "Docs", "Handoffs"), { recursive: true });
+    await writeFile(
+      path.join(overlay, "Docs", "Roadmap", "Phases", "PHASE-001.md"),
+      `---
+id: PHASE-001
+title: Dashboard
+type: build
+proof_kind: visual
+state: active
+order: 1
+depends_on: []
+from_backlog: null
+owner: founder
+outcome: "See the dashboard"
+proof: "/dashboard"
+non_goals: []
+amends_specs: []
+opened: 2026-08-05
+closed: null
+lessons: null
+---
+# PHASE-001 overlay
+`,
+    );
+    await writeFile(
+      path.join(overlay, "Docs", "Handoffs", "HANDOFF.md"),
+      "# Handoff\nFrom overlay worktree\n",
+    );
+
+    const worktrees = [
+      { path: primary, head: null, branch: "main", isPrimary: true as const },
+      { path: overlay, head: null, branch: "phase/001", isPrimary: false as const },
+    ];
+    const server = createDashboardServer({
+      repositoryRoot: primary,
+      watch: false,
+      worktrees,
+    });
+    openServers.push(server);
+    const port = await listenOnLoopback(server, 0);
+
+    const { status, body } = await getJson(port, "/api/index");
+    expect(status).toBe(200);
+    expect(body).toMatchObject({
+      phases: [expect.objectContaining({ id: "PHASE-001", state: "active" })],
+      handoff: expect.objectContaining({ body: expect.stringContaining("From overlay worktree") }),
+      projection_roots: expect.objectContaining({
+        overlay_phase: "PHASE-001",
+        overlay_branch: "phase/001",
+      }),
+    });
+
+    const doc = await getJson(port, "/api/doc?id=HANDOFF");
+    expect(doc.status).toBe(200);
+    expect((doc.body as { body: string }).body).toContain("From overlay worktree");
   });
 });
