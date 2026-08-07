@@ -20,10 +20,10 @@ const FILTER_KEYS = {
 };
 
 const DEFAULT_FILTERS = {
-  roadmap: { state: "", type: "", q: "", sort: "schedule" },
-  activity: { type: "", q: "", sort: "time" },
-  work: { kind: "", status: "", q: "", sort: "open-first" },
-  signals: { severity: "", kind: "", status: "open", q: "", sort: "severity" },
+  roadmap: { state: "", type: "", feature: "", area: "", q: "", sort: "schedule" },
+  activity: { type: "", feature: "", area: "", q: "", sort: "time" },
+  work: { kind: "", status: "", feature: "", area: "", q: "", sort: "open-first" },
+  signals: { severity: "", kind: "", status: "open", feature: "", area: "", q: "", sort: "severity" },
 };
 
 function loadFilters(key, defaults) {
@@ -63,6 +63,7 @@ const state = {
   selectedId: null,
   lastIndexedAt: null,
   tocCollapsed: readStored(TOC_COLLAPSED_KEY) === "1",
+  filterPanelOpen: false,
 };
 
 const panels = {
@@ -131,11 +132,24 @@ function formatAge(iso) {
   return `${days}d ago`;
 }
 
-/** Table Age from a date-only field (YYYY-MM-DD) — shows hours when under 48h. */
+/**
+ * Table Age from Work/phase `opened`.
+ * - ISO datetime → real relative time (formatAge)
+ * - Date-only YYYY-MM-DD → calendar days only ("today" / "Nd ago") — never fake hours
+ *   from midnight UTC (that made every same-day row show e.g. "16h ago").
+ */
 function formatOpenedAge(opened) {
   if (!opened) return "—";
+  if (/^\d{4}-\d{2}-\d{2}T/u.test(opened)) {
+    return formatAge(opened);
+  }
   if (/^\d{4}-\d{2}-\d{2}$/u.test(opened)) {
-    return formatAge(`${opened}T00:00:00.000Z`);
+    const start = Date.parse(`${opened}T00:00:00.000Z`);
+    if (Number.isNaN(start)) return "—";
+    const days = Math.max(0, Math.floor((Date.now() - start) / (24 * 60 * 60 * 1000)));
+    if (days === 0) return "today";
+    if (days === 1) return "1d ago";
+    return `${days}d ago`;
   }
   return formatAge(opened);
 }
@@ -173,6 +187,127 @@ function featureAreaFromSpecId(specId) {
   return { feature: specId, area: null };
 }
 
+
+function matchesSpecFilter(value, filter) {
+  if (!filter) return true;
+  if (filter === "__none__") return value == null || value === "";
+  return value === filter;
+}
+
+function collectSpecOptions(items, getFeature, getArea) {
+  const features = new Set();
+  const areas = new Set();
+  let untaggedFeature = false;
+  let untaggedArea = false;
+  for (const item of items) {
+    const feature = getFeature(item);
+    const area = getArea(item);
+    if (feature) features.add(feature);
+    else untaggedFeature = true;
+    if (area) areas.add(area);
+    else untaggedArea = true;
+  }
+  return {
+    features: [...features].sort(),
+    areas: [...areas].sort(),
+    untaggedFeature,
+    untaggedArea,
+  };
+}
+
+function filtersAreDefault(page, filters) {
+  const defaults = DEFAULT_FILTERS[page];
+  if (!defaults) return true;
+  return Object.keys(defaults).every((key) => (filters[key] ?? "") === (defaults[key] ?? ""));
+}
+
+function deepFilterCount(filters) {
+  return [filters.feature, filters.area].filter(Boolean).length;
+}
+
+function activityTags(index, event) {
+  const phaseId = event.phase ?? event.ref ?? null;
+  if (!phaseId) return { feature: null, area: null };
+  const phase = (index.phases ?? []).find((row) => row.id === phaseId);
+  return { feature: phase?.feature ?? null, area: phase?.area ?? null };
+}
+
+function filterPanelHtml(page, filters, options) {
+  const open = state.filterPanelOpen && state.page === page;
+  const deepCount = deepFilterCount(filters);
+  const badge = deepCount ? `<span class="filter-badge">${deepCount}</span>` : "";
+  const dirty = !filtersAreDefault(page, filters);
+  return `
+    <div class="toolbar-actions">
+      <div class="filter-panel-wrap">
+        <button type="button" class="toolbar-btn" data-filter-panel-toggle aria-expanded="${open}" aria-haspopup="dialog">
+          Filters${badge}
+        </button>
+        <div class="filter-panel" role="dialog" aria-label="Feature and area filters" ${open ? "" : "hidden"}>
+          <div class="filter-panel-section">
+            <span class="chip-label">Feature</span>
+            <div class="chip-group">
+              ${chip("feature", "", filters.feature ?? "", "All")}
+              ${options.untaggedFeature ? chip("feature", "__none__", filters.feature ?? "", "Untagged") : ""}
+              ${options.features.map((id) => chip("feature", id, filters.feature ?? "", shortSpecId(id))).join("")}
+            </div>
+          </div>
+          <div class="filter-panel-section">
+            <span class="chip-label">Area</span>
+            <div class="chip-group">
+              ${chip("area", "", filters.area ?? "", "All")}
+              ${options.untaggedArea ? chip("area", "__none__", filters.area ?? "", "Untagged") : ""}
+              ${options.areas.map((id) => chip("area", id, filters.area ?? "", shortSpecId(id))).join("")}
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="toolbar-btn" data-filter-reset ${dirty ? "" : "disabled"}>Reset</button>
+    </div>
+  `;
+}
+
+function rerenderTablePage(page) {
+  if (!state.index) return;
+  if (page === "roadmap") renderRoadmap(state.index);
+  else if (page === "activity") renderActivity(state.index);
+  else if (page === "work") renderWork(state.index);
+  else if (page === "signals") renderSignals(state.index);
+}
+
+function resetPageFilters(page) {
+  const next = { ...DEFAULT_FILTERS[page] };
+  if (page === "roadmap") state.roadmapFilters = next;
+  else if (page === "activity") state.activityFilters = next;
+  else if (page === "work") state.workFilters = next;
+  else if (page === "signals") state.signalsFilters = next;
+  else return;
+  state.filterPanelOpen = false;
+  persistPageFilters(page);
+  rerenderTablePage(page);
+}
+
+function pageFilters(page) {
+  if (page === "roadmap") return state.roadmapFilters;
+  if (page === "activity") return state.activityFilters;
+  if (page === "work") return state.workFilters;
+  if (page === "signals") return state.signalsFilters;
+  return null;
+}
+
+function setPageFilter(page, key, value) {
+  const current = pageFilters(page);
+  if (!current) return;
+  const next = { ...current, [key]: value };
+  if (page === "roadmap") state.roadmapFilters = next;
+  else if (page === "activity") state.activityFilters = next;
+  else if (page === "work") state.workFilters = next;
+  else if (page === "signals") state.signalsFilters = next;
+  persistPageFilters(page);
+  if (key === "feature" || key === "area") state.filterPanelOpen = true;
+  rerenderTablePage(page);
+}
+
 function chip(name, value, current, label = value) {
   return `<button type="button" class="chip" data-filter="${name}" data-value="${escapeHtml(value)}" aria-pressed="${current === value}">${escapeHtml(label || "All")}</button>`;
 }
@@ -192,12 +327,41 @@ function truncateSummary(text) {
   return `<span class="cell-primary" title="${escapeHtml(value)}">${escapeHtml(value.slice(0, SUMMARY_CAP))}…</span>`;
 }
 
-/** Column key → sort key. Only mapped columns are clickable. */
+/** Column key → sort key. Summary is never sortable; every other column is. */
 const TABLE_SORT_KEYS = {
-  roadmap: { id: "schedule", order: "schedule", kind: "type", summary: "title", status: "state", age: "age" },
-  activity: { kind: "type", age: "time" },
-  work: { id: "id", kind: "kind", status: "status", age: "age" },
-  signals: { kind: "kind", summary: "severity", status: "status", age: "age" },
+  roadmap: {
+    id: "schedule",
+    order: "schedule",
+    kind: "type",
+    feature: "feature",
+    area: "area",
+    status: "state",
+    age: "age",
+  },
+  activity: {
+    id: "id",
+    kind: "type",
+    feature: "feature",
+    area: "area",
+    status: "status",
+    age: "time",
+  },
+  work: {
+    id: "id",
+    kind: "kind",
+    feature: "feature",
+    area: "area",
+    status: "status",
+    age: "age",
+  },
+  signals: {
+    id: "id",
+    kind: "kind",
+    feature: "feature",
+    area: "area",
+    status: "status",
+    age: "age",
+  },
 };
 
 const TABLE_COLUMNS = [
@@ -958,10 +1122,11 @@ function phaseScheduleRanks(phases) {
 }
 
 function renderRoadmap(index) {
-  const { state: stateFilter, type: typeFilter, q, sort } = state.roadmapFilters;
+  const { state: stateFilter, type: typeFilter, feature, area, q, sort } = state.roadmapFilters;
   const { depths, ranks } = phaseScheduleRanks(index.phases);
   let rows = [...index.phases]
     .filter((phase) => (!stateFilter || phase.state === stateFilter) && (!typeFilter || phase.type === typeFilter))
+    .filter((phase) => matchesSpecFilter(phase.feature, feature) && matchesSpecFilter(phase.area, area))
     .filter((phase) => matchesQuery(`${phase.id} ${phase.title} ${specsLabel(phase)}`, q));
 
   rows.sort((left, right) => {
@@ -969,8 +1134,15 @@ function renderRoadmap(index) {
       return (ranks.get(left.id) ?? 0) - (ranks.get(right.id) ?? 0);
     }
     if (sort === "age") return right.age_days - left.age_days;
-    if (sort === "title") return left.title.localeCompare(right.title);
     if (sort === "type") return left.type.localeCompare(right.type) || left.order - right.order;
+    if (sort === "feature") {
+      return String(left.feature ?? "").localeCompare(String(right.feature ?? ""))
+        || (ranks.get(left.id) ?? 0) - (ranks.get(right.id) ?? 0);
+    }
+    if (sort === "area") {
+      return String(left.area ?? "").localeCompare(String(right.area ?? ""))
+        || (ranks.get(left.id) ?? 0) - (ranks.get(right.id) ?? 0);
+    }
     if (sort === "state") {
       return stateRank(left.state) - stateRank(right.state) || left.order - right.order;
     }
@@ -999,6 +1171,8 @@ function renderRoadmap(index) {
     </tr>`;
   }).join("");
 
+  const specOptions = collectSpecOptions(index.phases, (row) => row.feature, (row) => row.area);
+
   panels.roadmap.innerHTML = `
     <div class="page-toolbar">
       ${searchInput("roadmap-q", q, "Search phases…")}
@@ -1015,6 +1189,7 @@ function renderRoadmap(index) {
           ${chip("type", "design", typeFilter, "Design")}
         </div>
       </div>
+      ${filterPanelHtml("roadmap", state.roadmapFilters, specOptions)}
     </div>
     <p class="table-meta">Showing ${rows.length} of ${index.phases.length} · columns: ID, Order, Kind, Summary, Feature, Area, Status, Age</p>
     <div class="table-frame">
@@ -1039,7 +1214,7 @@ function activityRefPhaseCells(event) {
 }
 
 function renderActivity(index) {
-  const { type, q, sort } = state.activityFilters;
+  const { type, feature, area, q, sort } = state.activityFilters;
   const source = index.activity.current_month ?? [];
   if (source.length === 0) {
     panels.activity.innerHTML = `<div class="empty">Commands will appear here as they run.</div>`;
@@ -1048,14 +1223,39 @@ function renderActivity(index) {
 
   let events = source
     .filter((event) => !type || event.type === type)
+    .filter((event) => {
+      const tags = activityTags(index, event);
+      return matchesSpecFilter(tags.feature, feature) && matchesSpecFilter(tags.area, area);
+    })
     .filter((event) => matchesQuery(`${event.type} ${event.summary} ${event.ref ?? ""} ${event.phase ?? ""} ${event.cmd ?? ""}`, q));
 
   events = [...events].sort((left, right) => {
+    const idOf = (event) => String(event.ref ?? event.phase ?? "");
+    const leftTags = activityTags(index, left);
+    const rightTags = activityTags(index, right);
     if (sort === "type") return left.type.localeCompare(right.type) || right.ts.localeCompare(left.ts);
+    if (sort === "id") return idOf(left).localeCompare(idOf(right)) || right.ts.localeCompare(left.ts);
+    if (sort === "status") {
+      return String(left.status ?? "complete").localeCompare(String(right.status ?? "complete"))
+        || right.ts.localeCompare(left.ts);
+    }
+    if (sort === "feature") {
+      return String(leftTags.feature ?? "").localeCompare(String(rightTags.feature ?? ""))
+        || right.ts.localeCompare(left.ts);
+    }
+    if (sort === "area") {
+      return String(leftTags.area ?? "").localeCompare(String(rightTags.area ?? ""))
+        || right.ts.localeCompare(left.ts);
+    }
     return right.ts.localeCompare(left.ts);
   });
 
   const types = [...new Set(source.map((event) => event.type))].sort();
+  const specOptions = collectSpecOptions(
+    source,
+    (event) => activityTags(index, event).feature,
+    (event) => activityTags(index, event).area,
+  );
 
   panels.activity.innerHTML = `
     <div class="page-toolbar">
@@ -1067,6 +1267,7 @@ function renderActivity(index) {
           ${types.map((value) => chip("type", value, type)).join("")}
         </div>
       </div>
+      ${filterPanelHtml("activity", state.activityFilters, specOptions)}
     </div>
     <p class="table-meta">Showing ${events.length} of ${source.length} · columns: ID, Kind, Summary, Feature, Area, Status, Age</p>
     <div class="table-frame">
@@ -1083,8 +1284,8 @@ function renderActivity(index) {
               <td class="mono" title="${escapeHtml([event.ref, event.phase].filter(Boolean).join(" · "))}">${escapeHtml(idLabel)}${phaseNote ? `<span class="cell-secondary">${escapeHtml(phaseNote)}</span>` : ""}</td>
               <td>${escapeHtml(event.type)}</td>
               <td class="wrap">${truncateSummary(event.summary)}</td>
-              <td>—</td>
-              <td>—</td>
+              <td>${shortSpecCell(activityTags(index, event).feature)}</td>
+              <td>${shortSpecCell(activityTags(index, event).area)}</td>
               <td>${statusHtml(event.status ?? "complete")}</td>
               <td class="mono" title="${escapeHtml(event.ts)}">${escapeHtml(formatAge(event.ts))}</td>
             </tr>`;
@@ -1242,7 +1443,7 @@ function workBucket(status) {
 }
 
 function renderWork(index) {
-  const { kind, status, q, sort } = state.workFilters;
+  const { kind, status, feature, area, q, sort } = state.workFilters;
   const source = index.work ?? [];
   if (source.length === 0) {
     panels.work.innerHTML = `<div class="empty">No work yet. Run <code>/log</code> or <code>/fix</code>.</div>`;
@@ -1252,6 +1453,7 @@ function renderWork(index) {
   let rows = source
     .filter((row) => !kind || row.kind === kind)
     .filter((row) => !status || workBucket(row.status) === status)
+    .filter((row) => matchesSpecFilter(row.feature, feature) && matchesSpecFilter(row.area, area))
     .filter((row) =>
       matchesQuery(
         `${row.id} ${row.kind} ${row.summary} ${row.status} ${row.feature ?? ""} ${row.area ?? ""} ${row.note ?? ""}`,
@@ -1273,6 +1475,16 @@ function renderWork(index) {
     if (sort === "id") {
       return openRank(left) - openRank(right) || left.id.localeCompare(right.id);
     }
+    if (sort === "feature") {
+      return openRank(left) - openRank(right)
+        || String(left.feature ?? "").localeCompare(String(right.feature ?? ""))
+        || left.id.localeCompare(right.id);
+    }
+    if (sort === "area") {
+      return openRank(left) - openRank(right)
+        || String(left.area ?? "").localeCompare(String(right.area ?? ""))
+        || left.id.localeCompare(right.id);
+    }
     if (sort === "age") {
       return (right.age_days ?? 0) - (left.age_days ?? 0);
     }
@@ -1293,6 +1505,8 @@ function renderWork(index) {
     )
     : null;
 
+  const specOptions = collectSpecOptions(source, (row) => row.feature, (row) => row.area);
+
   panels.work.innerHTML = `
     <div class="page-toolbar">
       ${searchInput("work-q", q, "Search work…")}
@@ -1309,6 +1523,7 @@ function renderWork(index) {
           ${kinds.map((value) => chip("work-kind", value, kind)).join("")}
         </div>
       </div>
+      ${filterPanelHtml("work", state.workFilters, specOptions)}
     </div>
     <p class="table-meta">Showing ${rows.length} of ${source.length} · Docs/WORK.yaml</p>
     <div class="table-frame">
@@ -1337,7 +1552,7 @@ function renderWork(index) {
 }
 
 function renderSignals(index) {
-  const { severity, kind, status, q, sort } = state.signalsFilters;
+  const { severity, kind, status, feature, area, q, sort } = state.signalsFilters;
   const source = index.issues ?? [];
   if (source.length === 0) {
     panels.signals.innerHTML = `<div class="empty">No signals. Empty is a valid state.</div>`;
@@ -1349,12 +1564,29 @@ function renderSignals(index) {
     .filter((issue) => !severity || issue.severity === severity)
     .filter((issue) => !kind || issue.kind === kind)
     .filter((issue) => !status || issueStatus(issue) === status)
+    .filter((issue) => {
+      const tags = featureAreaFromSpecId(issue.spec);
+      return matchesSpecFilter(tags.feature, feature) && matchesSpecFilter(tags.area, area);
+    })
     .filter((issue) => matchesQuery(`${issue.kind} ${issue.ref} ${issue.summary} ${issue.spec ?? ""} ${issueStatus(issue)}`, q));
 
   issues = [...issues].sort((left, right) => {
+    const tags = (issue) => featureAreaFromSpecId(issue.spec);
     if (sort === "age") return (right.age_days ?? 0) - (left.age_days ?? 0);
     if (sort === "kind") return left.kind.localeCompare(right.kind);
-    if (sort === "status") return issueStatus(left).localeCompare(issueStatus(right)) || (right.age_days ?? 0) - (left.age_days ?? 0);
+    if (sort === "id") return String(left.ref ?? "").localeCompare(String(right.ref ?? ""));
+    if (sort === "feature") {
+      return String(tags(left).feature ?? "").localeCompare(String(tags(right).feature ?? ""))
+        || String(left.ref ?? "").localeCompare(String(right.ref ?? ""));
+    }
+    if (sort === "area") {
+      return String(tags(left).area ?? "").localeCompare(String(tags(right).area ?? ""))
+        || String(left.ref ?? "").localeCompare(String(right.ref ?? ""));
+    }
+    if (sort === "status") {
+      return issueStatus(left).localeCompare(issueStatus(right)) || (right.age_days ?? 0) - (left.age_days ?? 0);
+    }
+    // default: severity, then age (Severity stays a filter chip — not a Summary sort)
     return (severityRank[left.severity] ?? 9) - (severityRank[right.severity] ?? 9)
       || (right.age_days ?? 0) - (left.age_days ?? 0);
   });
@@ -1371,6 +1603,12 @@ function renderSignals(index) {
           : "No signals match these filters."
     )
     : null;
+
+  const specOptions = collectSpecOptions(
+    source,
+    (issue) => featureAreaFromSpecId(issue.spec).feature,
+    (issue) => featureAreaFromSpecId(issue.spec).area,
+  );
 
   panels.signals.innerHTML = `
     <div class="page-toolbar">
@@ -1395,6 +1633,7 @@ function renderSignals(index) {
           ${kinds.map((value) => chip("signal-kind", value, kind)).join("")}
         </div>
       </div>
+      ${filterPanelHtml("signals", state.signalsFilters, specOptions)}
     </div>
     <p class="table-meta">${index.paths_scanned_at ? `Slow cycle ${formatAge(index.paths_scanned_at)} · ` : ""}Showing ${issues.length} of ${source.length} · columns: ID, Kind, Summary, Feature, Area, Status, Age</p>
     <div class="table-frame">
@@ -1773,10 +2012,25 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  const panelToggle = event.target.closest("[data-filter-panel-toggle]");
+  if (panelToggle && state.index) {
+    state.filterPanelOpen = !state.filterPanelOpen;
+    rerenderTablePage(state.page);
+    return;
+  }
+
+  const resetButton = event.target.closest("[data-filter-reset]");
+  if (resetButton && state.index && !resetButton.disabled) {
+    resetPageFilters(state.page);
+    return;
+  }
+
   const chipButton = event.target.closest("[data-filter]");
   if (chipButton && state.index) {
     const { filter, value } = chipButton.dataset;
-    if (["state", "type"].includes(filter) && state.page === "roadmap") {
+    if (filter === "feature" || filter === "area") {
+      setPageFilter(state.page, filter, value);
+    } else if (["state", "type"].includes(filter) && state.page === "roadmap") {
       state.roadmapFilters = { ...state.roadmapFilters, [filter]: value };
       persistPageFilters("roadmap");
       renderRoadmap(state.index);
@@ -1805,6 +2059,12 @@ document.addEventListener("click", (event) => {
       persistPageFilters("signals");
       renderSignals(state.index);
     }
+    return;
+  }
+
+  if (state.filterPanelOpen && !event.target.closest(".filter-panel-wrap")) {
+    state.filterPanelOpen = false;
+    rerenderTablePage(state.page);
     return;
   }
 

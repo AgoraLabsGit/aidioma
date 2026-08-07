@@ -49,6 +49,10 @@ dashboard and agents read. The prose below is for people.
 | See the project | `/dashboard` |
 | Stop for now | `/handoff` |
 
+**Docs home (D-020):** When `.worktrees/docs` exists, all living `Docs/`, `.work/`, and agent-skill
+writes happen there (`docs/ssot`). Phase/task trees are for product code. `/dashboard` reads that
+tree — if the footer shows a `task/*` or `phase/*` branch, restart `/dashboard`.
+
 **You don't have to memorize these.** Describe the problem in plain language — "button x is too
 large", "which translation API should we use" — and the agent fires the right one and tells you
 which it was.

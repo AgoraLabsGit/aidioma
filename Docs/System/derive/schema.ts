@@ -161,7 +161,12 @@ export const workItemSchema = z.object({
     .union([z.array(workOpenQuestionSchema), z.null()])
     .default(null),
   done_summary: z.union([z.string(), z.null()]).default(null),
-  opened: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  /** Date-only (legacy) or UTC ISO datetime — datetime preferred so Age is real. */
+  opened: z
+    .string()
+    .regex(
+      /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z)?$/,
+    ),
 });
 
 export const workSchema = z.array(workItemSchema);

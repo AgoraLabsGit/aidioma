@@ -33,6 +33,7 @@ Lets the founder see phases, Work, Signals, and Knowledge projected from Docs/.
 - Rule: Work page shows `WORK.yaml`; Signals shows derived health only
 - Rule: Work detail surfaces `open_questions` and `done_summary` when present
 - Rule: Table summaries truncate at 80 chars (full text in tooltip); column headers own sort
+- Rule: Feature/Area filters live in a Filters pop-up panel (not primary chip row); Reset clears filters/sort/search per table page
 - Rule: Signals entry is the sidebar-foot status pill (not a main-nav item)
 
 ## Boundaries

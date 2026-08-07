@@ -5,11 +5,15 @@ description: Choose among external options; write Research/R-*.md and optional d
 
 # /research
 
-1. Name the question and ≥2 real options.
-2. Write `Docs/Research/R-nnn.md` from the template (verdict required).
-3. **Required Adv:** follow `Docs/System/protocols/adv-protocol.md` on options/verdict; revise or record blockers.
-4. Optional: append decision to `DECISIONS.md` when the verdict locks a choice.
-5. Activity `type: research`. Report R-id.
+0. **Docs home (D-020):** Write `Research/` + decisions + Work only in `.worktrees/docs` when present.
+1. Upsert `WORK.yaml` `kind: research`, `status: active` (ids: `R-nnn` Work id; file stays
+   `Research/R-nnn.md`) with `opened: <UTC ISO now>` before other research edits.
+2. Name the question and ≥2 real options.
+3. Write `Docs/Research/R-nnn.md` from the template (verdict required).
+4. **Required Adv:** always via fresh sub-agent (`adv-protocol.md`). Drafting/verdict prose may stay
+   on the coordinator; revise or record blockers.
+5. Optional: append decision to `DECISIONS.md` when the verdict locks a choice.
+6. Work → `done` + `done_summary`. Activity `type: research`. Report R-id.
 
-**May invoke:** Adv sub-agent; optional `/design` if the verdict locks behavior.  
+**May invoke:** Adv sub-agent (required for Adv); optional `/design` if the verdict locks behavior.  
 **Must not:** commit product/app code; end without a verdict (`none` is valid).

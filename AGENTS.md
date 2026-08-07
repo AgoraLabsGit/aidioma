@@ -6,13 +6,16 @@ context.
 ## Start here
 
 1. Read this file and `Docs/AGENTS.md` (agent contract).
-2. Living docs root is `Docs/`. Prefer `.work/context.json` when present; else read
-   `Docs/START.md`, `Docs/System/system.md`, `Docs/System/COMMANDS.md`,
+2. **Docs home first (D-020):** If `.worktrees/docs` exists (`npm run work:docs-home`), treat that
+   worktree as the only writable SSOT for `Docs/**`, `.work/**`, this file, `CLAUDE.md`, and
+   `.claude/skills/**`. Do not edit those paths on `phase/*` / `task/*` trees.
+3. Living docs root is `Docs/` (inside Docs home when present). Prefer `.work/context.json` when
+   present; else read `Docs/START.md`, `Docs/System/system.md`, `Docs/System/COMMANDS.md`,
    `Docs/Handoffs/HANDOFF.md`, and the active/next phase under `Docs/Roadmap/Phases/`.
-3. Treat `Docs.2/` as frozen evidence only (`Docs.2/FROZEN.md`). Never dual-write living state there.
-4. Inspect Git status, branch/worktrees (exactly one phase branch/worktree when a phase is active),
+4. Treat `Docs.2/` as frozen evidence only (`Docs.2/FROZEN.md`). Never dual-write living state there.
+5. Inspect Git status, branch/worktrees (exactly one phase branch/worktree when a phase is active),
    the active phase spec, and relevant executable behavior before acting.
-5. `apps/web/`, packages, `content/`, migrations, and tests prove product behavior.
+6. `apps/web/`, packages, `content/`, migrations, and tests prove product behavior.
 
 ## Development System V3
 

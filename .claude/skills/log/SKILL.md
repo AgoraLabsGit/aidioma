@@ -5,6 +5,7 @@ description: Park a non-phase work item in Docs/WORK.yaml with auto-classified k
 
 # /log
 
+0. **Docs home (D-020):** If `.worktrees/docs` exists, append `WORK.yaml` / activity only there.
 1. Classify kind: fix | task | proposal | research | question | audit.
 2. Append `WORK.yaml` row `status: open` (new ids by kind prefix).
 3. Do **not** implement.

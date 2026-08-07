@@ -692,3 +692,130 @@
   open_questions: null
   done_summary: "close skill path A/B; COMMANDS/AGENTS/system/reduced-close/fix/task skills; D-021. Reduced-close executed on PR #21."
   opened: 2026-08-07
+- id: A-002
+  kind: audit
+  summary: "Stale dashboard + Docs home write-path (D-020) agent-context"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Lenses: Proof · agent-context. Scope: why Work page missed session T/F rows; whether sessions know to write on docs/ssot."
+  open_questions: null
+  done_summary: |
+    Proof: Data not lost — T-004..T-006/F-004 on main+docs/ssot (55 rows). Screenshot was stale UI
+    (footer task/post-007…, count 49). Root causes: (1) session wrote Docs/WORK on task branch not
+    Docs home; (2) ensure-docs-home only created, never refreshed tip; (3) long-lived dashboard
+    process/tab can show wrong branch until /dashboard restart. derive() correctly pins docs home
+    when present.
+    Agent-context (pre-fix): PARTIAL FAIL — D-020 + AGENTS + /dashboard skill stated the rule;
+    writer skills (/task /fix /run /log /handoff /close /audit /plan /research /design /system
+    /triage /status) and START.md did not; system.md still said "until P-001". Sessions could not
+    be trusted to know.
+    Residual closed by T-007 in same session. Future sessions: write System/Docs/.work/skills on
+    docs/ssot; /dashboard must show docs/ssot footer.
+  opened: 2026-08-07T16:22:30Z
+- id: T-007
+  kind: task
+  summary: "Wire Docs home write rule into writer skills + refresh ensure-docs-home"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Follows A-002: AGENTS/D-020 state the rule; /task /fix /run /log /handoff /close /audit and system.md interim wording do not enforce it."
+  open_questions: null
+  done_summary: "Step-0 Docs home in writer skills; AGENTS start-here; START/COMMANDS/system.md; ensure-docs-home ff-refresh when clean; dashboard skill checks docs/ssot footer."
+  opened: 2026-08-07T16:22:45Z
+- id: A-003
+  kind: audit
+  summary: "Work ledger immediacy — active rows appear when /task /fix /research start"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Lens: Proof · agent-context."
+  open_questions: null
+  done_summary: |
+    PASS with gaps closed in-session: /fix /task /audit already upsert status:active first;
+    dashboard Open bucket includes active; watcher reindexes Docs-home WORK.yaml (~300ms) when
+    writes land on docs/ssot. FAIL→fixed: /research had no Work row (only R-*.md); skills now
+    upsert kind:research active first + mark done at end; fix/task/audit say write active before
+    other edits. Remaining WARN: agents writing WORK on phase/task trees still invisible until
+    merge (D-020); /design uses decisions/specs not Work by design; same-session done can flash
+    active briefly if agent batches writes.
+  opened: 2026-08-07T16:31:05Z
+- id: A-004
+  kind: audit
+  summary: "Command skills — default sub-agent delegation for /run and peers"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Lens: agent-context. Sub-agent explore 2acf9f1b."
+  open_questions: null
+  done_summary: |
+    Pre-fix FAIL: /run+/close always-delegate triage only; /audit "OK"; Required Adv optional;
+    /triage Prefer vs system.md must. Closed by T-009: /run Delegate-by-default; /triage must for
+    phase; /audit+/research+/design Adv via fresh sub-agent; /close prefer sub-agents for Adv/lenses;
+    /fix/task keep-tiny-on-coordinator exception. Coordinator still owns founder wording, MCOO,
+    merge PASS/WARN/FAIL, D-020 write locality.
+  opened: 2026-08-07T16:31:05Z
+- id: T-008
+  kind: task
+  summary: "All table columns sortable except Summary; serve dashboard UI from Docs home"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "TABLE_SORT_KEYS + comparators for Roadmap/Activity/Work/Signals; Summary never sortable; run-dashboard.sh prefers Docs-home server.ts; Dashboard-spec updated."
+  opened: 2026-08-07T16:31:05Z
+- id: T-009
+  kind: task
+  summary: "Apply A-004 delegation defaults into command skills"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "run/triage/audit/research/design/close/fix/task skill wording for default sub-agent delegation + coordinator exceptions."
+  opened: 2026-08-07T16:31:05Z
+- id: T-010
+  kind: task
+  summary: "Dashboard table filter panel (Feature/Area) + Reset on all table pages"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Deeper filters (Feature/Area) in a pop-up panel — not more chips on the main toolbar row."
+  open_questions: null
+  done_summary: "Filters popover (Feature/Area/Untagged) + Reset on Roadmap/Activity/Work/Signals; Activity tags from phase; filters.test 28 pass; Dashboard-spec + SPEC-F-DEV-DASHBOARD."
+  opened: 2026-08-07
+- id: F-005
+  kind: fix
+  summary: "Work Age uses date-only midnight UTC (fake hours); active rows not shown until done"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Also process: prior audits/tasks written done in one batch — dashboard never saw active."
+  open_questions: null
+  done_summary: "opened accepts ISO; formatOpenedAge date-only→today/Nd (no midnight hours); skills require active+ISO flush before work; stamped A-002..T-009."
+  opened: 2026-08-07T16:34:00Z
