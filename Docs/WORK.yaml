@@ -5,6 +5,7 @@
 # Status: open | active | done | promoted | dropped
 # feature/area: nullable SPEC-F-* / SPEC-A-* affiliation (org tags, not amend intent).
 # /log parks; /fix /task /audit /design do-now; /triage executes; /plan promotes proposals.
+# context_paths: optional material paths at done (D-024); not a tool-read log.
 
 # Migrated from FIXES.yaml (FIX-001..004)
 - id: W-001
@@ -1160,17 +1161,77 @@
 - id: S-003
   kind: design
   summary: "Brief vs Context labels; declared context_paths (not auto tool-reads)"
-  status: active
+  status: done
   feature: SPEC-F-DEV-DASHBOARD
   area: SPEC-A-DEVSYSTEM
   phase: null
   promoted_to: null
   blocked_by: null
   note: "Founder: rename authored Context→Brief; Context=files that informed work; ask if deterministic."
+  context_paths:
+    - Docs/DECISIONS.md
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
   open_questions:
     - q: "Ack Adv WARN on D-024 (dual vocabulary: file ## Context = UI Brief; UI Context = context_paths)?"
-      answer: null
+      answer: "Acked 2026-08-07 — accept dual vocabulary during transition; prefer ## Brief in new templates."
       asked: 2026-08-07
-  done_summary: null
+  done_summary: "D-024 + SPEC-F/A rules locked. Adv WARN acked. Implement via T-020 (shipped)."
   opened: 2026-08-07T18:19:25Z
+
+- id: T-020
+  kind: task
+  summary: "Implement D-024 Brief/Context/Files + Work/Phase context_paths"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Schema + dashboard + skills; fill context_paths at done only."
+  context_paths:
+    - Docs/DECISIONS.md
+    - Docs/System/derive/schema.ts
+    - Docs/System/schemas/work.schema.json
+    - Docs/System/dashboard/public/app.js
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+    - .claude/skills/task/SKILL.md
+  open_questions: null
+  done_summary: "D-024 shipped: Work/Phase context_paths in schema; dashboard Brief/Context/Files; skills fill paths at done. validate+tests green."
+  opened: 2026-08-07T18:32:53Z
+
+- id: T-021
+  kind: task
+  summary: "Dashboard defaults: Work newest-first; Roadmap active then next by order"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  context_paths:
+    - Docs/System/specs/Dashboard-spec.md
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/filters.test.ts
+  open_questions: null
+  done_summary: "Work default Age desc; legacy open-first migrates; Roadmap schedule pins active then Order. filters.test 35 green."
+  opened: 2026-08-07T18:35:22Z
+
+- id: T-022
+  kind: task
+  summary: "Copy row IDs; humanize Work kind labels (Design); keep D-/S- prefixes"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "No DN-/D-swap. Activity copy = ts + type + ref (no event id)."
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/styles.css
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Copy control on Work/Roadmap/Activity IDs; Activity clipboard=ts type ref; Work kind column/chips show Design/Fix/…; D-/S- prefixes unchanged."
+  opened: 2026-08-07T18:44:37Z
 

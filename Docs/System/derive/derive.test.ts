@@ -227,6 +227,47 @@ describe("kind-prefixed work ids", () => {
     expect(rows).toHaveLength(1);
     expect(rows[0]?.opened).toBe("2026-08-07T16:34:00Z");
   });
+
+  it("accepts context_paths (D-024) and defaults missing to null", () => {
+    const withPaths = parseWork(`
+- id: T-020
+  kind: task
+  summary: "paths"
+  status: done
+  feature: null
+  area: null
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  context_paths:
+    - Docs/System/derive/schema.ts
+    - Docs/System/dashboard/public/app.js
+  open_questions: null
+  done_summary: "ok"
+  opened: 2026-08-07T18:00:00Z
+`);
+    expect(withPaths[0]?.context_paths).toEqual([
+      "Docs/System/derive/schema.ts",
+      "Docs/System/dashboard/public/app.js",
+    ]);
+    const without = parseWork(`
+- id: T-021
+  kind: task
+  summary: "no paths"
+  status: done
+  feature: null
+  area: null
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "ok"
+  opened: 2026-08-07
+`);
+    expect(without[0]?.context_paths).toBeNull();
+  });
 });
 
 describe("last_check", () => {
@@ -434,6 +475,7 @@ describe("sortPhasesForRoadmap", () => {
     proof: "p",
     non_goals: [] as string[],
     amends_specs: [] as string[],
+    context_paths: null,
     feature: null,
     area: null,
     opened: "2026-08-07",

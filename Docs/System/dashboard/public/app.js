@@ -27,7 +27,7 @@ const ACTIVITY_PROCESS_ALLOWLIST = [...ACTIVITY_PROCESS_ALWAYS, ...ACTIVITY_PROC
 const DEFAULT_FILTERS = {
   roadmap: { state: "", type: "", feature: "", area: "", q: "", sort: "schedule", sortDir: "asc" },
   activity: { type: "", feature: "", area: "", q: "", sort: "time", sortDir: "desc" },
-  work: { kind: "", status: "", feature: "", area: "", q: "", sort: "open-first", sortDir: "asc" },
+  work: { kind: "", status: "", feature: "", area: "", q: "", sort: "age", sortDir: "desc" },
   signals: { severity: "", kind: "", status: "open", feature: "", area: "", q: "", sort: "severity", sortDir: "asc" },
 };
 
@@ -67,7 +67,12 @@ function loadFilters(key, defaults) {
   try {
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== "object") return { ...defaults };
-    return { ...defaults, ...parsed };
+    const merged = { ...defaults, ...parsed };
+    // Legacy factory default was open-first (not a column); promote to Age newest-first.
+    if (key === FILTER_KEYS.work && merged.sort === "open-first") {
+      return { ...merged, sort: "age", sortDir: "desc" };
+    }
+    return merged;
   } catch {
     return { ...defaults };
   }
@@ -714,6 +719,40 @@ function typeLabel(type) {
   return type ?? "—";
 }
 
+/** Work kind → human label (ids stay F/T/P/R/Q/A/S-nnn; D- remains decisions). */
+function workKindLabel(kind) {
+  const labels = {
+    fix: "Fix",
+    task: "Task",
+    proposal: "Proposal",
+    research: "Research",
+    question: "Question",
+    audit: "Audit",
+    design: "Design",
+  };
+  return labels[kind] ?? kind ?? "—";
+}
+
+/** Compact clipboard text for an Activity event (no durable event id). */
+function activityCopyText(event) {
+  const parts = [event.ts, event.type];
+  if (event.ref) parts.push(event.ref);
+  else if (event.phase) parts.push(event.phase);
+  return parts.filter(Boolean).join(" ");
+}
+
+/** ID cell with copy control — stops row-open when clicked. */
+function idCopyCell(id, { title = "Copy id", copyText: text = id, secondary = "" } = {}) {
+  const value = String(id ?? "");
+  const payload = String(text ?? value);
+  if (!value || value === "—") return `<td class="mono">—</td>`;
+  return `<td class="mono id-cell">
+    <span class="id-cell-text">${escapeHtml(value)}</span>
+    <button type="button" class="id-copy" data-copy="${escapeHtml(payload)}" title="${escapeHtml(title)}" aria-label="${escapeHtml(title)}">⧉</button>
+    ${secondary}
+  </td>`;
+}
+
 function phaseRelatedIssues(index, phaseId) {
   return (index.issues ?? []).filter((issue) =>
     issue.ref === phaseId
@@ -905,14 +944,19 @@ function renderPhaseView(phase, index, { primary = false, compact = false } = {}
 
       <section class="phase-card">
         <div class="phase-card-section">
-          <h3 class="now-label">Context</h3>
-          <div class="prose" data-section="Context"><p class="muted">Loading…</p></div>
+          <h3 class="now-label">Brief</h3>
+          <div class="prose" data-section="Brief"><p class="muted">Loading…</p></div>
           <h4 class="phase-subhead">Out of scope</h4>
           ${
             nonGoals.length
               ? `<ul class="phase-plain-list">${nonGoals.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`
               : `<p class="muted">None listed</p>`
           }
+        </div>
+
+        <div class="phase-card-section">
+          <h3 class="now-label">Context</h3>
+          ${contextPathsHtml(phase.context_paths)}
         </div>
 
         <div class="phase-card-section">
@@ -1096,7 +1140,16 @@ async function hydratePhaseDocs(root = document) {
       if (!response.ok) throw new Error(`doc ${response.status}`);
       const doc = await response.json();
       const { body } = parseFrontmatter(doc.body);
-      for (const name of ["Context", "Inputs", "Plan"]) {
+      const briefSlot = host.querySelector(`[data-section="Brief"]`);
+      if (briefSlot) {
+        // D-024: prefer ## Brief, else legacy ## Context
+        const brief =
+          extractMarkdownSection(body, "Brief") || extractMarkdownSection(body, "Context");
+        briefSlot.innerHTML = brief
+          ? renderMarkdown(brief)
+          : `<p class="muted">No Brief/Context section in phase file.</p>`;
+      }
+      for (const name of ["Inputs", "Plan"]) {
         const slot = host.querySelector(`[data-section="${name}"]`);
         if (!slot) continue;
         const section = extractMarkdownSection(body, name);
@@ -1213,7 +1266,11 @@ function renderRoadmap(index) {
   rows.sort((left, right) => {
     let cmp = 0;
     if (sort === "schedule") {
-      cmp = (ranks.get(left.id) ?? 0) - (ranks.get(right.id) ?? 0);
+      // Default focus: active phase(s) first, then remaining by schedule Order.
+      const leftActive = left.state === "active" ? 0 : 1;
+      const rightActive = right.state === "active" ? 0 : 1;
+      cmp = leftActive - rightActive
+        || (ranks.get(left.id) ?? 0) - (ranks.get(right.id) ?? 0);
     } else if (sort === "age") {
       cmp = compareOpenedAsc(left.opened, right.opened)
         || (left.age_days ?? 0) - (right.age_days ?? 0);
@@ -1237,7 +1294,7 @@ function renderRoadmap(index) {
     const step = ranks.get(phase.id) ?? "—";
     return `
     <tr data-id="${escapeHtml(phase.id)}" data-type="${escapeHtml(phase.type)}" data-state="${escapeHtml(phase.state)}" ${state.selectedId === phase.id ? 'data-selected="true"' : ""}>
-      <td class="mono">${escapeHtml(phase.id)}</td>
+      ${idCopyCell(phase.id, { title: "Copy phase id" })}
       <td class="mono" title="Schedule step (depends_on → order). Frontmatter order=${escapeHtml(String(phase.order))}">${escapeHtml(String(step))}</td>
       <td class="${phase.type === "design" ? "type-design" : ""}">${escapeHtml(typeLabel(phase.type))}</td>
       <td class="wrap">
@@ -1405,7 +1462,13 @@ function renderActivity(index) {
               : null;
             return `
             <tr>
-              <td class="mono" title="${escapeHtml([event.ref, event.phase].filter(Boolean).join(" · "))}">${escapeHtml(idLabel)}${phaseNote ? `<span class="cell-secondary">${escapeHtml(phaseNote)}</span>` : ""}</td>
+              ${idCopyCell(idLabel, {
+                title: "Copy activity key (ts type ref)",
+                copyText: activityCopyText(event),
+                secondary: phaseNote
+                  ? `<span class="cell-secondary">${escapeHtml(phaseNote)}</span>`
+                  : "",
+              })}
               <td>${escapeHtml(event.type)}</td>
               <td class="wrap">${truncateSummary(event.summary)}</td>
               <td>${shortSpecCell(activityTags(index, event).feature)}</td>
@@ -1606,10 +1669,11 @@ function renderWork(index) {
         || String(left.area ?? "").localeCompare(String(right.area ?? ""))
         || left.id.localeCompare(right.id);
     } else if (sort === "age") {
+      // Default: newest first when sortDir is desc.
       cmp = compareOpenedAsc(left.opened, right.opened)
         || (left.age_days ?? 0) - (right.age_days ?? 0);
     } else {
-      // open-first (default): open/active above closed, then older→newer within bucket
+      // Legacy open-first: open/active above closed, then older→newer within bucket
       cmp = openRank(left) - openRank(right) || compareOpenedAsc(left.opened, right.opened);
     }
     return orient(cmp, sortDir);
@@ -1643,7 +1707,7 @@ function renderWork(index) {
         <div class="chip-group">
           <span class="chip-label">Kind</span>
           ${chip("work-kind", "", kind, "All")}
-          ${kinds.map((value) => chip("work-kind", value, kind)).join("")}
+          ${kinds.map((value) => chip("work-kind", value, kind, workKindLabel(value))).join("")}
         </div>
       </div>
       ${filterPanelHtml("work", state.workFilters, specOptions)}
@@ -1657,8 +1721,8 @@ function renderWork(index) {
               ? `<tr><td colspan="7">${escapeHtml(emptyFiltered)}</td></tr>`
               : rows.map((row) => `
             <tr data-id="${escapeHtml(row.id)}" data-status="${escapeHtml(row.status)}">
-              <td class="mono">${escapeHtml(row.id)}</td>
-              <td>${escapeHtml(row.kind)}</td>
+              ${idCopyCell(row.id, { title: "Copy work id" })}
+              <td title="${escapeHtml(row.kind)}">${escapeHtml(workKindLabel(row.kind))}</td>
               <td class="wrap">${truncateSummary(row.summary)}</td>
               <td>${shortSpecCell(row.feature)}</td>
               <td>${shortSpecCell(row.area)}</td>
@@ -1922,14 +1986,32 @@ function renderWorkActivity(index, workId) {
   </div>`;
 }
 
-/** Always-on Context (Phase parity) — Work rows use `note` as context body. */
-function renderWorkContext(row) {
+/** Declared context_paths (D-024) — honest empty; never invent from tool traces. */
+function contextPathsHtml(paths) {
+  if (!Array.isArray(paths) || paths.length === 0) {
+    return `<p class="muted">None declared</p>`;
+  }
+  return `<ul class="phase-plain-list">${paths
+    .map((path) => `<li class="mono">${escapeHtml(path)}</li>`)
+    .join("")}</ul>`;
+}
+
+/** Brief = authored intent (Work `note`). */
+function renderWorkBrief(row) {
   const body = row.note
     ? `<p>${escapeHtml(row.note)}</p>`
     : `<p class="muted">No note on this Work row.</p>`;
   return `<div class="phase-card-section">
-    <h3 class="now-label">Context</h3>
+    <h3 class="now-label">Brief</h3>
     ${body}
+  </div>`;
+}
+
+/** Context = declared context_paths filled at done. */
+function renderWorkContextPaths(row) {
+  return `<div class="phase-card-section">
+    <h3 class="now-label">Context</h3>
+    ${contextPathsHtml(row.context_paths)}
   </div>`;
 }
 
@@ -1984,7 +2066,7 @@ function renderWorkFiles(index, row) {
 function renderWorkDetail(row, index) {
   const pairs = [
     [
-      ["Kind", escapeHtml(row.kind), { mono: true }],
+      ["Kind", escapeHtml(workKindLabel(row.kind)), { mono: true }],
       ["Status", statusHtml(row.status)],
     ],
     [
@@ -2005,7 +2087,8 @@ function renderWorkDetail(row, index) {
     ],
   ];
   const bodySections = [
-    renderWorkContext(row),
+    renderWorkBrief(row),
+    renderWorkContextPaths(row),
     renderWorkQuestions(row.open_questions),
     row.done_summary
       ? `<div class="phase-card-section">
@@ -2259,9 +2342,11 @@ if (detailResize) {
 document.addEventListener("click", (event) => {
   const copy = event.target.closest("[data-copy]");
   if (copy) {
+    event.preventDefault();
+    event.stopPropagation();
     void copyText(copy.dataset.copy).then(() => {
       const previous = copy.textContent;
-      copy.textContent = "Copied";
+      copy.textContent = "✓";
       setTimeout(() => {
         copy.textContent = previous;
       }, 900);

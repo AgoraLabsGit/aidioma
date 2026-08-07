@@ -23,6 +23,8 @@ const phaseObjectSchema = z.object({
   proof: z.string().min(1),
   non_goals: z.array(z.string()),
   amends_specs: z.array(z.string().regex(/^SPEC-[FA]-[A-Z0-9-]+$/)),
+  /** Declared paths that informed the phase (D-024) — not an automatic read log. */
+  context_paths: z.union([z.array(z.string().min(1)), z.null()]).default(null),
   opened: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   closed: z.union([z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.null()]).default(null),
   lessons: z.union([z.string(), z.null()]).default(null),
@@ -159,6 +161,8 @@ export const workItemSchema = z.object({
   promoted_to: z.union([z.string(), z.null()]).default(null),
   blocked_by: z.union([workIdSchema, z.null()]).default(null),
   note: z.union([z.string(), z.null()]).default(null),
+  /** Declared paths that informed the work (D-024) — fill at done; not a tool-read log. */
+  context_paths: z.union([z.array(z.string().min(1)), z.null()]).default(null),
   open_questions: z
     .union([z.array(workOpenQuestionSchema), z.null()])
     .default(null),

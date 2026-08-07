@@ -42,6 +42,11 @@
       "note": {
         "type": ["string", "null"]
       },
+      "context_paths": {
+        "type": ["array", "null"],
+        "items": { "type": "string", "minLength": 1 },
+        "description": "Declared repo-relative paths that informed this Work (D-024); fill at done"
+      },
       "open_questions": {
         "type": ["array", "null"],
         "items": {
