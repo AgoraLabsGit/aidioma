@@ -13,9 +13,18 @@ import {
 import { extractDecisionSection } from "../derive/parser.js";
 
 const dashboardDirectory = fileURLToPath(new URL(".", import.meta.url));
-const publicDirectory = path.join(dashboardDirectory, "public");
+const defaultPublicDirectory = path.join(dashboardDirectory, "public");
 /** Package lives at Docs/System/dashboard — repo root is three levels up. */
 const packageRepositoryRoot = path.resolve(dashboardDirectory, "../../..");
+
+function isEnoent(error: unknown): boolean {
+  return Boolean(
+    error &&
+      typeof error === "object" &&
+      "code" in error &&
+      (error as { code?: unknown }).code === "ENOENT",
+  );
+}
 const DEFAULT_PORT = 4317;
 const DEBOUNCE_MS = 300;
 
@@ -29,6 +38,8 @@ const staticAssets = new Map([
 export type DashboardServerOptions = {
   repositoryRoot?: string;
   docsRoot?: string;
+  /** Override static asset directory (tests). Default: ./public next to server.ts. */
+  publicDirectory?: string;
   onError?: (error: unknown) => void;
   watch?: boolean;
   /** Test injection for worktree overlay (D-018). */
@@ -186,6 +197,7 @@ async function resolveDocBody(
 
 export function createDashboardServer(options: DashboardServerOptions = {}): Server {
   assertDashboardEnvironment();
+  const publicDirectory = options.publicDirectory ?? defaultPublicDirectory;
   const sseClients = new Set<SseClient>();
   let cachedIndex: DeriveIndex | null = null;
   let debounceTimer: NodeJS.Timeout | null = null;
@@ -447,6 +459,11 @@ export function createDashboardServer(options: DashboardServerOptions = {}): Ser
       const body = await readFile(path.join(publicDirectory, asset.file));
       send(request, response, 200, asset.contentType, body);
     } catch (error) {
+      // Missing UI files (wrong worktree / incomplete checkout) → quiet 404, not Error spam.
+      if (isEnoent(error)) {
+        send(request, response, 404, "text/plain; charset=utf-8", "Dashboard asset not found.");
+        return;
+      }
       options.onError?.(error);
       send(request, response, 500, "text/plain; charset=utf-8", "Dashboard asset unavailable.");
     }

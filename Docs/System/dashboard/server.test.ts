@@ -185,6 +185,41 @@ describe("work dashboard", () => {
     expect(body).toMatchObject({ error: "Document not found." });
   });
 
+  it("404s missing static assets without treating ENOENT as a server error", async () => {
+    const repositoryRoot = await createFixture();
+    const emptyPublic = path.join(repositoryRoot, "empty-public");
+    await mkdir(emptyPublic, { recursive: true });
+    const errors: unknown[] = [];
+    const server = createDashboardServer({
+      repositoryRoot,
+      watch: false,
+      publicDirectory: emptyPublic,
+      onError: (error) => errors.push(error),
+    });
+    openServers.push(server);
+    const port = await listenOnLoopback(server, 0);
+    const result = await new Promise<{ status: number; body: string }>((resolve, reject) => {
+      const req = request(
+        { host: "127.0.0.1", port, path: "/", method: "GET", headers: { Host: "127.0.0.1" } },
+        (response) => {
+          const chunks: Buffer[] = [];
+          response.on("data", (chunk) => chunks.push(chunk));
+          response.on("end", () =>
+            resolve({
+              status: response.statusCode ?? 0,
+              body: Buffer.concat(chunks).toString("utf8"),
+            }),
+          );
+        },
+      );
+      req.on("error", reject);
+      req.end();
+    });
+    expect(result.status).toBe(404);
+    expect(result.body).toMatch(/not found/i);
+    expect(errors).toEqual([]);
+  });
+
   it("overlays active phase docs from a linked worktree onto primary-rooted index", async () => {
     const primary = await createFixture();
     const overlay = await mkdtemp(path.join(tmpdir(), "aidioma-dash-overlay-"));

@@ -100,3 +100,32 @@
 {"ts":"2026-08-07T16:55:04Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-011","status":"complete","summary":"Visibility test passed — founder saw T-011 on Work + Activity"}
 {"ts":"2026-08-07T16:56:07Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"F-006","status":"complete","summary":"work lane: typecheck+test(29)+validate issues=0"}
 {"ts":"2026-08-07T16:57:26Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-25","status":"complete","summary":"Reduced close: merged PR #25 (F-006/7/8, A-005, T-011); CI green; docs/ssot @ 79ae8fc"}
+{"ts":"2026-08-07T17:24:24Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-009","status":"start","summary":"Dashboard wrong-tree ENOENT from phase cwd"}
+{"ts":"2026-08-07T17:26:14Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-009","status":"complete","summary":"run-dashboard Docs home + quiet 404 for missing static"}
+{"ts":"2026-08-07T17:28:05Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-010","status":"start","summary":"Activity Feature/Area join Work refs"}
+{"ts":"2026-08-07T17:28:37Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-010","status":"complete","summary":"Activity Feature/Area join Work refs"}
+{"ts":"2026-08-07T17:30:29Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-012","status":"start","summary":"Remove bylines; shrink Filters badge"}
+{"ts":"2026-08-07T17:30:29Z","type":"audit","actor":"agent","cmd":"/audit","phase":null,"ref":"A-006","status":"start","summary":"UI consistency audit"}
+{"ts":"2026-08-07T17:31:22Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-012","status":"complete","summary":"Removed bylines; shrunk Filters badge"}
+{"ts":"2026-08-07T17:32:41Z","type":"audit","actor":"agent","cmd":"/audit","phase":null,"ref":"A-006","status":"complete","summary":"UI: shell/tokens solid; no page template; Knowledge/Signals spec drift"}
+{"ts":"2026-08-07T17:34:46Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-013","status":"start","summary":"Detail panel layout + collapse + border"}
+{"ts":"2026-08-07T17:36:51Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-013","status":"complete","summary":"Detail panels Phase layout; collapse top-left; no thick resize border"}
+{"ts": "2026-08-07T17:39:14Z", "type": "audit", "cmd": "/audit", "summary": "A-007 \u2014 Phase Files/Work detail + Activity panel wiring (start)", "ref": "A-007", "phase": null, "status": "active", "actor": "agent"}
+{"ts":"2026-08-07T17:39:36Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-014","status":"start","summary":"Remove detail path+id bylines"}
+{"ts":"2026-08-07T17:40:07Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-014","status":"complete","summary":"Remove detail path+id bylines"}
+{"ts": "2026-08-07T17:40:35Z", "type": "audit", "cmd": "/audit", "summary": "A-007 \u2014 Phase Files/Work/Activity detail intelligence (complete)", "ref": "A-007", "phase": null, "status": "complete", "actor": "agent"}
+{"ts":"2026-08-07T17:42:20Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-011","status":"start","summary":"Detail Close + chevron + collapsed rail layout"}
+{"ts":"2026-08-07T17:44:06Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-011","status":"complete","summary":"Detail Close + chevron + workspace offset"}
+{"ts":"2026-08-07T17:46:21Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-015","status":"start","summary":"Larger collapse chevron; hide ✕ when collapsed"}
+{"ts":"2026-08-07T17:46:53Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-015","status":"complete","summary":"Close top-right expanded; larger chevron; no ✕ collapsed"}
+{"ts":"2026-08-07T17:47:13Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-016","status":"start","summary":"Remove detail-offset workspace reflow"}
+{"ts":"2026-08-07T17:47:34Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-016","status":"complete","summary":"No workspace reflow on detail open/collapse"}
+{"ts":"2026-08-07T17:49:58Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-017","status":"start","summary":"Age columns default newest-first"}
+{"ts":"2026-08-07T17:50:37Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-017","status":"complete","summary":"Age columns default newest-first"}
+{"ts":"2026-08-07T17:53:37Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-012","status":"start","summary":"Fixed rail gutter without expand reflow"}
+{"ts":"2026-08-07T17:54:05Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-012","status":"complete","summary":"Fixed 48px rail gutter; no expand reflow"}
+{"ts":"2026-08-07T17:55:21Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-013","status":"start","summary":"Rail overlap + no auto-open on refresh"}
+{"ts":"2026-08-07T17:55:48Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-013","status":"complete","summary":"Fix hidden override; detail closed on load; 52px gutter"}
+{"ts": "2026-08-07T17:56:55Z", "type": "task", "cmd": "/task", "summary": "T-018 \u2014 /design activity active flush at start", "ref": "T-018", "phase": null, "status": "active", "actor": "agent"}
+{"ts": "2026-08-07T17:57:12Z", "type": "task", "cmd": "/task", "summary": "T-018 \u2014 /design activity active flush at start", "ref": "T-018", "phase": null, "status": "complete", "actor": "agent"}
+{"ts":"2026-08-07T17:57:59Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":null,"status":"complete","summary":"lanes: work — typecheck+test+validate for reduced /close"}
