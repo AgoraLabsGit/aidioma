@@ -1,17 +1,19 @@
-# Current handoff — after reduced `/close` (PR #21)
+# Current handoff — after reduced `/close` (PR #23)
 
 **Date:** 2026-08-07
 
-**Branch:** `main` @ `db4f5c2` (merge PR #21)
+**Branch:** `main` @ `b2e5282` (merge PR #23)
 **Active phase:** none
 **Docs home:** `.worktrees/docs` (`docs/ssot`) @ same tip
 
 ## Done this session
 
-- P-001 Docs home; T-002/T-003 path-lens + reduced-close; F-004 status colors restored
-- T-004 filter persistence; T-005 System `protocols/` + `specs/`
-- **T-006 / D-021** — `/close` dispatches full phase close or reduced close
-- Reduced `/close`: CI green → merge #21 → Docs home refreshed
+- **T-010** — Filters popover (Feature/Area) + Reset on table pages
+- **T-008** — Sortable columns except Summary; `run-dashboard.sh` from Docs home
+- **F-005** — Work Age date-only day counts
+- **A-002/T-007** — D-020 write rule in writer skills; `ensure-docs-home` ff-refresh
+- **A-003/A-004/T-009** — Work immediacy; default sub-agent delegation in skills
+- Reduced `/close`: CI green → merge #23 → Docs home refreshed
 
 ## Open
 
