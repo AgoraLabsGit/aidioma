@@ -22,6 +22,7 @@ Utility that **does work**. Phase-scoped or named-phase triage **must** run in a
 1. Resolve mode → load matching open/active rows.
 2. Classify: **do** | **blocked** | **plan** | **drop** | **leave**. Cite `W-nnn — summary`.
 3. Auto-execute clear `/fix`/`/task` via sub-agents; `done_summary`.
+   Product rows → `task/*`/`fix/*` worktrees (D-025). Docs-home path leases on overlap.
 4. Confirm drop / `/plan` / lifecycle. Clarifications → `open_questions` on that row.
 5. **Unassigned batch finished with material changes** → `/check`; `/audit` if big/risky.
 6. Activity event. Report ids.

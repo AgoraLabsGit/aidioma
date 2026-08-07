@@ -117,6 +117,7 @@ Chose: Permanent **Docs home** worktree as the only writable SSOT for `Docs/**` 
 Why: Founder runs parallel agents (phase + tasks/fixes/research). Overlay still assumes one “live” Docs writer and merges trees; separate agent checkouts of `Docs/` diverge (`state: proposed` vs `active`). One Docs home gives one camera and one ledger without inventing multi-root truth.
 Revisit if: Docs-home merge lag blocks phase close, or two agents editing the same Docs-home files thrash `WORK.yaml` worse than overlay did
 Supersedes: D-018 — Main-rooted dashboard with active worktree overlay
+Clarified by: D-025 — product `/task`/`/fix` desks + Docs-home path leases
 
 ### Shape
 
@@ -136,7 +137,8 @@ Supersedes: D-018 — Main-rooted dashboard with active worktree overlay
 2. `/dashboard` starts from Docs home only; refuse or stop servers rooted elsewhere.
 3. `/run` creates/uses the phase **code** worktree; activation (`state: active`) is committed on Docs home.
 4. `/close` = Docs-home schedule/spec/System commits (already on `docs/ssot` → `main`) + phase code PR. No requirement that phase branch carry Docs diffs.
-5. Parallel agents OK: phase agent on code tree; task/fix/research agents on Docs home (or code tree for code-only fixes).
+5. Parallel agents OK: phase agent on code tree; product task/fix on `task/*`/`fix/*` (D-025); meta/research on Docs home.
+6. Docs-home path leases via active Work `context_paths` (D-025) — overlap → wait/park.
 
 ### Process surface (skills / AGENTS.md)
 
@@ -229,4 +231,93 @@ Adv: WARN — dual vocabulary during transition (file `## Context` = UI Brief; U
 - Work: `context_paths: string[] | null` in schema + template; skills fill material paths on done when known
 - Phase: optional frontmatter `context_paths` (same meaning); dashboard Brief ← `## Brief` else `## Context`
 - Dashboard Work/Phase detail: sections **Brief**, **Context**, **Files** (in that order where present)
+
+## D-025 — Non-phase trees: product vs Docs home
+Date: 2026-08-07 · Phase: — · From: — · Affects: [SPEC-A-DEVSYSTEM]
+Chose: Steady-state **product** `/task`/`/fix` run in dedicated `task/*` / `fix/*` worktrees (product code only); **Docs home** remains the only writer for `Docs/**`, `.work/**`, root agent entrypoints, and `.claude/skills/**`. Concurrent Docs-home editors claim overlapping paths via active Work `context_paths` — second agent waits or parks — over every non-phase session coding on `docs/ssot`
+Why: System-building temporarily concentrates chores on Docs home; once AIdioma product work dominates, non-phase code should isolate like phases. D-020 already forbids Docs writes on task trees; this locks the converse routing and a light lease for the shared meta tree
+Revisit if: Path leases are ignored in practice, or System UI moves out of `Docs/System/` into a product package
+
+### Routing
+
+| Outcome lives in… | Desk |
+|---|---|
+| `apps/`, `packages/`, `content/`, product tests | `task/t-nnn-*` or `fix/f-nnn-*` worktree (create if missing) |
+| `Docs/**`, `.work/**`, `AGENTS.md`, `CLAUDE.md`, `.claude/skills/**` | Docs home only (`docs/ssot`) |
+| Ledger / activity for any of the above | Always Docs home (flush `active` before other edits) |
+
+### Path lease (Docs home only)
+
+1. On Docs-home edit, set/keep `context_paths` on the **active** Work row to the paths you will touch (before material edits when known).
+2. If another `status: active` Work row already lists an overlapping path → **do not edit**; wait, `/handoff`, or `/log` — do not thrash the same file.
+3. Product `task/*` / `fix/*` trees do not need leases against each other (git isolation); still do not write Docs there.
+
+### Interim (System-building)
+
+While most work is System/dashboard, Docs-home `/task`/`/fix` for `Docs/System/**` remains valid. Prefer leases; do not invent parallel Docs-home writers on the same CSS/skill file.
+
+### Non-goals
+
+- Multiple active phases (W-015 unchanged)
+- File locks / daemon mutexes
+- Requiring a worktree for pure ledger parks (`/log`) or read-only `/status`
+
+### Implement via (`/close`)
+
+- Reduced close inventories desks; publishes **each** dirty session desk
+- Product → PR `task/*` / `fix/*` → merge → delete that worktree
+- Meta → short-lived `close/*` from Docs home → merge → refresh Docs home; **never** delete Docs home
+- Dual-desk sessions must not publish only one side
+- Phase close unchanged: code PR + Docs-home meta (D-020)
+
+## D-026 — Praxis Docs page (operator guide)
+Date: 2026-08-07 · Phase: — · From: — · Affects: [SPEC-F-DEV-DASHBOARD, SPEC-A-DEVSYSTEM]
+Chose: First-class dashboard page **Docs** (`docs`) as the Praxis PM operator guide — foot entry with Signals/Theme; V1 content = living `Docs/START.md` + `Docs/System/COMMANDS.md`; sidebar-foot is one icon-only row (Signals · Docs · Theme) — over main-nav Docs tab, Knowledge reuse, or a separate authored guide file
+Why: Founders need an in-product how-to for Praxis without dumping `system.md` or conflating the guide with Knowledge’s artifact browser. Living START/COMMANDS stay SSOT; the page projects them.
+Revisit if: Guide needs more than START+COMMANDS (e.g. curated narrative), or Docs belongs in main nav after usage data
+
+### Shape
+
+| | Rule |
+|---|---|
+| Page | `docs`, title **Docs**; not a main-nav tab |
+| Entry | Sidebar-foot Docs control (with Signals + Theme) |
+| Content V1 | Project `START.md` + `System/COMMANDS.md` (TOC + full-page reader) |
+| Foot chrome | One horizontal icon-only row; labels via `title`/`aria-label` only |
+| ≠ Knowledge | Knowledge = artifact browser; Docs = operator guide |
+
+### Non-goals
+
+- Editing Docs from the UI
+- Replacing the Commands panel
+- Shipping full `system.md` prose in V1
+- New authored guide file as a second SSOT
+
+### Implement via
+
+- `SPEC-F-DEV-DASHBOARD` + `Dashboard-spec` Shell/Pages
+- UI task: page panel + foot Docs control + icon-only foot row (T-043)
+
+**Superseded content rule:** D-027 — Docs projects beginner guide only (not COMMANDS.md).
+
+## D-027 — Docs page is a beginner Praxis guide
+Date: 2026-08-07 · Phase: — · From: A-009 · Affects: [SPEC-F-DEV-DASHBOARD, SPEC-A-DEVSYSTEM]
+Chose: Docs page projects a **customer-facing beginner guide** (`Docs/START.md` rewritten) only — over projecting `COMMANDS.md` / agent SSOT on the Docs page
+Why: Founder wants a complete beginner to understand Praxis; COMMANDS.md is the agent command key. D-026 V1 content rule failed that goal (A-009).
+Revisit if: A separate `GUIDE.md` home apart from START is clearer than START + COMMANDS-OVERVIEW
+Supersedes: D-026 content V1 (START + System/COMMANDS projection). Keeps D-026 page/entry/foot chrome.
+
+### Shape
+
+| | Rule |
+|---|---|
+| Docs TOC | Titles only (Welcome, Commands) — no file-path sub-lines; no Guide/Praxis chrome |
+| Content | `START.md` (incl. multi-session `/handoff`) + customer `COMMANDS-OVERVIEW.md` |
+| Not on Docs | `System/COMMANDS.md`, schemas, desks, audit bars — agent/Commands panel / Knowledge |
+| Accuracy | “At most one phase in flight **today**”; parallel phases planned (W-015); small work outside phases is first-class |
+
+### Non-goals
+
+- Deleting or diluting `COMMANDS.md` as agent SSOT
+- Shipping full `system.md` on the Docs page
 

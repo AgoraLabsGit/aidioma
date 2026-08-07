@@ -1411,3 +1411,589 @@
   open_questions: null
   done_summary: "Left-aligned Praxis; Outfit 600 wordmark via Google Fonts."
   opened: 2026-08-07T19:20:12Z
+
+- id: F-018
+  kind: fix
+  summary: "Activity Status stays active for mid-close with phase set and ref null"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "15:56 PHASE-007 close has ref:null status:active; phase is closed; activityDisplayStatus only joins Work refs."
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "activityDisplayStatus: closed/canceled phase → done (covers mid-close ref:null). Spec+CHANGELOG."
+  opened: 2026-08-07T19:25:28Z
+
+- id: T-031
+  kind: task
+  summary: "Align Praxis wordmark with sidebar nav buttons"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Match .sidebar-brand horizontal padding to .tab (space-3)."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+  open_questions: null
+  done_summary: "sidebar-brand horizontal padding = .tab (space-3)."
+  opened: 2026-08-07T19:27:19Z
+
+- id: T-032
+  kind: task
+  summary: "Watch git worktrees metadata so dashboard auto-reindexes on add/remove"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "File watcher covered Docs/.work only; worktree add needed manual /api/reindex."
+  context_paths:
+    - Docs/System/dashboard/server.ts
+    - Docs/System/derive/worktrees.ts
+    - Docs/System/specs/Dashboard-spec.md
+  open_questions: null
+  done_summary: "Watcher includes <git-common-dir>/worktrees; collectWatchRoots + specs/CHANGELOG; tests green."
+  opened: 2026-08-07T19:28:43Z
+
+- id: T-033
+  kind: task
+  summary: "Sidebar polish: wordmark align/size, gap, soft selected tab"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Optical align wordmark to nav text column; 22px height; tighter gap; selected tab fill-only."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+  open_questions: null
+  done_summary: "Wordmark 22px + pad to label column; sidebar gap space-3; selected tab soft fill + 3px left accent (no border)."
+  opened: 2026-08-07T19:29:45Z
+
+- id: T-034
+  kind: task
+  summary: "Fix sidebar brand/nav optical alignment"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Wordmark with icon column; stabilize tab-icon box; clean left accent via ::before."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/public/brand/praxis-wordmark-white.svg
+  open_questions: null
+  done_summary: "Wordmark inset = tab/icon column; cropped SVG viewBox; fixed icon flex box; selected accent via ::before."
+  opened: 2026-08-07T19:31:31Z
+
+- id: T-035
+  kind: task
+  summary: "Replace sidebar page icons with minimal stroke SVGs"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Keep 1.25em slot; match topbar stroke style; fix Activity hamburger metaphor."
+  context_paths:
+    - Docs/System/dashboard/public/index.html
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/public/app.js
+  open_questions: null
+  done_summary: "Minimal stroke SVGs for nav+Signals+Theme; label-only JS updates; SPEC+CHANGELOG."
+  opened: 2026-08-07T19:32:27Z
+
+- id: T-036
+  kind: task
+  summary: "Restore Praxis wordmark size + label-column alignment"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "T-033/SPEC: 22px wordmark padded to nav label column; icon swap left it on icon column."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/public/index.html
+  open_questions: null
+  done_summary: "Restored 22px wordmark padded to nav label column (T-033/SPEC); img attrs 81×22."
+  opened: 2026-08-07T19:36:30Z
+
+- id: F-019
+  kind: fix
+  summary: "Align Signals and Theme foot control font, badge, and icon sizing"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Signals used mono/2xs/no border; Theme used sans/sm/bordered — mismatched badge and icons."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/public/index.html
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Shared .sidebar-foot-btn chrome (36px, sans fs-sm, bordered badge, 1.25em icons). Live computed styles matched. Spec+CHANGELOG."
+  opened: 2026-08-07T19:40:30Z
+
+- id: T-037
+  kind: task
+  summary: "Tone down light theme glare (duskier shell, deeper ink, stronger chips)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Light theme ~90% near-white; reduce luminance while keeping panels white."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+    - Docs/System/specs/Dashboard-spec.md
+  open_questions: null
+  done_summary: "Light tokens: bg #e8eaed, ink #1a1a1a/#5c6370, border #d0d5dd, status softs 16%. Live CSS vars proven. Spec+CHANGELOG."
+  opened: 2026-08-07T19:42:00Z
+
+- id: T-038
+  kind: task
+  summary: "Nav and sidebars use page bg; tables keep surface panels"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Sidebar/detail were --surface; match page --bg in light+dark; keep .table-frame on --surface."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Sidebar/detail/Knowledge TOC → --bg; tables/foot badges stay --surface. Light+dark computed match proven."
+  opened: 2026-08-07T19:43:30Z
+
+- id: F-020
+  kind: fix
+  summary: "Light theme: cream shell, kill pure-white panels"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Founder likes cream page; --surface #fff still too bright on tables/controls."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Light --bg cream #ebe6df; --surface soft grey #e2e4e8; no near-white proven live. Spec+CHANGELOG."
+  opened: 2026-08-07T19:45:00Z
+
+- id: F-021
+  kind: fix
+  summary: "Align Praxis wordmark with nav icon column"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Brand was padded to label column; founder wants left edge with page icons."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "sidebar-brand pad matches .tab; logoLeft===iconLeft (0px delta). Spec+CHANGELOG."
+  opened: 2026-08-07T19:46:20Z
+
+- id: F-022
+  kind: fix
+  summary: "Center detail panel collapse arrow inside its button"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: ".icon-btn asymmetric padding left › off-center in #detail-collapse."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+  open_questions: null
+  done_summary: "Square #detail-collapse padding:0 after .icon-btn; glyph dx=0 expanded+collapsed. CHANGELOG."
+  opened: 2026-08-07T19:47:20Z
+
+- id: F-023
+  kind: fix
+  summary: "Light theme tables: warm paper panels (not blue-grey)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "--surface #e2e4e8 reads blue on cream; research: warm paper/stone with cream canvas."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Tables --surface #f3efe7 warm paper (RGB 243/239/231, no blue cast). Spec+CHANGELOG."
+  opened: 2026-08-07T19:48:20Z
+
+- id: T-039
+  kind: task
+  summary: "Page + panel titles use mono (same as ID)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "#page-title and .phase-name were sans display; IDs and #detail-title already mono."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "#page-title + .phase-name → --mono; #detail-title already mono. Live fonts match ID. Spec+CHANGELOG."
+  opened: 2026-08-07T19:49:10Z
+
+- id: T-040
+  kind: task
+  summary: "Steady-state: product /task /fix use task|fix worktrees; Docs home meta-only + path leases"
+  status: done
+  feature: null
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Encode D-025: product non-phase code trees; Docs home for meta; overlap on context_paths waits."
+  context_paths:
+    - Docs/DECISIONS.md
+    - Docs/AGENTS.md
+    - AGENTS.md
+    - .claude/skills/task/SKILL.md
+    - .claude/skills/fix/SKILL.md
+    - Docs/Specs/Areas/SPEC-A-DEVSYSTEM.md
+    - Docs/System/system.md
+  open_questions: null
+  done_summary: "D-025 + SPEC-A/AGENTS/skills/system/COMMANDS: product task|fix worktrees; Docs-home path leases; interim System-building noted."
+  opened: 2026-08-07T19:52:07Z
+
+- id: T-041
+  kind: task
+  summary: "Apply sidebar design-review nits (logo, accent, icons)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Review: optical logo+3–4px; accent left:-1px; selected icon opacity 1; normalize SVG left bearing."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/public/index.html
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Logo ml 4px; accent ::before -1px; selected icon opacity 1; SVG bearings ~x3.5–5. Spec+CHANGELOG."
+  opened: 2026-08-07T19:53:30Z
+
+- id: T-042
+  kind: task
+  summary: "Align /close + reduced-close with D-025 dual-desk publish"
+  status: done
+  feature: null
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Spell product task|fix PR + Docs-home journal; never delete docs home; close/* for meta."
+  context_paths:
+    - .claude/skills/close/SKILL.md
+    - Docs/System/protocols/reduced-close.md
+    - Docs/System/COMMANDS.md
+    - Docs/System/system.md
+    - Docs/DECISIONS.md
+    - Docs/AGENTS.md
+  open_questions: null
+  done_summary: "close skill + reduced-close: desk inventory; product PR + meta close/*; never delete Docs home; COMMANDS/AGENTS/system/SPEC/D-025 implement-via."
+  opened: 2026-08-07T19:58:01Z
+
+- id: S-004
+  kind: design
+  summary: "Praxis Docs page + compact sidebar-foot controls"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Full Docs page for Praxis PM; foot entry with Signals/Theme; compact icon-row chrome follows as T-043 after lock."
+  context_paths:
+    - Docs/DECISIONS.md
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+    - Docs/System/specs/Dashboard-spec.md
+    - Docs/START.md
+    - Docs/System/COMMANDS.md
+  open_questions: null
+  done_summary: "D-026 locked. Docs page (START+COMMANDS), foot-only entry, icon-only Signals·Docs·Theme. Adv PASS. Implement T-043."
+  opened: 2026-08-07T20:03:33Z
+
+- id: F-024
+  kind: fix
+  summary: "Clear IDE Problems: work.yml npm ci scripts + ghost Sonar/TS on deleted paths"
+  status: done
+  feature: null
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "14 Problems: 1 real (work.yml S6505); 12 Sonar on deleted tooling/work-registry/loader.ts; 1 TS on deleted lesson-content/tsconfig.json."
+  context_paths:
+    - .github/workflows/work.yml
+    - Docs/System/CHANGELOG.md
+  open_questions: null
+  done_summary: "Repo: work.yml npm ci --ignore-scripts + path filters drop deleted tooling/work-registry|work-dashboard|Docs.next. Ghosts (13): lesson-content/tsconfig + tooling/work-registry/loader.ts deleted — clear via Reload Window / SonarQube Update all project bindings."
+  opened: 2026-08-07T20:05:49Z
+
+- id: T-043
+  kind: task
+  summary: "Docs page + icon-only sidebar-foot row"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Implement D-026: docs page (START+COMMANDS), Docs foot control, compact icon-only Signals·Docs·Theme row."
+  context_paths:
+    - Docs/System/dashboard/public/index.html
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/server.ts
+    - Docs/System/dashboard/server.test.ts
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Docs page projects START+COMMANDS; foot icon-only Signals·Docs·Theme; /api/doc START|COMMANDS; 42 dashboard tests green."
+  opened: 2026-08-07T20:06:00Z
+
+- id: T-044
+  kind: task
+  summary: "Narrow sidebar to 180px; smaller foot icons"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: reduce menu width 220→180; shrink Signals/Docs/Theme icons."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "--sidebar-w 180px; foot buttons 28px / icons ~12px. SPEC-F updated."
+  opened: 2026-08-07T20:09:18Z
+
+- id: F-025
+  kind: fix
+  summary: "Docs page: load START/COMMANDS + layout fill"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Repro: Docs shows Could not load START; Guide TOC layout broken. Cause: stale server missing findDocPath START/COMMANDS; page-docs missing knowledge height rules; Docs reused Knowledge collapse chrome."
+  context_paths:
+    - Docs/System/dashboard/server.ts
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/styles.css
+  open_questions: null
+  done_summary: "Restarted dashboard with START/COMMANDS findDocPath; page-docs height fill; Docs TOC fixed 220px without Knowledge collapse. /api/doc START+COMMANDS 200; 42 tests."
+  opened: 2026-08-07T20:14:15Z
+
+- id: F-026
+  kind: fix
+  summary: "Docs prose tables: no vertical CMD wrap"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "COMMANDS.md Lifecycle table renders /plan as one letter per line. word-break:break-word + 100% width table."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/public/app.js
+  open_questions: null
+  done_summary: "md-table-wrap + horizontal scroll; first-col nowrap; drop word-break:break-word. CMD reads as /plan again."
+  opened: 2026-08-07T20:16:57Z
+
+- id: T-045
+  kind: task
+  summary: "Docs reader: full-width prose (drop 72ch)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: Docs text column leaves empty space on the right; fill the pane."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: ".page-docs .knowledge-doc .prose max-width:none; Knowledge keeps 72ch."
+  opened: 2026-08-07T20:18:05Z
+
+- id: F-027
+  kind: fix
+  summary: "Prose: space after md-tables (Docs + detail)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Lines under COMMANDS tables hug the border; same .prose/.md-table-wrap used in detail."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+  open_questions: null
+  done_summary: "md-table-wrap margin 0.85em 0 (shared prose); phase-card list bottom 0.85em; prose last-child trim. Docs+detail."
+  opened: 2026-08-07T20:19:58Z
+
+- id: A-008
+  kind: audit
+  summary: "CSS audit: prose/table/detail vertical rhythm"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Lens: seams/spacing. Founder: table→text gap + detail panels."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+  open_questions: null
+  done_summary: "Verdict: F-027 fixes table→text hug. Med: p↔table was asymmetric (now matched 0.85em); phase list margin-bottom was 0 (restored). Low: last-child trim; table→h2 larger by design. Follow-ups optional: unify em vs --space scale."
+  opened: 2026-08-07T20:19:58Z
+
+- id: T-046
+  kind: task
+  summary: "Docs TOC: drop secondary sub-lines"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Guide list shows START.md · orientation under titles — remove."
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+  open_questions: null
+  done_summary: "Docs Guide TOC titles only — removed cell-secondary file sub-lines."
+  opened: 2026-08-07T20:22:42Z
+
+- id: A-009
+  kind: audit
+  summary: "Docs language: beginner / customer-facing Praxis guide"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Lens: agent-context + claims accuracy. Founder: non-technical; fix one-phase slogan; work outside phase; parallel phases planned."
+  context_paths:
+    - Docs/START.md
+    - Docs/System/COMMANDS.md
+    - Docs/DECISIONS.md
+  open_questions: null
+  done_summary: "Fail for beginner Docs: drop COMMANDS projection; rewrite START; fix one-phase overclaim + FIXES/Backlog. Recommend guide-only TOC."
+  opened: 2026-08-07T20:22:42Z
+
+- id: A-010
+  kind: audit
+  summary: "Reconcile Praxis reality vs specs + System templates"
+  status: done
+  feature: null
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Lens: schema drift / seams. Live process (D-020..D-026, reduced close, Work kinds, Docs page) vs system.md, COMMANDS, templates, Dashboard-spec, SPEC-A/F."
+  context_paths:
+    - Docs/System/system.md
+    - Docs/System/Templates
+    - Docs/System/specs/Dashboard-spec.md
+    - Docs/Specs/Areas/SPEC-A-DEVSYSTEM.md
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Core process matches live. High drift: START/templates FIXES/Backlog; Dashboard-spec Knowledge four-tables; work/phase JSON schemas lag Zod. Fix order listed in activity."
+  opened: 2026-08-07T20:22:42Z
+
+- id: S-005
+  kind: design
+  summary: "Docs page = beginner Praxis guide (amend D-026)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "From A-009/A-010: customer guide; no COMMANDS dump; accurate phase vs small work."
+  context_paths:
+    - Docs/START.md
+    - Docs/DECISIONS.md
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/Templates
+    - Docs/System/system.md
+    - Docs/System/specs/Dashboard-spec.md
+  open_questions: null
+  done_summary: "D-027 locked (Adv PASS). Docs=Welcome/START beginner guide only; COMMANDS off Docs. Softened one-phase claims; templates+schemas+Dashboard-spec Knowledge reconciled (A-009/A-010)."
+  opened: 2026-08-07T20:28:00Z
+
+- id: T-047
+  kind: task
+  summary: "Docs TOC: remove Guide and Praxis labels"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+  open_questions: null
+  done_summary: "Removed Guide head + Praxis group label from Docs TOC."
+  opened: 2026-08-07T20:27:46Z
+
+- id: T-048
+  kind: task
+  summary: "Docs: Commands overview page + handoff for multi-session phases"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: missing commands overview; handoffs under-explained for multi-session phases."
+  context_paths:
+    - Docs/START.md
+    - Docs/COMMANDS-OVERVIEW.md
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/server.ts
+  open_questions: null
+  done_summary: "Docs TOC: Welcome + Commands (COMMANDS-OVERVIEW.md). START: multi-session /handoff section. Specs/D-027 updated."
+  opened: 2026-08-07T20:39:51Z

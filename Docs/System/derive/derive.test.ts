@@ -9,7 +9,7 @@ import { categorizeBranch,
   projectNameFromRemote, githubTreeUrl } from "./git.js";
 import { nextCheckId, nextWorkId, type PhaseFrontmatter } from "./schema.js";
 import { parseWork } from "./parser.js";
-import { parseWorktreePorcelain } from "./worktrees.js";
+import { parseWorktreePorcelain, resolveGitWorktreesMetaDir } from "./worktrees.js";
 
 const temporaryDirectories: string[] = [];
 
@@ -365,6 +365,11 @@ branch refs/heads/phase/007-command-system-audit
         isPrimary: false,
       },
     ]);
+  });
+
+  it("resolves git worktrees metadata dir from this checkout", async () => {
+    const meta = await resolveGitWorktreesMetaDir(process.cwd());
+    expect(meta).toMatch(/[/\\]worktrees$/);
   });
 
   it("overlays active phase from a linked worktree onto primary", async () => {

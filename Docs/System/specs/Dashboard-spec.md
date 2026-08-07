@@ -37,7 +37,7 @@ Two-way control is a separate product.
 ```
 primary Docs/** + .work/activity ─┐
 active phase worktree (overlay) ──┼─→ chokidar ─→ debounce 300ms ─→ derive() ─→ projection
-                                  │                                      │
+git-common-dir/worktrees (meta) ──┤                                      │
                                   └──────────────────────────────────────┘
                                                                          ▼
                                            dashboard UI ←── SSE /api/events
@@ -61,6 +61,8 @@ D-020 is active; `overlay*` fields apply only in interim mode.
 - Parsers: frontmatter + YAML + markdown body render + `chokidar` (watch)
 - Port fixed; `/dashboard` stops stale servers before starting (V3 §7 runtime hygiene)
 - Watches Docs-home (or primary ± overlay) `Docs/` + `.work/activity/`
+- Also watches `<git-common-dir>/worktrees` (when present) so linked worktree
+  add/remove/prune/branch moves reindex without a manual refresh
 
 ### Watcher contract
 
@@ -68,6 +70,7 @@ D-020 is active; `overlay*` fields apply only in interim mode.
 |---|---|
 | Rebuild strategy | Full re-derive on any change. No incremental invalidation. |
 | Debounce | 300ms — a branch switch must produce one rebuild, not hundreds |
+| Worktree meta | Watch `<git-common-dir>/worktrees` only (not checkout trees) so ordinary edits do not storm rebuilds |
 | Fail soft | Per-file try/catch. A malformed file becomes a `parse_error` row, never a crash |
 | Validate | Unresolvable `depends_on`, `decisions`, `affects`, `amends_specs` ids become `broken_link` rows |
 | Heartbeat | Stamp `indexed_at` on every build; UI displays it with a manual reindex button |
@@ -219,30 +222,34 @@ Computed by the indexer; never authored.
 
 ```
 ┌────────┬─────────────────────────────────────────────────┐
-│ AIdioma│ Active · Work · Roadmap · Activity · Knowledge   │
+│ Praxis │ Active · Work · Roadmap · Activity · Knowledge   │
 │ Active │                    indexed 3s ago [⟳]            │
 │ Work   ├─────────────────────────────────────────────────┤
 │ …      │ search + filters (one row) · table (header + Sort) │
-│ ● N    │  ← foot pill opens Signals (not in main nav)     │
+│ ⚠ 📄 ◐ │  ← foot icons: Signals · Docs · Theme (not nav)  │
 └────────┴─────────────────────────────────────────────────┘
         detail pane (resizable) slides from right on row click
 ```
 
-- Every page except **Active** is a table (Knowledge is a document viewer).
+- Every page except **Active** is a table (Knowledge and Docs are document viewers).
 - Row click → detail pane: frontmatter fields on top, markdown body fetched and rendered on
   demand via `/api/doc?id=`. Bodies are never embedded in `index.json`.
 - Cross-links: any id in any cell is clickable and routes to its artifact.
 - Stale heartbeat (>60s) turns the indicator amber.
-- **Signals** is not a main-nav tab. Open it from the sidebar-foot status pill.
+- **Signals** and **Docs** are not main-nav tabs. Open them from the sidebar-foot icon row.
+- Sidebar-foot: one horizontal **icon-only** row — Signals · Docs · Theme (matched chrome;
+  labels via `title` / `aria-label` only).
 
 ### Visual register
 
 | | |
 |---|---|
-| Type | System sans for UI, monospace for ids, paths, timestamps |
+| Type | System sans for UI; monospace for ids, paths, timestamps, page titles, and panel titles |
 | Density | ~32px rows, no card padding, table-first |
 | Status | Colored dot **plus** text label — never color alone |
 | Chrome | Sidebar nav + table pages. No charts / analytics widgets in V1 |
+| Light theme | Cream shell (`#ebe6df`) + warm paper panels (`#f3efe7`); no pure white / cool blue-grey |
+| Chrome fill | Nav / detail / Knowledge TOC = page `--bg`; tables + elevated cards = `--surface` |
 
 Phase state colors (Status pills + Roadmap State chips; unique hues):
 active blue · ready cyan · proposed amber · blocked purple · closed green · canceled red.
@@ -333,32 +340,25 @@ Active UI** (founder removed the command bar / suggested-next box).
 
 ### Knowledge
 
-Four tables on one page, tab-switched. Hold the line at four.
+Artifact browser: left **TOC** (grouped Product / Specs / Decisions / Research / Releases) +
+full-page markdown reader via `/api/doc`. Not four tabbed tables (live UI; PHASE-006 may still
+refine). Filter box on the TOC. Contested/superseded handling stays in the Specs group.
 
-**Specs**
+`PRODUCT.md` is the default document when Knowledge opens.
 
-| ID | Kind | Title | Status | Depends on | Used by | Decisions | Last amended | Drift |
+### Docs
 
-- Features and Areas filterable; areas show `blast_radius` in Used by
-- Contested rows flagged amber, superseded greyed and hidden by default
+Beginner Praxis guide (D-026 chrome + D-027 content). **Not** Knowledge (artifact browser).
+**Not** `COMMANDS.md` (agent SSOT / Commands panel).
 
-**Decisions**
+| | |
+|---|---|
+| Page id | `docs` (title **Docs**) |
+| Entry | Sidebar-foot Docs control only (not main nav) |
+| Content | Customer-facing `START.md` + `COMMANDS-OVERVIEW.md` via `/api/doc` (TOC titles only) |
+| Non-goals | Edit from UI; project `System/COMMANDS.md`; replace Commands panel; ship full `system.md` |
 
-| ID | Date | Title | Chose | Affects | Phase | From |
-
-**Research**
-
-| ID | Date | Question | Verdict | Status | Affects | Phase |
-
-- `phase: null` rows grouped as *Unassigned findings*
-- `stale` (>90d) badged amber
-
-**Releases**
-
-| ID | Date | Phase | Summary |
-
-`PRODUCT.md` renders as a header panel above the tabs — who it's for, what it does, what it never
-does.
+Detail pane stays closed on Docs (full-page reader, same class as Knowledge).
 
 ### Work
 
@@ -387,7 +387,7 @@ outcome types excluded from the Activity page). Clarifications live on the row �
 
 Derived health only. This page is where `paths` visibly pays off.
 **UI label is Signals** (supersedes D-007 Issues-for-everything).
-**Entry:** sidebar-foot pill only (not main nav). Always visible; alert style when open high-severity > 0.
+**Entry:** sidebar-foot Signals control only (not main nav). Always visible; alert style when open high-severity > 0.
 
 | Kind | Ref | Summary | Spec | Age | Severity | Status |
 
@@ -407,7 +407,9 @@ Rows from the slow cycle (`drift`, `unspecified`, `dead_spec`) display `paths_sc
 Default sort: severity, then age (severity via filter chips — not via Summary header).
 **Sortable headers:** every column except Summary (ID, Kind, Feature, Area, Status, Age).
 Filters: status (All / Open / Closed=fixed), kind, severity; Feature/Area via Filters panel; Reset.
-Foot pill label: `● Signals` when no open high-severity; `● N signal(s)` when N > 0.
+Foot controls: Signals · Docs · Theme — one icon-only row, matched badge chrome (bordered, same
+height/icon slot). Visible text labels omitted; `title`/`aria-label` required. Signals alert
+style when open high-severity > 0; accessible name may include count (e.g. `3 signals`).
 
 ---
 

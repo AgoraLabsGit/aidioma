@@ -14,7 +14,7 @@ Thin key. Detail: `System/system.md`. Staging: hand-edited until `/system` gener
 |---|---|---|---|---|
 | `/plan` | New work not on Roadmap | Phase file; MCOO; may promote Work proposal | Contract named; Adv optional if contested | `/research` (if options open); `/log` |
 | `/run` | Start/resume the one active phase | Execute outcome; commit on phase branch | Start phase `/triage`; proof + seams; Adv at `/close` | `/triage`, `/research`, `/design`, `/fix`, `/task`, `/audit`, `/check`, `/log`, `/status`, `/handoff`, `/launch`, `/dashboard` |
-| `/close` | End session / publish | **Active phase:** triage → `/check` → full Proof/Scope/Publish → merge. **No phase:** [reduced-close.md](protocols/reduced-close.md) → merge | Phase: Adv + nested lenses. Standalone: reduced; `/check` always | `/triage` (phase), `/check`, `/audit`, review helpers |
+| `/close` | End session / publish | **Active phase:** triage → `/check` → full Proof/Scope/Publish → dual-desk merge (code + Docs home). **No phase:** [reduced-close.md](protocols/reduced-close.md) — inventory desks (D-025) → `/check` → publish each (product `task/*`/`fix/*` + meta `close/*`) | Phase: Adv + nested lenses. Standalone: reduced; `/check` always | `/triage` (phase), `/check`, `/audit`, review helpers |
 | `/ship` | Promote to production | Deploy + `RELEASES.md` | Preconditions incl. last `/check` green | `/check` |
 
 `/close --cancel` → phase `canceled`, no merge (phase path only).  
@@ -31,6 +31,11 @@ Never refuse `/close` because no phase is active — run reduced close.
 | `/design` | Decisions and/or a spec; Work `kind: design` (`S-nnn`) + activity active flush first | Review Research first; **Required Adv**; close with `decide`/`spec` or blocked trail | `/research` if missing; Adv sub-agent |
 | `/fix` | Patch + proof + Work `fix` + `done_summary` | Required proof; publish via `/close` (reduced) | `/check`; `/close` to publish; optional `/audit`; `/log`/`/plan` if stretches |
 | `/task` | Patch/docs + proof + Work `task` + `done_summary` | Required proof (light); publish via `/close` (reduced) | `/check`; `/close` to publish; optional `/audit`; `/log`/`/plan` if stretches |
+
+**Desks (D-025):** Product `/task`/`/fix` → `task/*`/`fix/*` worktrees. Meta → Docs home.
+Docs-home path leases via active Work `context_paths` (overlap → wait/park).
+**`/close` publish:** every dirty session desk — product PR + meta `close/*` when both dirty;
+never delete Docs home.
 | `/audit` | Findings + Work `audit` + `done_summary` | Is the audit (not merge gate) | Review sub-agent |
 
 ## Utility

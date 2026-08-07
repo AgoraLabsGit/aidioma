@@ -26,23 +26,15 @@ Do not delete anything listed here. `/close` and `/status --repair` skip these.
 
 ---
 
-# Backlog.md — format
+# Unscheduled work (retired Backlog / FIXES)
 
-Unscheduled candidates. Not a second registry — nothing here is live work.
+`Roadmap/Backlog.md` and `FIXES.yaml` are **retired** (D-012 / PHASE-005). Park unscheduled
+ideas and defects in `Docs/WORK.yaml`:
 
-```markdown
-# Backlog
+| Need | Work kind | Id prefix |
+|---|---|---|
+| Broken / wrong behavior | `fix` | `F-` |
+| One-session chore | `task` | `T-` |
+| Phase-sized idea | `proposal` | `P-` |
 
-| ID | Title | Type | Blocked by | Note |
-|---|---|---|---|---|
-| BL-001 | Offline mode | build | — | Needs sync model first |
-| BL-002 | Repo cleanup | design | BL-001 | Depends on the sync decision |
-```
-
-## Rules
-
-- Own id namespace (`BL-nnn`). A backlog item is not a phase and does not take a phase id.
-- `/plan` promotes a row: creates the phase with `from_backlog: BL-001`, then deletes the row.
-- An item is never in both `Backlog.md` and `Roadmap/Phases/`.
-- `blocked_by` names another backlog id. Cross-references to phases go in the note.
-- If it is broken rather than unbuilt, it belongs in `FIXES.yaml`.
+See `Templates/work-entry.md`. Promote a proposal with `/plan` → phase + `promoted_to`.

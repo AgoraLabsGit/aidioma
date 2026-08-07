@@ -4,6 +4,30 @@ Append only. Every `/system` change adds one line.
 
 | Date | schema_version | Change |
 |---|---|---|
+| 2026-08-07 | 3 | T-048: Docs Commands overview + multi-session handoff guidance |
+| 2026-08-07 | 3 | A-009/A-010/S-005/D-027: Beginner Docs guide; reconcile phase slogans + templates |
+| 2026-08-07 | 3 | F-027/A-008: Prose table/list vertical rhythm (Docs + detail) |
+| 2026-08-07 | 3 | T-045: Docs prose full pane width (Knowledge keeps 72ch) |
+| 2026-08-07 | 3 | F-026: Prose md-tables scroll horizontally; first column nowrap |
+| 2026-08-07 | 3 | F-025: Docs page loads START/COMMANDS; layout fill + simple Guide TOC |
+| 2026-08-07 | 3 | T-044: Sidebar 180px; smaller foot icons |
+| 2026-08-07 | 3 | S-004/D-026 + T-043: Praxis Docs page (START+COMMANDS); icon-only foot Signals·Docs·Theme |
+| 2026-08-07 | 3 | F-024: work.yml `npm ci --ignore-scripts`; drop stale work-registry path filters |
+| 2026-08-07 | 3 | T-042: `/close` + reduced-close aligned to D-025 dual-desk publish |
+| 2026-08-07 | 3 | T-041: Sidebar design nits — logo optical align, accent, icons |
+| 2026-08-07 | 3 | T-040/D-025: Product `/task`/`/fix` → task\|fix worktrees; Docs-home path leases |
+| 2026-08-07 | 3 | T-039: Page + panel titles use mono (same as IDs) |
+| 2026-08-07 | 3 | F-023: Light tables → warm paper panels (drop blue-grey) |
+| 2026-08-07 | 3 | F-022: Detail collapse ›/‹ centered in square icon button |
+| 2026-08-07 | 3 | F-021: Praxis wordmark aligns with nav icon column |
+| 2026-08-07 | 3 | F-020: Light theme cream shell; soft grey panels (no `#fff`) |
+| 2026-08-07 | 3 | T-038: Nav/detail/TOC use page `--bg`; tables keep `--surface` |
+| 2026-08-07 | 3 | T-037: Light theme dusk shell + deeper ink + stronger chip chroma |
+| 2026-08-07 | 3 | F-019: Signals/Theme foot controls share font, badge, icon sizing |
+| 2026-08-07 | 3 | T-036: Restore Praxis wordmark 22px + label-column align |
+| 2026-08-07 | 3 | T-035: Sidebar page icons → minimal stroke SVGs (same 1.25em slot) |
+| 2026-08-07 | 3 | T-032: Dashboard watcher includes `<git-common-dir>/worktrees` (auto-reindex on add/remove) |
+| 2026-08-07 | 3 | F-018: Activity Status joins closed/canceled phase (clears stale mid-close `active`) |
 | 2026-08-07 | 3 | T-028: Detail `#detail-title` + `.phase-name` share `--detail-title-size` (xl; not page-title 2xl) |
 | 2026-08-07 | 3 | T-024: C-nnn check refs; topbar git sessions badge + categorized panel |
 | 2026-08-07 | 3 | T-023: Larger detail ID title + copy beside collapse (all `#detail` pages) |

@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import {
   assertDashboardEnvironment,
+  collectWatchRoots,
   createDashboardServer,
   isAllowedHost,
   listenOnLoopback,
@@ -33,6 +34,7 @@ async function createFixture() {
   await mkdir(path.join(docsRoot, "Roadmap", "Phases"), { recursive: true });
   await mkdir(path.join(docsRoot, "Specs", "Features"), { recursive: true });
   await mkdir(path.join(docsRoot, "Handoffs"), { recursive: true });
+  await mkdir(path.join(docsRoot, "System"), { recursive: true });
   await Promise.all([
     writeFile(
       path.join(docsRoot, "Roadmap", "Phases", "PHASE-001.md"),
@@ -77,6 +79,12 @@ Revisit if: Never
     ),
     writeFile(path.join(docsRoot, "RELEASES.md"), "# Releases\n"),
     writeFile(path.join(docsRoot, "PRODUCT.md"), "# Product\n"),
+    writeFile(path.join(docsRoot, "START.md"), "# Welcome to Praxis\n\nOrientation.\n"),
+    writeFile(
+      path.join(docsRoot, "COMMANDS-OVERVIEW.md"),
+      "# Commands overview\n\nCustomer command map.\n",
+    ),
+    writeFile(path.join(docsRoot, "System", "COMMANDS.md"), "# Commands\n\nLifecycle map.\n"),
     writeFile(path.join(docsRoot, "Handoffs", "HANDOFF.md"), "# Handoff\n"),
   ]);
   return repositoryRoot;
@@ -122,6 +130,36 @@ describe("work dashboard", () => {
     expect(isAllowedHost("example.com")).toBe(false);
   });
 
+  it("collectWatchRoots includes Docs, activity, and optional git worktrees meta", () => {
+    expect(
+      collectWatchRoots({
+        primary: "/repo",
+        docs_home: null,
+        overlay: null,
+        overlay_phase: null,
+        overlay_branch: null,
+      }),
+    ).toEqual(["/repo/Docs", "/repo/.work/activity"]);
+    expect(
+      collectWatchRoots(
+        {
+          primary: "/repo",
+          docs_home: null,
+          overlay: "/repo/.worktrees/phase-007",
+          overlay_phase: "PHASE-007",
+          overlay_branch: "phase/007",
+        },
+        "/repo/.git/worktrees",
+      ),
+    ).toEqual([
+      "/repo/Docs",
+      "/repo/.work/activity",
+      "/repo/.worktrees/phase-007/Docs",
+      "/repo/.worktrees/phase-007/.work/activity",
+      "/repo/.git/worktrees",
+    ]);
+  });
+
   it("serves derived index with phases and next_command", async () => {
     const { port } = await startFixtureServer();
     const { status, body } = await getJson(port, "/api/index");
@@ -147,14 +185,18 @@ describe("work dashboard", () => {
       req.end();
     });
     expect(html).toContain("Praxis");
+    expect(html).toContain("/brand/praxis-wordmark-white.svg");
     expect(html).toContain('id="worktrees-panel-btn"');
     expect(html).toContain('id="worktrees-panel"');
     expect(html).toContain('data-page="active"');
     expect(html).toContain('data-page="work"');
     expect(html).toContain('data-page="roadmap"');
     expect(html).toContain('id="issue-pill"');
+    expect(html).toContain('id="docs-pill"');
     expect(html).toContain('id="page-signals"');
+    expect(html).toContain('id="page-docs"');
     expect(html).not.toMatch(/class="tab"[^>]*data-page="signals"/);
+    expect(html).not.toMatch(/class="tab"[^>]*data-page="docs"/);
     expect(html).toContain('class="reindex-icon"');
     expect(html).toContain('id="commands-panel-btn"');
     expect(html).toContain('id="commands-panel"');
@@ -178,6 +220,24 @@ describe("work dashboard", () => {
     expect(doc.body).toContain("## D-001 — Fixture decision");
     expect(doc.body).toContain("Chose: Keep decisions in DECISIONS.md");
     expect(doc.body).not.toContain("## D-002");
+  });
+
+  it("serves Praxis Docs guide sources START and COMMANDS-OVERVIEW", async () => {
+    const { port } = await startFixtureServer();
+    const start = await getJson(port, "/api/doc?id=START");
+    expect(start.status).toBe(200);
+    expect(start.body).toMatchObject({
+      id: "START",
+      path: path.join("Docs", "START.md"),
+    });
+    expect((start.body as { body: string }).body).toContain("# Welcome to Praxis");
+    const overview = await getJson(port, "/api/doc?id=COMMANDS-OVERVIEW");
+    expect(overview.status).toBe(200);
+    expect(overview.body).toMatchObject({
+      id: "COMMANDS-OVERVIEW",
+      path: path.join("Docs", "COMMANDS-OVERVIEW.md"),
+    });
+    expect((overview.body as { body: string }).body).toContain("# Commands overview");
   });
 
   it("404s unknown decision ids", async () => {

@@ -90,6 +90,21 @@ export async function resolvePrimaryWorktreeRoot(fromRoot: string): Promise<stri
 }
 
 /**
+ * Git linked-worktree metadata dir (`<git-common-dir>/worktrees`).
+ * Changes here on add/remove/prune/branch move — not on ordinary working-tree edits.
+ */
+export async function resolveGitWorktreesMetaDir(fromRoot: string): Promise<string | null> {
+  try {
+    const common = (await runGit(fromRoot, ["rev-parse", "--git-common-dir"])).trim();
+    if (!common) return null;
+    const absolute = path.isAbsolute(common) ? common : path.resolve(fromRoot, common);
+    return path.join(absolute, "worktrees");
+  } catch {
+    return null;
+  }
+}
+
+/**
  * D-020 Docs home: `.worktrees/docs` (branch `docs/ssot`) when present.
  * Env `AIDIOMA_DOCS_HOME` overrides. Returns null when absent (D-018 overlay interim).
  */
