@@ -124,6 +124,7 @@ const heartbeat = document.querySelector(".heartbeat");
 const pageTitle = document.querySelector("#page-title");
 const detail = document.querySelector("#detail");
 const detailTitle = document.querySelector("#detail-title");
+const detailTitleCopy = document.querySelector("#detail-title-copy");
 const detailMeta = document.querySelector("#detail-meta");
 const detailFrontmatter = document.querySelector("#detail-frontmatter");
 const detailBody = document.querySelector("#detail-body");
@@ -738,6 +739,7 @@ function activityCopyText(event) {
   const parts = [event.ts, event.type];
   if (event.ref) parts.push(event.ref);
   else if (event.phase) parts.push(event.phase);
+  else if (event.cmd) parts.push(event.cmd);
   return parts.filter(Boolean).join(" ");
 }
 
@@ -1127,7 +1129,104 @@ function setCommandsPanelOpen(open) {
   if (!panel || !button) return;
   panel.hidden = !open;
   button.setAttribute("aria-expanded", open ? "true" : "false");
-  if (open) renderCommandsPanel();
+  if (open) {
+    setWorktreesPanelOpen(false);
+    renderCommandsPanel();
+  }
+}
+
+const WORKTREE_CATEGORY_LABEL = {
+  docs: "Docs home",
+  main: "Main",
+  phase: "Phases",
+  task: "Tasks",
+  other: "Other",
+};
+
+
+function syncProjectBrand(index) {
+  const name = index?.repo?.project_name?.trim() || "Project";
+  const brand = document.querySelector("#brand-name");
+  const mark = document.querySelector("#brand-mark");
+  if (brand) brand.textContent = name;
+  if (mark) mark.textContent = name.charAt(0).toUpperCase() || "·";
+  document.title = name;
+}
+
+function syncWorktreesBadge(index) {
+  const countEl = document.querySelector("#worktrees-count");
+  const button = document.querySelector("#worktrees-panel-btn");
+  const worktrees = index?.repo?.worktrees ?? [];
+  const count = index?.repo?.worktree_count ?? worktrees.length;
+  if (countEl) {
+    countEl.textContent = String(count);
+    countEl.hidden = count <= 0;
+  }
+  if (button) {
+    button.title = count
+      ? `Worktrees — ${count}`
+      : "Worktrees";
+  }
+}
+
+function renderWorktreesPanel(index) {
+  const body = document.querySelector("#worktrees-panel-body");
+  if (!body) return;
+  const worktrees = index?.repo?.worktrees ?? [];
+  if (!worktrees.length) {
+    body.innerHTML = `<p class="muted">No git worktrees discovered.</p>`;
+    return;
+  }
+  const groups = ["docs", "main", "phase", "task", "other"]
+    .map((category) => ({
+      category,
+      rows: worktrees.filter((worktree) => worktree.category === category),
+    }))
+    .filter((group) => group.rows.length);
+  body.innerHTML = groups
+    .map(
+      (group) => `
+    <section class="commands-group">
+      <h3>${escapeHtml(WORKTREE_CATEGORY_LABEL[group.category] ?? group.category)} (${group.rows.length})</h3>
+      ${group.rows
+        .map((worktree) => {
+          const branch = worktree.branch ?? "DETACHED";
+          const dirty = worktree.clean ? "clean" : "dirty";
+          const sync = `↑${worktree.ahead ?? 0} ↓${worktree.behind ?? 0}`;
+          const phase = worktree.phase_id
+            ? `<button type="button" class="cmd-copy" data-open-id="${escapeHtml(worktree.phase_id)}" title="Open phase">${escapeHtml(worktree.phase_id)}</button>`
+            : "";
+          const link = worktree.web_url
+            ? `<a class="worktree-link" href="${escapeHtml(worktree.web_url)}" target="_blank" rel="noreferrer">GitHub</a>`
+            : "";
+          return `
+        <div class="worktree-row">
+          <div class="worktree-top">
+            <code>${escapeHtml(branch)}</code>
+            <button type="button" class="id-copy" data-copy="${escapeHtml(branch)}" title="Copy branch">⧉</button>
+            ${phase}
+            ${link}
+          </div>
+          <div class="worktree-meta">${escapeHtml(dirty)} · ${escapeHtml(sync)}${worktree.short_head ? ` · ${escapeHtml(worktree.short_head)}` : ""}${worktree.is_primary ? " · primary" : ""}${worktree.is_docs_home ? " · docs home" : ""}</div>
+          <div class="worktree-path">${escapeHtml(worktree.path)}</div>
+        </div>`;
+        })
+        .join("")}
+    </section>`,
+    )
+    .join("");
+}
+
+function setWorktreesPanelOpen(open) {
+  const panel = document.querySelector("#worktrees-panel");
+  const button = document.querySelector("#worktrees-panel-btn");
+  if (!panel || !button) return;
+  panel.hidden = !open;
+  button.setAttribute("aria-expanded", open ? "true" : "false");
+  if (open) {
+    setCommandsPanelOpen(false);
+    renderWorktreesPanel(state.index);
+  }
 }
 
 async function hydratePhaseDocs(root = document) {
@@ -1456,7 +1555,8 @@ function renderActivity(index) {
         <thead><tr>${tableHeaders("activity", sort, sortDir)}</tr></thead>
         <tbody>
           ${events.map((event) => {
-            const idLabel = event.ref ?? event.phase ?? "—";
+            // Process ops often omit ref (e.g. /check) — fall back to cmd, never a blank cell.
+            const idLabel = event.ref ?? event.phase ?? event.cmd ?? event.type ?? "—";
             const phaseNote = event.phase && event.ref && event.phase !== event.ref
               ? event.phase
               : null;
@@ -1871,6 +1971,10 @@ function updateChrome(index) {
       ? `Interim D-018 overlay on primary (live ${overlayBranch || "phase"}) — Docs home is D-020/P-001`
       : "Interim D-018 primary root — Docs home is D-020/P-001";
   }
+  syncWorktreesBadge(index);
+  if (!document.querySelector("#worktrees-panel")?.hidden) {
+    renderWorktreesPanel(index);
+  }
   const high = index.issues.filter(
     (issue) => issueStatus(issue) === "open" && issue.severity === "high",
   ).length;
@@ -2178,6 +2282,7 @@ function closeDetail() {
   detail.hidden = true;
   detail.classList.remove("collapsed");
   state.selectedId = null;
+  syncDetailTitleCopy(null);
   syncDetailCollapseControl();
   syncDetailRailGutter();
   if (state.index) {
@@ -2187,11 +2292,27 @@ function closeDetail() {
   }
 }
 
+
+function syncDetailTitleCopy(id) {
+  if (!detailTitleCopy) return;
+  const value = String(id ?? "").trim();
+  if (!value || value === "Detail") {
+    detailTitleCopy.hidden = true;
+    detailTitleCopy.dataset.copy = "";
+    return;
+  }
+  detailTitleCopy.hidden = false;
+  detailTitleCopy.dataset.copy = value;
+  detailTitleCopy.title = `Copy ${value}`;
+  detailTitleCopy.setAttribute("aria-label", `Copy ${value}`);
+}
+
 async function openDetail(id) {
   state.selectedId = id;
   detail.hidden = false;
   detail.classList.remove("collapsed");
   detailTitle.textContent = id;
+  syncDetailTitleCopy(id);
   applyDetailWidth(Number(readStored(DETAIL_WIDTH_KEY)) || 560);
   syncDetailCollapseControl();
   syncDetailRailGutter();
@@ -2305,6 +2426,25 @@ document.querySelector("#commands-panel-btn")?.addEventListener("click", () => {
 
 document.querySelector("#commands-panel-close")?.addEventListener("click", () => {
   setCommandsPanelOpen(false);
+});
+
+document.querySelector("#worktrees-panel-btn")?.addEventListener("click", () => {
+  const panel = document.querySelector("#worktrees-panel");
+  setWorktreesPanelOpen(Boolean(panel?.hidden));
+});
+
+document.querySelector("#worktrees-panel-close")?.addEventListener("click", () => {
+  setWorktreesPanelOpen(false);
+});
+
+document.querySelector("#worktrees-panel-body")?.addEventListener("click", (event) => {
+  const openPhase = event.target.closest("[data-open-id]");
+  if (openPhase?.dataset.openId) {
+    setWorktreesPanelOpen(false);
+    showPage("roadmap");
+    void openDetail(openPhase.dataset.openId);
+    return;
+  }
 });
 
 document.querySelector("#commands-panel-body")?.addEventListener("click", (event) => {

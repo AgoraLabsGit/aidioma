@@ -1,5 +1,5 @@
 /* ============================================================================
- * AIdioma development dashboard
+ * Development dashboard
  *
  * Shell: SalesOps-style sidebar + table pages.
  * Now: Pulse-style ops overview.
@@ -375,6 +375,57 @@ body {
 }
 .reindex-btn.busy {
   opacity: 0.7;
+}
+
+.worktrees-badge-btn {
+  position: relative;
+}
+.worktrees-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: var(--fw-semibold);
+  line-height: 16px;
+  text-align: center;
+}
+.worktrees-panel .worktree-row {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+.worktrees-panel .worktree-row:last-child {
+  border-bottom: 0;
+}
+.worktrees-panel .worktree-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.worktrees-panel .worktree-meta {
+  color: var(--text-subtle);
+  font-size: var(--fs-2xs);
+  font-family: var(--mono);
+}
+.worktrees-panel .worktree-path {
+  color: var(--text-muted);
+  font-size: var(--fs-2xs);
+  font-family: var(--mono);
+  word-break: break-all;
+}
+.worktrees-panel .worktree-actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
 }
 
 .commands-panel {
@@ -1839,6 +1890,7 @@ code,
 .detail.collapsed .doc-meta-slot,
 .detail.collapsed .doc-body,
 .detail.collapsed #detail-title,
+.detail.collapsed .detail-title-row,
 .detail.collapsed .detail-actions-end,
 .detail.collapsed .detail-resize {
   display: none;
@@ -1899,13 +1951,29 @@ code,
 .detail-actions-end {
   margin-left: auto;
 }
-.detail-header h2 {
-  margin: 0;
+.detail-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   flex: 1 1 auto;
   min-width: 0;
-  font-size: var(--fs-md);
+}
+.detail-header h2,
+#detail-title {
+  margin: 0;
+  flex: 0 1 auto;
+  min-width: 0;
+  /* Same size scale as #page-title */
+  font-size: var(--fs-2xl);
+  line-height: 1.1;
   font-family: var(--mono);
   font-weight: var(--fw-semibold);
+  letter-spacing: -0.03em;
+}
+.detail-title-copy {
+  flex: 0 0 auto;
+  font-size: var(--fs-sm);
+  padding: 0.15rem 0.35rem;
 }
 #detail-collapse {
   font-size: var(--fs-lg);

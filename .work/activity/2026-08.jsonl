@@ -60,12 +60,12 @@
 {"ts":"2026-08-07T14:33:00Z","type":"build","actor":"agent","cmd":"/run","phase":"PHASE-007","ref":"PHASE-007","status":"complete","summary":"Activated PHASE-007; branch phase/007-command-system-audit + worktree; design checkpoint next"}
 {"ts":"2026-08-07T14:45:00Z","type":"research","actor":"agent","cmd":"/research","phase":"PHASE-007","ref":"R-003","status":"complete","summary":"Panel: nest rich close lenses under Proof/Scope/Publish; Adv on research/design/close; path-aware /check"}
 {"ts":"2026-08-07T15:05:00Z","type":"build","actor":"agent","cmd":"/run","phase":"PHASE-007","ref":"D-016","status":"complete","summary":"D-016 primary-rooted dashboard + active worktree overlay; proof via derive from primary"}
-{"ts":"2026-08-07T15:20:00Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-007","ref":null,"status":"complete","summary":"lanes: work — pass (typecheck+test 25/25)"}
+{"ts":"2026-08-07T15:20:00Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-007","ref":"C-001","status":"complete","summary":"lanes: work \u2014 pass (typecheck+test 25/25)"}
 {"ts":"2026-08-07T15:28:00Z","type":"design","actor":"agent","cmd":"/design","phase":"PHASE-007","ref":"D-020","status":"complete","summary":"D-020 Docs+System home worktree supersedes D-018 overlay; founder ack on skills boundary + ship path"}
 {"ts":"2026-08-07T15:39:00Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-007","ref":null,"status":"complete","summary":"Phase-scoped triage: 0 open/active phase:PHASE-007 rows — EMPTY"}
 {"ts":"2026-08-07T15:45:00Z","type":"audit","actor":"agent","cmd":"/audit","phase":"PHASE-007","ref":"A-001","status":"complete","summary":"Command audit: Adv+MCOO protocols; project-agnostic skills; residual P-001 Docs home"}
 {"ts":"2026-08-07T15:46:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-007","ref":"F-003","status":"complete","summary":"De-productized skills: operator/founder; no AIdioma/learner in skill text"}
-{"ts":"2026-08-07T15:55:00Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-007","ref":null,"status":"complete","summary":"work lane: typecheck+test(25)+validate issues=0"}
+{"ts":"2026-08-07T15:55:00Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-007","ref":"C-002","status":"complete","summary":"work lane: typecheck+test(25)+validate issues=0"}
 {"ts":"2026-08-07T15:56:00Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-007","ref":null,"status":"active","summary":"Close hygiene: triage CLEAR; Adv WARN acked (static COMMAND_MAP V1; D-018 interim); MCOO WARN P-001; publishing"}
 {"ts":"2026-08-07T16:05:00Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-002","status":"complete","summary":"path-lens-map.md for /close Proof lenses"}
 {"ts":"2026-08-07T16:05:01Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-003","status":"complete","summary":"reduced-close.md for standalone /fix /task publish"}
@@ -74,7 +74,7 @@
 {"ts":"2026-08-07T16:06:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-004","status":"complete","summary":"Restored status pill+chip colors from stash onto post-007 branch"}
 {"ts":"2026-08-07T16:12:00Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-004","status":"complete","summary":"Dashboard filters/sorts/page persist in localStorage"}
 {"ts":"2026-08-07T16:12:01Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-005","status":"complete","summary":"System protocols/ + specs/ layout; updated refs"}
-{"ts":"2026-08-07T16:14:00Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"T-006","status":"complete","summary":"work lane: typecheck+test(50)+validate issues=0"}
+{"ts":"2026-08-07T16:14:00Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-003","status":"complete","summary":"work lane: typecheck+test(50)+validate issues=0 \u00b7 work T-006"}
 {"ts":"2026-08-07T16:14:30Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-006","status":"complete","summary":"D-021 /close dispatches reduced close when no phase"}
 {"ts":"2026-08-07T16:17:49Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-21","status":"complete","summary":"Reduced close: merged PR #21 (P-001 Docs home, D-021 /close dispatch, T-004/5/6, F-004); CI green; docs/ssot @ db4f5c2"}
 {"ts":"2026-08-07T16:22:30Z","type":"audit","actor":"agent","cmd":"/audit","phase":null,"ref":"A-002","status":"complete","summary":"Stale dashboard = wrong tree/tab; Docs home agent-context was partial — closed by T-007"}
@@ -86,7 +86,7 @@
 {"ts":"2026-08-07T16:35:00Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-010","status":"complete","summary":"Dashboard Filters panel (Feature/Area) + Reset on table pages"}
 {"ts":"2026-08-07T16:34:23Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-005","status":"active","summary":"Work Age broken (date-only→fake hours); active-first logging"}
 {"ts":"2026-08-07T16:35:06Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-005","status":"complete","summary":"Work Age: ISO opened + date-only calendar age; active-first flush required"}
-{"ts":"2026-08-07T16:38:00Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"T-010","status":"complete","summary":"work lane: typecheck+test(29)+validate issues=0"}
+{"ts":"2026-08-07T16:38:00Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-004","status":"complete","summary":"work lane: typecheck+test(29)+validate issues=0 \u00b7 work T-010"}
 {"ts":"2026-08-07T16:41:30Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-23","status":"complete","summary":"Reduced close: merged PR #23 (T-010 Filters panel, T-007/8/9, F-005 Age, A-002/3/4); CI green; docs/ssot @ b2e5282"}
 {"ts":"2026-08-07T16:45:14Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-006","status":"active","summary":"Activity Status desynced from Work ledger for same ref"}
 {"ts":"2026-08-07T16:45:38Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-006","status":"complete","summary":"Activity Status column syncs to Work ledger for Work refs"}
@@ -98,7 +98,7 @@
 {"ts":"2026-08-07T16:52:14Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-008","status":"complete","summary":"Do not persist table search q"}
 {"ts":"2026-08-07T16:54:32Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-011","status":"active","summary":"VISIBILITY TEST for Work Open + Activity after F-008"}
 {"ts":"2026-08-07T16:55:04Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-011","status":"complete","summary":"Visibility test passed — founder saw T-011 on Work + Activity"}
-{"ts":"2026-08-07T16:56:07Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"F-006","status":"complete","summary":"work lane: typecheck+test(29)+validate issues=0"}
+{"ts":"2026-08-07T16:56:07Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-005","status":"complete","summary":"work lane: typecheck+test(29)+validate issues=0 \u00b7 work F-006"}
 {"ts":"2026-08-07T16:57:26Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-25","status":"complete","summary":"Reduced close: merged PR #25 (F-006/7/8, A-005, T-011); CI green; docs/ssot @ 79ae8fc"}
 {"ts":"2026-08-07T17:24:24Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-009","status":"start","summary":"Dashboard wrong-tree ENOENT from phase cwd"}
 {"ts":"2026-08-07T17:26:14Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-009","status":"complete","summary":"run-dashboard Docs home + quiet 404 for missing static"}
@@ -128,7 +128,7 @@
 {"ts":"2026-08-07T17:55:48Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-013","status":"complete","summary":"Fix hidden override; detail closed on load; 52px gutter"}
 {"ts": "2026-08-07T17:56:55Z", "type": "task", "cmd": "/task", "summary": "T-018 \u2014 /design activity active flush at start", "ref": "T-018", "phase": null, "status": "active", "actor": "agent"}
 {"ts": "2026-08-07T17:57:12Z", "type": "task", "cmd": "/task", "summary": "T-018 \u2014 /design activity active flush at start", "ref": "T-018", "phase": null, "status": "complete", "actor": "agent"}
-{"ts":"2026-08-07T17:57:59Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":null,"status":"complete","summary":"lanes: work — typecheck+test+validate for reduced /close"}
+{"ts":"2026-08-07T17:57:59Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-006","status":"complete","summary":"lanes: work \u2014 typecheck+test+validate for reduced /close"}
 {"ts":"2026-08-07T17:59:41Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-27","status":"complete","summary":"Reduced close: merged PR #27 (dashboard UX session); CI green; docs/ssot @ 7dfedc5"}
 {"ts": "2026-08-07T18:01:36Z", "type": "task", "cmd": "/task", "summary": "T-019 \u2014 Work surfaces activity; restore S-nnn", "ref": "T-019", "phase": null, "status": "active", "actor": "agent"}
 {"ts": "2026-08-07T18:01:36Z", "type": "design", "cmd": "/design", "summary": "S-001 \u2014 Work primary visibility over Activity page", "ref": "S-001", "phase": null, "status": "active", "actor": "agent"}
@@ -145,7 +145,7 @@
 {"ts":"2026-08-07T18:19:25Z","type":"design","actor":"agent","cmd":"/design","phase":null,"ref":"S-003","status":"active","summary":"Brief vs Context; declared context_paths"}
 {"ts":"2026-08-07T18:20:54Z","type":"decide","actor":"agent","cmd":"/design","phase":null,"ref":"D-024","status":"complete","summary":"Brief vs Context; declared context_paths (Adv WARN)"}
 {"ts":"2026-08-07T18:20:54Z","type":"spec","actor":"agent","cmd":"/design","phase":null,"ref":"SPEC-F-DEV-DASHBOARD","status":"complete","summary":"D-024 Brief/Context/Files rules"}
-{"ts":"2026-08-07T18:21:54Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":null,"status":"complete","summary":"work lane: typecheck+test 32/32+validate issues=0"}
+{"ts":"2026-08-07T18:21:54Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-007","status":"complete","summary":"work lane: typecheck+test 32/32+validate issues=0"}
 {"ts":"2026-08-07T18:23:12Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-29","status":"complete","summary":"Reduced close: D-022–D-024 Work/Activity separation + Brief/Context; merged 3991e17"}
 {"ts":"2026-08-07T18:32:53Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-020","status":"active","summary":"Implement D-024 context_paths + Brief/Context UI"}
 {"ts":"2026-08-07T18:33:44Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-020","status":"complete","summary":"Ship D-024 context_paths + Brief/Context/Files UI"}
@@ -155,6 +155,14 @@
 {"ts":"2026-08-07T18:44:21Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-022","status":"active","summary":"Copy IDs + Design kind labels"}
 {"ts":"2026-08-07T18:44:37Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-022","status":"active","summary":"Copy IDs + Design kind labels"}
 {"ts":"2026-08-07T18:45:26Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-022","status":"complete","summary":"Copy IDs + humanize Work kind labels"}
-{"ts":"2026-08-07T18:46:00Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":null,"status":"failed","summary":"work:typecheck FAIL — PhaseFrontmatter fixtures missing context_paths"}
-{"ts":"2026-08-07T18:46:20Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":null,"status":"complete","summary":"work lane: typecheck+test 35/35+validate issues=0"}
+{"ts":"2026-08-07T18:46:00Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-008","status":"failed","summary":"work:typecheck FAIL \u2014 PhaseFrontmatter fixtures missing context_paths"}
+{"ts":"2026-08-07T18:46:20Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-009","status":"complete","summary":"work lane: typecheck+test 35/35+validate issues=0"}
 {"ts":"2026-08-07T18:47:29Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-31","status":"complete","summary":"Reduced close: T-020 D-024 context_paths + T-021 sort defaults; merged 2c57d8d"}
+{"ts":"2026-08-07T18:48:56Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-023","status":"active","summary":"Larger detail ID title + copy"}
+{"ts":"2026-08-07T18:49:07Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-023","status":"complete","summary":"Larger detail ID title + copy"}
+{"ts":"2026-08-07T18:57:16Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-024","status":"active","summary":"C-nnn checks + git sessions badge"}
+{"ts":"2026-08-07T18:59:29Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-024","status":"complete","summary":"C-nnn checks + git sessions badge"}
+{"ts":"2026-08-07T19:00:22Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-007","ref":"PHASE-007","status":"complete","summary":"PHASE-007 close complete (retro): phase state closed; P-001 Docs home shipped; residual 15:56 mid-close journal left intact"}
+{"ts":"2026-08-07T19:01:30Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-016","status":"active","summary":"Backfill check refs to C-nnn"}
+{"ts":"2026-08-07T19:01:40Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-016","status":"complete","summary":"Backfilled 9 checks to C-001..C-009"}
+{"ts":"2026-08-07T19:11:33Z","type":"check","ref":"C-010","status":"complete","summary":"work:typecheck + work:test (39) + work:validate — worktrees rename + project_name brand"}

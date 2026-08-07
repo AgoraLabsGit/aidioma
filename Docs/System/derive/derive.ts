@@ -15,6 +15,7 @@ import {
   type ReleaseEntry,
 } from "./parser.js";
 import {
+  nextCheckId,
   phaseSchema,
   type PhaseFrontmatter,
   type ResearchFrontmatter,
@@ -117,7 +118,9 @@ export type DeriveIndex = {
   /** Derived health signals (not the Work ledger). */
   issues: IndexIssue[];
   handoff: { updated_at: string | null; body: string };
-  last_check: { status: string | null; ts: string | null };
+  last_check: { status: string | null; ts: string | null; ref: string | null };
+  /** Next Activity check id (`C-nnn`) for `/check` emitters. */
+  next_check_id: string;
   in_production: { release: string | null; date: string | null };
   next_command: string | null;
   product: { body: string };
@@ -856,8 +859,13 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
     ? {
         status: lastCheckEvent.status === "complete" ? "pass" : lastCheckEvent.status === "failed" ? "fail" : lastCheckEvent.status,
         ts: lastCheckEvent.ts,
+        ref: lastCheckEvent.ref ?? null,
       }
-    : { status: null, ts: null };
+    : { status: null, ts: null, ref: null };
+  const checkRefs = activity.current_month
+    .map((event) => event.ref)
+    .filter((ref): ref is string => typeof ref === "string");
+  const next_check_id = nextCheckId(checkRefs);
   const activityByPhase = new Map<string, number>();
   for (const event of activity.current_month) {
     if (!event.phase) continue;
@@ -868,7 +876,9 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
     phase.activity_count = activityByPhase.get(phase.id) ?? 0;
   }
 
-  const repo = await readGitStatus(repositoryRoot);
+  const repo = await readGitStatus(repositoryRoot, {
+    worktrees: options.worktrees,
+  });
   const sortedPhases = sortPhasesForRoadmap(phases);
   const next_command = suggestNextCommand(sortedPhases, repo, blockedReason);
   const latestRelease = [...releases].sort((left, right) => right.date.localeCompare(left.date))[0];
@@ -903,6 +913,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
     issues,
     handoff: { updated_at: handoffUpdatedAt, body: handoffBody },
     last_check,
+    next_check_id,
     in_production: {
       release: latestRelease?.id ?? null,
       date: latestRelease?.date ?? null,

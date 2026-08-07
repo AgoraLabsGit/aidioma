@@ -192,6 +192,20 @@ export function nextWorkId(
   return `${prefix}-${String(max + 1).padStart(3, "0")}`;
 }
 
+/**
+ * Next Activity check id (`C-nnn`). Not a Work ledger kind — journal `ref` only.
+ * Pass every known `ref` from activity events (and any other C-* strings).
+ */
+export function nextCheckId(existingRefs: readonly string[]): string {
+  let max = 0;
+  const pattern = /^C-([0-9]{3})$/;
+  for (const ref of existingRefs) {
+    const match = pattern.exec(ref);
+    if (match) max = Math.max(max, Number(match[1]));
+  }
+  return `C-${String(max + 1).padStart(3, "0")}`;
+}
+
 /** @deprecated Use workItemSchema — kept for test fixtures during migration */
 export const fixItemSchema = z.object({
   id: z.string().regex(/^FIX-[0-9]{3}$/),
