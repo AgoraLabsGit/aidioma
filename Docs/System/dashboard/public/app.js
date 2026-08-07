@@ -20,11 +20,42 @@ const FILTER_KEYS = {
 };
 
 const DEFAULT_FILTERS = {
-  roadmap: { state: "", type: "", feature: "", area: "", q: "", sort: "schedule" },
-  activity: { type: "", feature: "", area: "", q: "", sort: "time" },
-  work: { kind: "", status: "", feature: "", area: "", q: "", sort: "open-first" },
-  signals: { severity: "", kind: "", status: "open", feature: "", area: "", q: "", sort: "severity" },
+  roadmap: { state: "", type: "", feature: "", area: "", q: "", sort: "schedule", sortDir: "asc" },
+  activity: { type: "", feature: "", area: "", q: "", sort: "time", sortDir: "desc" },
+  work: { kind: "", status: "", feature: "", area: "", q: "", sort: "open-first", sortDir: "asc" },
+  signals: { severity: "", kind: "", status: "open", feature: "", area: "", q: "", sort: "severity", sortDir: "asc" },
 };
+
+/** First-click direction per column (second click flips). */
+function defaultSortDirFor(_page, sortKey) {
+  // Age: oldest first (prior one-way behavior). Activity time: newest first.
+  if (sortKey === "age") return "asc";
+  if (sortKey === "time") return "desc";
+  return "asc";
+}
+
+/** Apply asc/desc to a comparator result (0 / ±n). */
+function orient(cmp, dir) {
+  if (!cmp) return 0;
+  return dir === "asc" ? cmp : -cmp;
+}
+
+function openedTimeMs(opened) {
+  if (!opened) return NaN;
+  if (/^\d{4}-\d{2}-\d{2}T/u.test(opened)) return Date.parse(opened);
+  if (/^\d{4}-\d{2}-\d{2}$/u.test(opened)) return Date.parse(`${opened}T00:00:00.000Z`);
+  return Date.parse(opened);
+}
+
+/** Ascending = older first; use with orient(…, sortDir). desc ⇒ newest first. */
+function compareOpenedAsc(leftOpened, rightOpened) {
+  const left = openedTimeMs(leftOpened);
+  const right = openedTimeMs(rightOpened);
+  if (Number.isNaN(left) && Number.isNaN(right)) return 0;
+  if (Number.isNaN(left)) return 1;
+  if (Number.isNaN(right)) return -1;
+  return left - right;
+}
 
 function loadFilters(key, defaults) {
   const raw = readStored(key);
@@ -46,7 +77,10 @@ function persistPageFilters(page) {
     signals: [FILTER_KEYS.signals, () => state.signalsFilters],
   }[page];
   if (!pair) return;
-  writeStored(pair[0], JSON.stringify(pair[1]()));
+  // Never persist free-text search — a leftover q (e.g. "F-005") hides new Work rows
+  // while Activity (separate filters / newest-first) still shows them (F-008).
+  const value = { ...pair[1](), q: "" };
+  writeStored(pair[0], JSON.stringify(value));
 }
 
 const storedPage = readStored(PAGE_KEY);
@@ -390,46 +424,44 @@ function columnsForPage(page) {
   return page === "roadmap" ? ROADMAP_COLUMNS : TABLE_COLUMNS;
 }
 
-function sortableTh(sortKey, currentSort, label, extraClass = "") {
+function sortableTh(sortKey, currentSort, sortDir, label, extraClass = "") {
   const active = currentSort === sortKey;
   const classes = ["sortable", extraClass].filter(Boolean).join(" ");
-  return `<th class="${classes}" aria-sort="${active ? "other" : "none"}">
-    <button type="button" class="th-sort" data-sort-key="${escapeHtml(sortKey)}" aria-pressed="${active}">
-      ${escapeHtml(label)}${active ? '<span class="sort-mark" aria-hidden="true">▾</span>' : ""}
+  const ariaSort = !active ? "none" : sortDir === "asc" ? "ascending" : "descending";
+  const mark = !active ? "" : sortDir === "asc" ? "▴" : "▾";
+  return `<th class="${classes}" aria-sort="${ariaSort}">
+    <button type="button" class="th-sort" data-sort-key="${escapeHtml(sortKey)}" aria-pressed="${active}" title="${active ? `Sorted ${sortDir === "asc" ? "ascending" : "descending"} — click to reverse` : "Sort"}">
+      ${escapeHtml(label)}${mark ? `<span class="sort-mark" aria-hidden="true">${mark}</span>` : ""}
     </button>
   </th>`;
 }
 
-function tableHeaders(page, currentSort) {
+function tableHeaders(page, currentSort, sortDir = "asc") {
   const map = TABLE_SORT_KEYS[page] ?? {};
   return columnsForPage(page).map(([col, label, cls]) => {
     const sortKey = map[col];
     if (!sortKey) {
       return `<th${cls ? ` class="${escapeHtml(cls)}"` : ""}>${escapeHtml(label)}</th>`;
     }
-    return sortableTh(sortKey, currentSort, label, cls);
+    return sortableTh(sortKey, currentSort, sortDir, label, cls);
   }).join("");
 }
 
 function applyTableSort(page, sortKey) {
   if (!state.index) return;
-  if (page === "roadmap") {
-    state.roadmapFilters = { ...state.roadmapFilters, sort: sortKey };
-    persistPageFilters("roadmap");
-    renderRoadmap(state.index);
-  } else if (page === "activity") {
-    state.activityFilters = { ...state.activityFilters, sort: sortKey };
-    persistPageFilters("activity");
-    renderActivity(state.index);
-  } else if (page === "work") {
-    state.workFilters = { ...state.workFilters, sort: sortKey };
-    persistPageFilters("work");
-    renderWork(state.index);
-  } else if (page === "signals") {
-    state.signalsFilters = { ...state.signalsFilters, sort: sortKey };
-    persistPageFilters("signals");
-    renderSignals(state.index);
-  }
+  const current = pageFilters(page);
+  if (!current) return;
+  const same = current.sort === sortKey;
+  const sortDir = same
+    ? (current.sortDir === "asc" ? "desc" : "asc")
+    : defaultSortDirFor(page, sortKey);
+  const next = { ...current, sort: sortKey, sortDir };
+  if (page === "roadmap") state.roadmapFilters = next;
+  else if (page === "activity") state.activityFilters = next;
+  else if (page === "work") state.workFilters = next;
+  else if (page === "signals") state.signalsFilters = next;
+  persistPageFilters(page);
+  rerenderTablePage(page);
 }
 
 function matchesQuery(haystack, q) {
@@ -1122,7 +1154,7 @@ function phaseScheduleRanks(phases) {
 }
 
 function renderRoadmap(index) {
-  const { state: stateFilter, type: typeFilter, feature, area, q, sort } = state.roadmapFilters;
+  const { state: stateFilter, type: typeFilter, feature, area, q, sort, sortDir = "asc" } = state.roadmapFilters;
   const { depths, ranks } = phaseScheduleRanks(index.phases);
   let rows = [...index.phases]
     .filter((phase) => (!stateFilter || phase.state === stateFilter) && (!typeFilter || phase.type === typeFilter))
@@ -1130,23 +1162,26 @@ function renderRoadmap(index) {
     .filter((phase) => matchesQuery(`${phase.id} ${phase.title} ${specsLabel(phase)}`, q));
 
   rows.sort((left, right) => {
+    let cmp = 0;
     if (sort === "schedule") {
-      return (ranks.get(left.id) ?? 0) - (ranks.get(right.id) ?? 0);
-    }
-    if (sort === "age") return right.age_days - left.age_days;
-    if (sort === "type") return left.type.localeCompare(right.type) || left.order - right.order;
-    if (sort === "feature") {
-      return String(left.feature ?? "").localeCompare(String(right.feature ?? ""))
+      cmp = (ranks.get(left.id) ?? 0) - (ranks.get(right.id) ?? 0);
+    } else if (sort === "age") {
+      cmp = compareOpenedAsc(left.opened, right.opened)
+        || (left.age_days ?? 0) - (right.age_days ?? 0);
+    } else if (sort === "type") {
+      cmp = left.type.localeCompare(right.type) || left.order - right.order;
+    } else if (sort === "feature") {
+      cmp = String(left.feature ?? "").localeCompare(String(right.feature ?? ""))
         || (ranks.get(left.id) ?? 0) - (ranks.get(right.id) ?? 0);
-    }
-    if (sort === "area") {
-      return String(left.area ?? "").localeCompare(String(right.area ?? ""))
+    } else if (sort === "area") {
+      cmp = String(left.area ?? "").localeCompare(String(right.area ?? ""))
         || (ranks.get(left.id) ?? 0) - (ranks.get(right.id) ?? 0);
+    } else if (sort === "state") {
+      cmp = stateRank(left.state) - stateRank(right.state) || left.order - right.order;
+    } else {
+      cmp = (ranks.get(left.id) ?? 0) - (ranks.get(right.id) ?? 0);
     }
-    if (sort === "state") {
-      return stateRank(left.state) - stateRank(right.state) || left.order - right.order;
-    }
-    return (ranks.get(left.id) ?? 0) - (ranks.get(right.id) ?? 0);
+    return orient(cmp, sortDir);
   });
 
   const body = rows.map((phase) => {
@@ -1195,7 +1230,7 @@ function renderRoadmap(index) {
     <div class="table-frame">
       <table>
         <thead>
-          <tr>${tableHeaders("roadmap", sort)}</tr>
+          <tr>${tableHeaders("roadmap", sort, sortDir)}</tr>
         </thead>
         <tbody>${body || `<tr><td colspan="8">No phases match.</td></tr>`}</tbody>
       </table>
@@ -1213,8 +1248,24 @@ function activityRefPhaseCells(event) {
   return `<td class="mono">${escapeHtml(ref ?? "—")}</td><td class="mono">${escapeHtml(phase ?? "—")}</td>`;
 }
 
+/**
+ * Activity Status column: when `ref` is a Work id, show current WORK.yaml status
+ * (ledger SSOT). Event JSON keeps historical status; UI must not leave a stale
+ * `active` pill after the Work row is `done`.
+ * Non-work events: map `complete` → `done` for pill consistency.
+ */
+function activityDisplayStatus(event, index) {
+  const ref = event.ref;
+  if (ref) {
+    const work = (index.work ?? []).find((row) => row.id === ref);
+    if (work?.status) return work.status;
+  }
+  if (event.status === "complete") return "done";
+  return event.status ?? "done";
+}
+
 function renderActivity(index) {
-  const { type, feature, area, q, sort } = state.activityFilters;
+  const { type, feature, area, q, sort, sortDir = "desc" } = state.activityFilters;
   const source = index.activity.current_month ?? [];
   if (source.length === 0) {
     panels.activity.innerHTML = `<div class="empty">Commands will appear here as they run.</div>`;
@@ -1233,21 +1284,25 @@ function renderActivity(index) {
     const idOf = (event) => String(event.ref ?? event.phase ?? "");
     const leftTags = activityTags(index, left);
     const rightTags = activityTags(index, right);
-    if (sort === "type") return left.type.localeCompare(right.type) || right.ts.localeCompare(left.ts);
-    if (sort === "id") return idOf(left).localeCompare(idOf(right)) || right.ts.localeCompare(left.ts);
-    if (sort === "status") {
-      return String(left.status ?? "complete").localeCompare(String(right.status ?? "complete"))
-        || right.ts.localeCompare(left.ts);
+    let cmp = 0;
+    if (sort === "type") {
+      cmp = left.type.localeCompare(right.type) || compareOpenedAsc(left.ts, right.ts);
+    } else if (sort === "id") {
+      cmp = idOf(left).localeCompare(idOf(right)) || compareOpenedAsc(left.ts, right.ts);
+    } else if (sort === "status") {
+      cmp = activityDisplayStatus(left, index).localeCompare(activityDisplayStatus(right, index))
+        || compareOpenedAsc(left.ts, right.ts);
+    } else if (sort === "feature") {
+      cmp = String(leftTags.feature ?? "").localeCompare(String(rightTags.feature ?? ""))
+        || compareOpenedAsc(left.ts, right.ts);
+    } else if (sort === "area") {
+      cmp = String(leftTags.area ?? "").localeCompare(String(rightTags.area ?? ""))
+        || compareOpenedAsc(left.ts, right.ts);
+    } else {
+      // time (default): ascending = older first; default sortDir desc ⇒ newest first
+      cmp = compareOpenedAsc(left.ts, right.ts);
     }
-    if (sort === "feature") {
-      return String(leftTags.feature ?? "").localeCompare(String(rightTags.feature ?? ""))
-        || right.ts.localeCompare(left.ts);
-    }
-    if (sort === "area") {
-      return String(leftTags.area ?? "").localeCompare(String(rightTags.area ?? ""))
-        || right.ts.localeCompare(left.ts);
-    }
-    return right.ts.localeCompare(left.ts);
+    return orient(cmp, sortDir);
   });
 
   const types = [...new Set(source.map((event) => event.type))].sort();
@@ -1272,7 +1327,7 @@ function renderActivity(index) {
     <p class="table-meta">Showing ${events.length} of ${source.length} · columns: ID, Kind, Summary, Feature, Area, Status, Age</p>
     <div class="table-frame">
       <table>
-        <thead><tr>${tableHeaders("activity", sort)}</tr></thead>
+        <thead><tr>${tableHeaders("activity", sort, sortDir)}</tr></thead>
         <tbody>
           ${events.map((event) => {
             const idLabel = event.ref ?? event.phase ?? "—";
@@ -1286,7 +1341,7 @@ function renderActivity(index) {
               <td class="wrap">${truncateSummary(event.summary)}</td>
               <td>${shortSpecCell(activityTags(index, event).feature)}</td>
               <td>${shortSpecCell(activityTags(index, event).area)}</td>
-              <td>${statusHtml(event.status ?? "complete")}</td>
+              <td title="${escapeHtml(event.status ?? "")}">${statusHtml(activityDisplayStatus(event, index))}</td>
               <td class="mono" title="${escapeHtml(event.ts)}">${escapeHtml(formatAge(event.ts))}</td>
             </tr>`;
           }).join("") || `<tr><td colspan="7">No events match.</td></tr>`}
@@ -1443,7 +1498,7 @@ function workBucket(status) {
 }
 
 function renderWork(index) {
-  const { kind, status, feature, area, q, sort } = state.workFilters;
+  const { kind, status, feature, area, q, sort, sortDir = "asc" } = state.workFilters;
   const source = index.work ?? [];
   if (source.length === 0) {
     panels.work.innerHTML = `<div class="empty">No work yet. Run <code>/log</code> or <code>/fix</code>.</div>`;
@@ -1462,34 +1517,33 @@ function renderWork(index) {
 
   const openRank = (row) => (workBucket(row.status) === "open" ? 0 : 1);
   rows = [...rows].sort((left, right) => {
+    let cmp = 0;
     if (sort === "kind") {
-      return openRank(left) - openRank(right)
+      cmp = openRank(left) - openRank(right)
         || left.kind.localeCompare(right.kind)
-        || (right.age_days ?? 0) - (left.age_days ?? 0);
-    }
-    if (sort === "status") {
-      return openRank(left) - openRank(right)
+        || compareOpenedAsc(left.opened, right.opened);
+    } else if (sort === "status") {
+      cmp = openRank(left) - openRank(right)
         || left.status.localeCompare(right.status)
-        || (right.age_days ?? 0) - (left.age_days ?? 0);
-    }
-    if (sort === "id") {
-      return openRank(left) - openRank(right) || left.id.localeCompare(right.id);
-    }
-    if (sort === "feature") {
-      return openRank(left) - openRank(right)
+        || compareOpenedAsc(left.opened, right.opened);
+    } else if (sort === "id") {
+      cmp = openRank(left) - openRank(right) || left.id.localeCompare(right.id);
+    } else if (sort === "feature") {
+      cmp = openRank(left) - openRank(right)
         || String(left.feature ?? "").localeCompare(String(right.feature ?? ""))
         || left.id.localeCompare(right.id);
-    }
-    if (sort === "area") {
-      return openRank(left) - openRank(right)
+    } else if (sort === "area") {
+      cmp = openRank(left) - openRank(right)
         || String(left.area ?? "").localeCompare(String(right.area ?? ""))
         || left.id.localeCompare(right.id);
+    } else if (sort === "age") {
+      cmp = compareOpenedAsc(left.opened, right.opened)
+        || (left.age_days ?? 0) - (right.age_days ?? 0);
+    } else {
+      // open-first (default): open/active above closed, then older→newer within bucket
+      cmp = openRank(left) - openRank(right) || compareOpenedAsc(left.opened, right.opened);
     }
-    if (sort === "age") {
-      return (right.age_days ?? 0) - (left.age_days ?? 0);
-    }
-    // open-first (default): open/active above closed, then newer first
-    return openRank(left) - openRank(right) || (right.age_days ?? 0) - (left.age_days ?? 0);
+    return orient(cmp, sortDir);
   });
 
   const kinds = [...new Set(source.map((row) => row.kind))].sort();
@@ -1525,10 +1579,12 @@ function renderWork(index) {
       </div>
       ${filterPanelHtml("work", state.workFilters, specOptions)}
     </div>
-    <p class="table-meta">Showing ${rows.length} of ${source.length} · Docs/WORK.yaml</p>
+    <p class="table-meta">Showing ${rows.length} of ${source.length} · Docs/WORK.yaml${
+      q ? ` · search “${escapeHtml(q)}” (clear to see all)` : ""
+    }</p>
     <div class="table-frame">
       <table>
-        <thead><tr>${tableHeaders("work", sort)}</tr></thead>
+        <thead><tr>${tableHeaders("work", sort, sortDir)}</tr></thead>
         <tbody>
           ${
             emptyFiltered
@@ -1552,7 +1608,7 @@ function renderWork(index) {
 }
 
 function renderSignals(index) {
-  const { severity, kind, status, feature, area, q, sort } = state.signalsFilters;
+  const { severity, kind, status, feature, area, q, sort, sortDir = "asc" } = state.signalsFilters;
   const source = index.issues ?? [];
   if (source.length === 0) {
     panels.signals.innerHTML = `<div class="empty">No signals. Empty is a valid state.</div>`;
@@ -1572,23 +1628,28 @@ function renderSignals(index) {
 
   issues = [...issues].sort((left, right) => {
     const tags = (issue) => featureAreaFromSpecId(issue.spec);
-    if (sort === "age") return (right.age_days ?? 0) - (left.age_days ?? 0);
-    if (sort === "kind") return left.kind.localeCompare(right.kind);
-    if (sort === "id") return String(left.ref ?? "").localeCompare(String(right.ref ?? ""));
-    if (sort === "feature") {
-      return String(tags(left).feature ?? "").localeCompare(String(tags(right).feature ?? ""))
+    let cmp = 0;
+    if (sort === "age") {
+      cmp = (left.age_days ?? 0) - (right.age_days ?? 0);
+    } else if (sort === "kind") {
+      cmp = left.kind.localeCompare(right.kind);
+    } else if (sort === "id") {
+      cmp = String(left.ref ?? "").localeCompare(String(right.ref ?? ""));
+    } else if (sort === "feature") {
+      cmp = String(tags(left).feature ?? "").localeCompare(String(tags(right).feature ?? ""))
         || String(left.ref ?? "").localeCompare(String(right.ref ?? ""));
-    }
-    if (sort === "area") {
-      return String(tags(left).area ?? "").localeCompare(String(tags(right).area ?? ""))
+    } else if (sort === "area") {
+      cmp = String(tags(left).area ?? "").localeCompare(String(tags(right).area ?? ""))
         || String(left.ref ?? "").localeCompare(String(right.ref ?? ""));
+    } else if (sort === "status") {
+      cmp = issueStatus(left).localeCompare(issueStatus(right))
+        || (left.age_days ?? 0) - (right.age_days ?? 0);
+    } else {
+      // default: severity, then age
+      cmp = (severityRank[left.severity] ?? 9) - (severityRank[right.severity] ?? 9)
+        || (left.age_days ?? 0) - (right.age_days ?? 0);
     }
-    if (sort === "status") {
-      return issueStatus(left).localeCompare(issueStatus(right)) || (right.age_days ?? 0) - (left.age_days ?? 0);
-    }
-    // default: severity, then age (Severity stays a filter chip — not a Summary sort)
-    return (severityRank[left.severity] ?? 9) - (severityRank[right.severity] ?? 9)
-      || (right.age_days ?? 0) - (left.age_days ?? 0);
+    return orient(cmp, sortDir);
   });
 
   const kinds = [...new Set(source.map((issue) => issue.kind))].sort();
@@ -1638,7 +1699,7 @@ function renderSignals(index) {
     <p class="table-meta">${index.paths_scanned_at ? `Slow cycle ${formatAge(index.paths_scanned_at)} · ` : ""}Showing ${issues.length} of ${source.length} · columns: ID, Kind, Summary, Feature, Area, Status, Age</p>
     <div class="table-frame">
       <table>
-        <thead><tr>${tableHeaders("signals", sort)}</tr></thead>
+        <thead><tr>${tableHeaders("signals", sort, sortDir)}</tr></thead>
         <tbody>
           ${
             emptyFiltered

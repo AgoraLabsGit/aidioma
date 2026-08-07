@@ -2,10 +2,12 @@
 
 Append only. Every `/system` change adds one line.
 
-| 2026-08-07 | 3 | F-005: Work opened ISO datetime; Age no longer fakes hours from midnight UTC
-
 | Date | schema_version | Change |
 |---|---|---|
+| 2026-08-07 | 3 | F-008: Do not persist table search `q` (avoids hiding new Work rows) |
+| 2026-08-07 | 3 | F-007: Table column sort toggles asc/desc on repeat click (▴/▾) |
+| 2026-08-07 | 3 | F-006: Activity Status syncs to Work ledger when `ref` is a Work id |
+| 2026-08-07 | 3 | F-005: Work opened ISO datetime; Age no longer fakes hours from midnight UTC |
 | 2026-08-07 | 3 | T-010: dashboard Filters panel (Feature/Area) + Reset on table pages |
 | 2026-08-07 | 3 | A-003/A-004/T-008/T-009: Work immediacy; sub-agent defaults; sortable cols except Summary; run-dashboard from Docs home |
 | 2026-08-07 | 3 | A-002/T-007: Docs home write rule in writer skills; `work:docs-home` ff-refresh; system.md P-001 shipped |
