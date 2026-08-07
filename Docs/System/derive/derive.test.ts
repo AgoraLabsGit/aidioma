@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { derive, sortPhasesForRoadmap } from "./derive.js";
 import { nextWorkId, type PhaseFrontmatter } from "./schema.js";
 import { parseWork } from "./parser.js";
+import { parseWorktreePorcelain } from "./worktrees.js";
 
 const temporaryDirectories: string[] = [];
 
@@ -203,6 +204,198 @@ describe("kind-prefixed work ids", () => {
     expect(nextWorkId("fix", rows.map((row) => row.id))).toBe("F-002");
     expect(nextWorkId("task", rows.map((row) => row.id))).toBe("T-001");
     expect(nextWorkId("audit", [])).toBe("A-001");
+  });
+});
+
+describe("last_check", () => {
+  it("projects latest activity check event", async () => {
+    const repositoryRoot = await createDocsFixture();
+    await mkdir(path.join(repositoryRoot, ".work", "activity"), { recursive: true });
+    await writeFile(
+      path.join(repositoryRoot, ".work", "activity", "2026-08.jsonl"),
+      `${JSON.stringify({
+        ts: "2026-08-07T16:00:00Z",
+        type: "check",
+        actor: "agent",
+        cmd: "/check",
+        phase: null,
+        ref: null,
+        status: "complete",
+        summary: "lanes: work — pass",
+      })}\n`,
+    );
+    const index = await derive({
+      repositoryRoot,
+      writeIndex: false,
+      overlayWorktrees: false,
+      now: () => new Date("2026-08-07T17:00:00.000Z"),
+    });
+    expect(index.last_check).toEqual({
+      status: "pass",
+      ts: "2026-08-07T16:00:00Z",
+    });
+  });
+});
+
+describe("worktree overlay", () => {
+  it("parses git worktree porcelain with primary first", () => {
+    const parsed = parseWorktreePorcelain(`worktree /repo
+HEAD abc
+branch refs/heads/main
+
+worktree /repo/.worktrees/phase-007
+HEAD def
+branch refs/heads/phase/007-command-system-audit
+`);
+    expect(parsed).toEqual([
+      {
+        path: "/repo",
+        head: "abc",
+        branch: "main",
+        isPrimary: true,
+      },
+      {
+        path: "/repo/.worktrees/phase-007",
+        head: "def",
+        branch: "phase/007-command-system-audit",
+        isPrimary: false,
+      },
+    ]);
+  });
+
+  it("overlays active phase from a linked worktree onto primary", async () => {
+    const primary = await createDocsFixture();
+    const overlay = await mkdtemp(path.join(tmpdir(), "aidioma-overlay-"));
+    temporaryDirectories.push(overlay);
+
+    await mkdir(path.join(overlay, "Docs", "Roadmap", "Phases"), { recursive: true });
+    await mkdir(path.join(overlay, "Docs", "Research"), { recursive: true });
+    await mkdir(path.join(overlay, "Docs", "Handoffs"), { recursive: true });
+    await mkdir(path.join(overlay, ".work", "activity"), { recursive: true });
+
+    await writeFile(
+      path.join(overlay, "Docs", "Roadmap", "Phases", "PHASE-001-dev-system-dashboard.md"),
+      `---
+id: PHASE-001
+title: Dev System Dashboard
+type: build
+proof_kind: visual
+state: active
+order: 1
+depends_on: []
+from_backlog: null
+owner: founder
+outcome: "Dashboard projects live Docs."
+proof: "Running /dashboard"
+non_goals:
+  - Production hosting
+amends_specs: []
+opened: 2026-08-05
+closed: null
+lessons: null
+---
+
+# PHASE-001
+
+## Context
+
+Live in worktree.
+
+## Proof
+
+- [ ] Overlay proof item
+`,
+    );
+    await writeFile(
+      path.join(overlay, "Docs", "Handoffs", "HANDOFF.md"),
+      "# Handoff\nActive in overlay\n",
+    );
+    await writeFile(
+      path.join(overlay, "Docs", "Research", "R-003.md"),
+      `---
+id: R-003
+question: "overlay research"
+verdict: "yes"
+status: fresh
+informed: []
+affects: []
+phase: PHASE-001
+date: 2026-08-07
+---
+
+# Overlay research
+`,
+    );
+    await writeFile(
+      path.join(overlay, "Docs", "WORK.yaml"),
+      `- id: T-001
+  kind: task
+  summary: "From overlay"
+  status: open
+  feature: null
+  area: null
+  phase: PHASE-001
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: null
+  opened: 2026-08-07
+`,
+    );
+    await writeFile(
+      path.join(overlay, ".work", "activity", "2026-08.jsonl"),
+      `${JSON.stringify({
+        ts: "2026-08-07T15:00:00Z",
+        type: "build",
+        actor: "agent",
+        cmd: "/run",
+        phase: "PHASE-001",
+        ref: "PHASE-001",
+        status: "complete",
+        summary: "overlay event",
+      })}\n`,
+    );
+
+    const index = await derive({
+      repositoryRoot: primary,
+      writeIndex: false,
+      overlayWorktrees: true,
+      worktrees: [
+        { path: primary, head: null, branch: "main", isPrimary: true },
+        {
+          path: overlay,
+          head: null,
+          branch: "phase/001",
+          isPrimary: false,
+        },
+      ],
+      now: () => new Date("2026-08-07T16:00:00.000Z"),
+    });
+
+    expect(index.phases[0]).toMatchObject({ id: "PHASE-001", state: "active" });
+    expect(index.handoff.body).toContain("Active in overlay");
+    expect(index.research.some((item) => item.id === "R-003")).toBe(true);
+    expect(index.work.some((row) => row.id === "T-001")).toBe(true);
+    expect(index.activity.current_month.some((event) => event.summary === "overlay event")).toBe(
+      true,
+    );
+    expect(index.projection_roots).toMatchObject({
+      primary: await realpath(primary),
+      overlay: await realpath(overlay),
+      overlay_phase: "PHASE-001",
+      overlay_branch: "phase/001",
+    });
+    expect(index.overlay_doc_paths).toEqual(
+      expect.arrayContaining([
+        "Handoffs/HANDOFF.md",
+        "Roadmap/Phases/PHASE-001-dev-system-dashboard.md",
+        "Research/R-003.md",
+        "WORK.yaml",
+      ]),
+    );
+    expect(index.active_proof_checklist.some((item) => item.includes("Overlay proof"))).toBe(true);
+    expect(index.next_command).toBe("/run");
   });
 });
 

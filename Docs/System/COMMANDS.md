@@ -1,7 +1,7 @@
 ---
 schema_version: 3
 generated_from: System/system.md
-updated: 2026-08-06
+updated: 2026-08-07
 ---
 
 # Commands
@@ -10,42 +10,76 @@ Thin key. Detail: `System/system.md`. Staging: hand-edited until `/system` gener
 
 ## Lifecycle — gated
 
-| Cmd | When | Does | Must not |
-|---|---|---|---|
-| `/plan` | New work not on Roadmap | Phase file; MCOO; may promote Work proposal | Product code; unconsumed foundations |
-| `/run` | Start/resume the one active phase | Execute outcome; commit on phase branch | Merge; silent scope expand |
-| `/close` | Phase complete | Phase `/triage` first, then Proof/Scope/Publish → PR → merge | Merge on FAIL; skip phase triage; delete `PRESERVE.md` items |
-| `/ship` | Promote to production | Deploy + `RELEASES.md` | Ship on red check / open FAIL / contested spec |
+| Cmd | When | Does | Audit / proof | May invoke |
+|---|---|---|---|---|
+| `/plan` | New work not on Roadmap | Phase file; MCOO; may promote Work proposal | Contract named; Adv optional if contested | `/research` (if options open); `/log` |
+| `/run` | Start/resume the one active phase | Execute outcome; commit on phase branch | Start phase `/triage`; proof + seams; Adv at `/close` | `/triage`, `/research`, `/design`, `/fix`, `/task`, `/audit`, `/check`, `/log`, `/status`, `/handoff`, `/launch`, `/dashboard` |
+| `/close` | Phase complete | Triage → `/check` → Proof/Scope/Publish → PR → merge | Nested lenses + Adv claims; `/check` required | `/triage`, `/check`, `/audit`, Bugbot/security/code-review helpers |
+| `/ship` | Promote to production | Deploy + `RELEASES.md` | Preconditions incl. last `/check` green | `/check` |
 
-`/close --cancel` → `canceled`, no merge. `/close --dry-run` → three checks, findings → `WORK.yaml`.
+`/close --cancel` → `canceled`, no merge. `/close --dry-run` → triage + `/check` + three checks, findings → `WORK.yaml`.
+
+**Must precede:** `/plan` and `/design` review relevant `Research/R-*` (run `/research` first if options are open) before locking a phase or decisions.
 
 ## Action — one unit, one artifact
 
-| Cmd | Produces | Fires when | Must not |
+| Cmd | Produces | Audit / proof | May invoke |
 |---|---|---|---|
-| `/research` | `Research/R-*.md` + optional decision | ≥2 external options block progress | Commit code; end without verdict |
-| `/design` | Decisions and/or a spec | Behavior undefined or ≥3 decisions open | Change app behavior silently |
-| `/fix` | Patch + proof + Work `fix` + `done_summary` | Bounded defect | Stretch into design |
-| `/task` | Patch/docs + proof + Work `task` + `done_summary` | Small intentional chore | Stretch into phase |
-| `/audit` | Findings + Work `audit` + `done_summary` | Scoped review (feature/area/spec/agent-context/process) | Replace `/close` merge gate |
+| `/research` | `Research/R-*.md` + optional decision | **Required Adv** + verdict | Adv sub-agent; optional `/design` if behavior locks |
+| `/design` | Decisions and/or a spec | Review Research first; **Required Adv** | `/research` if missing; Adv sub-agent |
+| `/fix` | Patch + proof + Work `fix` + `done_summary` | Required proof; reduced close if publishing | `/check` before publish; optional `/audit`; `/log`/`/plan` if stretches |
+| `/task` | Patch/docs + proof + Work `task` + `done_summary` | Required proof (light) | `/check` before publish; optional `/audit`; `/log`/`/plan` if stretches |
+| `/audit` | Findings + Work `audit` + `done_summary` | Is the audit (not merge gate) | Review sub-agent |
 
 ## Utility
 
-| Cmd | Does | Must not |
-|---|---|---|
-| `/log` | Park Work row (`open`); classify kind | Implement |
-| `/triage` | Optional `[PHASE\|area\|feature]`; if phase active/named → **sub-agent, that `phase:` only**; auto-do clear `/fix`/`/task`; confirm drop/plan; ask→`open_questions` | Mix other phases / `phase: null` into a phase pass |
-| `/status` | Brief + refresh `context.json` | Edit authored files |
-| `/check` | Tests/lint | Fix findings |
-| `/launch` | App dev server | Production |
-| `/dashboard` | Dashboard server | Production |
-| `/handoff` | Overwrite `HANDOFFS/HANDOFF.md` | Commit/PR/merge |
+| Cmd | Does | Audit / proof | May invoke |
+|---|---|---|---|
+| `/log` | Park Work row (`open`); classify kind | none | — |
+| `/triage` | Sub-agent batch; auto `/fix`/`/task`; confirm drop/plan | none as gate | `/fix`, `/task`; unassigned batch → `/check`, optional `/audit` |
+| `/status` | Brief + refresh `context.json` | none | — |
+| `/check` | Path-aware tests/lint; record `last_check` | Is the test run; must not fix | — |
+| `/launch` | App dev server | none | — |
+| `/dashboard` | Project living Docs (D-020 Docs home when present; else primary+overlay) | none | — |
+| `/handoff` | Overwrite `Handoffs/HANDOFF.md` | none | — |
+
+**Triage mode:** Inside `/run` / active phase → that phase’s Work only (implicit). No active phase → unassigned (`phase: null`) batch.
 
 ## Meta
 
-| Cmd | Does | Must not |
+| Cmd | Does | Audit / proof | May invoke |
+|---|---|---|---|
+| `/system` | Edit `Docs/System/`; context-budget caps | Adv when amending audit/close/merge rules | `/check` (work lane) |
+
+## Protocols (executable)
+
+| Protocol | When | Home |
 |---|---|---|
-| `/system` | Edit `Docs/System/`; context-budget caps | Run while phase `active` (unless phase outcome); write outside System/; product code |
+| **Required Adv** | `/research`, `/design`, `/close` claims | [`adv-protocol.md`](adv-protocol.md) |
+| **MCOO** | `/plan` (cheap) · `/close` Scope (binding FAIL list) | [`mcoo-checklist.md`](mcoo-checklist.md) |
+
+## Close lenses (nested under Proof / Scope / Publish)
+
+| Lens | Gate | When |
+|---|---|---|
+| Outcome evidence | Proof | always |
+| Adversarial phase claims | Proof | always |
+| Security / privacy / a11y / AI tokens / perf / migration | Proof | path-triggered |
+| path→spec | Scope | always (computed) |
+| MCOO | Scope | always |
+| Seams / composability | Scope | build with code; broader every ~2–3 caps |
+| Code quality | Scope | code in diff |
+| Publish hygiene + started CI | Publish | always |
+
+## `/check` lanes
+
+| Lane | Paths | Scripts |
+|---|---|---|
+| work | `Docs/**`, skills, derive, dashboard | `work:typecheck` → `work:test` → `work:validate` |
+| app | `apps/web/**`, packages | `app:typecheck` → `app:lint` → `app:test` |
+| content | `content/**`, tooling/content | `content:typecheck` → `content:validate` (+ fixtures/smoke as needed) |
+
+Select from diff vs `origin/main` ∪ dirty tree. `--all` / `--lane` overrides. Activity `type: check` → `last_check`.
 
 ## Intent routing
 
@@ -62,8 +96,6 @@ Thin key. Detail: `System/system.md`. Staging: hand-edited until `/system` gener
 | Where are we? | `/status` |
 | Push live | `/ship` |
 
-Report command + id. Ask once if class ambiguous. Always cite Work/phase as `W-015 — Parallel active phases` (id + summary).
+Report command + id. Ask once if class ambiguous. Cite Work/phase as `id — summary` (example: `W-015 — Parallel active phases`).
 
-**Classifier:** `fix` broken · `task` one-session chore · `proposal` needs `/plan` · `research` options · `question` standalone uncertainty · `audit` review. Clarifications append `open_questions` on the target row — never a new `question` row for the same item.
-
-**Coordinator** owns phase + Work routing. Delegate bounded `/fix`/`/task`/`/audit`/`/triage` batches to sub-agents.
+**Coordinator** owns phase + Work routing. Delegate bounded `/fix`/`/task`/`/audit`/`/triage` batches to sub-agents. Use **May invoke** — do not invent silent chains; do not skip required precedes.

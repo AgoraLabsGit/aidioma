@@ -5,27 +5,24 @@ description: Classify and execute open Docs/WORK.yaml rows by phase/area/feature
 
 # /triage
 
-Utility that **does work**. Filters: `PHASE-nnn` · area · feature (e.g. `/triage PHASE-005`, `/triage Devsystem`).
+Utility that **does work**. Prefer a **sub-agent** for the batch (preserve coordinator context).
 
-## Phase-scoped default
+## Mode (implicit)
 
-If a phase is **active** in this chat (or `/triage` names a phase id):
-
-1. **Spawn a sub-agent** whose sole job is open/active Work with `phase: <that PHASE-id>` — nothing else.
-2. Coordinator does **not** scan the whole ledger in-process for that pass.
-3. Sub-agent returns: do / blocked / plan / drop / leave per row (`W-nnn — summary`), then executes clear `/fix`/`/task` (or reports blockers).
-4. Coordinator applies ledger updates, asks founder only for drop/plan/lifecycle.
-
-Unscoped `/triage` with **no** active phase → filter optional area/feature, else top open batch (still prefer a sub-agent for the batch).
+| Context | Scope |
+|---|---|
+| Inside `/run` / phase active | That phase’s Work only — no typed PHASE id required |
+| Explicit `/triage PHASE-nnn` | That phase only |
+| No active phase | Unassigned (`phase: null`) ± area/feature filter |
 
 ## Steps
 
-1. Resolve filter: explicit arg → else active phase id → else area/feature if given → else general batch.
-2. Load matching open/active rows from `Docs/WORK.yaml`.
-3. Classify: **do** | **blocked** | **plan** | **drop** | **leave**. Cite `W-nnn — summary`.
-4. Auto-execute clear `/fix`/`/task` via sub-agents; set `done_summary`.
-5. Confirm drop / `/plan` / lifecycle. ≤3 consequential calls.
-6. Clarifications → `open_questions` on **that** row (never a new `question` row).
-7. Activity event. Report ids done / blocked / left / empty.
+1. Resolve mode → load matching open/active rows.
+2. Classify: **do** | **blocked** | **plan** | **drop** | **leave**. Cite `W-nnn — summary`.
+3. Auto-execute clear `/fix`/`/task` via sub-agents; `done_summary`.
+4. Confirm drop / `/plan` / lifecycle. Clarifications → `open_questions` on that row.
+5. **Unassigned batch finished with material changes** → `/check`; `/audit` if big/risky.
+6. Activity event. Report ids.
 
-Must not: pull in Work with a different `phase` (or `phase: null`) during a phase-scoped pass; expand into unplanned phases; skip confirm on drop/plan.
+**May invoke:** `/fix`, `/task`; after unassigned batch → `/check`, optional `/audit`.  
+**Must not:** mix other phases or `phase: null` into a phase-scoped pass.

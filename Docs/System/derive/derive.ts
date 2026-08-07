@@ -21,8 +21,21 @@ import {
   type SpecFrontmatter,
   type WorkItem,
 } from "./schema.js";
+import {
+  discoverActiveOverlay,
+  resolvePrimaryWorktreeRoot,
+  type ActiveOverlay,
+  type GitWorktree,
+} from "./worktrees.js";
 
 const defaultRepositoryRoot = fileURLToPath(new URL("../../..", import.meta.url));
+
+export type ProjectionRoots = {
+  primary: string;
+  overlay: string | null;
+  overlay_phase: string | null;
+  overlay_branch: string | null;
+};
 
 export type IssueSeverity = "high" | "medium" | "low";
 /** Derived health signals only — authored work lives in `work[]`. */
@@ -105,6 +118,10 @@ export type DeriveIndex = {
   product: { body: string };
   blocked_reason: string | null;
   active_proof_checklist: string[];
+  /** Primary checkout + optional active-phase worktree overlay. */
+  projection_roots: ProjectionRoots;
+  /** Docs-relative paths served from the overlay root (for /api/doc). */
+  overlay_doc_paths: string[];
 };
 
 export type DeriveOptions = {
@@ -112,6 +129,10 @@ export type DeriveOptions = {
   docsRoot?: string;
   now?: () => Date;
   writeIndex?: boolean;
+  /** When false, skip worktree overlay (default true). */
+  overlayWorktrees?: boolean;
+  /** Test injection for git worktrees (paths must exist). */
+  worktrees?: GitWorktree[];
 };
 
 function isContained(parent: string, candidate: string): boolean {
@@ -267,7 +288,11 @@ function extractProofChecklist(body: string): string[] {
     .filter((line) => line.startsWith("- ["));
 }
 
-async function loadActivity(
+function activityDedupeKey(event: ActivityEvent): string {
+  return [event.ts, event.cmd, event.ref ?? "", event.summary].join("\0");
+}
+
+async function loadActivityFromRoot(
   repositoryRoot: string,
   now: Date,
 ): Promise<DeriveIndex["activity"]> {
@@ -311,15 +336,53 @@ async function loadActivity(
   return { current_month, months, total };
 }
 
+function mergeActivity(
+  base: DeriveIndex["activity"],
+  overlay: DeriveIndex["activity"],
+): DeriveIndex["activity"] {
+  const seen = new Set<string>();
+  const current_month: ActivityEvent[] = [];
+  for (const event of [...overlay.current_month, ...base.current_month]) {
+    const key = activityDedupeKey(event);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    current_month.push(event);
+  }
+  current_month.sort((left, right) => right.ts.localeCompare(left.ts));
+  const months = [...new Set([...base.months, ...overlay.months])].sort();
+  return {
+    current_month,
+    months,
+    total: base.total + overlay.total,
+  };
+}
+
 export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> {
   const now = options.now?.() ?? new Date();
-  const repositoryRoot = await realpath(options.repositoryRoot ?? defaultRepositoryRoot);
+  const requestedRoot = await realpath(options.repositoryRoot ?? defaultRepositoryRoot);
+  const overlayEnabled = options.overlayWorktrees !== false;
+
+  let repositoryRoot = requestedRoot;
+  let overlay: ActiveOverlay | null = null;
+  if (overlayEnabled) {
+    if (options.worktrees) {
+      const primary =
+        options.worktrees.find((item) => item.isPrimary) ?? options.worktrees[0];
+      repositoryRoot = primary ? await realpath(primary.path) : requestedRoot;
+      overlay = await discoverActiveOverlay(repositoryRoot, options.worktrees);
+    } else {
+      repositoryRoot = await resolvePrimaryWorktreeRoot(requestedRoot);
+      overlay = await discoverActiveOverlay(repositoryRoot);
+    }
+  }
+
   const docsCandidate = options.docsRoot
     ? path.isAbsolute(options.docsRoot)
       ? options.docsRoot
       : path.resolve(repositoryRoot, options.docsRoot)
     : path.join(repositoryRoot, "Docs");
   const docsRoot = await containedRealPath(repositoryRoot, docsCandidate);
+  const overlayDocPaths = new Set<string>();
 
   const issues: IndexIssue[] = [];
   const phases: ProjectedPhase[] = [];
@@ -468,6 +531,118 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
   const productSource = await readOptional(path.join(docsRoot, "PRODUCT.md"));
   if (productSource) {
     productBody = productSource.replace(/^---[\s\S]*?\n---\n?/u, "").trim();
+  }
+
+  // Active-phase worktree overlay (D-016): prefer live phase Docs without dual-writing main.
+  if (overlay) {
+    const overlayDocs = path.join(overlay.root, "Docs");
+    const overlayPhaseFiles = await listMarkdownFiles(
+      path.join(overlayDocs, "Roadmap", "Phases"),
+    );
+    const phaseById = new Map(phases.map((phase) => [phase.id, phase]));
+    for (const filePath of overlayPhaseFiles) {
+      const relative = path.relative(overlayDocs, filePath).split(path.sep).join("/");
+      try {
+        const source = await readFile(filePath, "utf8");
+        const { data, body } = parseFrontmatter(
+          source,
+          relative,
+          phaseSchema as import("zod").ZodType<PhaseFrontmatter>,
+        );
+        phaseBodies.set(data.id, body);
+        if (data.state === "blocked") {
+          blockedReason = extractBlockedReason(body);
+        }
+        const projected: ProjectedPhase = {
+          ...data,
+          age_days: dayDiff(data.opened, now),
+          activity_count: 0,
+          sourcePath: relative,
+        };
+        phaseById.set(data.id, projected);
+        overlayDocPaths.add(relative);
+      } catch (error) {
+        const summary =
+          error instanceof ParseError
+            ? error.details.join("; ")
+            : error instanceof Error
+              ? error.message
+              : "Unknown parse error";
+        addParseIssue(issues, `overlay:${relative}`, summary);
+      }
+    }
+    phases.length = 0;
+    phases.push(...phaseById.values());
+
+    const overlayResearchFiles = await listMarkdownFiles(path.join(overlayDocs, "Research"));
+    const researchById = new Map(research.map((item) => [item.id, item]));
+    for (const filePath of overlayResearchFiles) {
+      const relative = path.relative(overlayDocs, filePath).split(path.sep).join("/");
+      try {
+        const source = await readFile(filePath, "utf8");
+        const data = parseResearchFrontmatter(source, relative);
+        const age = dayDiff(data.date, now);
+        researchById.set(data.id, { ...data, age_days: age, sourcePath: relative });
+        overlayDocPaths.add(relative);
+      } catch (error) {
+        const summary =
+          error instanceof ParseError
+            ? error.details.join("; ")
+            : error instanceof Error
+              ? error.message
+              : "Unknown parse error";
+        addParseIssue(issues, `overlay:${relative}`, summary);
+      }
+    }
+    research.length = 0;
+    research.push(...researchById.values());
+
+    const overlayWorkSource = await readOptional(path.join(overlayDocs, "WORK.yaml"));
+    if (overlayWorkSource !== null) {
+      try {
+        const parsed = parseWork(overlayWorkSource, "WORK.yaml");
+        work = parsed.map((item) => ({ ...item, age_days: dayDiff(item.opened, now) }));
+        overlayDocPaths.add("WORK.yaml");
+      } catch (error) {
+        const summary =
+          error instanceof ParseError
+            ? error.details.join("; ")
+            : error instanceof Error
+              ? error.message
+              : "Unknown parse error";
+        addParseIssue(issues, "overlay:WORK.yaml", summary);
+      }
+    }
+
+    const overlayHandoffPath = path.join(overlayDocs, "Handoffs", "HANDOFF.md");
+    const overlayHandoff = await readOptional(overlayHandoffPath);
+    if (overlayHandoff !== null) {
+      handoffBody = overlayHandoff;
+      overlayDocPaths.add("Handoffs/HANDOFF.md");
+      try {
+        const metadata = await stat(overlayHandoffPath);
+        handoffUpdatedAt = metadata.mtime.toISOString();
+      } catch {
+        handoffUpdatedAt = null;
+      }
+    }
+
+    const overlayRoadmap = await readOptional(path.join(overlayDocs, "Roadmap", "Roadmap.md"));
+    if (overlayRoadmap !== null) {
+      overlayDocPaths.add("Roadmap/Roadmap.md");
+    }
+
+    const overlayDecisions = await readOptional(path.join(overlayDocs, "DECISIONS.md"));
+    if (overlayDecisions) {
+      const parsed = parseDecisions(overlayDecisions, "DECISIONS.md");
+      const byId = new Map(decisions.map((item) => [item.id, item]));
+      for (const decision of parsed.decisions) byId.set(decision.id, decision);
+      decisions = [...byId.values()];
+      overlayDocPaths.add("DECISIONS.md");
+      for (const error of parsed.errors) {
+        addParseIssue(issues, "overlay:DECISIONS.md", error);
+      }
+    }
   }
 
   // Reverse depends_on → used_by / blast_radius
@@ -656,7 +831,18 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
     }
   }
 
-  const activity = await loadActivity(repositoryRoot, now);
+  let activity = await loadActivityFromRoot(repositoryRoot, now);
+  if (overlay) {
+    const overlayActivity = await loadActivityFromRoot(overlay.root, now);
+    activity = mergeActivity(activity, overlayActivity);
+  }
+  const lastCheckEvent = activity.current_month.find((event) => event.type === "check");
+  const last_check = lastCheckEvent
+    ? {
+        status: lastCheckEvent.status === "complete" ? "pass" : lastCheckEvent.status === "failed" ? "fail" : lastCheckEvent.status,
+        ts: lastCheckEvent.ts,
+      }
+    : { status: null, ts: null };
   const activityByPhase = new Map<string, number>();
   for (const event of activity.current_month) {
     if (!event.phase) continue;
@@ -680,6 +866,13 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
       left.ref.localeCompare(right.ref),
   );
 
+  const projection_roots: ProjectionRoots = {
+    primary: repositoryRoot,
+    overlay: overlay?.root ?? null,
+    overlay_phase: overlay?.phaseId ?? null,
+    overlay_branch: overlay?.branch ?? null,
+  };
+
   const index: DeriveIndex = {
     indexed_at: now.toISOString(),
     paths_scanned_at: null,
@@ -693,7 +886,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
     activity,
     issues,
     handoff: { updated_at: handoffUpdatedAt, body: handoffBody },
-    last_check: { status: null, ts: null },
+    last_check,
     in_production: {
       release: latestRelease?.id ?? null,
       date: latestRelease?.date ?? null,
@@ -706,6 +899,8 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
       if (!active) return [];
       return extractProofChecklist(phaseBodies.get(active.id) ?? "");
     })(),
+    projection_roots,
+    overlay_doc_paths: [...overlayDocPaths].sort(),
   };
 
   if (options.writeIndex !== false) {
@@ -716,6 +911,13 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
 
   return index;
 }
+
+export {
+  discoverActiveOverlay,
+  listGitWorktrees,
+  resolvePrimaryWorktreeRoot,
+  parseWorktreePorcelain,
+} from "./worktrees.js";
 
 /** Scoped agent boot manifest — subset of derive(). */
 export async function writeContextJson(

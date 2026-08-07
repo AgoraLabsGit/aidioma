@@ -35,21 +35,30 @@ Two-way control is a separate product.
 ## 2. Architecture
 
 ```
-Docs/**/*.md ─┐
-Docs/WORK.yaml ─┼─→ chokidar ─→ debounce 300ms ─→ derive() ─→ projection
-.work/activity/*.jsonl ─┘                                              │
-                                                                       ▼
-                                         dashboard UI ←── SSE /api/events
+primary Docs/** + .work/activity ─┐
+active phase worktree (overlay) ──┼─→ chokidar ─→ debounce 300ms ─→ derive() ─→ projection
+                                  │                                      │
+                                  └──────────────────────────────────────┘
+                                                                         ▼
+                                           dashboard UI ←── SSE /api/events
 ```
 
 **One `derive()` module** (V3 §7). `/status`, other commands, and the dashboard all call it.
 The dashboard watches files, re-runs `derive()`, and serves the projection. It does not invent a
 second derivation engine. Authored `Docs/` files are never written by the dashboard.
 
+**Primary-rooted live overlay (D-018):** `/dashboard` always indexes the **primary git
+worktree**. If exactly one linked worktree has an `active`/`blocked` phase, `derive()` overlays
+that worktree’s phases, `HANDOFF.md`, Research, `WORK.yaml`, and activity into the projection.
+Phase-branch Docs remain SSOT for merge — no dual-write of `state: active` onto main. Heartbeat
+shows `live PHASE-nnn (branch)` when an overlay is in effect. `index.projection_roots` and
+`overlay_doc_paths` tell `/api/doc` which root owns a path.
+
 - Lives under `Docs/System/dashboard/` with shared `Docs/System/derive/`; launched by `/dashboard`
 - Local single process, no database; stack may stay the existing server or move to Next — decide in PHASE-001
 - Parsers: frontmatter + YAML + markdown body render + `chokidar` (watch)
 - Port fixed; `/dashboard` stops stale servers before starting (V3 §7 runtime hygiene)
+- Watches primary **and** active overlay `Docs/` + `.work/activity/`
 
 ### Watcher contract
 
@@ -168,7 +177,19 @@ Pages render `index.json` and hold no logic.
   "handoff": {"updated_at": "2026-08-05T09:10:00Z"},
   "last_check": {"status": "pass", "ts": "2026-08-05T13:55:00Z"},
   "in_production": {"release": "RELEASE-004", "date": "2026-08-05"},
-  "next_command": "/run"
+  "next_command": "/run",
+  "projection_roots": {
+    "primary": "/path/to/repo",
+    "overlay": "/path/to/repo/.worktrees/phase-007",
+    "overlay_phase": "PHASE-007",
+    "overlay_branch": "phase/007-command-system-audit"
+  },
+  "overlay_doc_paths": [
+    "Handoffs/HANDOFF.md",
+    "Roadmap/Phases/PHASE-007-command-system-audit.md",
+    "Research/R-003.md",
+    "WORK.yaml"
+  ]
 }
 ```
 
@@ -187,6 +208,8 @@ Computed by the indexer; never authored.
 | `issues[]` | Derived health signals only (see §5 Signals) |
 | `next_command` | From active phase state (see §5) |
 | `in_production` | Last `ship` event / last `RELEASES.md` entry |
+| `projection_roots` | Primary worktree path + optional active-phase overlay (D-018) |
+| `overlay_doc_paths` | Docs-relative paths read from the overlay root |
 
 ---
 
@@ -236,7 +259,8 @@ one card per `active`/`blocked` phase so parallel phases do not collapse into on
 |---|---|
 | Header | id + title + `outcome` (state/type live in Status only) |
 | Status | Two-column glance (4+4) — left: state, type, owner, opened · right: proof_kind, git, check, issues |
-| Phase card | One card, sections: Context (+ out of scope), Plan, Proof, Dependencies (`depends_on`), Specs amended (`amends_specs`), Inputs (body), Files, Issues, Audits (stub), Tests (stub, build only). **Tables vs lists:** authored `\|` markdown → real `.md-table` (key→value maps like Inputs). Numbered Plan / proof checklist → row+divider lists. Out of scope → plain bullets (no table chrome). Never `display:grid`/`flex` on prose `<li>` with mixed inline nodes (breaks `code`). |
+| Phase card | One card, sections: Context (+ out of scope), Plan, Proof, Dependencies (`depends_on`), Specs amended (`amends_specs`), Inputs (body), Files, Work/Signals, **Audits** (latest `/audit` activity for phase or honest “not run”), **Tests** (`last_check` or “not run”; build always, design when a check exists). **Tables vs lists:** authored `\|` markdown → real `.md-table`. Numbered Plan / proof checklist → row+divider lists. Out of scope → plain bullets. |
+| Commands panel | Header icon **left of** reindex opens a read-only command map (class + does + May invoke). Copy-to-clipboard cmd names only — no run buttons (D-019). |
 | Handoff | Below the phase stack on Active only — `HANDOFF.md` with `updated_at` |
 
 **Index vs body:** `index.json` is frontmatter-only (D-006). Named body sections load on demand via

@@ -695,22 +695,106 @@ function renderPhaseView(phase, index, { primary = false, compact = false } = {}
           ${relatedIssuesHtml(relatedIssues)}
         </div>
 
-        <div class="phase-card-section phase-stub">
+        <div class="phase-card-section">
           <h3 class="now-label">Audits</h3>
-          <p class="muted">Not projected yet — close-check / steward evidence for this phase will land here.</p>
+          ${phaseAuditsHtml(index, phase.id)}
         </div>
 
         ${
-          phase.type === "build"
-            ? `<div class="phase-card-section phase-stub">
+          phase.type === "build" || index.last_check?.status
+            ? `<div class="phase-card-section">
                 <h3 class="now-label">Tests</h3>
-                <p class="muted">Not projected yet — test runs tied to this phase will land here.</p>
+                ${phaseTestsHtml(index)}
               </div>`
             : ""
         }
       </section>
     </article>
   `;
+}
+
+function phaseAuditsHtml(index, phaseId) {
+  const audits = (index.activity?.current_month ?? []).filter(
+    (event) => event.type === "audit" && event.phase === phaseId,
+  );
+  if (!audits.length) {
+    return `<p class="muted">Not run — no <code>/audit</code> or close-audit events for this phase yet.</p>`;
+  }
+  return `<ul>${audits.slice(0, 5).map((event) => `
+    <li>
+      <span class="status" data-state="${escapeHtml(event.status === "complete" ? "done" : event.status)}">${escapeHtml(event.status)}</span>
+      <code>${escapeHtml(event.cmd)}</code>
+      <span>${escapeHtml(event.summary)}</span>
+      <span class="muted mono">${escapeHtml(formatAge(event.ts))}</span>
+    </li>`).join("")}</ul>`;
+}
+
+function phaseTestsHtml(index) {
+  const check = index.last_check;
+  if (!check?.status) {
+    return `<p class="muted">Not run — no <code>/check</code> recorded yet.</p>`;
+  }
+  return `<p>
+    <span class="status" data-state="${escapeHtml(check.status === "pass" ? "active" : "blocked")}">${escapeHtml(check.status)}</span>
+    <span class="muted mono">${escapeHtml(check.ts ? formatAge(check.ts) : "—")}</span>
+  </p>`;
+}
+
+const COMMAND_MAP = [
+  { cls: "Lifecycle", rows: [
+    ["/run", "Phase triage → execute outcome", "/triage, /research, /design, /fix, /task, /audit, /check, …"],
+    ["/close", "Triage → /check → Proof/Scope/Publish", "/triage, /check, /audit, helpers"],
+    ["/plan", "Phase file; review Research first", "/research, /log"],
+    ["/ship", "Deploy + RELEASES", "/check"],
+  ]},
+  { cls: "Action", rows: [
+    ["/task", "Small chore", "/check; optional /audit"],
+    ["/fix", "Bounded defect", "/check; optional /audit"],
+    ["/audit", "Scoped review (not merge gate)", "review sub-agent"],
+    ["/research", "Options + required Adv", "Adv sub-agent; optional /design"],
+    ["/design", "Decisions/specs; Research first; Adv", "/research; Adv sub-agent"],
+  ]},
+  { cls: "Utility", rows: [
+    ["/status", "Brief + context.json", "—"],
+    ["/check", "Path-aware tests/lint", "—"],
+    ["/triage", "Batch Work; phase mode implicit", "/fix, /task; then /check"],
+    ["/log", "Park Work row", "—"],
+    ["/dashboard", "Docs home when present; else primary+overlay", "—"],
+    ["/handoff", "Overwrite HANDOFF", "—"],
+    ["/launch", "App server", "—"],
+  ]},
+  { cls: "Meta", rows: [
+    ["/system", "Framework edits", "/check; Adv if close/audit rules"],
+  ]},
+];
+
+function renderCommandsPanel() {
+  const body = document.querySelector("#commands-panel-body");
+  if (!body) return;
+  body.innerHTML = COMMAND_MAP.map((group) => `
+    <section class="commands-group">
+      <h3>${escapeHtml(group.cls)}</h3>
+      <table class="commands-table">
+        <thead><tr><th>Cmd</th><th>Does</th><th>May invoke</th></tr></thead>
+        <tbody>
+          ${group.rows.map(([cmd, does, may]) => `
+            <tr>
+              <td><button type="button" class="cmd-copy mono" data-copy="${escapeHtml(cmd)}" title="Copy">${escapeHtml(cmd)}</button></td>
+              <td>${escapeHtml(does)}</td>
+              <td class="muted">${escapeHtml(may)}</td>
+            </tr>`).join("")}
+        </tbody>
+      </table>
+    </section>`).join("");
+}
+
+function setCommandsPanelOpen(open) {
+  const panel = document.querySelector("#commands-panel");
+  const button = document.querySelector("#commands-panel-btn");
+  if (!panel || !button) return;
+  panel.hidden = !open;
+  button.setAttribute("aria-expanded", open ? "true" : "false");
+  if (open) renderCommandsPanel();
 }
 
 async function hydratePhaseDocs(root = document) {
@@ -1303,7 +1387,16 @@ function renderSignals(index) {
 
 function updateChrome(index) {
   state.lastIndexedAt = index.indexed_at;
-  indexedAt.textContent = `indexed ${formatAge(index.indexed_at)}`;
+  const overlayPhase = index.projection_roots?.overlay_phase;
+  const overlayBranch = index.projection_roots?.overlay_branch;
+  indexedAt.textContent = overlayPhase
+    ? `indexed ${formatAge(index.indexed_at)} · live ${overlayPhase}${overlayBranch ? ` (${overlayBranch})` : ""}`
+    : `indexed ${formatAge(index.indexed_at)}`;
+  if (heartbeat) {
+    heartbeat.title = overlayPhase
+      ? `Interim D-018 overlay on primary (live ${overlayBranch || "phase"}) — Docs home is D-020/P-001`
+      : "Interim D-018 primary root — Docs home is D-020/P-001";
+  }
   const high = index.issues.filter(
     (issue) => issueStatus(issue) === "open" && issue.severity === "high",
   ).length;
@@ -1543,6 +1636,21 @@ issuePill?.addEventListener("click", () => {
 
 document.querySelector("#reindex").addEventListener("click", () => {
   void reindex();
+});
+
+document.querySelector("#commands-panel-btn")?.addEventListener("click", () => {
+  const panel = document.querySelector("#commands-panel");
+  setCommandsPanelOpen(Boolean(panel?.hidden));
+});
+
+document.querySelector("#commands-panel-close")?.addEventListener("click", () => {
+  setCommandsPanelOpen(false);
+});
+
+document.querySelector("#commands-panel-body")?.addEventListener("click", (event) => {
+  const button = event.target.closest(".cmd-copy");
+  if (!button?.dataset.copy) return;
+  void navigator.clipboard?.writeText(button.dataset.copy);
 });
 
 themeToggle.addEventListener("click", () => {

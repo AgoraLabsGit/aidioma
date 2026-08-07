@@ -28,7 +28,9 @@ Files are the source of truth. Events are the journal. State is never derived fr
 ## 1. Principles
 
 - **MCOO** — Minimal complexity for optimal output. Never onboard more complexity than the
-  outcome requires. Cut, defer, or drop is always a valid result.
+  outcome requires. Cut, defer, or drop is always a valid result. Kin to YAGNI: no complexity
+  for a *presumed* future need; malleability (tests, clear seams) still earns its keep.
+  Executable lists: `System/mcoo-checklist.md`.
 - **Proof-first** — A phase closes on demonstrated behavior, not description.
 - **One active phase** — Exactly one. One branch. One worktree.
 - **Write it down or it didn't happen** — Behavior change requires a spec change.
@@ -513,8 +515,8 @@ under *Unassigned* on the dashboard.
 | Cmd | When | Does | Must not |
 |---|---|---|---|
 | `/plan` | New work not on the Roadmap | Create a phase file; name the complexity cost; cut/defer is a valid outcome | Write product code; build unconsumed foundations |
-| `/run` | Start or resume the one active phase | Execute the phase outcome; commit on the phase branch | Merge; expand scope horizontally; continue past a broken contract |
-| `/close` | Phase complete | Phase-scoped `/triage` first, then three checks → commit/PR → merge exact head → clean `main`; stop phase-owned servers | Merge on FAIL; skip phase triage; expand scope silently; delete anything in `PRESERVE.md` |
+| `/run` | Start or resume the one active phase | Phase `/triage` (sub-agent) first, then execute outcome; may `/research` `/design` `/fix` `/task` `/audit` `/check` | Merge; expand scope horizontally; continue past a broken contract |
+| `/close` | Phase complete | Phase `/triage` → **`/check`** → Proof/Scope/Publish (nested lenses) → PR → merge exact head → clean `main` | Merge on FAIL; skip triage or `/check`; expand scope silently; delete `PRESERVE.md` items |
 | `/ship` | Promote to production | Deploy production; append to `RELEASES.md` | Ship on a red check, an open FAIL, or a contested spec |
 
 `/ship` preconditions — all four, or it refuses:
@@ -532,9 +534,10 @@ are the only source of expensive information the system doesn't otherwise captur
 learned from work that shipped is already encoded in a spec, decision, or test. Captured at the
 moment of maximum honesty, it costs one line.
 
-`/close --dry-run` — runs the three close checks (Proof / Scope / Publish), changes nothing,
-writes findings to `WORK.yaml`. `/audit` is the general action for scoped reviews (including
-agent-context and specs); close checks remain the merge gate.
+`/close --dry-run` — phase triage + `/check` + three close checks (Proof / Scope / Publish),
+changes nothing, writes findings to `WORK.yaml`. `/audit` is the general action for scoped
+reviews; close checks remain the merge gate. Nested close lenses and May-invoke links: see
+`COMMANDS.md` (D-019).
 
 ### Action
 
@@ -578,9 +581,9 @@ If `/fix` or `/task` needs design or multi-session scope, `/log` as `proposal` (
 | `/log` | Append `WORK.yaml` row (`open`); auto-classify kind | Implement the work |
 | `/triage` | Optional `[PHASE\|area\|feature]`; active/named phase → **sub-agent on `phase:` rows only**; classify; auto-run clear `/fix`/`/task`; confirm drop/plan; ask→`open_questions` | Mix other phases or `phase: null` into a phase pass; expand into unplanned phases |
 | `/status` | Print a brief: active phase, git, runtime, suggested next command; refresh `context.json` | Change any authored file |
-| `/check` | Run tests and lint | Fix what it finds |
+| `/check` | Path-aware tests/lint; append activity `check` → `last_check` | Fix what it finds |
 | `/launch` | Stop stale app servers, start the app | Touch production |
-| `/dashboard` | Stop stale dashboard servers, start the dashboard | Run in production |
+| `/dashboard` | Stop stale dashboard servers; start Docs SSOT home when present (D-020); **interim:** primary-rooted + active-phase overlay (D-018) until P-001 | Run in production; dual-write schedule onto main |
 | `/handoff` | Overwrite `Handoffs/HANDOFF.md` | Commit, PR, or merge |
 
 **Handoffs are not archived.** They hold ephemeral mental state — valuable for six hours,
@@ -688,14 +691,23 @@ Anything else is not proof. A description of behavior is not proof.
 
 ## 10. Close: three checks
 
+Order: phase `/triage` → **`/check`** (path-aware; FAIL blocks) → Proof → Scope → Publish.
+
 | Check | Question | Fail means |
 |---|---|---|
 | **Proof** | Does the declared outcome demonstrably run on a real path? | Blocks merge |
 | **Scope** | Did anything ship outside the contract? Was a spec written or amended for every behavior change? | Blocks merge |
 | **Publish** | Clean `main`, PR contained, servers stopped, no orphan branches? | Blocks merge |
 
-Conditional concerns — accessibility, security, privacy, AI tokens, performance, data migration —
-are a checklist inside **Proof**, triggered by which paths changed. They are not additional roles.
+**Always under Proof:** outcome evidence; adversarial audit of phase claims.  
+**Always under Scope:** path→spec (computed); MCOO binding cut.  
+**Conditional (path-triggered) under Proof:** accessibility, security, privacy, AI tokens,
+performance, data migration.  
+**Conditional under Scope:** seams/composability (build code; broader every ~2–3 capabilities);
+code quality when code is in the diff.
+
+These are nested lenses, not extra merge gates or named auditor roles (D-019).
+Required Adv steps: `System/adv-protocol.md`. MCOO FAIL criteria: `System/mcoo-checklist.md`.
 
 | Result | Rule |
 |---|---|
@@ -776,9 +788,14 @@ Every command shown in the UI is copy-to-clipboard. That is the bridge.
 ### Liveness
 
 ```
-Docs/ + .work/ → chokidar (300ms debounce) → full reindex → index.json → SSE → browser
+primary Docs/ + .work/ (+ active phase worktree overlay)
+  → chokidar (300ms debounce) → full reindex → index.json → SSE → browser
 ```
 
+- **Docs home (D-020), interim overlay (D-018).** Target: `/dashboard` roots at the permanent
+  Docs home worktree (P-001). Until that ships, resolve the primary git worktree and overlay the
+  sole `active`/`blocked` phase worktree. Do not dual-write `state: active` onto main for the
+  dashboard.
 - **Full rebuild on any change.** Under 100ms at this scale. Do not build incremental
   invalidation — it is where tools of this kind usually go wrong.
 - **Debounce is required.** A branch switch changes hundreds of files; without it you fire
@@ -787,8 +804,9 @@ Docs/ + .work/ → chokidar (300ms debounce) → full reindex → index.json →
   a parse error on Signals.
 - **Validate on index.** Unresolvable `depends_on` and `decisions` ids surface as broken links.
   The indexer is the integrity checker; no separate lint needed.
-- **Heartbeat.** Display `indexed_at` plus a manual reindex button. File watchers die silently;
-  without a visible timestamp you cannot tell a live dashboard from a dead one.
+- **Heartbeat.** Display `indexed_at` plus a manual reindex button; when overlaying, show
+  `live PHASE-nnn (branch)`. File watchers die silently; without a visible timestamp you cannot
+  tell a live dashboard from a dead one.
 
 All derived values — reversed area→feature edges, blast radius, drift, unspecified code,
 per-feature timelines, Roadmap ordering — are computed once by the indexer. Pages render

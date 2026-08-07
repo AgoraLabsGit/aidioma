@@ -566,3 +566,51 @@
   open_questions: null
   done_summary: "Set last_amended: null on SPEC-F-LEXICON + SPEC-A-CONTENT (dates invalid; schema wants PHASE-*|null). Open signals 15→0; both specs in index."
   opened: 2026-08-07
+- id: P-001
+  kind: proposal
+  summary: "Implement D-020 Docs+System home worktree; retire D-018 overlay"
+  status: open
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "D-020 approved in principle (supersede D-018; skills+AGENTS in Docs home). Ship-path recommendation: follow-on phase after PHASE-007."
+  open_questions:
+    - q: "Ship Docs home inside PHASE-007 (rip overlay) or /plan a follow-on phase?"
+      answer: "Implement after PHASE-007 closes (follow-on). Keep D-018 overlay as interim until then."
+      asked: 2026-08-07
+    - q: "Writable Docs home includes AGENTS.md + .claude/skills/** (recommended) or Docs/+.work only?"
+      answer: "yes — include AGENTS.md, CLAUDE.md, .claude/skills/** in Docs home writable set"
+      asked: 2026-08-07
+    - q: "Confirm supersede D-018 with D-020?"
+      answer: "yes"
+      asked: 2026-08-07
+  done_summary: null
+  opened: 2026-08-07
+- id: A-001
+  kind: audit
+  summary: "Command system design: interlock, Adv/MCOO operationalization, project-agnostic skills"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-007
+  promoted_to: null
+  blocked_by: null
+  note: "Web: Adv = objectives+findings (red-team); MCOO ≈ YAGNI + malleability (Fowler)."
+  open_questions: null
+  done_summary: "Machine interlocks (plan→run→close+/check). Blockers fixed: adv-protocol.md + mcoo-checklist.md wired into COMMANDS/skills; skills de-productized (operator/founder). Residual: D-020 Docs home = P-001; path→lens map; reduced-close mini checklist."
+  opened: 2026-08-07
+- id: F-003
+  kind: fix
+  summary: "Commands/skills used product/learner coupling — make process project-agnostic"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-007
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Skill text: product/learner→generic; Mike→founder; Docs.2→frozen legacy. Lane scripts stay as project adapter paths until adapters/<project>.md. Verify: rg AIdioma|learner|Mike .claude/skills → empty."
+  opened: 2026-08-07
