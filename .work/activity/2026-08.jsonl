@@ -99,3 +99,4 @@
 {"ts":"2026-08-07T16:54:32Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-011","status":"active","summary":"VISIBILITY TEST for Work Open + Activity after F-008"}
 {"ts":"2026-08-07T16:55:04Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-011","status":"complete","summary":"Visibility test passed — founder saw T-011 on Work + Activity"}
 {"ts":"2026-08-07T16:56:07Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"F-006","status":"complete","summary":"work lane: typecheck+test(29)+validate issues=0"}
+{"ts":"2026-08-07T16:57:26Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-25","status":"complete","summary":"Reduced close: merged PR #25 (F-006/7/8, A-005, T-011); CI green; docs/ssot @ 79ae8fc"}
