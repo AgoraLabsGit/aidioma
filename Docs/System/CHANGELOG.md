@@ -4,6 +4,7 @@ Append only. Every `/system` change adds one line.
 
 | Date | schema_version | Change |
 |---|---|---|
+| 2026-08-07 | 3 | T-028: Detail `#detail-title` + `.phase-name` share `--detail-title-size` (xl; not page-title 2xl) |
 | 2026-08-07 | 3 | T-024: C-nnn check refs; topbar git sessions badge + categorized panel |
 | 2026-08-07 | 3 | T-023: Larger detail ID title + copy beside collapse (all `#detail` pages) |
 | 2026-08-07 | 3 | T-022: Copy ID on Work/Roadmap/Activity; humanize Work kind labels; keep D-/S- |
@@ -46,6 +47,16 @@ Append only. Every `/system` change adds one line.
 | 2026-08-06 | 3 | PHASE-005 routing v2: executing `/triage`; Work `open_questions`+`done_summary`; `/audit` kind+command; context-budget under `/system` |
 | 2026-08-06 | 3 | PHASE-005: `WORK.yaml` ledger; `/log` `/triage` `/task`; Work vs Signals dashboard; phase `feature`/`area` |
 | 2026-08-05 | 3 | Approved V3 (`system.md`); migrated Docs.3 schedule/dashboard/ci into live Docs/; re-minted PHASE-000..003 |
+## 2026-08-07 — Worktrees panel blank + Praxis wordmark
+
+- **F-017:** UI reads `repo.worktrees` with `sessions` fallback; derive dual-emits both (stale process after rename blanked the panel).
+- **T-027:** Praxis wordmark only (no P mark), ~1.25× type.
+
+## 2026-08-07 — Praxis brand + GitHub worktrees icon
+
+- Sidebar / `<title>` hard-coded **Praxis** (dashboard PM product name).
+- Worktrees topbar control uses the GitHub mark.
+
 ## 2026-08-07 — Worktrees badge + dynamic project brand
 
 - Dashboard topbar panel renamed from “sessions” to **worktrees** (`repo.worktrees` / `worktree_count`).

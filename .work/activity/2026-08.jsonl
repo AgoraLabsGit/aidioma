@@ -167,3 +167,17 @@
 {"ts":"2026-08-07T19:01:40Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-016","status":"complete","summary":"Backfilled 9 checks to C-001..C-009"}
 {"ts":"2026-08-07T19:11:33Z","type":"check","ref":"C-010","status":"complete","summary":"work:typecheck + work:test (39) + work:validate — worktrees rename + project_name brand"}
 {"ts":"2026-08-07T19:13:11Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-33","status":"complete","summary":"Reduced /close: merged PR #33 (worktrees badge + project_name brand + Docs-home session); remotes pruned to origin/main"}
+{"ts":"2026-08-07T19:14:50Z","type":"task","actor":"agent","cmd":"/task","ref":"T-026","status":"active","summary":"Praxis brand + GitHub mark on worktrees badge"}
+{"ts":"2026-08-07T19:14:50Z","type":"task","actor":"agent","cmd":"/task","ref":"T-025","status":"complete","summary":"Late ledger PR #33 worktrees rename"}
+{"ts":"2026-08-07T19:15:14Z","type":"task","actor":"agent","cmd":"/task","ref":"T-026","status":"complete","summary":"Praxis brand + GitHub mark on worktrees badge"}
+{"ts":"2026-08-07T19:17:38Z","type":"fix","actor":"agent","cmd":"/fix","ref":"F-017","status":"active","summary":"Worktrees panel empty — sessions vs worktrees"}
+{"ts":"2026-08-07T19:17:38Z","type":"task","actor":"agent","cmd":"/task","ref":"T-027","status":"active","summary":"Praxis brand: drop mark, larger type"}
+{"ts":"2026-08-07T19:18:04Z","type":"fix","actor":"agent","cmd":"/fix","ref":"F-017","status":"complete","summary":"Worktrees panel empty — sessions vs worktrees"}
+{"ts":"2026-08-07T19:18:04Z","type":"task","actor":"agent","cmd":"/task","ref":"T-027","status":"complete","summary":"Praxis brand: drop mark, larger type"}
+{"ts":"2026-08-07T19:19:02Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-028","status":"complete","summary":"Detail heading matches title via --detail-title-size (retro log)"}
+{"ts":"2026-08-07T19:19:03Z","type":"task","actor":"agent","cmd":"/task","ref":"T-028","status":"active","summary":"Center Praxis; match page-title size"}
+{"ts":"2026-08-07T19:19:14Z","type":"task","actor":"agent","cmd":"/task","ref":"T-029","status":"complete","summary":"Center Praxis; match page-title size"}
+{"ts":"2026-08-07T19:20:12Z","type":"task","actor":"agent","cmd":"/task","ref":"T-030","status":"active","summary":"Praxis left-align + Outfit wordmark"}
+{"ts":"2026-08-07T19:20:23Z","type":"task","actor":"agent","cmd":"/task","ref":"T-030","status":"complete","summary":"Praxis left-align + Outfit wordmark"}
+{"ts":"2026-08-07T19:20:42Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-028","status":"complete","summary":"Re-applied --detail-title-size after styles.css clobber"}
+{"ts":"2026-08-07T19:22:43Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-011","status":"complete","summary":"lanes: work — typecheck+test(39)+validate issues=0 for reduced /close"}
