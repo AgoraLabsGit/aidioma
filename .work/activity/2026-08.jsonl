@@ -146,3 +146,4 @@
 {"ts":"2026-08-07T18:20:54Z","type":"decide","actor":"agent","cmd":"/design","phase":null,"ref":"D-024","status":"complete","summary":"Brief vs Context; declared context_paths (Adv WARN)"}
 {"ts":"2026-08-07T18:20:54Z","type":"spec","actor":"agent","cmd":"/design","phase":null,"ref":"SPEC-F-DEV-DASHBOARD","status":"complete","summary":"D-024 Brief/Context/Files rules"}
 {"ts":"2026-08-07T18:21:54Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":null,"status":"complete","summary":"work lane: typecheck+test 32/32+validate issues=0"}
+{"ts":"2026-08-07T18:23:12Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-29","status":"complete","summary":"Reduced close: D-022–D-024 Work/Activity separation + Brief/Context; merged 3991e17"}
