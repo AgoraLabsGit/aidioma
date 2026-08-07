@@ -1,24 +1,32 @@
-# Current handoff — after PHASE-007
+# Current handoff — after reduced `/close` (PR #21)
 
 **Date:** 2026-08-07
 
-**Branch:** `main` (after close)
+**Branch:** `main` (after merge)
 **Active phase:** none
-**Preserved:** primary may still be on `task/t-002-*` with Lexicon/DeepL dirty — leave alone
 
-## Done
+## Done this session
 
-- PHASE-007 closed: D-018 interim overlay, D-019 audit bars + `/check` + May-invoke, D-020 Docs home approved (implement = P-001)
-- Adv protocol + MCOO checklist; skills project-agnostic
-- Commands panel (static COMMAND_MAP V1); Active Audits/Tests + `last_check`
+- P-001 Docs home; T-002/T-003 path-lens + reduced-close; F-004 status colors restored
+- T-004 filter persistence; T-005 System `protocols/` + `specs/`
+- **T-006 / D-021** — `/close` dispatches full phase close or reduced close
+
+## After merge
+
+```text
+npm run work:docs-home   # refresh docs/ssot onto new main
+npm run work:dashboard
+```
+
+Write Docs/System/skills only in `.worktrees/docs` when home exists.
 
 ## Open
 
-- P-001 — Implement D-020 Docs home; retire D-018 overlay
-- Residual from A-001: path→lens map; reduced-close mini checklist
+- W-015 — Parallel active phases
+- Product proposals W-005–W-014 until PHASE-002+
 
 ## Next command
 
 ```text
-/plan Docs home (P-001 / D-020)
+/plan   # or /status — pick next Roadmap phase (002 / 006 / 008)
 ```

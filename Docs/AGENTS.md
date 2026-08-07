@@ -65,8 +65,9 @@ On `done`, set `done_summary` (what shipped + evidence pointers).
   `/research` `/design` `/fix` `/task` `/audit` `/check` (see COMMANDS).
 - **`/triage`:** active phase → that `phase:` only. No phase → unassigned batch; after material
   batch → `/check` (+ `/audit` if risky).
-- **`/close`:** phase `/triage` → **`/check`** → Proof/Scope/Publish (nested lenses) → merge.
-  Never skip triage or `/check`.
+- **`/close`:** always. **Active phase** → triage → `/check` → full lenses → merge.
+  **No phase** → reduced close (`protocols/reduced-close.md`) → merge. Never skip `/check`.
+  Never refuse `/close` for lack of a phase.
 
 ## Coordinator + sub-agents
 
@@ -82,3 +83,10 @@ updates `WORK.yaml`. Follow skill **May invoke** lists — do not invent silent 
 
 Specs = behavior. Decisions = why. Research = options. Phases = temporary. Work = authored ledger.
 Signals = derived health only. No folder outside `system.md` layout.
+
+## Docs home (D-020)
+
+When `.worktrees/docs` exists (`npm run work:docs-home`): **all writes** to `Docs/**`
+(including `Docs/System/**`), `.work/**`, root `AGENTS.md`, `CLAUDE.md`, and `.claude/skills/**`
+happen in that worktree only. Phase/task trees are for product code. `/dashboard` roots there.
+Until the home exists, D-018 primary+overlay remains interim.

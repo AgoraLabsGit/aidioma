@@ -47,18 +47,20 @@ active phase worktree (overlay) ──┼─→ chokidar ─→ debounce 300ms �
 The dashboard watches files, re-runs `derive()`, and serves the projection. It does not invent a
 second derivation engine. Authored `Docs/` files are never written by the dashboard.
 
-**Primary-rooted live overlay (D-018):** `/dashboard` always indexes the **primary git
-worktree**. If exactly one linked worktree has an `active`/`blocked` phase, `derive()` overlays
-that worktree’s phases, `HANDOFF.md`, Research, `WORK.yaml`, and activity into the projection.
-Phase-branch Docs remain SSOT for merge — no dual-write of `state: active` onto main. Heartbeat
-shows `live PHASE-nnn (branch)` when an overlay is in effect. `index.projection_roots` and
-`overlay_doc_paths` tell `/api/doc` which root owns a path.
+**Docs home (D-020):** When `.worktrees/docs` exists (branch `docs/ssot`; `npm run work:docs-home`),
+`/dashboard` and `derive()` root there for `Docs/` + `.work/`. No phase overlay. Agents write
+Docs/System/skills only in that worktree.
+
+**Interim (D-018) — only if Docs home absent:** primary-rooted index; if exactly one linked
+worktree has an `active`/`blocked` phase, overlay that tree’s phases, HANDOFF, Research, WORK,
+activity. Heartbeat may show `live PHASE-nnn (branch)`. `projection_roots.docs_home` is set when
+D-020 is active; `overlay*` fields apply only in interim mode.
 
 - Lives under `Docs/System/dashboard/` with shared `Docs/System/derive/`; launched by `/dashboard`
 - Local single process, no database; stack may stay the existing server or move to Next — decide in PHASE-001
 - Parsers: frontmatter + YAML + markdown body render + `chokidar` (watch)
 - Port fixed; `/dashboard` stops stale servers before starting (V3 §7 runtime hygiene)
-- Watches primary **and** active overlay `Docs/` + `.work/activity/`
+- Watches Docs-home (or primary ± overlay) `Docs/` + `.work/activity/`
 
 ### Watcher contract
 
@@ -242,8 +244,16 @@ Computed by the indexer; never authored.
 | Status | Colored dot **plus** text label — never color alone |
 | Chrome | Sidebar nav + table pages. No charts / analytics widgets in V1 |
 
-Status colors: active/fresh green · blocked/contested amber · canceled/superseded grey ·
-failing/drift red.
+Phase state colors (Status pills + Roadmap State chips; unique hues):
+active blue · ready cyan · proposed amber · blocked purple · closed green · canceled red.
+
+Other statuses: done/complete/ok/fixed/fresh green · open/contested/stale amber ·
+failed/dropped red · superseded grey · promoted blue.
+
+Status/severity filter chips use the same hues: Work Open amber / Closed green;
+Signals Open amber / Closed(fixed) green; severity high red · medium amber · low muted.
+
+Preferences (localStorage): last page; each table page’s filters + sort (survive refresh).
 
 ---
 
@@ -414,5 +424,5 @@ Steps 1–4 are independently useful. Step 7 depends on specs having populated `
 - Time: "ago" / age columns match source timestamps (`ts`, `opened`, `indexed_at`)
 - Sort/filter chips and clickable column headers on Roadmap, Activity, Work, Signals change the visible rows correctly
 - `PHASE-099` appears only because its phase `.md` exists (never mocked in JS)
-- `Dashboard-spec.md` stays under `Docs/System/` until a later promote-to-`SPEC-*` decision (D-009)
+- `specs/Dashboard-spec.md` stays under `Docs/System/` until a later promote-to-`SPEC-*` decision (D-009)
 - Schema/derive module changes require restarting `/dashboard` (file watch re-derives data, not reloaded Zod enums)

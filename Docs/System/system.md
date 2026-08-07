@@ -30,7 +30,7 @@ Files are the source of truth. Events are the journal. State is never derived fr
 - **MCOO** — Minimal complexity for optimal output. Never onboard more complexity than the
   outcome requires. Cut, defer, or drop is always a valid result. Kin to YAGNI: no complexity
   for a *presumed* future need; malleability (tests, clear seams) still earns its keep.
-  Executable lists: `System/mcoo-checklist.md`.
+  Executable lists: `System/protocols/mcoo-checklist.md`.
 - **Proof-first** — A phase closes on demonstrated behavior, not description.
 - **One active phase** — Exactly one. One branch. One worktree.
 - **Write it down or it didn't happen** — Behavior change requires a spec change.
@@ -172,7 +172,12 @@ Docs/
     COMMANDS.md               command key
     ci-policy.md
     CHANGELOG.md              /system append log
+    protocols/                adv, mcoo, path-lens, reduced-close
+    specs/                    Dashboard-spec.md (D-009 — not SPEC-*)
     Templates/
+    schemas/
+    dashboard/
+    derive/
     adapters/cursor.md
 .work/
   activity/                   committed — YYYY-MM.jsonl, append-only
@@ -516,7 +521,7 @@ under *Unassigned* on the dashboard.
 |---|---|---|---|
 | `/plan` | New work not on the Roadmap | Create a phase file; name the complexity cost; cut/defer is a valid outcome | Write product code; build unconsumed foundations |
 | `/run` | Start or resume the one active phase | Phase `/triage` (sub-agent) first, then execute outcome; may `/research` `/design` `/fix` `/task` `/audit` `/check` | Merge; expand scope horizontally; continue past a broken contract |
-| `/close` | Phase complete | Phase `/triage` → **`/check`** → Proof/Scope/Publish (nested lenses) → PR → merge exact head → clean `main` | Merge on FAIL; skip triage or `/check`; expand scope silently; delete `PRESERVE.md` items |
+| `/close` | End session / publish | **Phase active:** triage → `/check` → full Proof/Scope/Publish → merge. **No phase:** reduced close (`protocols/reduced-close.md`) → merge | Merge on FAIL; skip `/check`; refuse `/close` when no phase (must run reduced path); delete `PRESERVE.md` items |
 | `/ship` | Promote to production | Deploy production; append to `RELEASES.md` | Ship on a red check, an open FAIL, or a contested spec |
 
 `/ship` preconditions — all four, or it refuses:
@@ -702,12 +707,13 @@ Order: phase `/triage` → **`/check`** (path-aware; FAIL blocks) → Proof → 
 **Always under Proof:** outcome evidence; adversarial audit of phase claims.  
 **Always under Scope:** path→spec (computed); MCOO binding cut.  
 **Conditional (path-triggered) under Proof:** accessibility, security, privacy, AI tokens,
-performance, data migration.  
+performance, data migration — map: `System/protocols/path-lens-map.md`.  
 **Conditional under Scope:** seams/composability (build code; broader every ~2–3 capabilities);
 code quality when code is in the diff.
 
 These are nested lenses, not extra merge gates or named auditor roles (D-019).
-Required Adv steps: `System/adv-protocol.md`. MCOO FAIL criteria: `System/mcoo-checklist.md`.
+Required Adv steps: `System/protocols/adv-protocol.md`. MCOO FAIL criteria: `System/protocols/mcoo-checklist.md`.
+`/close` with no active phase (and `/fix`/`/task` publish): `System/protocols/reduced-close.md`.
 
 | Result | Rule |
 |---|---|

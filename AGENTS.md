@@ -30,6 +30,7 @@ See `Docs/System/COMMANDS.md`. Lifecycle: `/plan` `/run` `/close` `/ship`. Actio
 `/handoff`. Meta: `/system`.
 
 - `/run` may commit on the phase branch. Merges require audited close checks.
+- `/close` always: active phase → full close; no phase → reduced close (D-021).
 - `/handoff` overwrites `Docs/Handoffs/HANDOFF.md` only — no commit/PR/merge.
 - `/system` only while no phase is `active`; writes under `Docs/System/`.
 
@@ -44,3 +45,5 @@ See `Docs/System/COMMANDS.md`. Lifecycle: `/plan` `/run` `/close` `/ship`. Actio
 - `origin/main` is the sole durable branch.
 - Preserve items listed in `Docs/PRESERVE.md` (including Lexicon stash).
 - `/launch` and `/dashboard` clear their own stale servers; `/close` verifies phase-owned servers stop.
+- Docs home (D-020): `.worktrees/docs` via `npm run work:docs-home` — write `Docs/`, `.work/`,
+  `AGENTS.md`, `CLAUDE.md`, `.claude/skills/**` only there when the home exists.

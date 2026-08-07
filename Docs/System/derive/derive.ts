@@ -23,6 +23,7 @@ import {
 } from "./schema.js";
 import {
   discoverActiveOverlay,
+  resolveDocsHomeRoot,
   resolvePrimaryWorktreeRoot,
   type ActiveOverlay,
   type GitWorktree,
@@ -31,7 +32,11 @@ import {
 const defaultRepositoryRoot = fileURLToPath(new URL("../../..", import.meta.url));
 
 export type ProjectionRoots = {
+  /** Derive root for Docs + .work (Docs home when present — D-020). */
   primary: string;
+  /** Set when `.worktrees/docs` (or AIDIOMA_DOCS_HOME) is the SSOT. */
+  docs_home: string | null;
+  /** Active-phase overlay root (D-018 interim; null when docs_home set). */
   overlay: string | null;
   overlay_phase: string | null;
   overlay_branch: string | null;
@@ -364,7 +369,15 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
 
   let repositoryRoot = requestedRoot;
   let overlay: ActiveOverlay | null = null;
-  if (overlayEnabled) {
+  let docsHome: string | null = null;
+
+  // D-020: Docs home is the sole Docs/.work SSOT when present — no overlay.
+  docsHome = await resolveDocsHomeRoot(requestedRoot);
+  if (docsHome) {
+    repositoryRoot = docsHome;
+    overlay = null;
+  } else if (overlayEnabled) {
+    // D-018 interim until Docs home exists.
     if (options.worktrees) {
       const primary =
         options.worktrees.find((item) => item.isPrimary) ?? options.worktrees[0];
@@ -868,6 +881,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
 
   const projection_roots: ProjectionRoots = {
     primary: repositoryRoot,
+    docs_home: docsHome,
     overlay: overlay?.root ?? null,
     overlay_phase: overlay?.phaseId ?? null,
     overlay_branch: overlay?.branch ?? null,
@@ -915,6 +929,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
 export {
   discoverActiveOverlay,
   listGitWorktrees,
+  resolveDocsHomeRoot,
   resolvePrimaryWorktreeRoot,
   parseWorktreePorcelain,
 } from "./worktrees.js";

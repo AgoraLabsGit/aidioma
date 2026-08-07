@@ -4,6 +4,9 @@ Append only. Every `/system` change adds one line.
 
 | Date | schema_version | Change |
 |---|---|---|
+| 2026-08-07 | 3 | D-021: `/close` dispatches full phase close or reduced close (no-phase sessions) |
+| 2026-08-07 | 3 | System layout: `protocols/` + `specs/`; dashboard persists page filters/sorts (localStorage) |
+| 2026-08-07 | 3 | P-001: Docs home derive/dashboard pin + `work:docs-home`; path-lens-map + reduced-close residuals |
 | 2026-08-07 | 3 | D-020: Docs home worktree SSOT (supersedes D-018); implement deferred to P-001 |
 | 2026-08-07 | 3 | A-001: Adv protocol + MCOO checklist; skills project-agnostic (operator, not product names) |
 | 2026-08-07 | 3 | D-019: command audit bars; `/check` in `/close`; May-invoke/Must-precede links; nested close lenses |

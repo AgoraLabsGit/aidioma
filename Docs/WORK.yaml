@@ -569,16 +569,16 @@
 - id: P-001
   kind: proposal
   summary: "Implement D-020 Docs+System home worktree; retire D-018 overlay"
-  status: open
+  status: done
   feature: SPEC-F-DEV-DASHBOARD
   area: SPEC-A-DEVSYSTEM
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "D-020 approved in principle (supersede D-018; skills+AGENTS in Docs home). Ship-path recommendation: follow-on phase after PHASE-007."
+  note: "D-020 approved; shipped after PHASE-007 close without a separate phase (founder: just implement)."
   open_questions:
     - q: "Ship Docs home inside PHASE-007 (rip overlay) or /plan a follow-on phase?"
-      answer: "Implement after PHASE-007 closes (follow-on). Keep D-018 overlay as interim until then."
+      answer: "Implement after PHASE-007 closes. Keep D-018 as interim when Docs home absent."
       asked: 2026-08-07
     - q: "Writable Docs home includes AGENTS.md + .claude/skills/** (recommended) or Docs/+.work only?"
       answer: "yes — include AGENTS.md, CLAUDE.md, .claude/skills/** in Docs home writable set"
@@ -586,7 +586,33 @@
     - q: "Confirm supersede D-018 with D-020?"
       answer: "yes"
       asked: 2026-08-07
-  done_summary: null
+  done_summary: "resolveDocsHomeRoot + derive/dashboard pin; npm run work:docs-home; overlay only if home absent. AGENTS/skills/COMMANDS updated. Create home after merge via work:docs-home."
+  opened: 2026-08-07
+- id: T-002
+  kind: task
+  summary: "path→lens map for /close Proof conditional lenses (A-001 residual)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Docs/System/path-lens-map.md; wired COMMANDS + /close skill + system.md §10."
+  opened: 2026-08-07
+- id: T-003
+  kind: task
+  summary: "Reduced-close mini checklist for standalone /fix /task publish (A-001 residual)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Docs/System/reduced-close.md; wired COMMANDS + /fix /task skills + system.md."
   opened: 2026-08-07
 - id: A-001
   kind: audit
@@ -613,4 +639,56 @@
   note: null
   open_questions: null
   done_summary: "Skill text: product/learner→generic; Mike→founder; Docs.2→frozen legacy. Lane scripts stay as project adapter paths until adapters/<project>.md. Verify: rg AIdioma|learner|Mike .claude/skills → empty."
+  opened: 2026-08-07
+- id: F-004
+  kind: fix
+  summary: "Restore status pill + filter chip colors lost when stashed off task/t-002 (not merged with PHASE-007)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Was stash@{1} status-colors; id collision with PHASE-007 F-003/T-002/T-003 avoided via F-004."
+  open_questions: null
+  done_summary: "Reapplied unique phase hues + Work/Signals/severity chip tones to styles.css; Dashboard-spec register updated. Recovered from stash on task/post-007-handoff-residuals."
+  opened: 2026-08-07
+- id: T-004
+  kind: task
+  summary: "Persist dashboard page + filters/sorts across refresh (localStorage)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "app.js: load/persist roadmap/activity/work/signals filters+sort + last page via localStorage keys aidioma-filters-* / aidioma-dashboard-page."
+  opened: 2026-08-07
+- id: T-005
+  kind: task
+  summary: "Organize Docs/System — protocols/ and specs/ subfolders"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Moved adv/mcoo/path-lens/reduced-close → protocols/; Dashboard-spec → specs/; updated COMMANDS, system.md layout, skills. Root keeps system/COMMANDS/CHANGELOG/ci-policy."
+  opened: 2026-08-07
+- id: T-006
+  kind: task
+  summary: "/close dispatches reduced close when no phase active (D-021)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "close skill path A/B; COMMANDS/AGENTS/system/reduced-close/fix/task skills; D-021. Reduced-close executed on PR #21."
   opened: 2026-08-07

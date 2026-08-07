@@ -6,7 +6,7 @@
  * Knowledge: document viewer.
  *
  * Tokens mirror Praxis workbench. Dark default; light via [data-theme="light"].
- * --accent = interactive/selected only — never status.
+ * --accent = interactive/selected + in-flight status (active / promoted).
  * ========================================================================= */
 
 :root {
@@ -39,6 +39,8 @@
   --danger-soft: rgb(255 107 107 / 14%);
   --blocked: #b48cff;
   --blocked-soft: rgb(180 140 255 / 16%);
+  --info: #3ecfcf;
+  --info-soft: rgb(62 207 207 / 14%);
 
   --shadow-floating: 0 16px 44px rgb(0 0 0 / 62%);
 
@@ -103,6 +105,8 @@
   --danger-soft: rgb(195 53 43 / 10%);
   --blocked: #6d3fd1;
   --blocked-soft: rgb(109 63 209 / 10%);
+  --info: #0e8f8f;
+  --info-soft: rgb(14 143 143 / 10%);
 
   --shadow-floating: 0 16px 44px rgb(16 24 40 / 14%);
 }
@@ -552,6 +556,84 @@ main {
   border-color: var(--accent-border);
   color: var(--accent);
   font-weight: var(--fw-semibold);
+}
+
+/* Status / severity filter chips — same hues as Status pills */
+.chip[data-filter="state"]:not([data-value=""]),
+.chip[data-filter="work-status"]:not([data-value=""]),
+.chip[data-filter="signal-status"]:not([data-value=""]),
+.chip[data-filter="signal-severity"]:not([data-value=""]) {
+  color: var(--chip-tone);
+  border-color: color-mix(in srgb, var(--chip-tone) 45%, transparent);
+  background: var(--chip-tone-soft);
+}
+.chip[data-filter="state"]:not([data-value=""]):hover,
+.chip[data-filter="work-status"]:not([data-value=""]):hover,
+.chip[data-filter="signal-status"]:not([data-value=""]):hover,
+.chip[data-filter="signal-severity"]:not([data-value=""]):hover {
+  color: var(--chip-tone);
+  border-color: var(--chip-tone);
+}
+.chip[data-filter="state"]:not([data-value=""])[aria-pressed="true"],
+.chip[data-filter="work-status"]:not([data-value=""])[aria-pressed="true"],
+.chip[data-filter="signal-status"]:not([data-value=""])[aria-pressed="true"],
+.chip[data-filter="signal-severity"]:not([data-value=""])[aria-pressed="true"] {
+  color: var(--chip-tone);
+  border-color: var(--chip-tone);
+  background: var(--chip-tone-soft);
+  font-weight: var(--fw-semibold);
+}
+
+/* Roadmap phase states */
+.chip[data-filter="state"][data-value="active"] {
+  --chip-tone: var(--accent);
+  --chip-tone-soft: var(--accent-soft);
+}
+.chip[data-filter="state"][data-value="ready"] {
+  --chip-tone: var(--info);
+  --chip-tone-soft: var(--info-soft);
+}
+.chip[data-filter="state"][data-value="proposed"] {
+  --chip-tone: var(--warning);
+  --chip-tone-soft: var(--warning-soft);
+}
+.chip[data-filter="state"][data-value="blocked"] {
+  --chip-tone: var(--blocked);
+  --chip-tone-soft: var(--blocked-soft);
+}
+.chip[data-filter="state"][data-value="closed"] {
+  --chip-tone: var(--success);
+  --chip-tone-soft: var(--success-soft);
+}
+.chip[data-filter="state"][data-value="canceled"] {
+  --chip-tone: var(--danger);
+  --chip-tone-soft: var(--danger-soft);
+}
+
+/* Work + Signals status buckets */
+.chip[data-filter="work-status"][data-value="open"],
+.chip[data-filter="signal-status"][data-value="open"] {
+  --chip-tone: var(--warning);
+  --chip-tone-soft: var(--warning-soft);
+}
+.chip[data-filter="work-status"][data-value="closed"],
+.chip[data-filter="signal-status"][data-value="fixed"] {
+  --chip-tone: var(--success);
+  --chip-tone-soft: var(--success-soft);
+}
+
+/* Signals severity */
+.chip[data-filter="signal-severity"][data-value="high"] {
+  --chip-tone: var(--danger);
+  --chip-tone-soft: var(--danger-soft);
+}
+.chip[data-filter="signal-severity"][data-value="medium"] {
+  --chip-tone: var(--warning);
+  --chip-tone-soft: var(--warning-soft);
+}
+.chip[data-filter="signal-severity"][data-value="low"] {
+  --chip-tone: var(--text-subtle);
+  --chip-tone-soft: var(--surface-subtle);
 }
 .table-meta {
   margin: 0 0 var(--space-3);
@@ -1234,7 +1316,9 @@ code,
   font-size: var(--fs-xs);
 }
 
-/* ——— Status ——— */
+/* ——— Status (dot + label; every table Status column) ———
+ * Phase: active blue · ready cyan · proposed amber · blocked purple · closed green · canceled red
+ */
 .status {
   display: inline-flex;
   align-items: center;
@@ -1255,54 +1339,66 @@ code,
   background: var(--tone, var(--text-muted));
   flex: 0 0 auto;
 }
-.status[data-state="active"],
-.status[data-state="fresh"] {
-  --tone: var(--success);
-  --tone-soft: var(--success-soft);
+
+.status[data-state="active"] {
+  --tone: var(--accent);
+  --tone-soft: var(--accent-soft);
 }
 .status[data-state="ready"] {
-  --tone: var(--success);
-  --tone-soft: var(--success-soft);
+  --tone: var(--info);
+  --tone-soft: var(--info-soft);
+}
+.status[data-state="proposed"] {
+  --tone: var(--warning);
+  --tone-soft: var(--warning-soft);
 }
 .status[data-state="blocked"] {
   --tone: var(--blocked);
   --tone-soft: var(--blocked-soft);
 }
+.status[data-state="closed"] {
+  --tone: var(--success);
+  --tone-soft: var(--success-soft);
+  opacity: 0.9;
+}
+.status[data-state="canceled"] {
+  --tone: var(--danger);
+  --tone-soft: var(--danger-soft);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.status[data-state="fresh"],
+.status[data-state="done"],
+.status[data-state="complete"],
+.status[data-state="ok"],
+.status[data-state="fixed"] {
+  --tone: var(--success);
+  --tone-soft: var(--success-soft);
+  opacity: 0.85;
+}
+.status[data-state="open"],
 .status[data-state="contested"],
 .status[data-state="stale"] {
   --tone: var(--warning);
   --tone-soft: var(--warning-soft);
 }
-.status[data-state="proposed"],
-.status[data-state="closed"],
-.status[data-state="superseded"],
-.status[data-state="canceled"],
-.status[data-state="done"],
-.status[data-state="promoted"],
-.status[data-state="fixed"] {
-  --tone: var(--text-muted);
-  --tone-soft: var(--surface-subtle);
-}
-/* Work ledger statuses */
-.status[data-state="open"] {
-  --tone: var(--warning);
-  --tone-soft: var(--warning-soft);
-}
+.status[data-state="failed"],
 .status[data-state="dropped"] {
   --tone: var(--danger);
   --tone-soft: var(--danger-soft);
   text-decoration: line-through;
   text-decoration-thickness: 1px;
 }
+.status[data-state="superseded"] {
+  --tone: var(--text-muted);
+  --tone-soft: var(--surface-subtle);
+}
 .status[data-state="promoted"] {
   --tone: var(--accent);
   --tone-soft: var(--accent-soft);
 }
-.status[data-state="done"] {
-  --tone: var(--success);
-  --tone-soft: var(--success-soft);
-  opacity: 0.85;
-}
+
 .status[data-state="ready"]::before,
 .status[data-state="proposed"]::before,
 .status[data-state="open"]::before {
@@ -1310,11 +1406,7 @@ code,
   border: 1.5px solid var(--tone);
 }
 .status[data-state="active"]::before {
-  box-shadow: 0 0 0 3px var(--success-soft);
-}
-.status[data-state="canceled"] {
-  text-decoration: line-through;
-  text-decoration-thickness: 1px;
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .sev-high {

@@ -382,6 +382,7 @@ date: 2026-08-07
     );
     expect(index.projection_roots).toMatchObject({
       primary: await realpath(primary),
+      docs_home: null,
       overlay: await realpath(overlay),
       overlay_phase: "PHASE-001",
       overlay_branch: "phase/001",

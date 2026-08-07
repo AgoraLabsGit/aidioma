@@ -152,4 +152,11 @@ Supersedes: D-018 — Main-rooted dashboard with active worktree overlay
 
 ### Implement via
 
-Amend `system.md` §1/§4/§7/§12, `COMMANDS.md`, `AGENTS.md`, `/dashboard` `/run` `/close` `/task` `/fix` skills; remove or idle D-018 overlay once Docs home ships. Prefer `/plan` follow-on or absorb into PHASE-007 only with founder ack (overlay already coded).
+Shipped (P-001, 2026-08-07): `resolveDocsHomeRoot`, dashboard pin, `npm run work:docs-home`,
+skills/AGENTS/COMMANDS. D-018 overlay remains only when Docs home is absent.
+
+## D-021 — `/close` dispatches phase close or reduced close
+Date: 2026-08-07 · Phase: — · From: — · Affects: [SPEC-A-DEVSYSTEM]
+Chose: `/close` always — active phase → full phase close; no phase → reduced close (`protocols/reduced-close.md`) — over a separate publish verb or refusing `/close` outside phases
+Why: Founders end sessions with `/close`; a doc-only reduced-close path was skipped by agents; one verb must publish both phase and standalone work
+Revisit if: Reduced path accidentally skips Required Adv on phase claims, or non-phase closes balloon into full phase ritual
