@@ -181,3 +181,4 @@
 {"ts":"2026-08-07T19:20:23Z","type":"task","actor":"agent","cmd":"/task","ref":"T-030","status":"complete","summary":"Praxis left-align + Outfit wordmark"}
 {"ts":"2026-08-07T19:20:42Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-028","status":"complete","summary":"Re-applied --detail-title-size after styles.css clobber"}
 {"ts":"2026-08-07T19:22:43Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-011","status":"complete","summary":"lanes: work — typecheck+test(39)+validate issues=0 for reduced /close"}
+{"ts":"2026-08-07T19:24:13Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-35","status":"complete","summary":"Reduced close: merged PR #35 (T-027/28/29, F-017); C-011 green; docs/ssot @ 7a374b1"}
