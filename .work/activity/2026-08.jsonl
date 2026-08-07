@@ -76,3 +76,4 @@
 {"ts":"2026-08-07T16:12:01Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-005","status":"complete","summary":"System protocols/ + specs/ layout; updated refs"}
 {"ts":"2026-08-07T16:14:00Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"T-006","status":"complete","summary":"work lane: typecheck+test(50)+validate issues=0"}
 {"ts":"2026-08-07T16:14:30Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-006","status":"complete","summary":"D-021 /close dispatches reduced close when no phase"}
+{"ts":"2026-08-07T16:17:49Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-21","status":"complete","summary":"Reduced close: merged PR #21 (P-001 Docs home, D-021 /close dispatch, T-004/5/6, F-004); CI green; docs/ssot @ db4f5c2"}
