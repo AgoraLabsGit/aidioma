@@ -4,6 +4,8 @@ Append only. Every `/system` change adds one line.
 
 | Date | schema_version | Change |
 |---|---|---|
+| 2026-08-07 | 3 | T-024: C-nnn check refs; topbar git sessions badge + categorized panel |
+| 2026-08-07 | 3 | T-023: Larger detail ID title + copy beside collapse (all `#detail` pages) |
 | 2026-08-07 | 3 | T-022: Copy ID on Work/Roadmap/Activity; humanize Work kind labels; keep D-/S- |
 | 2026-08-07 | 3 | T-021: Work default Age newest-first; Roadmap schedule pins active then Order |
 | 2026-08-07 | 3 | T-020: Ship D-024 — `context_paths` schema; Brief/Context/Files UI; skills fill at done |
@@ -44,3 +46,8 @@ Append only. Every `/system` change adds one line.
 | 2026-08-06 | 3 | PHASE-005 routing v2: executing `/triage`; Work `open_questions`+`done_summary`; `/audit` kind+command; context-budget under `/system` |
 | 2026-08-06 | 3 | PHASE-005: `WORK.yaml` ledger; `/log` `/triage` `/task`; Work vs Signals dashboard; phase `feature`/`area` |
 | 2026-08-05 | 3 | Approved V3 (`system.md`); migrated Docs.3 schedule/dashboard/ci into live Docs/; re-minted PHASE-000..003 |
+## 2026-08-07 — Worktrees badge + dynamic project brand
+
+- Dashboard topbar panel renamed from “sessions” to **worktrees** (`repo.worktrees` / `worktree_count`).
+- Brand / `<title>` bind to `repo.project_name` (primary checkout folder; remote fallback).
+

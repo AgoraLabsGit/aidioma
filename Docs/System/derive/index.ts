@@ -11,8 +11,13 @@ export type {
   ProjectedSpec,
   ProjectedWork,
 } from "./derive.js";
-export { readGitStatus } from "./git.js";
-export type { GitStatus } from "./git.js";
+export {
+  categorizeBranch,
+  githubTreeUrl,
+  projectNameFromRemote,
+  readGitStatus,
+} from "./git.js";
+export type { GitStatus, RepoWorktree, WorktreeCategory } from "./git.js";
 export {
   ParseError,
   extractFrontmatter,
@@ -31,6 +36,7 @@ export {
   WORK_KIND_ID_PREFIX,
   fixItemSchema,
   fixesSchema,
+  nextCheckId,
   nextWorkId,
   phaseSchema,
   phaseStateSchema,

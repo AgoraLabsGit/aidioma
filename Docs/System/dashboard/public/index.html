@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark light" />
-    <title>AIdioma</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="/styles.css" />
     <script src="/app.js" defer></script>
   </head>
@@ -13,8 +13,8 @@
 
     <aside class="sidebar" aria-label="Primary">
       <div class="sidebar-brand">
-        <span class="brand-mark" aria-hidden="true">A</span>
-        <strong class="brand">AIdioma</strong>
+        <span class="brand-mark" id="brand-mark" aria-hidden="true">·</span>
+        <strong class="brand" id="brand-name">Project</strong>
       </div>
       <nav class="tabs" aria-label="Dashboard pages">
         <button type="button" class="tab" data-page="active" aria-current="page">
@@ -70,6 +70,23 @@
           <div class="heartbeat">
             <span id="indexed-at">indexed —</span>
           </div>
+          <button
+            id="worktrees-panel-btn"
+            type="button"
+            class="reindex-btn worktrees-badge-btn"
+            title="Git worktrees"
+            aria-label="Open git worktrees"
+            aria-expanded="false"
+            aria-controls="worktrees-panel"
+          >
+            <svg class="reindex-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+              <path
+                fill="currentColor"
+                d="M5 3a2 2 0 0 0-1 3.732V10a2 2 0 0 0 1 1.732V17.27A2 2 0 1 0 7 19a2 2 0 0 0-1-1.732V14h6.268A2 2 0 0 0 14 15.5a2 2 0 1 0 0-1H13V9.732A2 2 0 0 0 14 8a2 2 0 1 0-2 0v4H6V6.732A2 2 0 0 0 5 3z"
+              />
+            </svg>
+            <span id="worktrees-count" class="worktrees-count" hidden>0</span>
+          </button>
           <button id="commands-panel-btn" type="button" class="reindex-btn" title="Commands" aria-label="Open commands panel" aria-expanded="false" aria-controls="commands-panel">
             <svg class="reindex-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
               <path
@@ -88,6 +105,13 @@
           </button>
         </div>
       </header>
+      <aside id="worktrees-panel" class="commands-panel worktrees-panel" hidden>
+        <div class="commands-panel-header">
+          <h2>Worktrees</h2>
+          <button type="button" id="worktrees-panel-close" class="reindex-btn" title="Close" aria-label="Close worktrees panel">×</button>
+        </div>
+        <div id="worktrees-panel-body" class="commands-panel-body"></div>
+      </aside>
       <aside id="commands-panel" class="commands-panel" hidden>
         <div class="commands-panel-header">
           <h2>Commands</h2>
@@ -112,7 +136,10 @@
         <div class="detail-actions detail-actions-start">
           <button id="detail-collapse" type="button" class="icon-btn" title="Collapse panel" aria-label="Collapse panel" aria-expanded="true">›</button>
         </div>
-        <h2 id="detail-title">Detail</h2>
+        <div class="detail-title-row">
+          <h2 id="detail-title">Detail</h2>
+          <button id="detail-title-copy" type="button" class="id-copy detail-title-copy" data-copy="" title="Copy id" aria-label="Copy id" hidden>⧉</button>
+        </div>
         <div class="detail-actions detail-actions-end">
           <button id="detail-close" type="button" class="icon-btn" title="Close panel" aria-label="Close panel">Close</button>
         </div>

@@ -146,7 +146,9 @@ describe("work dashboard", () => {
       req.on("error", reject);
       req.end();
     });
-    expect(html).toContain("AIdioma");
+    expect(html).toContain('id="brand-name"');
+    expect(html).toContain('id="worktrees-panel-btn"');
+    expect(html).toContain('id="worktrees-panel"');
     expect(html).toContain('data-page="active"');
     expect(html).toContain('data-page="work"');
     expect(html).toContain('data-page="roadmap"');

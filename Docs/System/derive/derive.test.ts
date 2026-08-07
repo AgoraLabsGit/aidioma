@@ -5,7 +5,9 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { derive, sortPhasesForRoadmap } from "./derive.js";
-import { nextWorkId, type PhaseFrontmatter } from "./schema.js";
+import { categorizeBranch,
+  projectNameFromRemote, githubTreeUrl } from "./git.js";
+import { nextCheckId, nextWorkId, type PhaseFrontmatter } from "./schema.js";
 import { parseWork } from "./parser.js";
 import { parseWorktreePorcelain } from "./worktrees.js";
 
@@ -282,7 +284,7 @@ describe("last_check", () => {
         actor: "agent",
         cmd: "/check",
         phase: null,
-        ref: null,
+        ref: "C-003",
         status: "complete",
         summary: "lanes: work — pass",
       })}\n`,
@@ -296,7 +298,46 @@ describe("last_check", () => {
     expect(index.last_check).toEqual({
       status: "pass",
       ts: "2026-08-07T16:00:00Z",
+      ref: "C-003",
     });
+    expect(index.next_check_id).toBe("C-004");
+  });
+});
+
+describe("check ids + worktree categories", () => {
+  it("allocates next C-nnn from activity refs", () => {
+    expect(nextCheckId([])).toBe("C-001");
+    expect(nextCheckId(["C-001", "F-010", "C-003"])).toBe("C-004");
+  });
+
+  it("categorizes branches for the worktrees badge", () => {
+    expect(categorizeBranch("docs/ssot")).toEqual({ category: "docs", phase_id: null });
+    expect(categorizeBranch("main")).toEqual({ category: "main", phase_id: null });
+    expect(categorizeBranch("phase/007-command-system-audit")).toEqual({
+      category: "phase",
+      phase_id: "PHASE-007",
+    });
+    expect(categorizeBranch("task/t-024-sessions")).toEqual({
+      category: "task",
+      phase_id: null,
+    });
+    expect(categorizeBranch("close/pr-27-journal")).toEqual({
+      category: "task",
+      phase_id: null,
+    });
+  });
+
+  it("builds GitHub tree URLs from origin remotes", () => {
+    expect(
+      githubTreeUrl("git@github.com:AgoraLabsGit/aidioma.git", "phase/007-x"),
+    ).toBe("https://github.com/AgoraLabsGit/aidioma/tree/phase/007-x");
+    expect(githubTreeUrl("https://gitlab.com/x/y.git", "main")).toBeNull();
+  });
+
+  it("derives project_name from checkout folder (remote fallback)", () => {
+    expect(projectNameFromRemote("https://github.com/AgoraLabsGit/aidioma.git", "/tmp/AIdioma")).toBe("AIdioma");
+    expect(projectNameFromRemote(null, "/tmp/CoolProject")).toBe("CoolProject");
+    expect(projectNameFromRemote("git@github.com:Org/MyApp.git", "/")).toBe("MyApp");
   });
 });
 

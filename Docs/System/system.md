@@ -758,7 +758,7 @@ append-only files do conflict the resolution is always "keep both lines."
 | `actor` | `user` or `agent` |
 | `cmd` | Command that emitted it |
 | `phase` | Phase id, nullable |
-| `ref` | Artifact produced — R-id, D-id, SPEC-id, PHASE-id, FIX-id, RELEASE-id |
+| `ref` | Artifact produced — R-id, D-id, SPEC-id, PHASE-id, Work-id, **C-nnn** (check), PR-id, RELEASE-id |
 | `status` | `complete` / `failed` / `blocked` |
 | `summary` | One line, human-readable |
 
@@ -775,6 +775,7 @@ append-only files do conflict the resolution is always "keep both lines."
 | `fix` | `/fix` |
 | `audit` | `/audit` or `/close` (carries verdict) |
 | `ship` | `/ship` |
+| `check` | `/check` — always set `ref: C-nnn` (Activity-only; not a Work row) |
 
 Low-noise / process: `check`, `handoff`, `system` (also `close`, `ship`, `launch`, `dashboard`,
 `status`, `triage` when emitted).

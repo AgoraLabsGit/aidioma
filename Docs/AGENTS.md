@@ -42,7 +42,8 @@ Detail: `Docs/System/system.md`. Command key: `Docs/System/COMMANDS.md` (audit b
 | Where are we? | `/status` |
 
 Report: *"Logged T-001 (task) — summary."* Ask once if kind ambiguous, then act.
-New Work ids: `F/T/P/R/Q/A/S-nnn` by kind; legacy `W-*` kept (never rename). `S-` = design Work
+New Work ids: `F/T/P/R/Q/A/S-nnn` by kind; legacy `W-*` kept (never rename). `S-` = design Work.
+`C-nnn` = `/check` Activity refs only (not Work ledger).
 (`D-` is decisions only).
 
 ## Work kinds

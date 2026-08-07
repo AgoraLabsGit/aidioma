@@ -1235,3 +1235,60 @@
   done_summary: "Copy control on Work/Roadmap/Activity IDs; Activity clipboard=ts type ref; Work kind column/chips show Design/Fix/…; D-/S- prefixes unchanged."
   opened: 2026-08-07T18:44:37Z
 
+- id: T-023
+  kind: task
+  summary: "Detail title: larger ID + copy button next to collapse"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Shared detail header on all pages that use #detail."
+  context_paths:
+    - Docs/System/dashboard/public/index.html
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/public/app.js
+  open_questions: null
+  done_summary: "Detail header ID at fs-xl; copy button right of title; hidden when collapsed. Spec+CHANGELOG."
+  opened: 2026-08-07T18:48:56Z
+
+- id: T-024
+  kind: task
+  summary: "C-nnn check ids; topbar git sessions badge + panel"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Checks stay Activity-only (not Work). Sessions = git worktrees categorized."
+  context_paths:
+    - Docs/System/derive/git.ts
+    - Docs/System/derive/schema.ts
+    - Docs/System/derive/derive.ts
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/index.html
+    - .claude/skills/check/SKILL.md
+  open_questions: null
+  done_summary: "C-nnn via nextCheckId + check skill; index.next_check_id/last_check.ref; repo.sessions categorized; topbar git badge + panel with copy/GitHub/phase open. 38 tests."
+  opened: 2026-08-07T18:57:16Z
+
+- id: F-016
+  kind: fix
+  summary: "Backfill check activity refs to C-nnn"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "One-time journal rewrite — founder requested durable C- ids on old /check events."
+  context_paths:
+    - .work/activity/2026-08.jsonl
+    - Docs/System/derive/schema.ts
+    - .claude/skills/check/SKILL.md
+  open_questions: null
+  done_summary: "Migrated 9 check events in 2026-08.jsonl to C-001..C-009 (chrono). Prior Work refs kept in summary as · work T/F-*. next_check_id=C-010."
+  opened: 2026-08-07T19:01:30Z
+
