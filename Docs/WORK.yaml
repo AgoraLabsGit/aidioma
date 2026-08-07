@@ -819,3 +819,68 @@
   open_questions: null
   done_summary: "opened accepts ISO; formatOpenedAge date-only→today/Nd (no midnight hours); skills require active+ISO flush before work; stamped A-002..T-009."
   opened: 2026-08-07T16:34:00Z
+- id: F-006
+  kind: fix
+  summary: "Activity Status shows event active after Work is done — sync to Work ledger"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "activityDisplayStatus(): Work ref → WORK.yaml status; complete→done; tooltip keeps event status. Dashboard-spec + CHANGELOG."
+  opened: 2026-08-07T16:45:30Z
+- id: F-007
+  kind: fix
+  summary: "Table column sort is one-way only — toggle asc/desc on second click"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "sortDir on filters; same-column click toggles asc/desc; Age uses opened time; ▴/▾ marks. Roadmap/Activity/Work/Signals."
+  opened: 2026-08-07T16:49:27Z
+- id: A-005
+  kind: audit
+  summary: "Design review: Work ledger vs Activity journal wiring and status/filter UX"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Lenses: agent-context \u00b7 seams. Founder: F-007 visible on Activity not Work while active."
+  open_questions: null
+  done_summary: "Verdict: Not ledger desync. Activity=events (newest-first); Work=one row + separate persisted filters. Leftover Work search (e.g. F-005) hid F-007 while Activity showed the start event. F-008: stop persisting search q. Optional later: Active chip, Activity→Work deep-link, filter-hiding banner."
+  opened: 2026-08-07T16:52:00Z
+- id: F-008
+  kind: fix
+  summary: "Persisted Work search hides new active rows (Activity still shows them)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "persistPageFilters strips q; Work table-meta search hint; Dashboard-spec."
+  opened: 2026-08-07T16:52:00Z
+- id: T-011
+  kind: task
+  summary: "VISIBILITY TEST \u2014 leave active; confirm on Work Open + Activity"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Founder dashboard check after F-008 (search not persisted). Mark done or drop after check."
+  open_questions: null
+  done_summary: "Founder confirmed T-011 visible on Work Open + Activity after F-008."
+  opened: 2026-08-07T16:54:32Z

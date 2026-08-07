@@ -1,19 +1,19 @@
-# Current handoff — after reduced `/close` (PR #23)
+# Current handoff — after reduced `/close` (PR pending)
 
 **Date:** 2026-08-07
 
-**Branch:** `main` @ `b2e5282` (merge PR #23)
+**Branch:** `docs/ssot` (pre-merge) — shipping F-006…F-008 / A-005 / T-011
 **Active phase:** none
-**Docs home:** `.worktrees/docs` (`docs/ssot`) @ same tip
+**Docs home:** `.worktrees/docs` (`docs/ssot`)
 
 ## Done this session
 
-- **T-010** — Filters popover (Feature/Area) + Reset on table pages
-- **T-008** — Sortable columns except Summary; `run-dashboard.sh` from Docs home
-- **F-005** — Work Age date-only day counts
-- **A-002/T-007** — D-020 write rule in writer skills; `ensure-docs-home` ff-refresh
-- **A-003/A-004/T-009** — Work immediacy; default sub-agent delegation in skills
-- Reduced `/close`: CI green → merge #23 → Docs home refreshed
+- **F-006** — Activity Status syncs to Work ledger for Work refs
+- **F-007** — Column sort toggles asc/desc (▴/▾); Age uses `opened`
+- **F-008** — Do not persist table search `q` (Work meta search hint)
+- **A-005** — Work vs Activity: filter asymmetry, not ledger desync
+- **T-011** — Founder visibility proof on Work Open + Activity
+- `/check` work lane PASS (29 tests, validate issues=0)
 
 ## Open
 

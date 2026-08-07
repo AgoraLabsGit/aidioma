@@ -258,11 +258,14 @@ Signals Open amber / Closed(fixed) green; severity high red · medium amber · l
   chips on that row.
 - **Filters** control opens a pop-up panel for deeper filters: Feature and Area (All + values
   present on that page’s rows; optional Untagged). Badge when either is active.
-- **Reset** restores that page’s filters, search, and sort to defaults (clears panel filters too).
+- **Reset** restores that page’s filters, search, sort, and sort direction to defaults.
+- Column header click sorts; **second click on the same column reverses** direction (▴ asc /
+  ▾ desc). Persists as `sort` + `sortDir` with page filters.
 - Activity Feature/Area resolve from the event’s phase row when present.
 
-Preferences (localStorage): last page; each table page’s filters + sort (survive refresh),
-including Feature/Area panel values.
+Preferences (localStorage): last page; each table page’s chips + sort + sortDir + Feature/Area
+(survive refresh). **Search `q` is not persisted** (F-008) — leftover search hid new Work rows
+while Activity still showed them.
 
 ---
 
@@ -310,6 +313,10 @@ Active UI** (founder removed the command bar / suggested-next box).
 - Projects `.work/activity/*.jsonl` only (D-008). UI label stays **Activity**.
 - Reverse chronological; toolbar = search + Type chips on one row (no Actor/Phase filters; no Sort select)
 - Summary is plain text (no actor sub-line); capped at 80 chars with full tooltip
+- **Status column:** when `ref` matches a Work id, show **current** `WORK.yaml` status (ledger
+  SSOT) — not the historical event status. Prevents a start event with `status: active` from
+  staying “active” after the Work row is `done`. Non-work events map `complete` → `done`.
+  Tooltip keeps the raw event status.
 - **Sortable headers:** every column except Summary
 - ID shows ref (phase as secondary when different)
 - Feature/Area columns + panel filters resolve from the event phase when present
@@ -353,7 +360,8 @@ Authored ledger from `WORK.yaml`. Separate from Signals (D-011).
 Kinds: `fix` · `task` · `proposal` · `research` · `question` · `audit`.
 Status filters: Open = `open`+`active`; Closed = `done`+`promoted`+`dropped`.
 Table summaries capped at 80 chars (tooltip = full). **Sortable headers:** every column except
-Summary (ID, Kind, Feature, Area, Status, Age). No Sort select.
+Summary (ID, Kind, Feature, Area, Status, Age). Click toggles **asc/desc** (▴/▾); persists with
+filters. No Sort select.
 **Age:** prefer `opened` as UTC ISO datetime (real relative time). Date-only `YYYY-MM-DD`
 (legacy) shows calendar days (`today` / `Nd ago`) — never hours-from-midnight.
 `/fix` `/task` `/audit` `/research` write `status: active` + ISO `opened` **before** other edits.
