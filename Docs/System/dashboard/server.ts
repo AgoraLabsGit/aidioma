@@ -4,12 +4,12 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+import { derive, type DeriveIndex } from "../derive/derive.js";
 import {
-  derive,
+  resolveDocsHomeRoot,
   resolvePrimaryWorktreeRoot,
-  type DeriveIndex,
-} from "../derive/derive.js";
-import type { GitWorktree } from "../derive/worktrees.js";
+  type GitWorktree,
+} from "../derive/worktrees.js";
 import { extractDecisionSection } from "../derive/parser.js";
 
 const dashboardDirectory = fileURLToPath(new URL(".", import.meta.url));
@@ -90,7 +90,9 @@ function send(
 
 async function resolveRepositoryRoot(options: DashboardServerOptions): Promise<string> {
   if (options.repositoryRoot) return path.resolve(options.repositoryRoot);
-  // Always root at the primary git worktree (D-018), even when started from a phase worktree.
+  // D-020: prefer Docs home; else primary (D-018 overlay applied inside derive).
+  const docsHome = await resolveDocsHomeRoot(packageRepositoryRoot);
+  if (docsHome) return docsHome;
   return resolvePrimaryWorktreeRoot(packageRepositoryRoot);
 }
 

@@ -82,3 +82,10 @@ updates `WORK.yaml`. Follow skill **May invoke** lists — do not invent silent 
 
 Specs = behavior. Decisions = why. Research = options. Phases = temporary. Work = authored ledger.
 Signals = derived health only. No folder outside `system.md` layout.
+
+## Docs home (D-020)
+
+When `.worktrees/docs` exists (`npm run work:docs-home`): **all writes** to `Docs/**`
+(including `Docs/System/**`), `.work/**`, root `AGENTS.md`, `CLAUDE.md`, and `.claude/skills/**`
+happen in that worktree only. Phase/task trees are for product code. `/dashboard` roots there.
+Until the home exists, D-018 primary+overlay remains interim.

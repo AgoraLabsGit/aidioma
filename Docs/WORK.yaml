@@ -569,16 +569,16 @@
 - id: P-001
   kind: proposal
   summary: "Implement D-020 Docs+System home worktree; retire D-018 overlay"
-  status: open
+  status: done
   feature: SPEC-F-DEV-DASHBOARD
   area: SPEC-A-DEVSYSTEM
   phase: null
   promoted_to: null
   blocked_by: null
-  note: "D-020 approved in principle (supersede D-018; skills+AGENTS in Docs home). Ship-path recommendation: follow-on phase after PHASE-007."
+  note: "D-020 approved; shipped after PHASE-007 close without a separate phase (founder: just implement)."
   open_questions:
     - q: "Ship Docs home inside PHASE-007 (rip overlay) or /plan a follow-on phase?"
-      answer: "Implement after PHASE-007 closes (follow-on). Keep D-018 overlay as interim until then."
+      answer: "Implement after PHASE-007 closes. Keep D-018 as interim when Docs home absent."
       asked: 2026-08-07
     - q: "Writable Docs home includes AGENTS.md + .claude/skills/** (recommended) or Docs/+.work only?"
       answer: "yes — include AGENTS.md, CLAUDE.md, .claude/skills/** in Docs home writable set"
@@ -586,7 +586,33 @@
     - q: "Confirm supersede D-018 with D-020?"
       answer: "yes"
       asked: 2026-08-07
-  done_summary: null
+  done_summary: "resolveDocsHomeRoot + derive/dashboard pin; npm run work:docs-home; overlay only if home absent. AGENTS/skills/COMMANDS updated. Create home after merge via work:docs-home."
+  opened: 2026-08-07
+- id: T-002
+  kind: task
+  summary: "path→lens map for /close Proof conditional lenses (A-001 residual)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Docs/System/path-lens-map.md; wired COMMANDS + /close skill + system.md §10."
+  opened: 2026-08-07
+- id: T-003
+  kind: task
+  summary: "Reduced-close mini checklist for standalone /fix /task publish (A-001 residual)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Docs/System/reduced-close.md; wired COMMANDS + /fix /task skills + system.md."
   opened: 2026-08-07
 - id: A-001
   kind: audit

@@ -47,18 +47,20 @@ active phase worktree (overlay) ──┼─→ chokidar ─→ debounce 300ms �
 The dashboard watches files, re-runs `derive()`, and serves the projection. It does not invent a
 second derivation engine. Authored `Docs/` files are never written by the dashboard.
 
-**Primary-rooted live overlay (D-018):** `/dashboard` always indexes the **primary git
-worktree**. If exactly one linked worktree has an `active`/`blocked` phase, `derive()` overlays
-that worktree’s phases, `HANDOFF.md`, Research, `WORK.yaml`, and activity into the projection.
-Phase-branch Docs remain SSOT for merge — no dual-write of `state: active` onto main. Heartbeat
-shows `live PHASE-nnn (branch)` when an overlay is in effect. `index.projection_roots` and
-`overlay_doc_paths` tell `/api/doc` which root owns a path.
+**Docs home (D-020):** When `.worktrees/docs` exists (branch `docs/ssot`; `npm run work:docs-home`),
+`/dashboard` and `derive()` root there for `Docs/` + `.work/`. No phase overlay. Agents write
+Docs/System/skills only in that worktree.
+
+**Interim (D-018) — only if Docs home absent:** primary-rooted index; if exactly one linked
+worktree has an `active`/`blocked` phase, overlay that tree’s phases, HANDOFF, Research, WORK,
+activity. Heartbeat may show `live PHASE-nnn (branch)`. `projection_roots.docs_home` is set when
+D-020 is active; `overlay*` fields apply only in interim mode.
 
 - Lives under `Docs/System/dashboard/` with shared `Docs/System/derive/`; launched by `/dashboard`
 - Local single process, no database; stack may stay the existing server or move to Next — decide in PHASE-001
 - Parsers: frontmatter + YAML + markdown body render + `chokidar` (watch)
 - Port fixed; `/dashboard` stops stale servers before starting (V3 §7 runtime hygiene)
-- Watches primary **and** active overlay `Docs/` + `.work/activity/`
+- Watches Docs-home (or primary ± overlay) `Docs/` + `.work/activity/`
 
 ### Watcher contract
 

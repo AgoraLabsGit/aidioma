@@ -152,4 +152,5 @@ Supersedes: D-018 — Main-rooted dashboard with active worktree overlay
 
 ### Implement via
 
-Amend `system.md` §1/§4/§7/§12, `COMMANDS.md`, `AGENTS.md`, `/dashboard` `/run` `/close` `/task` `/fix` skills; remove or idle D-018 overlay once Docs home ships. Prefer `/plan` follow-on or absorb into PHASE-007 only with founder ack (overlay already coded).
+Shipped (P-001, 2026-08-07): `resolveDocsHomeRoot`, dashboard pin, `npm run work:docs-home`,
+skills/AGENTS/COMMANDS. D-018 overlay remains only when Docs home is absent.

@@ -702,12 +702,13 @@ Order: phase `/triage` → **`/check`** (path-aware; FAIL blocks) → Proof → 
 **Always under Proof:** outcome evidence; adversarial audit of phase claims.  
 **Always under Scope:** path→spec (computed); MCOO binding cut.  
 **Conditional (path-triggered) under Proof:** accessibility, security, privacy, AI tokens,
-performance, data migration.  
+performance, data migration — map: `System/path-lens-map.md`.  
 **Conditional under Scope:** seams/composability (build code; broader every ~2–3 capabilities);
 code quality when code is in the diff.
 
 These are nested lenses, not extra merge gates or named auditor roles (D-019).
 Required Adv steps: `System/adv-protocol.md`. MCOO FAIL criteria: `System/mcoo-checklist.md`.
+Standalone `/fix`/`/task` publish: `System/reduced-close.md`.
 
 | Result | Rule |
 |---|---|

@@ -67,3 +67,6 @@
 {"ts":"2026-08-07T15:46:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-007","ref":"F-003","status":"complete","summary":"De-productized skills: operator/founder; no AIdioma/learner in skill text"}
 {"ts":"2026-08-07T15:55:00Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-007","ref":null,"status":"complete","summary":"work lane: typecheck+test(25)+validate issues=0"}
 {"ts":"2026-08-07T15:56:00Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-007","ref":null,"status":"active","summary":"Close hygiene: triage CLEAR; Adv WARN acked (static COMMAND_MAP V1; D-018 interim); MCOO WARN P-001; publishing"}
+{"ts":"2026-08-07T16:05:00Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-002","status":"complete","summary":"path-lens-map.md for /close Proof lenses"}
+{"ts":"2026-08-07T16:05:01Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-003","status":"complete","summary":"reduced-close.md for standalone /fix /task publish"}
+{"ts":"2026-08-07T16:05:02Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"P-001","status":"complete","summary":"D-020 Docs home pin + work:docs-home; overlay interim if absent"}

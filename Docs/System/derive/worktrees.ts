@@ -89,6 +89,31 @@ export async function resolvePrimaryWorktreeRoot(fromRoot: string): Promise<stri
   return realpath(fromRoot);
 }
 
+/**
+ * D-020 Docs home: `.worktrees/docs` (branch `docs/ssot`) when present.
+ * Env `AIDIOMA_DOCS_HOME` overrides. Returns null when absent (D-018 overlay interim).
+ */
+export async function resolveDocsHomeRoot(fromRoot: string): Promise<string | null> {
+  const envHome = process.env.AIDIOMA_DOCS_HOME?.trim();
+  if (envHome) {
+    try {
+      return await realpath(envHome);
+    } catch {
+      return null;
+    }
+  }
+  const primary = await resolvePrimaryWorktreeRoot(fromRoot);
+  const candidate = path.join(primary, ".worktrees", "docs");
+  try {
+    const resolved = await realpath(candidate);
+    // Must look like a checkout (has Docs/).
+    await readFile(path.join(resolved, "Docs", "START.md"), "utf8");
+    return resolved;
+  } catch {
+    return null;
+  }
+}
+
 async function listPhaseFiles(docsRoot: string): Promise<string[]> {
   const directory = path.join(docsRoot, "Roadmap", "Phases");
   try {
