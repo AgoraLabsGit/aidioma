@@ -5,7 +5,8 @@ description: Classify and execute open Docs/WORK.yaml rows by phase/area/feature
 
 # /triage
 
-Utility that **does work**. Prefer a **sub-agent** for the batch (preserve coordinator context).
+Utility that **does work**. Phase-scoped or named-phase triage **must** run in a sub-agent
+(phase Work only). Unassigned batch: prefer a sub-agent (preserve coordinator context).
 
 ## Mode (implicit)
 
@@ -17,6 +18,7 @@ Utility that **does work**. Prefer a **sub-agent** for the batch (preserve coord
 
 ## Steps
 
+0. **Docs home (D-020):** Read/write `WORK.yaml` + activity in `.worktrees/docs` when present.
 1. Resolve mode → load matching open/active rows.
 2. Classify: **do** | **blocked** | **plan** | **drop** | **leave**. Cite `W-nnn — summary`.
 3. Auto-execute clear `/fix`/`/task` via sub-agents; `done_summary`.

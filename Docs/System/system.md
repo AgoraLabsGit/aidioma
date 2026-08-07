@@ -588,7 +588,7 @@ If `/fix` or `/task` needs design or multi-session scope, `/log` as `proposal` (
 | `/status` | Print a brief: active phase, git, runtime, suggested next command; refresh `context.json` | Change any authored file |
 | `/check` | Path-aware tests/lint; append activity `check` → `last_check` | Fix what it finds |
 | `/launch` | Stop stale app servers, start the app | Touch production |
-| `/dashboard` | Stop stale dashboard servers; start Docs SSOT home when present (D-020); **interim:** primary-rooted + active-phase overlay (D-018) until P-001 | Run in production; dual-write schedule onto main |
+| `/dashboard` | Stop stale dashboard servers; ensure+refresh Docs home (D-020); project that tree. **Interim only if home absent:** primary + active-phase overlay (D-018) | Run in production; dual-write Docs onto phase/task trees |
 | `/handoff` | Overwrite `Handoffs/HANDOFF.md` | Commit, PR, or merge |
 
 **Handoffs are not archived.** They hold ephemeral mental state — valuable for six hours,
@@ -798,10 +798,10 @@ primary Docs/ + .work/ (+ active phase worktree overlay)
   → chokidar (300ms debounce) → full reindex → index.json → SSE → browser
 ```
 
-- **Docs home (D-020), interim overlay (D-018).** Target: `/dashboard` roots at the permanent
-  Docs home worktree (P-001). Until that ships, resolve the primary git worktree and overlay the
-  sole `active`/`blocked` phase worktree. Do not dual-write `state: active` onto main for the
-  dashboard.
+- **Docs home (D-020), interim overlay (D-018).** `/dashboard` roots at `.worktrees/docs`
+  (`docs/ssot`) when present (P-001 shipped). Writers put `Docs/**`, `.work/**`, root agent
+  entrypoints, and `.claude/skills/**` only there. If the home is absent, resolve the primary
+  git worktree and overlay the sole `active`/`blocked` phase worktree (D-018 interim).
 - **Full rebuild on any change.** Under 100ms at this scale. Do not build incremental
   invalidation — it is where tools of this kind usually go wrong.
 - **Debounce is required.** A branch switch changes hundreds of files; without it you fire

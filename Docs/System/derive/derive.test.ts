@@ -205,6 +205,26 @@ describe("kind-prefixed work ids", () => {
     expect(nextWorkId("task", rows.map((row) => row.id))).toBe("T-001");
     expect(nextWorkId("audit", [])).toBe("A-001");
   });
+
+  it("accepts UTC ISO opened timestamps (Age precision)", () => {
+    const rows = parseWork(`
+- id: F-010
+  kind: fix
+  summary: "iso opened"
+  status: active
+  feature: null
+  area: null
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: null
+  opened: 2026-08-07T16:34:00Z
+`);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]?.opened).toBe("2026-08-07T16:34:00Z");
+  });
 });
 
 describe("last_check", () => {

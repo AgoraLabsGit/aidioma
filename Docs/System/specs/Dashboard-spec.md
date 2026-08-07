@@ -253,7 +253,16 @@ failed/dropped red · superseded grey · promoted blue.
 Status/severity filter chips use the same hues: Work Open amber / Closed green;
 Signals Open amber / Closed(fixed) green; severity high red · medium amber · low muted.
 
-Preferences (localStorage): last page; each table page’s filters + sort (survive refresh).
+**Table toolbar (Roadmap, Activity, Work, Signals):**
+- Primary row keeps search + status/kind/type chips only — do **not** add Feature/Area as
+  chips on that row.
+- **Filters** control opens a pop-up panel for deeper filters: Feature and Area (All + values
+  present on that page’s rows; optional Untagged). Badge when either is active.
+- **Reset** restores that page’s filters, search, and sort to defaults (clears panel filters too).
+- Activity Feature/Area resolve from the event’s phase row when present.
+
+Preferences (localStorage): last page; each table page’s filters + sort (survive refresh),
+including Feature/Area panel values.
 
 ---
 
@@ -289,10 +298,10 @@ Active UI** (founder removed the command bar / suggested-next box).
 
 - **Order** = 1-based schedule step from `depends_on` depth → frontmatter `order` → id (not the raw `order` field)
 - **Default sort: schedule** — same ranking; click ID or Order to restore it
-- Status / Kind / Age column headers still sort
+- **Sortable headers:** every column except Summary (ID, Order, Kind, Feature, Area, Status, Age)
 - Design phases visually distinct from build
 - Canceled rows show `lessons` inline
-- Filters: state, type (`design` | `build`)
+- Filters: state, type (`design` | `build`); Feature/Area via Filters panel; Reset
 
 ### Activity
 
@@ -301,7 +310,9 @@ Active UI** (founder removed the command bar / suggested-next box).
 - Projects `.work/activity/*.jsonl` only (D-008). UI label stays **Activity**.
 - Reverse chronological; toolbar = search + Type chips on one row (no Actor/Phase filters; no Sort select)
 - Summary is plain text (no actor sub-line); capped at 80 chars with full tooltip
-- Clickable column headers sort (Kind, Age); ID shows ref (phase as secondary when different)
+- **Sortable headers:** every column except Summary
+- ID shows ref (phase as secondary when different)
+- Feature/Area columns + panel filters resolve from the event phase when present
 - **Per-feature timeline** — later: selecting a spec filters its ref chain
 
 ### Knowledge
@@ -341,7 +352,12 @@ Authored ledger from `WORK.yaml`. Separate from Signals (D-011).
 
 Kinds: `fix` · `task` · `proposal` · `research` · `question` · `audit`.
 Status filters: Open = `open`+`active`; Closed = `done`+`promoted`+`dropped`.
-Table summaries capped at 80 chars (tooltip = full). Sort via column headers (no Sort select).
+Table summaries capped at 80 chars (tooltip = full). **Sortable headers:** every column except
+Summary (ID, Kind, Feature, Area, Status, Age). No Sort select.
+**Age:** prefer `opened` as UTC ISO datetime (real relative time). Date-only `YYYY-MM-DD`
+(legacy) shows calendar days (`today` / `Nd ago`) — never hours-from-midnight.
+`/fix` `/task` `/audit` `/research` write `status: active` + ISO `opened` **before** other edits.
+Feature/Area via Filters panel; Reset restores defaults.
 
 Detail pane: glance fields + optional `note` + **Open questions** (`open_questions`) + **Done
 summary** (`done_summary`). Clarifications live on the row — not as sibling `question` rows.
@@ -367,7 +383,9 @@ Derived health only. This page is where `paths` visibly pays off.
 
 Rows from the slow cycle (`drift`, `unspecified`, `dead_spec`) display `paths_scanned_at`.
 
-Default sort: severity, then age. Filters: status (All / Open / Closed=fixed), kind, severity.
+Default sort: severity, then age (severity via filter chips — not via Summary header).
+**Sortable headers:** every column except Summary (ID, Kind, Feature, Area, Status, Age).
+Filters: status (All / Open / Closed=fixed), kind, severity; Feature/Area via Filters panel; Reset.
 Foot pill label: `● Signals` when no open high-severity; `● N signal(s)` when N > 0.
 
 ---
@@ -422,7 +440,7 @@ Steps 1–4 are independently useful. Step 7 depends on specs having populated `
 - Issues: open FIX rows under Open; fixed FIX rows under Closed; other kinds remain
 - Activity: events from `.work/activity/`; new command appends a line and appears after reindex
 - Time: "ago" / age columns match source timestamps (`ts`, `opened`, `indexed_at`)
-- Sort/filter chips and clickable column headers on Roadmap, Activity, Work, Signals change the visible rows correctly
+- Sort/filter chips and clickable column headers on Roadmap, Activity, Work, Signals change the visible rows correctly; Summary never sortable; all other columns sortable
 - `PHASE-099` appears only because its phase `.md` exists (never mocked in JS)
 - `specs/Dashboard-spec.md` stays under `Docs/System/` until a later promote-to-`SPEC-*` decision (D-009)
 - Schema/derive module changes require restarting `/dashboard` (file watch re-derives data, not reloaded Zod enums)

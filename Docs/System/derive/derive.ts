@@ -157,7 +157,9 @@ async function containedRealPath(repositoryRoot: string, candidate: string): Pro
 }
 
 function dayDiff(from: string, now: Date): number {
-  const start = Date.parse(`${from}T00:00:00.000Z`);
+  const start = /^\d{4}-\d{2}-\d{2}$/u.test(from)
+    ? Date.parse(`${from}T00:00:00.000Z`)
+    : Date.parse(from);
   if (Number.isNaN(start)) return 0;
   const ms = now.getTime() - start;
   return Math.max(0, Math.floor(ms / (24 * 60 * 60 * 1000)));

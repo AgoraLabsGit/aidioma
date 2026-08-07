@@ -29,7 +29,7 @@
     "work:validate": "tsx Docs/System/derive/validate.ts",
     "work:typecheck": "tsc -p Docs/System/derive/tsconfig.json",
     "work:test": "vitest run Docs/System/derive Docs/System/dashboard",
-    "work:dashboard": "tsx Docs/System/dashboard/server.ts",
+    "work:dashboard": "bash tooling/run-dashboard.sh",
     "work:docs-home": "bash tooling/ensure-docs-home.sh"
   },
   "devDependencies": {

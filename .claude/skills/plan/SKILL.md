@@ -7,6 +7,7 @@ description: Onboard a new phase onto the Roadmap with a draft phase spec. Use w
 
 Onboard only — not the old multi-document design ritual.
 
+0. **Docs home (D-020):** Phase/Roadmap/Research writes → `.worktrees/docs` when present.
 1. Read `AGENTS.md`, `system.md` (schedule), Roadmap, `HANDOFF.md`.
 2. **Must precede:** review relevant `Research/R-*`. If ≥2 external options are open and no fresh R-* → **`/research` first**.
 3. With the founder: one bounded outcome, type (`design`|`build`), non-goals, MCOO cut list (`Docs/System/protocols/mcoo-checklist.md`). Do not preload frozen legacy docs yet.

@@ -7,6 +7,9 @@ description: End a session by publishing through audited main — full phase clo
 
 **Dispatcher.** Same verb always. Branch on whether a phase is `active`.
 
+**Docs home (D-020):** Close journal, phase `state`, handoff, `WORK.yaml`, System docs → write on
+`.worktrees/docs` when present; refresh via `npm run work:docs-home` after merge.
+
 ## A. Active phase → full phase close
 
 1. Read `AGENTS.md`, active phase, handoff. Confirm scope if unrelated dirty work.
@@ -14,7 +17,8 @@ description: End a session by publishing through audited main — full phase clo
 3. **`/check`** (path-aware) — FAIL blocks close.
 4. **Proof** — outcome evidence; **Required Adv** on phase claims via
    `Docs/System/protocols/adv-protocol.md`; path-triggered lenses per
-   `Docs/System/protocols/path-lens-map.md`.
+   `Docs/System/protocols/path-lens-map.md`. Required Adv + path lenses: prefer dedicated
+   sub-agents; this command owns PASS/WARN/FAIL and merge.
 5. **Scope** — path→spec; **MCOO** via `Docs/System/protocols/mcoo-checklist.md`;
    seams/composability (build); code quality if code in diff. Design: no product-code change.
    On FAIL: May invoke `/run` (cut), `/design`, `/research` with founder confirm — do not merge.

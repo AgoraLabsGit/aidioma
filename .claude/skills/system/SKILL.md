@@ -5,6 +5,7 @@ description: Onboard or revise development-system commands, Docs/System files, f
 
 # /system
 
+0. **Docs home (D-020):** All `Docs/System/**` + skill edits → `.worktrees/docs` when present.
 1. **Gate:** refuse while a phase is `active`, unless the active phase outcome amends System.
 2. Name the process change with the founder; MCOO; show wording before write.
 3. Update minimum set: `system.md`, `COMMANDS.md`, `AGENTS.md`, matching skills.

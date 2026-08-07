@@ -5,7 +5,17 @@ import { describe, expect, it } from "vitest";
  * If UI filter wiring drifts, update both sides in the same change.
  */
 
-type Phase = { id: string; title: string; type: string; state: string; order: number; age_days: number; outcome?: string };
+type Phase = {
+  id: string;
+  title: string;
+  type: string;
+  state: string;
+  order: number;
+  age_days: number;
+  feature?: string | null;
+  area?: string | null;
+  outcome?: string;
+};
 type Event = { ts: string; type: string; actor: string; phase: string | null; ref: string | null; summary: string; cmd?: string };
 type Signal = { kind: string; ref: string; summary: string; spec: string | null; severity: string; status: string; age_days: number | null };
 type Work = { id: string; kind: string; summary: string; status: string; feature: string | null; area: string | null; age_days: number };
@@ -15,12 +25,19 @@ function matchesQuery(haystack: string, q: string): boolean {
   return haystack.toLowerCase().includes(q.toLowerCase());
 }
 
+function matchesSpecFilter(value: string | null | undefined, filter: string): boolean {
+  if (!filter) return true;
+  if (filter === "__none__") return value == null || value === "";
+  return value === filter;
+}
+
 function filterPhases(
   phases: Phase[],
-  filters: { state: string; type: string; q: string },
+  filters: { state: string; type: string; feature?: string; area?: string; q: string },
 ): Phase[] {
   return phases
     .filter((phase) => (!filters.state || phase.state === filters.state) && (!filters.type || phase.type === filters.type))
+    .filter((phase) => matchesSpecFilter(phase.feature, filters.feature ?? "") && matchesSpecFilter(phase.area, filters.area ?? ""))
     .filter((phase) => matchesQuery(`${phase.id} ${phase.title}`, filters.q));
 }
 
@@ -37,14 +54,25 @@ function filterEvents(
     );
 }
 
+function featureAreaFromSpecId(specId: string | null): { feature: string | null; area: string | null } {
+  if (!specId) return { feature: null, area: null };
+  if (specId.startsWith("SPEC-A-")) return { feature: null, area: specId };
+  if (specId.startsWith("SPEC-F-")) return { feature: specId, area: null };
+  return { feature: specId, area: null };
+}
+
 function filterSignals(
   signals: Signal[],
-  filters: { severity: string; kind: string; status: string; q: string },
+  filters: { severity: string; kind: string; status: string; feature?: string; area?: string; q: string },
 ): Signal[] {
   return signals
     .filter((issue) => !filters.severity || issue.severity === filters.severity)
     .filter((issue) => !filters.kind || issue.kind === filters.kind)
     .filter((issue) => !filters.status || issue.status === filters.status)
+    .filter((issue) => {
+      const tags = featureAreaFromSpecId(issue.spec);
+      return matchesSpecFilter(tags.feature, filters.feature ?? "") && matchesSpecFilter(tags.area, filters.area ?? "");
+    })
     .filter((issue) =>
       matchesQuery(`${issue.kind} ${issue.ref} ${issue.summary} ${issue.spec ?? ""} ${issue.status}`, filters.q),
     );
@@ -56,17 +84,30 @@ function workBucket(status: string): "open" | "closed" {
 
 function filterWork(
   rows: Work[],
-  filters: { kind: string; status: string; q: string },
+  filters: { kind: string; status: string; feature?: string; area?: string; q: string },
 ): Work[] {
   return rows
     .filter((row) => !filters.kind || row.kind === filters.kind)
     .filter((row) => !filters.status || workBucket(row.status) === filters.status)
+    .filter((row) => matchesSpecFilter(row.feature, filters.feature ?? "") && matchesSpecFilter(row.area, filters.area ?? ""))
     .filter((row) =>
       matchesQuery(
         `${row.id} ${row.kind} ${row.summary} ${row.status} ${row.feature ?? ""} ${row.area ?? ""}`,
         filters.q,
       ),
     );
+}
+
+const DEFAULT_FILTERS = {
+  roadmap: { state: "", type: "", feature: "", area: "", q: "", sort: "schedule" },
+  activity: { type: "", feature: "", area: "", q: "", sort: "time" },
+  work: { kind: "", status: "", feature: "", area: "", q: "", sort: "open-first" },
+  signals: { severity: "", kind: "", status: "open", feature: "", area: "", q: "", sort: "severity" },
+} as const;
+
+function filtersAreDefault(page: keyof typeof DEFAULT_FILTERS, filters: Record<string, string>): boolean {
+  const defaults = DEFAULT_FILTERS[page];
+  return Object.keys(defaults).every((key) => (filters[key] ?? "") === (defaults as Record<string, string>)[key]);
 }
 
 function workBucketRank(status: string): number {
@@ -105,6 +146,12 @@ function sortPhases(rows: Phase[], sort: string): Phase[] {
     if (sort === "age") return right.age_days - left.age_days;
     if (sort === "title") return left.title.localeCompare(right.title);
     if (sort === "type") return left.type.localeCompare(right.type) || left.order - right.order;
+    if (sort === "feature") {
+      return String(left.feature ?? "").localeCompare(String(right.feature ?? "")) || left.order - right.order;
+    }
+    if (sort === "area") {
+      return String(left.area ?? "").localeCompare(String(right.area ?? "")) || left.order - right.order;
+    }
     return stateRank(left.state) - stateRank(right.state) || left.order - right.order;
   });
 }
@@ -134,16 +181,45 @@ function sortSignals(rows: Signal[], sort: string): Signal[] {
 
 /** Header column → sort key (mirrors TABLE_SORT_KEYS in app.js). */
 const TABLE_SORT_KEYS = {
-  roadmap: { id: "schedule", order: "schedule", kind: "type", summary: "title", status: "state", age: "age" },
-  activity: { kind: "type", age: "time" },
-  work: { id: "id", kind: "kind", status: "status", age: "age" },
-  signals: { kind: "kind", summary: "severity", status: "status", age: "age" },
+  roadmap: {
+    id: "schedule",
+    order: "schedule",
+    kind: "type",
+    feature: "feature",
+    area: "area",
+    status: "state",
+    age: "age",
+  },
+  activity: {
+    id: "id",
+    kind: "type",
+    feature: "feature",
+    area: "area",
+    status: "status",
+    age: "time",
+  },
+  work: {
+    id: "id",
+    kind: "kind",
+    feature: "feature",
+    area: "area",
+    status: "status",
+    age: "age",
+  },
+  signals: {
+    id: "id",
+    kind: "kind",
+    feature: "feature",
+    area: "area",
+    status: "status",
+    age: "age",
+  },
 } as const;
 
 const phases: Phase[] = [
-  { id: "PHASE-004", title: "Dash", type: "build", state: "active", order: 2, age_days: 1 },
-  { id: "PHASE-002", title: "Product", type: "design", state: "proposed", order: 3, age_days: 1 },
-  { id: "PHASE-001", title: "Old", type: "build", state: "closed", order: 1, age_days: 2 },
+  { id: "PHASE-004", title: "Dash", type: "build", state: "active", order: 2, age_days: 1, feature: "SPEC-F-DEV-DASHBOARD", area: "SPEC-A-DEVSYSTEM" },
+  { id: "PHASE-002", title: "Product", type: "design", state: "proposed", order: 3, age_days: 1, feature: "SPEC-F-LEXICON", area: "SPEC-A-CONTENT" },
+  { id: "PHASE-001", title: "Old", type: "build", state: "closed", order: 1, age_days: 2, feature: null, area: null },
 ];
 
 const events: Event[] = [
@@ -159,8 +235,8 @@ const signals: Signal[] = [
 ];
 
 const work: Work[] = [
-  { id: "W-001", kind: "fix", summary: "A", status: "done", feature: null, area: null, age_days: 1 },
-  { id: "W-003", kind: "task", summary: "B", status: "open", feature: null, area: null, age_days: 0 },
+  { id: "W-001", kind: "fix", summary: "A", status: "done", feature: "SPEC-F-DEV-DASHBOARD", area: "SPEC-A-DEVSYSTEM", age_days: 1 },
+  { id: "W-003", kind: "task", summary: "B", status: "open", feature: "SPEC-F-LEXICON", area: "SPEC-A-CONTENT", age_days: 0 },
   { id: "W-004", kind: "proposal", summary: "C", status: "active", feature: null, area: null, age_days: 0 },
 ];
 
@@ -227,7 +303,14 @@ describe("Work filters", () => {
   });
 
   it("header sort keys match Work column clicks (id/kind/status/age)", () => {
-    expect(TABLE_SORT_KEYS.work).toEqual({ id: "id", kind: "kind", status: "status", age: "age" });
+    expect(TABLE_SORT_KEYS.work).toEqual({
+      id: "id",
+      kind: "kind",
+      feature: "feature",
+      area: "area",
+      status: "status",
+      age: "age",
+    });
     expect(sortWork(work, TABLE_SORT_KEYS.work.id).map((w) => w.id)).toEqual(["W-003", "W-004", "W-001"]);
     expect(sortWork(work, TABLE_SORT_KEYS.work.kind).map((w) => w.kind)).toEqual(["proposal", "task", "fix"]);
     expect(sortWork(work, TABLE_SORT_KEYS.work.age).map((w) => w.id)).toEqual(["W-001", "W-003", "W-004"]);
@@ -235,26 +318,21 @@ describe("Work filters", () => {
 });
 
 describe("Column-header sort keys", () => {
-  it("Roadmap ID/Order/Kind/Summary/Status/Age map to schedule/type/title/state/age", () => {
+  it("Roadmap sortable columns exclude Summary; include Feature/Area", () => {
     expect(TABLE_SORT_KEYS.roadmap).toEqual({
       id: "schedule",
       order: "schedule",
       kind: "type",
-      summary: "title",
+      feature: "feature",
+      area: "area",
       status: "state",
       age: "age",
     });
-    expect(TABLE_SORT_KEYS.roadmap.id).toBe("schedule");
-    expect(TABLE_SORT_KEYS.roadmap.order).toBe("schedule");
+    expect("summary" in TABLE_SORT_KEYS.roadmap).toBe(false);
     expect(sortPhases(phases, TABLE_SORT_KEYS.roadmap.kind).map((p) => p.id)).toEqual([
       "PHASE-001",
       "PHASE-004",
       "PHASE-002",
-    ]);
-    expect(sortPhases(phases, TABLE_SORT_KEYS.roadmap.summary).map((p) => p.title)).toEqual([
-      "Dash",
-      "Old",
-      "Product",
     ]);
     expect(sortPhases(phases, TABLE_SORT_KEYS.roadmap.status).map((p) => p.state)).toEqual([
       "active",
@@ -263,8 +341,16 @@ describe("Column-header sort keys", () => {
     ]);
   });
 
-  it("Activity Kind/Age map to type/time", () => {
-    expect(TABLE_SORT_KEYS.activity).toEqual({ kind: "type", age: "time" });
+  it("Activity Kind/Age map to type/time; Summary not sortable", () => {
+    expect(TABLE_SORT_KEYS.activity).toEqual({
+      id: "id",
+      kind: "type",
+      feature: "feature",
+      area: "area",
+      status: "status",
+      age: "time",
+    });
+    expect("summary" in TABLE_SORT_KEYS.activity).toBe(false);
     expect(sortEvents(events, TABLE_SORT_KEYS.activity.age).map((e) => e.ts)).toEqual([
       "2026-08-05T12:00:00Z",
       "2026-08-05T11:00:00Z",
@@ -277,14 +363,17 @@ describe("Column-header sort keys", () => {
     ]);
   });
 
-  it("Signals Kind/Summary/Status/Age map to kind/severity/status/age", () => {
+  it("Signals sortable columns exclude Summary; severity remains default sort only", () => {
     expect(TABLE_SORT_KEYS.signals).toEqual({
+      id: "id",
       kind: "kind",
-      summary: "severity",
+      feature: "feature",
+      area: "area",
       status: "status",
       age: "age",
     });
-    expect(sortSignals(signals, TABLE_SORT_KEYS.signals.summary).map((s) => s.severity)).toEqual([
+    expect("summary" in TABLE_SORT_KEYS.signals).toBe(false);
+    expect(sortSignals(signals, "severity").map((s) => s.severity)).toEqual([
       "high",
       "high",
       "medium",
@@ -294,5 +383,39 @@ describe("Column-header sort keys", () => {
       "drift",
       "parse_error",
     ]);
+  });
+});
+
+describe("Feature/Area panel filters", () => {
+  it("filters Work and Roadmap by feature/area and Untagged", () => {
+    expect(filterWork(work, { kind: "", status: "", feature: "SPEC-F-LEXICON", area: "", q: "" }).map((w) => w.id)).toEqual([
+      "W-003",
+    ]);
+    expect(filterWork(work, { kind: "", status: "", feature: "", area: "SPEC-A-DEVSYSTEM", q: "" }).map((w) => w.id)).toEqual([
+      "W-001",
+    ]);
+    expect(filterWork(work, { kind: "", status: "", feature: "__none__", area: "", q: "" }).map((w) => w.id)).toEqual([
+      "W-004",
+    ]);
+    expect(filterPhases(phases, { state: "", type: "", feature: "SPEC-F-DEV-DASHBOARD", area: "", q: "" }).map((p) => p.id)).toEqual([
+      "PHASE-004",
+    ]);
+  });
+
+  it("filters Signals feature from issue.spec", () => {
+    expect(filterSignals(signals, { severity: "", kind: "", status: "", feature: "SPEC-F-X", area: "", q: "" }).map((i) => i.ref)).toEqual([
+      "SPEC-F-X",
+    ]);
+    expect(filterSignals(signals, { severity: "", kind: "", status: "", feature: "__none__", area: "", q: "" }).map((i) => i.ref)).toEqual([
+      "x.md",
+      "PHASE-001",
+    ]);
+  });
+
+  it("Reset defaults are dirty when feature/area or chips diverge", () => {
+    expect(filtersAreDefault("work", { ...DEFAULT_FILTERS.work })).toBe(true);
+    expect(filtersAreDefault("work", { ...DEFAULT_FILTERS.work, feature: "SPEC-F-LEXICON" })).toBe(false);
+    expect(filtersAreDefault("signals", { ...DEFAULT_FILTERS.signals, status: "" })).toBe(false);
+    expect(filtersAreDefault("roadmap", { ...DEFAULT_FILTERS.roadmap, sort: "age" })).toBe(false);
   });
 });
