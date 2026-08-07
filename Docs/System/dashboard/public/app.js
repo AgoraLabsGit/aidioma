@@ -1144,20 +1144,17 @@ const WORKTREE_CATEGORY_LABEL = {
 };
 
 
-function syncProjectBrand(index) {
-  const name = index?.repo?.project_name?.trim() || "Project";
-  const brand = document.querySelector("#brand-name");
-  const mark = document.querySelector("#brand-mark");
-  if (brand) brand.textContent = name;
-  if (mark) mark.textContent = name.charAt(0).toUpperCase() || "·";
-  document.title = name;
+/** Prefer repo.worktrees; accept legacy repo.sessions (stale dashboard process). */
+function repoWorktrees(index) {
+  const list = index?.repo?.worktrees ?? index?.repo?.sessions;
+  return Array.isArray(list) ? list : [];
 }
 
 function syncWorktreesBadge(index) {
   const countEl = document.querySelector("#worktrees-count");
   const button = document.querySelector("#worktrees-panel-btn");
-  const worktrees = index?.repo?.worktrees ?? [];
-  const count = index?.repo?.worktree_count ?? worktrees.length;
+  const worktrees = repoWorktrees(index);
+  const count = index?.repo?.worktree_count ?? index?.repo?.session_count ?? worktrees.length;
   if (countEl) {
     countEl.textContent = String(count);
     countEl.hidden = count <= 0;
@@ -1172,7 +1169,7 @@ function syncWorktreesBadge(index) {
 function renderWorktreesPanel(index) {
   const body = document.querySelector("#worktrees-panel-body");
   if (!body) return;
-  const worktrees = index?.repo?.worktrees ?? [];
+  const worktrees = repoWorktrees(index);
   if (!worktrees.length) {
     body.innerHTML = `<p class="muted">No git worktrees discovered.</p>`;
     return;

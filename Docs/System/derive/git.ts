@@ -33,6 +33,9 @@ export type GitStatus = {
   /** Open git worktrees, categorized for the dashboard badge. */
   worktrees: RepoWorktree[];
   worktree_count: number;
+  /** @deprecated Use worktrees — kept for stale dashboard processes. */
+  sessions: RepoWorktree[];
+  session_count: number;
 };
 
 async function runGit(repositoryRoot: string, args: string[]): Promise<string> {
@@ -266,6 +269,8 @@ export async function readGitStatus(
       behind,
       worktrees: projected,
       worktree_count: projected.length,
+      sessions: projected,
+      session_count: projected.length,
     };
   } catch {
     return {
@@ -276,6 +281,8 @@ export async function readGitStatus(
       behind: 0,
       worktrees: [],
       worktree_count: 0,
+      sessions: [],
+      session_count: 0,
     };
   }
 }

@@ -1292,3 +1292,122 @@
   done_summary: "Migrated 9 check events in 2026-08.jsonl to C-001..C-009 (chrono). Prior Work refs kept in summary as · work T/F-*. next_check_id=C-010."
   opened: 2026-08-07T19:01:30Z
 
+- id: T-025
+  kind: task
+  summary: "Late ledger: worktrees rename + project_name brand (PR #33)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Process miss — reduced /close published without a dedicated Work row after T-024. Ledgered after the fact for Work history."
+  context_paths:
+    - Docs/System/derive/git.ts
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/index.html
+  open_questions: null
+  done_summary: "repo.sessions→worktrees; topbar Worktrees panel; repo.project_name brand (later superseded by Praxis hardcode). Merged PR #33."
+  opened: 2026-08-07T19:14:50Z
+
+- id: T-026
+  kind: task
+  summary: "Praxis brand + GitHub mark on worktrees badge"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Hardcode dashboard product name Praxis; replace worktrees badge SVG with GitHub mark."
+  context_paths:
+    - Docs/System/dashboard/public/index.html
+    - Docs/System/dashboard/public/app.js
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Brand/title=Praxis; worktrees badge uses GitHub mark; removed dynamic project_name UI binding. 39 tests."
+  opened: 2026-08-07T19:14:50Z
+
+- id: F-017
+  kind: fix
+  summary: "Worktrees panel empty — API sessions vs UI worktrees"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Stale dashboard process served repo.sessions while UI read repo.worktrees."
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/derive/git.ts
+  open_questions: null
+  done_summary: "UI reads worktrees with sessions fallback; derive dual-emits both; restarted dashboard. Root cause: stale tsx process after field rename."
+  opened: 2026-08-07T19:17:38Z
+
+- id: T-027
+  kind: task
+  summary: "Praxis brand: drop mark, larger type"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Remove P mark; ~25% larger Praxis wordmark."
+  context_paths:
+    - Docs/System/dashboard/public/index.html
+    - Docs/System/dashboard/public/styles.css
+  open_questions: null
+  done_summary: "Removed brand-mark; Praxis at 1.25× base type."
+  opened: 2026-08-07T19:17:38Z
+
+- id: T-028
+  kind: task
+  summary: "Detail panel heading size matches title (#detail-title + .phase-name)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Heading was display-sized vs ID; share --detail-title-size (xl), not page-title 2xl. Re-applied 19:20Z after styles.css clobber (T-027/F-017)."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Shared --detail-title-size (xl) for #detail-title + .phase-name on all detail pages; page-title stays 2xl; spec+CHANGELOG. Re-applied after concurrent styles.css overwrite."
+  opened: 2026-08-07T19:10:00Z
+
+- id: T-029
+  kind: task
+  summary: "Center Praxis; match page-title size"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Sidebar wordmark centered; font-size = #page-title (--fs-2xl)."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+  open_questions: null
+  done_summary: "Centered .sidebar-brand; .brand uses --fs-2xl like #page-title."
+  opened: 2026-08-07T19:19:14Z
+
+- id: T-030
+  kind: task
+  summary: "Praxis left-align + Outfit wordmark"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Undo center; load Outfit for brand only."
+  context_paths:
+    - Docs/System/dashboard/public/index.html
+    - Docs/System/dashboard/public/styles.css
+  open_questions: null
+  done_summary: "Left-aligned Praxis; Outfit 600 wordmark via Google Fonts."
+  opened: 2026-08-07T19:20:12Z

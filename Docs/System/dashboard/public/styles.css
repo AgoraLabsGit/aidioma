@@ -52,6 +52,8 @@
   --fs-lg: 18px;
   --fs-xl: 22px;
   --fs-2xl: 28px;
+  /* Shared by #detail-title + .phase-name (T-028). Page title stays --fs-2xl. */
+  --detail-title-size: var(--fs-xl);
   --fw-regular: 400;
   --fw-medium: 500;
   --fw-semibold: 650;
@@ -73,6 +75,7 @@
   --topbar-h: 64px;
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
   --mono: ui-monospace, "SF Mono", "Menlo", "Cascadia Mono", monospace;
+  --font-brand: "Outfit", var(--sans);
 }
 
 :root[data-theme="light"] {
@@ -171,25 +174,15 @@ body {
 .sidebar-brand {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  justify-content: flex-start;
   padding: var(--space-1) var(--space-2);
 }
-.brand-mark {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-sm);
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-border);
-  color: var(--accent);
-  font-size: var(--fs-xs);
-  font-weight: var(--fw-semibold);
-}
 .brand {
-  font-size: var(--fs-base);
-  font-weight: var(--fw-semibold);
-  letter-spacing: -0.02em;
+  font-family: var(--font-brand);
+  font-size: var(--fs-2xl); /* same as #page-title */
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
 }
 .tabs {
   display: flex;
@@ -797,7 +790,7 @@ main {
   gap: var(--space-4);
 }
 .phase-view {
-  --phase-title-size: var(--fs-xl);      /* 22px — phase name */
+  --phase-title-size: var(--detail-title-size); /* same as #detail-title (T-028) */
   --phase-section-size: var(--fs-lg);    /* 18px — section headers */
   --phase-body-size: var(--fs-base);     /* 15px — body / outcome / lists */
   --phase-meta-size: var(--fs-xs);       /* 12px — ids, glance labels */
@@ -1963,12 +1956,12 @@ code,
   margin: 0;
   flex: 0 1 auto;
   min-width: 0;
-  /* Same size scale as #page-title */
-  font-size: var(--fs-2xl);
-  line-height: 1.1;
+  /* Same as .phase-name — --detail-title-size (T-028; not page-title display) */
+  font-size: var(--detail-title-size);
+  line-height: 1.2;
   font-family: var(--mono);
   font-weight: var(--fw-semibold);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
 .detail-title-copy {
   flex: 0 0 auto;
