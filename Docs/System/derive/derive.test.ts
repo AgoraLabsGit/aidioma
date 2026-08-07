@@ -204,6 +204,8 @@ describe("kind-prefixed work ids", () => {
     expect(nextWorkId("fix", rows.map((row) => row.id))).toBe("F-002");
     expect(nextWorkId("task", rows.map((row) => row.id))).toBe("T-001");
     expect(nextWorkId("audit", [])).toBe("A-001");
+    expect(nextWorkId("design", [])).toBe("S-001");
+    expect(nextWorkId("design", ["S-001"])).toBe("S-002");
   });
 
   it("accepts UTC ISO opened timestamps (Age precision)", () => {

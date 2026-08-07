@@ -130,3 +130,19 @@
 {"ts": "2026-08-07T17:57:12Z", "type": "task", "cmd": "/task", "summary": "T-018 \u2014 /design activity active flush at start", "ref": "T-018", "phase": null, "status": "complete", "actor": "agent"}
 {"ts":"2026-08-07T17:57:59Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":null,"status":"complete","summary":"lanes: work — typecheck+test+validate for reduced /close"}
 {"ts":"2026-08-07T17:59:41Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-27","status":"complete","summary":"Reduced close: merged PR #27 (dashboard UX session); CI green; docs/ssot @ 7dfedc5"}
+{"ts": "2026-08-07T18:01:36Z", "type": "task", "cmd": "/task", "summary": "T-019 \u2014 Work surfaces activity; restore S-nnn", "ref": "T-019", "phase": null, "status": "active", "actor": "agent"}
+{"ts": "2026-08-07T18:01:36Z", "type": "design", "cmd": "/design", "summary": "S-001 \u2014 Work primary visibility over Activity page", "ref": "S-001", "phase": null, "status": "active", "actor": "agent"}
+{"ts": "2026-08-07T18:03:31Z", "type": "decide", "cmd": "/design", "summary": "D-022 \u2014 Work primary visibility; activity journal projected", "ref": "D-022", "phase": null, "status": "complete", "actor": "agent"}
+{"ts": "2026-08-07T18:03:31Z", "type": "design", "cmd": "/design", "summary": "S-001 \u2014 Work primary visibility (complete)", "ref": "S-001", "phase": null, "status": "complete", "actor": "agent"}
+{"ts": "2026-08-07T18:03:31Z", "type": "task", "cmd": "/task", "summary": "T-019 \u2014 Work activity trails + design kind", "ref": "T-019", "phase": null, "status": "complete", "actor": "agent"}
+{"ts":"2026-08-07T18:04:36Z","type":"design","actor":"agent","cmd":"/design","phase":null,"ref":null,"status":"active","summary":"Design panel: Work page vs Activity page (keep both vs fold)"}
+{"ts":"2026-08-07T18:06:55Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-014","status":"active","summary":"Work detail Context+Files"}
+{"ts":"2026-08-07T18:06:55Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-015","status":"active","summary":"Restore Work kind design (S-nnn) in schema"}
+{"ts":"2026-08-07T18:07:28Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-014","status":"complete","summary":"Work detail Context+Files"}
+{"ts":"2026-08-07T18:07:28Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-015","status":"complete","summary":"Restore Work kind design S-nnn"}
+{"ts":"2026-08-07T18:17:46Z","type":"decide","actor":"agent","cmd":"/design","phase":null,"ref":"D-023","status":"complete","summary":"D-023 Work vs Activity page jobs (process spine); Adv WARN ack"}
+{"ts":"2026-08-07T18:17:46Z","type":"design","actor":"agent","cmd":"/design","phase":null,"ref":"S-002","status":"complete","summary":"Locked D-023; Activity page process allowlist implemented"}
+{"ts":"2026-08-07T18:19:25Z","type":"design","actor":"agent","cmd":"/design","phase":null,"ref":"S-003","status":"active","summary":"Brief vs Context; declared context_paths"}
+{"ts":"2026-08-07T18:20:54Z","type":"decide","actor":"agent","cmd":"/design","phase":null,"ref":"D-024","status":"complete","summary":"Brief vs Context; declared context_paths (Adv WARN)"}
+{"ts":"2026-08-07T18:20:54Z","type":"spec","actor":"agent","cmd":"/design","phase":null,"ref":"SPEC-F-DEV-DASHBOARD","status":"complete","summary":"D-024 Brief/Context/Files rules"}
+{"ts":"2026-08-07T18:21:54Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":null,"status":"complete","summary":"work lane: typecheck+test 32/32+validate issues=0"}

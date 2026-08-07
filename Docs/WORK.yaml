@@ -1,10 +1,10 @@
 # Work ledger — authored non-phase and do-now items.
 # Validated against System/schemas/work.schema.json.
-# Kinds: fix | task | proposal | research | question | audit
-# Ids: new rows F/T/P/R/Q/A-nnn by kind; legacy W-nnn kept (never renamed).
+# Kinds: fix | task | proposal | research | question | audit | design
+# Ids: new rows F/T/P/R/Q/A/S-nnn by kind (S=design; D- is decisions); legacy W-nnn kept.
 # Status: open | active | done | promoted | dropped
 # feature/area: nullable SPEC-F-* / SPEC-A-* affiliation (org tags, not amend intent).
-# /log parks; /fix /task /audit do-now; /triage executes; /plan promotes proposals.
+# /log parks; /fix /task /audit /design do-now; /triage executes; /plan promotes proposals.
 
 # Migrated from FIXES.yaml (FIX-001..004)
 - id: W-001
@@ -1083,4 +1083,94 @@
   open_questions: null
   done_summary: "design skill: append activity type=design status=active before other work; close with decide/spec or blocked trail. COMMANDS /design row noted. Still no Work ledger kind for /design (decisions/specs home). Verify: next /design shows on Activity Open/list immediately."
   opened: 2026-08-07T17:56:55Z
+
+- id: T-019
+  kind: task
+  summary: "Work surfaces activity trails; restore kind design (S-nnn); Activity page retire path"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Model A: journal stays in activity.jsonl; Work detail projects events by ref. Not every event is a Work row."
+  open_questions: null
+  done_summary: "Restored Work kind design (S-nnn); Work+Phase detail Activity trails; D-022 + specs; Activity page kept (nav removal gated). work:validate + work:test 31/31."
+  opened: 2026-08-07T18:01:36Z
+
+- id: S-001
+  kind: design
+  summary: "Work is primary visibility; activity.jsonl projected into Work/Phase detail; Activity page optional"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: show all activity on Work; likely delete Activity page. Chose Model A (project journal into Work, not Work-row-per-event)."
+  open_questions:
+    - q: "Remove Activity nav now once Work detail shows trails, or keep page one release?"
+      answer: "Keep Activity nav; process-spine job only (D-023 / S-002)."
+      asked: 2026-08-07
+  done_summary: "D-022 locked (Adv WARN: keep Activity nav until Phase trails ship — Phase Activity section added). Model A: journal projected into Work/Phase detail by ref/phase; not Work-row-per-event. Restored kind design S-nnn. Open Q answered by D-023: keep page as process spine."
+  opened: 2026-08-07T18:01:36Z
+
+- id: S-002
+  kind: design
+  summary: "Keep Work + Activity pages; Activity = process spine (D-023)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: plan/design/research/audit are outcome work; Activity must not duplicate Work."
+  open_questions: null
+  done_summary: "D-023 locked (Adv WARN ack). Activity page allowlist + app.js filter; Work/Phase detail keep outcome/lifecycle trails; journal unchanged."
+  opened: 2026-08-07T18:04:36Z
+
+- id: F-014
+  kind: fix
+  summary: "Work detail missing Context and Files sections (Phase parity)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: more robust Work detail; Phase has Context + Files — Work only had Note/questions/done."
+  open_questions: null
+  done_summary: "Work detail always shows Context (note) + Files (WORK.yaml, phase/spec homes, feature/area path trees) + Activity. Spec+CHANGELOG."
+  opened: 2026-08-07T18:06:55Z
+
+- id: F-015
+  kind: fix
+  summary: "WORK.yaml S-001 kind design fails validate (enum missing design)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Docs-home WIP added S-001 before schema shipped; [83].kind Invalid enum without design."
+  open_questions: null
+  done_summary: "Schema/Zod/work.schema.json accept kind design + S-nnn; restart dashboard cleared stale module cache that still rejected S-001."
+  opened: 2026-08-07T18:06:55Z
+
+- id: S-003
+  kind: design
+  summary: "Brief vs Context labels; declared context_paths (not auto tool-reads)"
+  status: active
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: rename authored Context→Brief; Context=files that informed work; ask if deterministic."
+  open_questions:
+    - q: "Ack Adv WARN on D-024 (dual vocabulary: file ## Context = UI Brief; UI Context = context_paths)?"
+      answer: null
+      asked: 2026-08-07
+  done_summary: null
+  opened: 2026-08-07T18:19:25Z
 

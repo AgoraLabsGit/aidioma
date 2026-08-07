@@ -28,7 +28,7 @@ Never refuse `/close` because no phase is active — run reduced close.
 | Cmd | Produces | Audit / proof | May invoke |
 |---|---|---|---|
 | `/research` | `Research/R-*.md` + optional decision | **Required Adv** + verdict | Adv sub-agent; optional `/design` if behavior locks |
-| `/design` | Decisions and/or a spec; **activity `design` active flush first** (no Work row) | Review Research first; **Required Adv**; close with `decide`/`spec` or blocked trail | `/research` if missing; Adv sub-agent |
+| `/design` | Decisions and/or a spec; Work `kind: design` (`S-nnn`) + activity active flush first | Review Research first; **Required Adv**; close with `decide`/`spec` or blocked trail | `/research` if missing; Adv sub-agent |
 | `/fix` | Patch + proof + Work `fix` + `done_summary` | Required proof; publish via `/close` (reduced) | `/check`; `/close` to publish; optional `/audit`; `/log`/`/plan` if stretches |
 | `/task` | Patch/docs + proof + Work `task` + `done_summary` | Required proof (light); publish via `/close` (reduced) | `/check`; `/close` to publish; optional `/audit`; `/log`/`/plan` if stretches |
 | `/audit` | Findings + Work `audit` + `done_summary` | Is the audit (not merge gate) | Review sub-agent |

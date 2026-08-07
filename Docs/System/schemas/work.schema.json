@@ -10,11 +10,11 @@
     "properties": {
       "id": {
         "type": "string",
-        "pattern": "^(W|F|T|P|R|Q|A)-[0-9]{3}$",
-        "description": "Legacy W-nnn or kind-prefixed F/T/P/R/Q/A-nnn (new rows)"
+        "pattern": "^(W|F|T|P|R|Q|A|S)-[0-9]{3}$",
+        "description": "Legacy W-nnn or kind-prefixed F/T/P/R/Q/A/S-nnn (S=design; D- is decisions)"
       },
       "kind": {
-        "enum": ["fix", "task", "proposal", "research", "question", "audit"]
+        "enum": ["fix", "task", "proposal", "research", "question", "audit", "design"]
       },
       "summary": { "type": "string", "minLength": 1 },
       "status": {
@@ -37,7 +37,7 @@
       },
       "blocked_by": {
         "type": ["string", "null"],
-        "pattern": "^(W|F|T|P|R|Q|A)-[0-9]{3}$"
+        "pattern": "^(W|F|T|P|R|Q|A|S)-[0-9]{3}$"
       },
       "note": {
         "type": ["string", "null"]
