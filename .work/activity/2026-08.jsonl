@@ -157,3 +157,4 @@
 {"ts":"2026-08-07T18:45:26Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-022","status":"complete","summary":"Copy IDs + humanize Work kind labels"}
 {"ts":"2026-08-07T18:46:00Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":null,"status":"failed","summary":"work:typecheck FAIL — PhaseFrontmatter fixtures missing context_paths"}
 {"ts":"2026-08-07T18:46:20Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":null,"status":"complete","summary":"work lane: typecheck+test 35/35+validate issues=0"}
+{"ts":"2026-08-07T18:47:29Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-31","status":"complete","summary":"Reduced close: T-020 D-024 context_paths + T-021 sort defaults; merged 2c57d8d"}
