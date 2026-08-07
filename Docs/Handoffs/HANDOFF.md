@@ -1,19 +1,19 @@
-# Current handoff — after reduced `/close` (PR pending)
+# Current handoff — after reduced `/close` (PR #25)
 
 **Date:** 2026-08-07
 
-**Branch:** `docs/ssot` (pre-merge) — shipping F-006…F-008 / A-005 / T-011
+**Branch:** `main` @ `79ae8fc` (merge PR #25)
 **Active phase:** none
-**Docs home:** `.worktrees/docs` (`docs/ssot`)
+**Docs home:** `.worktrees/docs` (`docs/ssot`) @ same tip
 
 ## Done this session
 
 - **F-006** — Activity Status syncs to Work ledger for Work refs
 - **F-007** — Column sort toggles asc/desc (▴/▾); Age uses `opened`
-- **F-008** — Do not persist table search `q` (Work meta search hint)
+- **F-008** — Do not persist table search `q`
 - **A-005** — Work vs Activity: filter asymmetry, not ledger desync
 - **T-011** — Founder visibility proof on Work Open + Activity
-- `/check` work lane PASS (29 tests, validate issues=0)
+- Reduced `/close`: CI green → merge #25 → Docs home refreshed
 
 ## Open
 
