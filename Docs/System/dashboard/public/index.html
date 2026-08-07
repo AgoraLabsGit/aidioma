@@ -65,7 +65,6 @@
       <header class="topbar">
         <div class="topbar-left">
           <h1 id="page-title">Active</h1>
-          <p id="page-subtitle" class="page-subtitle">Phases in flight</p>
         </div>
         <div class="topbar-right">
           <div class="heartbeat">
@@ -108,15 +107,17 @@
     </div>
 
     <aside id="detail" class="detail" hidden>
-      <div class="detail-resize" data-resize="detail" title="Drag to resize"></div>
+      <div class="detail-resize" data-resize="detail" title="Drag to resize" aria-hidden="true"></div>
       <div class="detail-header">
+        <div class="detail-actions detail-actions-start">
+          <button id="detail-collapse" type="button" class="icon-btn" title="Collapse panel" aria-label="Collapse panel" aria-expanded="true">›</button>
+        </div>
         <h2 id="detail-title">Detail</h2>
-        <div class="detail-actions">
-          <button id="detail-collapse" type="button" class="icon-btn" title="Collapse panel">⟩</button>
-          <button id="detail-close" type="button" class="icon-btn">Close</button>
+        <div class="detail-actions detail-actions-end">
+          <button id="detail-close" type="button" class="icon-btn" title="Close panel" aria-label="Close panel">Close</button>
         </div>
       </div>
-      <p id="detail-meta" class="doc-path"></p>
+      <p id="detail-meta" class="doc-path" hidden></p>
       <div id="detail-frontmatter" class="doc-meta-slot" hidden></div>
       <article id="detail-body" class="doc-body prose"></article>
     </aside>

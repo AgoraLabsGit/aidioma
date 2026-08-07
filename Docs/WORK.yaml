@@ -871,6 +871,19 @@
   open_questions: null
   done_summary: "persistPageFilters strips q; Work table-meta search hint; Dashboard-spec."
   opened: 2026-08-07T16:52:00Z
+- id: F-009
+  kind: fix
+  summary: "Dashboard from phase/task cwd serves wrong tree → ENOENT spam in terminal"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Terminal 886811: missing public/index.html under phase-007; run-dashboard only looked for nested docs relative to cwd."
+  open_questions: null
+  done_summary: "run-dashboard resolves primary Docs home from any cwd; missing static → quiet 404; startup refuses without public/index.html. Spec+test+CHANGELOG."
+  opened: 2026-08-07T17:24:16Z
 - id: T-011
   kind: task
   summary: "VISIBILITY TEST \u2014 leave active; confirm on Work Open + Activity"
@@ -884,3 +897,190 @@
   open_questions: null
   done_summary: "Founder confirmed T-011 visible on Work Open + Activity after F-008."
   opened: 2026-08-07T16:54:32Z
+- id: F-010
+  kind: fix
+  summary: "Activity Feature/Area stay empty for Work-ref events (phase-only join)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Same pattern as F-006 Status→Work join; activityTags only looked up phases."
+  open_questions: null
+  done_summary: "activityTags joins WORK.yaml feature/area for Work refs; phase tags unchanged. Spec+filter test+CHANGELOG."
+  opened: 2026-08-07T17:27:56Z
+- id: T-012
+  kind: task
+  summary: "Dashboard UI: remove page/table bylines; shrink Filters badge"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Removed page subtitles + table-meta bylines; Filters badge 14px. Spec+CHANGELOG."
+  opened: 2026-08-07T17:30:22Z
+- id: A-006
+  kind: audit
+  summary: "UI audit: components, page template, fonts/styling consistency"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Lenses: seams · agent-context. Founder asked best-practice layout consistency."
+  open_questions: null
+  done_summary: "Verdict: Shell+tokens coherent; no real page template/component library — table pages are duplicated string HTML; Dashboard-spec Knowledge/Signals drifted from live UI. Solid: chrome, chip/filter/tableHeaders helpers, renderPhaseView, tokens, T-012. Gaps: high Knowledge≠spec §5; med no table-page template, Age/empty inconsistency, Signals column drift, renderAll rebuilds; low dead CSS/helpers. Follow-ups: /task extract renderTablePage; /task|/design lock Knowledge; /task Age+empty normalize; /task dead CSS+token cleanup; /log render-visible-only."
+  opened: 2026-08-07T17:30:22Z
+- id: T-013
+  kind: task
+  summary: "Detail panels: match Phase layout; collapse top-left; remove half-height border"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Guideline: Phase details. Also audit Work/Signal/Knowledge panel consistency."
+  open_questions: null
+  done_summary: "Work/Signal details use phase-view Status+card chrome; collapse top-left; resize gutter invisible until hover; scroll in doc-body. Spec+CHANGELOG."
+  opened: 2026-08-07T17:34:41Z
+
+- id: A-007
+  kind: audit
+  summary: "Phase Files/Work/Signals/Audits/Tests wiring + Work/Activity detail intelligence"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Lenses: Proof · Scope · seams. Founder: Files=edited/created; Work detail richer like phase; Activity details?"
+  open_questions:
+    - q: "Should phase Files mean git-touched (created/edited) vs amends_specs.paths ownership trees?"
+      answer: "Visible records of files edited/created/deleted (git-touched), not ownership trees"
+      asked: 2026-08-07
+    - q: "Should Work/Activity detail richness be authored fields on the row/event, or derived joins from activity/git?"
+      answer: "Prefer derived (mechanical); founder asked agent opinion"
+      asked: 2026-08-07
+    - q: "Should phase Tests stay global last_check, or phase-scoped?"
+      answer: "Any tests run in that session (session/phase-scoped), not only global last_check"
+      asked: 2026-08-07
+  done_summary: |
+    Verdict: Phase detail PARTIAL; Work detail PARTIAL (thin-by-contract); Activity detail FAIL (no panel).
+    Files: SPEC MISMATCH not bug — impl shows amends_specs→paths ownership trees; founder wants created/edited marks; Dashboard-spec never defines Files. Needs /design.
+    Work: matches Dashboard-spec (glance+note+questions+done_summary); richer memory (inputs/files/audits/tests) not in schema — prefer derived joins from activity/git (MCOO) over bloating WORK.yaml. Needs /design then /task.
+    Activity: rows lack data-id; openDetail has no event renderer; shell implies clickable tables but Activity §5 has no panel. Needs /design then /task.
+    Also: Tests=global last_check (per written spec); Audits=current_month+phase only (misses phase:null / close). Empty Audits slots always shown vs spec “don’t show empty until projected.”
+    Follow-ups gated on founder answers to open_questions.
+  opened: 2026-08-07T17:39:14Z
+- id: T-014
+  kind: task
+  summary: "Detail panels: remove path byline + duplicate id under header"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Hid detail-meta path; compact phase/work/signal omit duplicate id (title keeps id). Spec+CHANGELOG."
+  opened: 2026-08-07T17:39:20Z
+- id: F-011
+  kind: fix
+  summary: "Detail panel: Close broken; collapse chevron direction; collapsed rail blocks UI"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Three related defects in detail chrome."
+  open_questions: null
+  done_summary: "Close stays in collapsed rail (✕); chevron ›/‹; --detail-offset pads workspace. Spec+CHANGELOG."
+  opened: 2026-08-07T17:42:30Z
+- id: T-015
+  kind: task
+  summary: "Detail chrome: larger chevron; Close top-right expanded only"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "Close back top-right (hidden when collapsed); chevron ~22px in rail."
+  opened: 2026-08-07T17:46:20Z
+- id: T-016
+  kind: task
+  summary: "Stop workspace reflow when detail panel opens/collapses"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Revert F-011 --detail-offset padding; panel overlays again."
+  open_questions: null
+  done_summary: "Removed --detail-offset / syncDetailLayout; workspace no longer reflows with detail."
+  opened: 2026-08-07T17:47:40Z
+- id: T-017
+  kind: task
+  summary: "Age columns default sort newest-first on all tables"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "defaultSortDirFor(age|time)=desc; Signals age cmp aligned to older-first asc. Spec+CHANGELOG."
+  opened: 2026-08-07T17:49:20Z
+- id: F-012
+  kind: fix
+  summary: "Collapsed detail rail overlaps topbar — reserve fixed rail gutter only"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "T-016 removed full-width reflow; keep constant 48px offset while detail open."
+  open_questions: null
+  done_summary: "While detail open: fixed 48px --detail-rail-gutter; expand still overlays (no width reflow)."
+  opened: 2026-08-07T17:53:30Z
+- id: F-013
+  kind: fix
+  summary: "Detail rail still overlaps topbar; panel reopens on refresh"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "F-012 gutter insufficient/not applied; persist or auto-open on load."
+  open_questions: null
+  done_summary: ".detail[hidden]{display:none!important}; boot forces closed; rail gutter 52px while open."
+  opened: 2026-08-07T17:55:30Z
+
+- id: T-018
+  kind: task
+  summary: "/design skill: append activity active flush at start (like /audit)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Activity visibility for in-flight /design; still no Work kind for design (A-003)."
+  open_questions: null
+  done_summary: "design skill: append activity type=design status=active before other work; close with decide/spec or blocked trail. COMMANDS /design row noted. Still no Work ledger kind for /design (decisions/specs home). Verify: next /design shows on Activity Open/list immediately."
+  opened: 2026-08-07T17:56:55Z
+

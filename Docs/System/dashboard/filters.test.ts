@@ -61,6 +61,26 @@ function featureAreaFromSpecId(specId: string | null): { feature: string | null;
   return { feature: specId, area: null };
 }
 
+/** Mirrors activityTags() in public/app.js */
+function activityTags(
+  index: { phases?: Phase[]; work?: Work[] },
+  event: { phase?: string | null; ref?: string | null },
+): { feature: string | null; area: string | null } {
+  const phaseId = event.phase ?? null;
+  if (phaseId) {
+    const phase = (index.phases ?? []).find((row) => row.id === phaseId);
+    if (phase) return { feature: phase.feature ?? null, area: phase.area ?? null };
+  }
+  const ref = event.ref ?? null;
+  if (ref) {
+    const work = (index.work ?? []).find((row) => row.id === ref);
+    if (work) return { feature: work.feature ?? null, area: work.area ?? null };
+    const phase = (index.phases ?? []).find((row) => row.id === ref);
+    if (phase) return { feature: phase.feature ?? null, area: phase.area ?? null };
+  }
+  return { feature: null, area: null };
+}
+
 function filterSignals(
   signals: Signal[],
   filters: { severity: string; kind: string; status: string; feature?: string; area?: string; q: string },
@@ -383,6 +403,52 @@ describe("Column-header sort keys", () => {
       "drift",
       "parse_error",
     ]);
+  });
+});
+
+describe("Activity Feature/Area join", () => {
+  it("joins Work ledger tags for Work-ref events; keeps phase tags when phase is set", () => {
+    const index = {
+      phases: [
+        {
+          id: "PHASE-004",
+          title: "Dash",
+          type: "build",
+          state: "ready",
+          order: 4,
+          age_days: 1,
+          feature: "SPEC-F-DEV-DASHBOARD",
+          area: "SPEC-A-DEVSYSTEM",
+        },
+      ],
+      work: [
+        {
+          id: "F-010",
+          kind: "fix",
+          summary: "tags",
+          status: "active",
+          feature: "SPEC-F-DEV-DASHBOARD",
+          area: "SPEC-A-DEVSYSTEM",
+          age_days: 0,
+        },
+      ],
+    };
+    expect(activityTags(index, { phase: null, ref: "F-010" })).toEqual({
+      feature: "SPEC-F-DEV-DASHBOARD",
+      area: "SPEC-A-DEVSYSTEM",
+    });
+    expect(activityTags(index, { phase: "PHASE-004", ref: "F-010" })).toEqual({
+      feature: "SPEC-F-DEV-DASHBOARD",
+      area: "SPEC-A-DEVSYSTEM",
+    });
+    expect(activityTags(index, { phase: null, ref: "PHASE-004" })).toEqual({
+      feature: "SPEC-F-DEV-DASHBOARD",
+      area: "SPEC-A-DEVSYSTEM",
+    });
+    expect(activityTags(index, { phase: null, ref: "PR-25" })).toEqual({
+      feature: null,
+      area: null,
+    });
   });
 });
 

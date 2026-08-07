@@ -1,10 +1,10 @@
 const PAGE_META = {
-  active: { title: "Active", subtitle: "Phases in flight" },
-  roadmap: { title: "Roadmap", subtitle: "Phases by schedule (depends_on → order)" },
-  activity: { title: "Activity", subtitle: "Command journal (.work/activity)" },
-  knowledge: { title: "Knowledge", subtitle: "Specs, decisions, research, releases" },
-  work: { title: "Work", subtitle: "WORK.yaml ledger — fix, task, proposal, research, question, audit" },
-  signals: { title: "Signals", subtitle: "Derived health (drift, parse errors, broken links…)" },
+  active: { title: "Active" },
+  roadmap: { title: "Roadmap" },
+  activity: { title: "Activity" },
+  knowledge: { title: "Knowledge" },
+  work: { title: "Work" },
+  signals: { title: "Signals" },
 };
 
 const DETAIL_WIDTH_KEY = "aidioma-detail-width";
@@ -28,9 +28,8 @@ const DEFAULT_FILTERS = {
 
 /** First-click direction per column (second click flips). */
 function defaultSortDirFor(_page, sortKey) {
-  // Age: oldest first (prior one-way behavior). Activity time: newest first.
-  if (sortKey === "age") return "asc";
-  if (sortKey === "time") return "desc";
+  // Age / Activity time: newest first on first click (asc = older first via comparators).
+  if (sortKey === "age" || sortKey === "time") return "desc";
   return "asc";
 }
 
@@ -113,7 +112,6 @@ const indexedAt = document.querySelector("#indexed-at");
 const issuePill = document.querySelector("#issue-pill");
 const heartbeat = document.querySelector(".heartbeat");
 const pageTitle = document.querySelector("#page-title");
-const pageSubtitle = document.querySelector("#page-subtitle");
 const detail = document.querySelector("#detail");
 const detailTitle = document.querySelector("#detail-title");
 const detailMeta = document.querySelector("#detail-meta");
@@ -259,11 +257,31 @@ function deepFilterCount(filters) {
   return [filters.feature, filters.area].filter(Boolean).length;
 }
 
+/**
+ * Activity Feature/Area: prefer explicit phase tags; else when `ref` is a Work id,
+ * join WORK.yaml (ledger SSOT — same pattern as activityDisplayStatus / F-006).
+ * Phase id in `ref` still resolves via the phase list.
+ */
 function activityTags(index, event) {
-  const phaseId = event.phase ?? event.ref ?? null;
-  if (!phaseId) return { feature: null, area: null };
-  const phase = (index.phases ?? []).find((row) => row.id === phaseId);
-  return { feature: phase?.feature ?? null, area: phase?.area ?? null };
+  const phaseId = event.phase ?? null;
+  if (phaseId) {
+    const phase = (index.phases ?? []).find((row) => row.id === phaseId);
+    if (phase) {
+      return { feature: phase.feature ?? null, area: phase.area ?? null };
+    }
+  }
+  const ref = event.ref ?? null;
+  if (ref) {
+    const work = (index.work ?? []).find((row) => row.id === ref);
+    if (work) {
+      return { feature: work.feature ?? null, area: work.area ?? null };
+    }
+    const phase = (index.phases ?? []).find((row) => row.id === ref);
+    if (phase) {
+      return { feature: phase.feature ?? null, area: phase.area ?? null };
+    }
+  }
+  return { feature: null, area: null };
 }
 
 function filterPanelHtml(page, filters, options) {
@@ -861,7 +879,11 @@ function renderPhaseView(phase, index, { primary = false, compact = false } = {}
   return `
     <article class="phase-view${compact ? " phase-view-compact" : ""}" data-phase="${escapeHtml(phase.id)}" data-phase-doc="${escapeHtml(phase.id)}">
       <header class="phase-header">
-        <p class="phase-id-row"><code>${escapeHtml(phase.id)}</code></p>
+        ${
+          compact
+            ? ""
+            : `<p class="phase-id-row"><code>${escapeHtml(phase.id)}</code></p>`
+        }
         <h2 class="phase-name">${escapeHtml(phase.title)}</h2>
         <p class="phase-outcome">${escapeHtml(phase.outcome)}</p>
         ${
@@ -1226,7 +1248,6 @@ function renderRoadmap(index) {
       </div>
       ${filterPanelHtml("roadmap", state.roadmapFilters, specOptions)}
     </div>
-    <p class="table-meta">Showing ${rows.length} of ${index.phases.length} · columns: ID, Order, Kind, Summary, Feature, Area, Status, Age</p>
     <div class="table-frame">
       <table>
         <thead>
@@ -1324,7 +1345,6 @@ function renderActivity(index) {
       </div>
       ${filterPanelHtml("activity", state.activityFilters, specOptions)}
     </div>
-    <p class="table-meta">Showing ${events.length} of ${source.length} · columns: ID, Kind, Summary, Feature, Area, Status, Age</p>
     <div class="table-frame">
       <table>
         <thead><tr>${tableHeaders("activity", sort, sortDir)}</tr></thead>
@@ -1453,8 +1473,8 @@ function renderKnowledge(index) {
       <aside class="knowledge-toc">
         <div class="knowledge-toc-head">
           <div class="toc-head-row">
+            <button type="button" class="icon-btn" data-toc-collapse title="Collapse document list" aria-label="Collapse document list">⟨</button>
             <strong>Documents</strong>
-            <button type="button" class="icon-btn" data-toc-collapse title="Collapse document list">⟨</button>
           </div>
           ${searchInput("knowledge-q", "", "Filter documents…")}
         </div>
@@ -1482,7 +1502,7 @@ function renderKnowledge(index) {
       </aside>
       <div class="toc-resize" data-resize="toc" title="Drag to resize"></div>
       <section class="knowledge-doc" data-knowledge-doc></section>
-      <button type="button" class="toc-expand" data-toc-expand title="Show document list" ${state.tocCollapsed ? "" : "hidden"}>Documents ⟩</button>
+      <button type="button" class="toc-expand" data-toc-expand title="Show document list" aria-label="Show document list" ${state.tocCollapsed ? "" : "hidden"}>⟩</button>
     </div>
   `;
 
@@ -1579,9 +1599,6 @@ function renderWork(index) {
       </div>
       ${filterPanelHtml("work", state.workFilters, specOptions)}
     </div>
-    <p class="table-meta">Showing ${rows.length} of ${source.length} · Docs/WORK.yaml${
-      q ? ` · search “${escapeHtml(q)}” (clear to see all)` : ""
-    }</p>
     <div class="table-frame">
       <table>
         <thead><tr>${tableHeaders("work", sort, sortDir)}</tr></thead>
@@ -1630,7 +1647,8 @@ function renderSignals(index) {
     const tags = (issue) => featureAreaFromSpecId(issue.spec);
     let cmp = 0;
     if (sort === "age") {
-      cmp = (left.age_days ?? 0) - (right.age_days ?? 0);
+      // Match compareOpenedAsc polarity: ascending = older first; default sortDir desc ⇒ newest first.
+      cmp = (right.age_days ?? 0) - (left.age_days ?? 0);
     } else if (sort === "kind") {
       cmp = left.kind.localeCompare(right.kind);
     } else if (sort === "id") {
@@ -1645,7 +1663,7 @@ function renderSignals(index) {
       cmp = issueStatus(left).localeCompare(issueStatus(right))
         || (left.age_days ?? 0) - (right.age_days ?? 0);
     } else {
-      // default: severity, then age
+      // default: severity, then newer age within severity
       cmp = (severityRank[left.severity] ?? 9) - (severityRank[right.severity] ?? 9)
         || (left.age_days ?? 0) - (right.age_days ?? 0);
     }
@@ -1696,7 +1714,6 @@ function renderSignals(index) {
       </div>
       ${filterPanelHtml("signals", state.signalsFilters, specOptions)}
     </div>
-    <p class="table-meta">${index.paths_scanned_at ? `Slow cycle ${formatAge(index.paths_scanned_at)} · ` : ""}Showing ${issues.length} of ${source.length} · columns: ID, Kind, Summary, Feature, Area, Status, Age</p>
     <div class="table-frame">
       <table>
         <thead><tr>${tableHeaders("signals", sort, sortDir)}</tr></thead>
@@ -1774,7 +1791,6 @@ function showPage(page) {
   writeStored(PAGE_KEY, page);
   const meta = PAGE_META[page] ?? PAGE_META.active;
   pageTitle.textContent = meta.title;
-  pageSubtitle.textContent = meta.subtitle;
   for (const [name, panel] of Object.entries(panels)) {
     panel.hidden = name !== page;
   }
@@ -1787,12 +1803,28 @@ function showPage(page) {
     else issuePill.removeAttribute("aria-current");
   }
   if (page === "knowledge") detail.hidden = true;
+  syncDetailRailGutter();
 }
 
 function applyDetailWidth(width) {
   const clamped = Math.min(Math.max(width, 360), Math.floor(window.innerWidth * 0.7));
   detail.style.width = `${clamped}px`;
   writeStored(DETAIL_WIDTH_KEY, String(clamped));
+}
+
+function glancePairsHtml(pairs) {
+  return `
+    <dl class="glance-grid">
+      ${pairs
+        .map(
+          ([left, right]) => `
+        ${glanceCellHtml(left[0], left[1], left[2])}
+        ${glanceCellHtml(right[0], right[1], right[2] ?? {})}
+      `,
+        )
+        .join("")}
+    </dl>
+  `;
 }
 
 function renderWorkQuestions(questions) {
@@ -1808,69 +1840,137 @@ function renderWorkQuestions(questions) {
     })
     .join("");
   return `
-    <section style="margin-top:1rem">
+    <div class="phase-card-section">
       <h3 class="now-label">Open questions</h3>
       <ul class="phase-plain-list">${items}</ul>
-    </section>`;
+    </div>`;
 }
 
+/** Work detail — same section chrome as Phase details (Status block + card sections). */
 function renderWorkDetail(row) {
-  const fields = [
-    ["Kind", row.kind],
-    ["Status", row.status],
-    ["Opened", row.opened],
-    ["Age", formatOpenedAge(row.opened)],
-    ["Feature", shortSpecId(row.feature)],
-    ["Area", shortSpecId(row.area)],
-    ["Phase", row.phase ?? "—"],
-    ["Blocked by", row.blocked_by ?? "—"],
-    ["Promoted to", row.promoted_to ?? "—"],
+  const pairs = [
+    [
+      ["Kind", escapeHtml(row.kind), { mono: true }],
+      ["Status", statusHtml(row.status)],
+    ],
+    [
+      ["Opened", escapeHtml(row.opened ?? "—"), { mono: true }],
+      ["Age", escapeHtml(formatOpenedAge(row.opened))],
+    ],
+    [
+      ["Feature", escapeHtml(shortSpecId(row.feature)), { mono: true }],
+      ["Area", escapeHtml(shortSpecId(row.area)), { mono: true }],
+    ],
+    [
+      ["Phase", escapeHtml(row.phase ?? "—"), { mono: true }],
+      ["Blocked by", escapeHtml(row.blocked_by ?? "—"), { mono: true }],
+    ],
+    [
+      ["Promoted to", escapeHtml(row.promoted_to ?? "—"), { mono: true }],
+      ["Ledger", "<code>WORK.yaml</code>"],
+    ],
   ];
-  return `
-    <div class="phase-card">
-      <p class="cell-primary" style="margin:0 0 1rem">${escapeHtml(row.summary)}</p>
-      <dl class="glance-grid">
-        ${fields.map(([label, value]) => `
-          <div class="glance-cell">
-            <dt>${escapeHtml(label)}</dt>
-            <dd class="mono">${escapeHtml(String(value))}</dd>
-          </div>
-        `).join("")}
-      </dl>
-      ${row.note ? `<p class="muted" style="margin-top:1rem">${escapeHtml(row.note)}</p>` : ""}
-      ${renderWorkQuestions(row.open_questions)}
-      ${row.done_summary ? `
-        <section style="margin-top:1rem">
+  const bodySections = [
+    row.note
+      ? `<div class="phase-card-section">
+          <h3 class="now-label">Note</h3>
+          <p>${escapeHtml(row.note)}</p>
+        </div>`
+      : "",
+    renderWorkQuestions(row.open_questions),
+    row.done_summary
+      ? `<div class="phase-card-section">
           <h3 class="now-label">Done summary</h3>
-          <p style="margin:0.35rem 0 0">${escapeHtml(row.done_summary)}</p>
-        </section>` : ""}
-      <p class="muted" style="margin-top:1rem">Ledger row in <code>Docs/WORK.yaml</code> — not a separate markdown ticket.</p>
-    </div>
+          <p>${escapeHtml(row.done_summary)}</p>
+        </div>`
+      : "",
+  ]
+    .filter(Boolean)
+    .join("");
+
+  return `
+    <article class="phase-view phase-view-compact">
+      <header class="phase-header">
+        <h2 class="phase-name">${escapeHtml(row.summary)}</h2>
+        <p class="phase-outcome">Ledger row in <code>Docs/WORK.yaml</code> — not a separate markdown ticket.</p>
+      </header>
+      <section class="phase-block">
+        <h3 class="now-label">Status</h3>
+        ${glancePairsHtml(pairs)}
+      </section>
+      ${bodySections ? `<section class="phase-card">${bodySections}</section>` : ""}
+    </article>
   `;
 }
 
+/** Signal detail — Phase-aligned Status + header. */
 function renderSignalDetail(issue) {
-  const fields = [
-    ["Kind", issue.kind],
-    ["Status", issueStatus(issue)],
-    ["Severity", issue.severity],
-    ["Spec", issue.spec ?? "—"],
-    ["Age", issue.age_days == null ? "—" : issue.age_days === 0 ? "<24h" : `${issue.age_days}d`],
+  const age =
+    issue.age_days == null ? "—" : issue.age_days === 0 ? "<24h" : `${issue.age_days}d`;
+  const pairs = [
+    [
+      ["Kind", escapeHtml(issue.kind), { mono: true }],
+      ["Status", statusHtml(issueStatus(issue))],
+    ],
+    [
+      ["Severity", escapeHtml(issue.severity)],
+      ["Spec", escapeHtml(issue.spec ?? "—"), { mono: true }],
+    ],
+    [
+      ["Age", escapeHtml(age)],
+      ["Source", "Derived signal"],
+    ],
   ];
   return `
-    <div class="phase-card">
-      <p class="cell-primary" style="margin:0 0 1rem">${escapeHtml(issue.summary)}</p>
-      <dl class="glance-grid">
-        ${fields.map(([label, value]) => `
-          <div class="glance-cell">
-            <dt>${escapeHtml(label)}</dt>
-            <dd class="mono">${escapeHtml(String(value))}</dd>
-          </div>
-        `).join("")}
-      </dl>
-      <p class="muted" style="margin-top:1rem">Derived signal — not an authored Work row.</p>
-    </div>
+    <article class="phase-view phase-view-compact">
+      <header class="phase-header">
+        <h2 class="phase-name">${escapeHtml(issue.summary)}</h2>
+        <p class="phase-outcome">Derived health signal — not an authored Work row.</p>
+      </header>
+      <section class="phase-block">
+        <h3 class="now-label">Status</h3>
+        ${glancePairsHtml(pairs)}
+      </section>
+    </article>
   `;
+}
+
+const DETAIL_RAIL_GUTTER = 52;
+
+/** Right-docked: expanded › collapses toward edge; collapsed ‹ expands open. */
+function syncDetailCollapseControl() {
+  const btn = document.querySelector("#detail-collapse");
+  if (!btn) return;
+  const collapsed = detail.classList.contains("collapsed");
+  btn.textContent = collapsed ? "‹" : "›";
+  btn.title = collapsed ? "Expand panel" : "Collapse panel";
+  btn.setAttribute("aria-label", btn.title);
+  btn.setAttribute("aria-expanded", collapsed ? "false" : "true");
+}
+
+/**
+ * Reserve only the collapsed-rail width while detail is open.
+ * Expanded panel overlays further left — workspace does not reflow on expand/collapse.
+ */
+function syncDetailRailGutter() {
+  const open = Boolean(detail && !detail.hidden);
+  document.body.style.setProperty(
+    "--detail-rail-gutter",
+    open ? `${DETAIL_RAIL_GUTTER}px` : "0px",
+  );
+}
+
+function closeDetail() {
+  detail.hidden = true;
+  detail.classList.remove("collapsed");
+  state.selectedId = null;
+  syncDetailCollapseControl();
+  syncDetailRailGutter();
+  if (state.index) {
+    if (state.page === "roadmap") renderRoadmap(state.index);
+    if (state.page === "work") renderWork(state.index);
+    if (state.page === "signals") renderSignals(state.index);
+  }
 }
 
 async function openDetail(id) {
@@ -1879,13 +1979,17 @@ async function openDetail(id) {
   detail.classList.remove("collapsed");
   detailTitle.textContent = id;
   applyDetailWidth(Number(readStored(DETAIL_WIDTH_KEY)) || 560);
+  syncDetailCollapseControl();
+  syncDetailRailGutter();
+  // ID lives in the topbar title — never repeat path/id bylines under it.
+  detailMeta.textContent = "";
+  detailMeta.hidden = true;
 
   const phase = state.index?.phases?.find((item) => item.id === id);
   const work = state.index?.work?.find((item) => item.id === id);
   const signal = state.index?.issues?.find((item) => item.ref === id);
 
   if (phase) {
-    detailMeta.textContent = phase.sourcePath ? `Docs/${phase.sourcePath}` : "";
     detailFrontmatter.hidden = true;
     detailFrontmatter.innerHTML = "";
     detailBody.className = "doc-body";
@@ -1895,13 +1999,11 @@ async function openDetail(id) {
     });
     await hydratePhaseDocs(detailBody);
   } else if (work) {
-    detailMeta.textContent = "Docs/WORK.yaml";
     detailFrontmatter.hidden = true;
     detailFrontmatter.innerHTML = "";
     detailBody.className = "doc-body";
     detailBody.innerHTML = renderWorkDetail(work);
   } else if (signal) {
-    detailMeta.textContent = "derived signal";
     detailFrontmatter.hidden = true;
     detailFrontmatter.innerHTML = "";
     detailBody.className = "doc-body";
@@ -1909,7 +2011,6 @@ async function openDetail(id) {
   } else {
     const response = await fetch(`/api/doc?id=${encodeURIComponent(id)}`);
     if (!response.ok) {
-      detailMeta.textContent = "";
       detailFrontmatter.hidden = true;
       detailBody.className = "doc-body";
       detailBody.innerHTML = `<p class="muted">No detail for ${escapeHtml(id)}.</p>`;
@@ -1918,7 +2019,7 @@ async function openDetail(id) {
     const doc = await response.json();
     detailBody.className = "doc-body prose";
     renderDocInto(doc, {
-      pathEl: detailMeta,
+      pathEl: null,
       metaEl: detailFrontmatter,
       bodyEl: detailBody,
     });
@@ -2004,18 +2105,17 @@ themeToggle.addEventListener("click", () => {
   applyTheme(next);
 });
 
-document.querySelector("#detail-close").addEventListener("click", () => {
-  detail.hidden = true;
-  state.selectedId = null;
-  if (state.index) {
-    if (state.page === "roadmap") renderRoadmap(state.index);
-    if (state.page === "work") renderWork(state.index);
-    if (state.page === "signals") renderSignals(state.index);
-  }
+document.querySelector("#detail-close").addEventListener("click", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  closeDetail();
 });
 
-document.querySelector("#detail-collapse").addEventListener("click", () => {
+document.querySelector("#detail-collapse").addEventListener("click", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
   detail.classList.toggle("collapsed");
+  syncDetailCollapseControl();
 });
 
 const detailResize = document.querySelector('[data-resize="detail"]');
@@ -2205,7 +2305,13 @@ setInterval(() => {
 }, 1000);
 
 applyTheme(readStored(THEME_KEY) === "light" ? "light" : "dark");
+// Detail stays closed until a row is opened — never auto-show on refresh.
+detail.hidden = true;
+detail.classList.remove("collapsed");
+state.selectedId = null;
 applyDetailWidth(Number(readStored(DETAIL_WIDTH_KEY)) || 520);
+syncDetailCollapseControl();
+syncDetailRailGutter();
 showPage(state.page);
 void loadIndex().then(connectEvents).catch((error) => {
   panels.active.innerHTML = `<div class="empty">Dashboard failed to load: ${escapeHtml(error.message)}</div>`;

@@ -2,8 +2,28 @@
 
 Append only. Every `/system` change adds one line.
 
+| 2026-08-07 | 3 | T-018: `/design` skill — activity `design` active flush at start (Activity visibility)
+
+| 2026-08-07 | 3 | F-013: Detail respects hidden (closed on load); 52px rail gutter
+
+| 2026-08-07 | 3 | F-012: Fixed 48px detail-rail gutter (no expand/collapse reflow)
+
+| 2026-08-07 | 3 | T-017: Age/time columns default newest-first on first sort click
+
+| 2026-08-07 | 3 | T-016: Detail overlays again — no workspace padding reflow
+
+| 2026-08-07 | 3 | T-015: Detail Close top-right when expanded; larger collapse chevron
+
+| 2026-08-07 | 3 | A-006: UI audit — shell/tokens solid; table pages not templated; Knowledge/Signals spec drift
+
 | Date | schema_version | Change |
 |---|---|---|
+| 2026-08-07 | 3 | F-011: Detail Close when collapsed; chevron flip; workspace offset for rail |
+| 2026-08-07 | 3 | T-014: Detail panels drop path byline + duplicate id under title |
+| 2026-08-07 | 3 | T-013: Detail panels match Phase layout; collapse top-left; invisible resize gutter |
+| 2026-08-07 | 3 | T-012: Remove page/table bylines; shrink Filters count badge |
+| 2026-08-07 | 3 | F-010: Activity Feature/Area join Work ledger when `ref` is a Work id |
+| 2026-08-07 | 3 | F-009: `run-dashboard` always prefers primary Docs home; missing static → quiet 404 |
 | 2026-08-07 | 3 | F-008: Do not persist table search `q` (avoids hiding new Work rows) |
 | 2026-08-07 | 3 | F-007: Table column sort toggles asc/desc on repeat click (▴/▾) |
 | 2026-08-07 | 3 | F-006: Activity Status syncs to Work ledger when `ref` is a Work id |
