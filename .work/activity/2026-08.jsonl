@@ -166,3 +166,4 @@
 {"ts":"2026-08-07T19:01:30Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-016","status":"active","summary":"Backfill check refs to C-nnn"}
 {"ts":"2026-08-07T19:01:40Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-016","status":"complete","summary":"Backfilled 9 checks to C-001..C-009"}
 {"ts":"2026-08-07T19:11:33Z","type":"check","ref":"C-010","status":"complete","summary":"work:typecheck + work:test (39) + work:validate — worktrees rename + project_name brand"}
+{"ts":"2026-08-07T19:13:11Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-33","status":"complete","summary":"Reduced /close: merged PR #33 (worktrees badge + project_name brand + Docs-home session); remotes pruned to origin/main"}
