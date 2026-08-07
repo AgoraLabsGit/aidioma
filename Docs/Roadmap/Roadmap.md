@@ -16,7 +16,7 @@
 | 8 | [PHASE-003 — Core Component Architecture](Phases/PHASE-003-core-component-architecture.md) | design | proposed | Minimum areas/components for the map. |
 | 99 | [PHASE-099 — MOCK dense Lexicon fixture](Phases/PHASE-099-mock-dense-lexicon.md) | build | proposed | UI density fixture only — do not /run. |
 
-**Active:** none · **Next:** `/plan` Docs home (P-001/D-020) or `/run PHASE-006`
+**Active:** none · **Next:** `/plan` next phase or `/run PHASE-006` / `PHASE-008` / `PHASE-002`
 
 
 Unscheduled candidates: `Docs/WORK.yaml`. Commands: [`../System/COMMANDS.md`](../System/COMMANDS.md).

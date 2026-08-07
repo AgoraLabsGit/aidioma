@@ -2,23 +2,16 @@
 
 **Date:** 2026-08-07
 
-**Branch:** `main` (after merge)
+**Branch:** `main` @ `db4f5c2` (merge PR #21)
 **Active phase:** none
+**Docs home:** `.worktrees/docs` (`docs/ssot`) @ same tip
 
 ## Done this session
 
 - P-001 Docs home; T-002/T-003 path-lens + reduced-close; F-004 status colors restored
 - T-004 filter persistence; T-005 System `protocols/` + `specs/`
 - **T-006 / D-021** — `/close` dispatches full phase close or reduced close
-
-## After merge
-
-```text
-npm run work:docs-home   # refresh docs/ssot onto new main
-npm run work:dashboard
-```
-
-Write Docs/System/skills only in `.worktrees/docs` when home exists.
+- Reduced `/close`: CI green → merge #21 → Docs home refreshed
 
 ## Open
 
