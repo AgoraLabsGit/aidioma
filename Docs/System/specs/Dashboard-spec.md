@@ -281,7 +281,7 @@ one card per `active`/`blocked` phase so parallel phases do not collapse into on
 |---|---|
 | Header | id + title + `outcome` (state/type live in Status only) |
 | Status | Two-column glance (4+4) — left: state, type, owner, opened · right: proof_kind, git, check, issues |
-| Phase card | One card, sections: Context (+ out of scope), Plan, Proof, Dependencies (`depends_on`), Specs amended (`amends_specs`), Inputs (body), Files, Work/Signals, **Audits** (latest `/audit` activity for phase or honest “not run”), **Tests** (`last_check` or “not run”; build always, design when a check exists). **Tables vs lists:** authored `\|` markdown → real `.md-table`. Numbered Plan / proof checklist → row+divider lists. Out of scope → plain bullets. |
+| Phase card | One card, sections: Context (+ out of scope), Plan, Proof, Dependencies (`depends_on`), Specs amended (`amends_specs`), Inputs (body), Files, Work/Signals, **Activity** (events with phase/ref), **Audits** (latest `/audit` activity for phase or honest “not run”), **Tests** (`last_check` or “not run”; build always, design when a check exists). **Tables vs lists:** authored `\|` markdown → real `.md-table`. Numbered Plan / proof checklist → row+divider lists. Out of scope → plain bullets. |
 | Commands panel | Header icon **left of** reindex opens a read-only command map (class + does + May invoke). Copy-to-clipboard cmd names only — no run buttons (D-019). |
 | Handoff | Below the phase stack on Active only — `HANDOFF.md` with `updated_at` |
 
@@ -311,6 +311,13 @@ Active UI** (founder removed the command bar / suggested-next box).
 | ID | Kind | Summary | Feature | Area | Status | Age |
 
 - Projects `.work/activity/*.jsonl` only (D-008). UI label stays **Activity**.
+- **Page job (D-023): process / ops spine** — not the outcome flight recorder.
+  Outcome trails live on **Work** / **Phase** detail (D-022). Journal file still stores all events.
+- **Allowlist (hard):** page never lists outcome types (`fix`, `task`, `log`, `research`,
+  `design`, `decide`, `spec`, `plan`, `build`, `audit`, `capture`, …).
+  - **Default (Type All):** `handoff`, `close`, `check`, `ship` only
+  - **Type chips ⊆** `{handoff, close, check, ship, launch, dashboard, status, triage, system}`
+    — optional ops chips are not included in default All; no outcome-type chips from raw journal
 - Reverse chronological; toolbar = search + Type chips on one row (no Actor/Phase filters; no Sort select)
 - Summary is plain text (no actor sub-line); capped at 80 chars with full tooltip
 - **Status column:** when `ref` matches a Work id, show **current** `WORK.yaml` status (ledger
@@ -320,6 +327,7 @@ Active UI** (founder removed the command bar / suggested-next box).
 - **Sortable headers:** every column except Summary
 - ID shows ref (phase as secondary when different)
 - Feature/Area columns + panel filters resolve from the event phase when present
+- Empty: “No process events yet. Outcome work → Work; phase runs → Active detail.”
 - **Per-feature timeline** — later: selecting a spec filters its ref chain
 
 ### Knowledge
@@ -353,22 +361,25 @@ does.
 
 ### Work
 
-Authored ledger from `WORK.yaml`. Separate from Signals (D-011).
+Authored **outcome** ledger from `WORK.yaml`. Separate from Signals (D-011) and from Activity’s
+process spine (D-023). Plan/design/research/audit are outcome work (correct homes), not Activity-page rows.
 
 | ID | Kind | Summary | Feature | Area | Status | Age |
 
-Kinds: `fix` · `task` · `proposal` · `research` · `question` · `audit`.
+Kinds: `fix` · `task` · `proposal` · `research` · `question` · `audit` · `design` (`S-nnn`).
 Status filters: Open = `open`+`active`; Closed = `done`+`promoted`+`dropped`.
 Table summaries capped at 80 chars (tooltip = full). **Sortable headers:** every column except
 Summary (ID, Kind, Feature, Area, Status, Age). Click toggles **asc/desc** (▴/▾); persists with
 filters. No Sort select.
 **Age:** prefer `opened` as UTC ISO datetime (real relative time). Date-only `YYYY-MM-DD`
 (legacy) shows calendar days (`today` / `Nd ago`) — never hours-from-midnight.
-`/fix` `/task` `/audit` `/research` write `status: active` + ISO `opened` **before** other edits.
+`/fix` `/task` `/audit` `/research` `/design` write `status: active` + ISO `opened` **before** other edits.
 Feature/Area via Filters panel; Reset restores defaults.
 
-Detail pane: glance fields + optional `note` + **Open questions** (`open_questions`) + **Done
-summary** (`done_summary`). Clarifications live on the row — not as sibling `question` rows.
+Detail pane: glance fields + optional `note` + **Open questions** + **Done summary** +
+**Activity** (derived: `.work/activity` events with `ref === work.id`, newest first — includes
+outcome types excluded from the Activity page). Clarifications live on the row — not as sibling
+`question` rows. Durable outcome commands must upsert a Work row so their trail appears here (D-022).
 
 ### Signals
 

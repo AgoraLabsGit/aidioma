@@ -7,9 +7,10 @@ superseded_by: null
 vendor: null
 decisions:
   - D-013
+  - D-024
 built_by:
   - PHASE-005
-last_amended: PHASE-007
+last_amended: PHASE-005
 research: []
 paths:
   - Docs/System/**
@@ -28,6 +29,7 @@ Process substrate: Docs/System, Work ledger, dashboard, Roadmap, and agent comma
 
 - Rule: Living process SSOT is `Docs/System/system.md`
 - Rule: Authored non-phase work lives in `Docs/WORK.yaml`
+- Rule: Work (and optionally Phase frontmatter) may declare `context_paths` — repo-relative paths that informed the item (D-024); not an automatic tool-read log
 - Failure mode: If derive/dashboard is down, agents still read Docs/ in the IDE
 
 ## Boundaries

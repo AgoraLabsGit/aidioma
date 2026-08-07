@@ -2,22 +2,20 @@
 
 Append only. Every `/system` change adds one line.
 
-| 2026-08-07 | 3 | T-018: `/design` skill — activity `design` active flush at start (Activity visibility)
-
-| 2026-08-07 | 3 | F-013: Detail respects hidden (closed on load); 52px rail gutter
-
-| 2026-08-07 | 3 | F-012: Fixed 48px detail-rail gutter (no expand/collapse reflow)
-
-| 2026-08-07 | 3 | T-017: Age/time columns default newest-first on first sort click
-
-| 2026-08-07 | 3 | T-016: Detail overlays again — no workspace padding reflow
-
-| 2026-08-07 | 3 | T-015: Detail Close top-right when expanded; larger collapse chevron
-
-| 2026-08-07 | 3 | A-006: UI audit — shell/tokens solid; table pages not templated; Knowledge/Signals spec drift
-
 | Date | schema_version | Change |
 |---|---|---|
+| 2026-08-07 | 3 | D-024/S-003: Brief vs Context labels; declared context_paths (Adv WARN pending ack) |
+| 2026-08-07 | 3 | D-023: Work = outcomes; Activity page = process spine allowlist (keep both) |
+| 2026-08-07 | 3 | F-014: Work detail Context + Files (Phase parity) |
+| 2026-08-07 | 3 | F-015: Work kind `design` (`S-nnn`) in schema/Zod |
+| 2026-08-07 | 3 | T-019/D-022: Work detail Activity trail; kind `design` (`S-nnn`); Activity page optional |
+| 2026-08-07 | 3 | T-018: `/design` skill — activity `design` active flush at start (Activity visibility) |
+| 2026-08-07 | 3 | F-013: Detail respects hidden (closed on load); 52px rail gutter |
+| 2026-08-07 | 3 | F-012: Fixed 48px detail-rail gutter (no expand/collapse reflow) |
+| 2026-08-07 | 3 | T-017: Age/time columns default newest-first on first sort click |
+| 2026-08-07 | 3 | T-016: Detail overlays again — no workspace padding reflow |
+| 2026-08-07 | 3 | T-015: Detail Close top-right when expanded; larger collapse chevron |
+| 2026-08-07 | 3 | A-006: UI audit — shell/tokens solid; table pages not templated; Knowledge/Signals spec drift |
 | 2026-08-07 | 3 | F-011: Detail Close when collapsed; chevron flip; workspace offset for rail |
 | 2026-08-07 | 3 | T-014: Detail panels drop path byline + duplicate id under title |
 | 2026-08-07 | 3 | T-013: Detail panels match Phase layout; collapse top-left; invisible resize gutter |

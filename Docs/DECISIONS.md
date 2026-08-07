@@ -160,3 +160,73 @@ Date: 2026-08-07 · Phase: — · From: — · Affects: [SPEC-A-DEVSYSTEM]
 Chose: `/close` always — active phase → full phase close; no phase → reduced close (`protocols/reduced-close.md`) — over a separate publish verb or refusing `/close` outside phases
 Why: Founders end sessions with `/close`; a doc-only reduced-close path was skipped by agents; one verb must publish both phase and standalone work
 Revisit if: Reduced path accidentally skips Required Adv on phase claims, or non-phase closes balloon into full phase ritual
+
+## D-022 — Work is primary visibility; activity.jsonl stays the journal
+Date: 2026-08-07 · Phase: — · From: S-001 · Affects: [SPEC-F-DEV-DASHBOARD, SPEC-A-DEVSYSTEM]
+Chose: Durable command work is visible on the **Work** table/detail; `.work/activity/*.jsonl` remains the append-only journal and is **projected** into Work (and Phase) detail by `ref` / `phase` — over turning every activity event into its own Work row, and over keeping Activity as the only place to see command history
+Why: Founder wants one place to follow work; Activity page becomes redundant for that job once trails land on Work. Ledger (authored Work rows) and journal (events) stay separate homes — UI primary shifts to Work
+Revisit if: Phase-lifecycle events (`/run` `/close` `/check` without Work ref) are invisible after Activity nav removal, or Work Open is drowned by event-like rows
+
+### Non-goals
+- Work-row-per-`/check` / `/dashboard` / `/handoff`
+- Agents reading `.work/activity/**`
+- Deleting the activity.jsonl files
+
+### Implement via
+Work detail Activity section; `/fix` `/task` `/audit` `/research` `/design` Work active flush; Activity page optional (nav removal after founder ack on S-001)
+
+## D-023 — Work vs Activity page jobs (process spine)
+Date: 2026-08-07 · Phase: — · From: S-002 · Affects: [SPEC-F-DEV-DASHBOARD, SPEC-A-DEVSYSTEM]
+Chose: Keep **both** Work and Activity pages with hard UI separation — over removing Activity (D-022 optional-nav) and over showing the full journal on Activity
+Why: Founder treats plan/design/research/audit as outcome work like tasks/fixes; Activity must not duplicate that table. Process/ops still need a home.
+Revisit if: Process-only Activity is too sparse to use, or founder wants a full flight-recorder page again
+Supersedes: D-022 claim that Activity page is optional / candidate for nav removal
+Adv: WARN (ack) — default rows = always-shown process types only; Type chips ⊆ process allowlist (no outcome-type chips)
+
+### Homes (page jobs)
+| Outcome | Authoritative home | Work ledger? |
+|---|---|---|
+| fix / task / proposal / research / question / audit | Work (`WORK.yaml`) | yes |
+| design (in-flight `/design`) | Work `kind: design` (`S-nnn`); durable D-*/SPEC-* also in Knowledge | yes while executing |
+| plan (phase outcomes) | Roadmap / phase files | no Work kind for `/plan` (may promote proposal) |
+| process ops | Activity page ← filtered journal | never Work rows for check/handoff/dashboard |
+
+### Activity page allowlist (table only)
+- **Default rows (All):** `handoff`, `close`, `check`, `ship`
+- **Optional Type chips** (same allowlist; not in default All): `launch`, `dashboard`, `status`, `triage`, `system`
+- **Excluded from Activity page:** outcome types (`fix`, `task`, `log`, `research`, `design`, `decide`, `spec`, `plan`, `build`, `audit`, `capture`, …)
+- `activity.jsonl` still appends all wired commands (journal SSOT unchanged)
+
+### Lifecycle visibility (required)
+- Phase detail keeps projecting `plan` / `build` / `close` / `check` / other phase-matched events (D-022)
+- Work detail keeps projecting events by Work `ref`
+- Activity page is **not** the `/run`/`/plan` flight recorder
+
+### Non-goals
+- Delete `activity.jsonl`
+- Work-row-per-ops-event
+- Agents loading `.work/activity/**`
+
+## D-024 — Brief vs Context; declared `context_paths`
+Date: 2026-08-07 · Phase: — · From: S-003 · Affects: [SPEC-F-DEV-DASHBOARD, SPEC-A-DEVSYSTEM]
+Chose: Detail **Brief** = authored intent (Work `note`; Phase `## Brief` else `## Context`); **Context** = declared `context_paths`; **Files** = ownership trees — over auto tool-read capture and over keeping prose labeled “Context”
+Why: Founder wants Context to mean “what was used,” but session reads are not deterministic without instrumentation; declared paths are honest and durable
+Revisit if: A reliable capture hook lands (skills/hooks) that can append reads without false completeness claims
+Adv: WARN — dual vocabulary during transition (file `## Context` = UI Brief; UI Context = `context_paths`); soft-fill may leave Context empty until skills write paths
+
+### Detail (locked)
+1. Brief = authored intent
+2. Context = declared repo-relative `context_paths` (honest empty if none; never invent from tool traces)
+3. Files = spec `paths` / phase `amends_specs` / ledger homes — separate from Context
+4. Phase Brief body precedence: `## Brief` if present, else `## Context`
+
+### Non-goals
+- Claiming Context is a complete set of every file read
+- Auto-harvesting Cursor/IDE tool traces into Docs/
+- Mass-renaming existing phase `## Context` headings in this decision (UI alias only)
+
+### Implement via
+- Work: `context_paths: string[] | null` in schema + template; skills fill material paths on done when known
+- Phase: optional frontmatter `context_paths` (same meaning); dashboard Brief ← `## Brief` else `## Context`
+- Dashboard Work/Phase detail: sections **Brief**, **Context**, **Files** (in that order where present)
+

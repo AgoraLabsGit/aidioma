@@ -19,6 +19,11 @@ const FILTER_KEYS = {
   signals: "aidioma-filters-signals",
 };
 
+/** Activity page process spine (D-023). Journal still stores all types. */
+const ACTIVITY_PROCESS_ALWAYS = ["handoff", "close", "check", "ship"];
+const ACTIVITY_PROCESS_OPTIONAL = ["launch", "dashboard", "status", "triage", "system"];
+const ACTIVITY_PROCESS_ALLOWLIST = [...ACTIVITY_PROCESS_ALWAYS, ...ACTIVITY_PROCESS_OPTIONAL];
+
 const DEFAULT_FILTERS = {
   roadmap: { state: "", type: "", feature: "", area: "", q: "", sort: "schedule", sortDir: "asc" },
   activity: { type: "", feature: "", area: "", q: "", sort: "time", sortDir: "desc" },
@@ -958,6 +963,11 @@ function renderPhaseView(phase, index, { primary = false, compact = false } = {}
         </div>
 
         <div class="phase-card-section">
+          <h3 class="now-label">Activity</h3>
+          ${phaseActivityHtml(index, phase.id)}
+        </div>
+
+        <div class="phase-card-section">
           <h3 class="now-label">Audits</h3>
           ${phaseAuditsHtml(index, phase.id)}
         </div>
@@ -973,6 +983,23 @@ function renderPhaseView(phase, index, { primary = false, compact = false } = {}
       </section>
     </article>
   `;
+}
+
+
+function phaseActivityHtml(index, phaseId) {
+  const events = (index.activity?.current_month ?? [])
+    .filter((event) => event.phase === phaseId || event.ref === phaseId)
+    .sort((left, right) => String(right.ts ?? "").localeCompare(String(left.ts ?? "")));
+  if (!events.length) {
+    return `<p class="muted">No activity events for this phase yet.</p>`;
+  }
+  return `<ul class="phase-plain-list">${events.slice(0, 40).map((event) => `
+    <li>
+      <span class="status" data-state="${escapeHtml(activityDisplayStatus(event, index))}">${escapeHtml(activityDisplayStatus(event, index))}</span>
+      <code>${escapeHtml(event.type ?? "—")}</code>
+      <span>${escapeHtml(event.ref && event.ref !== phaseId ? `${event.ref} · ` : "")}${escapeHtml(event.cmd ? `${event.cmd} — ${event.summary ?? ""}` : (event.summary ?? "—"))}</span>
+      <span class="muted mono">${escapeHtml(event.ts ? formatAge(event.ts) : "—")}</span>
+    </li>`).join("")}</ul>`;
 }
 
 function phaseAuditsHtml(index, phaseId) {
@@ -1285,16 +1312,36 @@ function activityDisplayStatus(event, index) {
   return event.status ?? "done";
 }
 
+function isActivityProcessType(type) {
+  return ACTIVITY_PROCESS_ALLOWLIST.includes(type);
+}
+
+/** D-023: default All = always-shown process types; chips ⊆ process allowlist. */
+function filterActivityPageEvents(source, type) {
+  const scoped = source.filter((event) => isActivityProcessType(event.type));
+  if (!type) {
+    return scoped.filter((event) => ACTIVITY_PROCESS_ALWAYS.includes(event.type));
+  }
+  if (!isActivityProcessType(type)) return [];
+  return scoped.filter((event) => event.type === type);
+}
+
 function renderActivity(index) {
   const { type, feature, area, q, sort, sortDir = "desc" } = state.activityFilters;
   const source = index.activity.current_month ?? [];
-  if (source.length === 0) {
-    panels.activity.innerHTML = `<div class="empty">Commands will appear here as they run.</div>`;
+  const processSource = source.filter((event) => isActivityProcessType(event.type));
+  if (processSource.length === 0) {
+    panels.activity.innerHTML = `<div class="empty">No process events yet. Outcome work → Work; phase runs → Active detail.</div>`;
     return;
   }
 
-  let events = source
-    .filter((event) => !type || event.type === type)
+  // Drop stale outcome-type chip from older localStorage prefs (D-023).
+  const typeFilter = type && isActivityProcessType(type) ? type : "";
+  if (type && !typeFilter) {
+    state.activityFilters = { ...state.activityFilters, type: "" };
+  }
+
+  let events = filterActivityPageEvents(source, typeFilter)
     .filter((event) => {
       const tags = activityTags(index, event);
       return matchesSpecFilter(tags.feature, feature) && matchesSpecFilter(tags.area, area);
@@ -1326,24 +1373,26 @@ function renderActivity(index) {
     return orient(cmp, sortDir);
   });
 
-  const types = [...new Set(source.map((event) => event.type))].sort();
+  const types = ACTIVITY_PROCESS_ALLOWLIST.filter((value) =>
+    processSource.some((event) => event.type === value) || ACTIVITY_PROCESS_ALWAYS.includes(value),
+  );
   const specOptions = collectSpecOptions(
-    source,
+    processSource,
     (event) => activityTags(index, event).feature,
     (event) => activityTags(index, event).area,
   );
 
   panels.activity.innerHTML = `
     <div class="page-toolbar">
-      ${searchInput("activity-q", q, "Search activity…")}
+      ${searchInput("activity-q", q, "Search process activity…")}
       <div class="filters">
         <div class="chip-group">
           <span class="chip-label">Type</span>
-          ${chip("type", "", type, "All")}
-          ${types.map((value) => chip("type", value, type)).join("")}
+          ${chip("type", "", typeFilter, "All")}
+          ${types.map((value) => chip("type", value, typeFilter)).join("")}
         </div>
       </div>
-      ${filterPanelHtml("activity", state.activityFilters, specOptions)}
+      ${filterPanelHtml("activity", { ...state.activityFilters, type: typeFilter }, specOptions)}
     </div>
     <div class="table-frame">
       <table>
@@ -1846,8 +1895,93 @@ function renderWorkQuestions(questions) {
     </div>`;
 }
 
+/** Activity events for a Work id (journal projection — D-022). */
+function workActivityEvents(index, workId) {
+  return (index?.activity?.current_month ?? [])
+    .filter((event) => event.ref === workId)
+    .sort((left, right) => String(right.ts ?? "").localeCompare(String(left.ts ?? "")));
+}
+
+function renderWorkActivity(index, workId) {
+  const events = workActivityEvents(index, workId);
+  if (!events.length) {
+    return `<div class="phase-card-section">
+      <h3 class="now-label">Activity</h3>
+      <p class="muted">No activity events with <code>ref: ${escapeHtml(workId)}</code> yet.</p>
+    </div>`;
+  }
+  return `<div class="phase-card-section">
+    <h3 class="now-label">Activity</h3>
+    <ul class="phase-plain-list">${events.slice(0, 40).map((event) => `
+      <li>
+        <span class="status" data-state="${escapeHtml(activityDisplayStatus(event, index))}">${escapeHtml(activityDisplayStatus(event, index))}</span>
+        <code>${escapeHtml(event.type ?? "—")}</code>
+        <span>${escapeHtml(event.cmd ? `${event.cmd} — ${event.summary ?? ""}` : (event.summary ?? "—"))}</span>
+        <span class="muted mono">${escapeHtml(event.ts ? formatAge(event.ts) : "—")}</span>
+      </li>`).join("")}</ul>
+  </div>`;
+}
+
+/** Always-on Context (Phase parity) — Work rows use `note` as context body. */
+function renderWorkContext(row) {
+  const body = row.note
+    ? `<p>${escapeHtml(row.note)}</p>`
+    : `<p class="muted">No note on this Work row.</p>`;
+  return `<div class="phase-card-section">
+    <h3 class="now-label">Context</h3>
+    ${body}
+  </div>`;
+}
+
+/** Spec ids tagged on the Work row → same Files grouping as Phase (`paths` on specs). */
+function workSpecPaths(index, row) {
+  const specs = index?.specs ?? [];
+  const ids = [row.feature, row.area].filter(Boolean);
+  const seen = new Set();
+  return ids
+    .filter((id) => {
+      if (seen.has(id)) return false;
+      seen.add(id);
+      return true;
+    })
+    .map((id) => {
+      const spec = specs.find((item) => item.id === id);
+      return {
+        id,
+        title: spec?.title ?? id,
+        paths: spec?.paths ?? [],
+      };
+    });
+}
+
+/** Doc homes + phase source + feature/area path trees. */
+function renderWorkFiles(index, row) {
+  const docs = ["Docs/WORK.yaml"];
+  const phase = row.phase
+    ? (index?.phases ?? []).find((item) => item.id === row.phase)
+    : null;
+  if (phase?.sourcePath) docs.push(`Docs/${phase.sourcePath}`);
+  for (const specId of [row.feature, row.area].filter(Boolean)) {
+    const spec = (index?.specs ?? []).find((item) => item.id === specId);
+    if (spec?.sourcePath) docs.push(`Docs/${spec.sourcePath}`);
+  }
+  const uniqueDocs = [...new Set(docs)];
+  const specPaths = workSpecPaths(index, row);
+  return `<div class="phase-card-section">
+    <h3 class="now-label">Files</h3>
+    <ul class="phase-plain-list">${uniqueDocs
+      .map((path) => `<li class="mono">${escapeHtml(path)}</li>`)
+      .join("")}</ul>
+    ${
+      specPaths.length
+        ? pathsBlockHtml(specPaths)
+        : `<p class="muted">No feature/area tags — no spec path trees.</p>`
+    }
+  </div>`;
+}
+
 /** Work detail — same section chrome as Phase details (Status block + card sections). */
-function renderWorkDetail(row) {
+function renderWorkDetail(row, index) {
   const pairs = [
     [
       ["Kind", escapeHtml(row.kind), { mono: true }],
@@ -1867,16 +2001,11 @@ function renderWorkDetail(row) {
     ],
     [
       ["Promoted to", escapeHtml(row.promoted_to ?? "—"), { mono: true }],
-      ["Ledger", "<code>WORK.yaml</code>"],
+      ["Activity", escapeHtml(String(workActivityEvents(index, row.id).length)), { mono: true }],
     ],
   ];
   const bodySections = [
-    row.note
-      ? `<div class="phase-card-section">
-          <h3 class="now-label">Note</h3>
-          <p>${escapeHtml(row.note)}</p>
-        </div>`
-      : "",
+    renderWorkContext(row),
     renderWorkQuestions(row.open_questions),
     row.done_summary
       ? `<div class="phase-card-section">
@@ -1884,6 +2013,8 @@ function renderWorkDetail(row) {
           <p>${escapeHtml(row.done_summary)}</p>
         </div>`
       : "",
+    renderWorkFiles(index, row),
+    renderWorkActivity(index, row.id),
   ]
     .filter(Boolean)
     .join("");
@@ -1898,7 +2029,7 @@ function renderWorkDetail(row) {
         <h3 class="now-label">Status</h3>
         ${glancePairsHtml(pairs)}
       </section>
-      ${bodySections ? `<section class="phase-card">${bodySections}</section>` : ""}
+      <section class="phase-card">${bodySections}</section>
     </article>
   `;
 }
@@ -2002,7 +2133,7 @@ async function openDetail(id) {
     detailFrontmatter.hidden = true;
     detailFrontmatter.innerHTML = "";
     detailBody.className = "doc-body";
-    detailBody.innerHTML = renderWorkDetail(work);
+    detailBody.innerHTML = renderWorkDetail(work, state.index);
   } else if (signal) {
     detailFrontmatter.hidden = true;
     detailFrontmatter.innerHTML = "";

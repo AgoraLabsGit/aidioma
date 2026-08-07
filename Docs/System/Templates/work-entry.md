@@ -3,8 +3,8 @@
 Validated against `System/schemas/work.schema.json`. YAML array.
 
 ```yaml
-- id: T-001                 # New: F|T|P|R|Q|A-nnn by kind. Legacy W-nnn still valid.
-  kind: task                 # fix | task | proposal | research | question | audit
+- id: T-001                 # New: F|T|P|R|Q|A|S-nnn by kind (S=design). Legacy W-nnn still valid.
+  kind: task                 # fix | task | proposal | research | question | audit | design
   summary: "Practice page crashes on empty input"
   status: open               # open | active | done | promoted | dropped
   feature: null              # SPEC-F-* or null
@@ -26,9 +26,10 @@ Validated against `System/schemas/work.schema.json`. YAML array.
 | research | `R-` |
 | question | `Q-` |
 | audit | `A-` |
+| design | `S-` |
 
 - Next id: `nextWorkId(kind, existingIds)` — max for that prefix + 1. Do **not** rename legacy `W-*`.
 - `/log` → `open`
-- `/fix` / `/task` / `/audit` → `active` then `done` (+ `done_summary`)
+- `/fix` / `/task` / `/audit` / `/design` → `active` then `done` (+ `done_summary`)
 - Clarifications → `open_questions` on **that** row
 - `/plan` on a proposal → `promoted` + `promoted_to: PHASE-nnn`

@@ -113,14 +113,15 @@ export const workKindSchema = z.enum([
   "research",
   "question",
   "audit",
+  "design",
 ]);
 
-/** Legacy W-nnn or kind-prefixed F/T/P/R/Q/A-nnn. */
-export const workIdSchema = z.string().regex(/^(W|F|T|P|R|Q|A)-[0-9]{3}$/);
+/** Legacy W-nnn or kind-prefixed F/T/P/R/Q/A/S-nnn. S=design (D- reserved for decisions). */
+export const workIdSchema = z.string().regex(/^(W|F|T|P|R|Q|A|S)-[0-9]{3}$/);
 
 export const WORK_KIND_ID_PREFIX: Record<
   z.infer<typeof workKindSchema>,
-  "F" | "T" | "P" | "R" | "Q" | "A"
+  "F" | "T" | "P" | "R" | "Q" | "A" | "S"
 > = {
   fix: "F",
   task: "T",
@@ -128,6 +129,7 @@ export const WORK_KIND_ID_PREFIX: Record<
   research: "R",
   question: "Q",
   audit: "A",
+  design: "S",
 };
 
 export const workStatusSchema = z.enum([
@@ -171,7 +173,7 @@ export const workItemSchema = z.object({
 
 export const workSchema = z.array(workItemSchema);
 
-/** Next kind-prefixed id (F/T/P/R/Q/A). Legacy W-* ids are ignored for the series. */
+/** Next kind-prefixed id (F/T/P/R/Q/A/S). Legacy W-* ids are ignored for the series. */
 export function nextWorkId(
   kind: z.infer<typeof workKindSchema>,
   existingIds: readonly string[],

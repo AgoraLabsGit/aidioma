@@ -41,13 +41,24 @@ function filterPhases(
     .filter((phase) => matchesQuery(`${phase.id} ${phase.title}`, filters.q));
 }
 
+/** Mirrors Activity page process spine in public/app.js (D-023). */
+const ACTIVITY_PROCESS_ALWAYS = ["handoff", "close", "check", "ship"];
+const ACTIVITY_PROCESS_OPTIONAL = ["launch", "dashboard", "status", "triage", "system"];
+const ACTIVITY_PROCESS_ALLOWLIST = [...ACTIVITY_PROCESS_ALWAYS, ...ACTIVITY_PROCESS_OPTIONAL];
+
+function filterActivityPageEvents(events: Event[], type: string): Event[] {
+  const scoped = events.filter((event) => ACTIVITY_PROCESS_ALLOWLIST.includes(event.type));
+  if (!type) return scoped.filter((event) => ACTIVITY_PROCESS_ALWAYS.includes(event.type));
+  if (!ACTIVITY_PROCESS_ALLOWLIST.includes(type)) return [];
+  return scoped.filter((event) => event.type === type);
+}
+
 function filterEvents(
   events: Event[],
   filters: { actor: string; type: string; phase: string; q: string },
 ): Event[] {
-  return events
+  return filterActivityPageEvents(events, filters.type)
     .filter((event) => !filters.actor || event.actor === filters.actor)
-    .filter((event) => !filters.type || event.type === filters.type)
     .filter((event) => !filters.phase || event.phase === filters.phase)
     .filter((event) =>
       matchesQuery(`${event.type} ${event.summary} ${event.ref ?? ""} ${event.phase ?? ""} ${event.cmd ?? ""}`, filters.q),
@@ -246,6 +257,10 @@ const events: Event[] = [
   { ts: "2026-08-05T10:00:00Z", type: "build", actor: "agent", phase: "PHASE-004", ref: "PHASE-004", summary: "Activated" },
   { ts: "2026-08-05T11:00:00Z", type: "plan", actor: "agent", phase: "PHASE-004", ref: "PHASE-004", summary: "Proposed" },
   { ts: "2026-08-05T12:00:00Z", type: "close", actor: "user", phase: "PHASE-001", ref: "PHASE-001", summary: "Closed" },
+  { ts: "2026-08-05T12:30:00Z", type: "check", actor: "agent", phase: "PHASE-001", ref: "PHASE-001", summary: "Tests green" },
+  { ts: "2026-08-05T13:00:00Z", type: "handoff", actor: "agent", phase: null, ref: null, summary: "Session handoff" },
+  { ts: "2026-08-05T13:30:00Z", type: "dashboard", actor: "agent", phase: null, ref: null, summary: "Opened dashboard" },
+  { ts: "2026-08-05T14:00:00Z", type: "fix", actor: "agent", phase: null, ref: "F-001", summary: "Fixed bug" },
 ];
 
 const signals: Signal[] = [
@@ -278,11 +293,28 @@ describe("Roadmap filters", () => {
 });
 
 describe("Activity filters", () => {
-  it("filters actor, type, phase, and search", () => {
+  it("D-023: default All is process always-set; excludes outcome types", () => {
+    expect(filterEvents(events, { actor: "", type: "", phase: "", q: "" }).map((e) => e.type).sort()).toEqual([
+      "check",
+      "close",
+      "handoff",
+    ]);
+    expect(filterEvents(events, { actor: "", type: "", phase: "", q: "" }).some((e) => e.type === "build")).toBe(false);
+    expect(filterEvents(events, { actor: "", type: "", phase: "", q: "" }).some((e) => e.type === "fix")).toBe(false);
+    expect(filterEvents(events, { actor: "", type: "", phase: "", q: "" }).some((e) => e.type === "dashboard")).toBe(false);
+  });
+
+  it("optional process chips work; outcome type chips yield nothing", () => {
+    expect(filterEvents(events, { actor: "", type: "dashboard", phase: "", q: "" }).map((e) => e.type)).toEqual([
+      "dashboard",
+    ]);
+    expect(filterEvents(events, { actor: "", type: "build", phase: "", q: "" })).toHaveLength(0);
     expect(filterEvents(events, { actor: "user", type: "", phase: "", q: "" }).map((e) => e.type)).toEqual(["close"]);
-    expect(filterEvents(events, { actor: "", type: "build", phase: "", q: "" })).toHaveLength(1);
-    expect(filterEvents(events, { actor: "", type: "", phase: "PHASE-004", q: "" })).toHaveLength(2);
-    expect(filterEvents(events, { actor: "", type: "", phase: "", q: "Proposed" })).toHaveLength(1);
+    expect(filterEvents(events, { actor: "", type: "", phase: "PHASE-001", q: "" }).map((e) => e.type).sort()).toEqual([
+      "check",
+      "close",
+    ]);
+    expect(filterEvents(events, { actor: "", type: "", phase: "", q: "handoff" })).toHaveLength(1);
   });
 });
 
@@ -372,13 +404,21 @@ describe("Column-header sort keys", () => {
     });
     expect("summary" in TABLE_SORT_KEYS.activity).toBe(false);
     expect(sortEvents(events, TABLE_SORT_KEYS.activity.age).map((e) => e.ts)).toEqual([
+      "2026-08-05T14:00:00Z",
+      "2026-08-05T13:30:00Z",
+      "2026-08-05T13:00:00Z",
+      "2026-08-05T12:30:00Z",
       "2026-08-05T12:00:00Z",
       "2026-08-05T11:00:00Z",
       "2026-08-05T10:00:00Z",
     ]);
     expect(sortEvents(events, TABLE_SORT_KEYS.activity.kind).map((e) => e.type)).toEqual([
       "build",
+      "check",
       "close",
+      "dashboard",
+      "fix",
+      "handoff",
       "plan",
     ]);
   });

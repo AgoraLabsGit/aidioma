@@ -102,8 +102,8 @@ one place that state survives. `/close` and `/status --repair` never clean anyth
 
 | Field | Meaning |
 |---|---|
-| `id` | Kind-prefixed `F/T/P/R/Q/A-nnn` for new rows; legacy `W-nnn` still valid |
-| `kind` | `fix` \| `task` \| `proposal` \| `research` \| `question` \| `audit` |
+| `id` | Kind-prefixed `F/T/P/R/Q/A/S-nnn` for new rows; legacy `W-nnn` still valid (`S-` = design; `D-` = decisions only) |
+| `kind` | `fix` \| `task` \| `proposal` \| `research` \| `question` \| `audit` \| `design` |
 | `status` | `open` \| `active` \| `done` \| `promoted` \| `dropped` |
 | `feature` / `area` | Nullable org tags (`SPEC-F-*` / `SPEC-A-*`) — not amend intent |
 | `phase` | Nullable phase id if tied mid-flight |
@@ -113,17 +113,18 @@ one place that state survives. `/close` and `/status --repair` never clean anyth
 | `open_questions` | Clarifications for **this** row (`[{q, answer, asked}]`); not a new Work row |
 | `done_summary` | What shipped + evidence when `done` |
 
-`/log` parks (`open`). `/fix` `/task` `/audit` do-now (`active`→`done` + `done_summary`).
+`/log` parks (`open`). `/fix` `/task` `/audit` `/design` do-now (`active`→`done` + `done_summary`).
 `/triage [PHASE|area|feature]` classifies and **executes** clear do-now work; confirms drop/plan/lifecycle.
 When a phase is active or named, triage **must** spawn a sub-agent limited to Work with
 `phase: <that id>` only. `/close` runs that phase-scoped triage **before** audits/reviews/tests.
 `/plan` may promote a `proposal` (`promoted` + `from_backlog: <work-id>` on the phase).
 New Work ids use kind prefixes (`F-` fix, `T-` task, `P-` proposal, `R-` research, `Q-`
-question, `A-` audit). Existing `W-*` rows are never renamed.
+question, `A-` audit, `S-` design). Existing `W-*` rows are never renamed.
 
 **Kind classifier (for `/log`):** `fix` = broken behavior; `task` = small intentional chore that
 fits one session; `proposal` = phase-sized or needs `/plan`; `research` = options choice;
-`question` = parked standalone uncertainty with no target row; `audit` = scheduled/fired review.
+`question` = parked standalone uncertainty with no target row; `audit` = scheduled/fired review;
+`design` = behavior lock via `/design` (decisions/specs).
 When executing a row needs clarification → ask the founder and append `open_questions` on that
 row — never spawn a sibling `question` row for the same item.
 
@@ -552,7 +553,7 @@ One unit of real work, one durable artifact, one event. Actions do not advance t
 | Cmd | Produces | Agent fires when | User fires when |
 |---|---|---|---|
 | `/research` | `Research/R-*.md` + optional decision | A choice between ≥2 external options blocks progress | Anytime, phase or no phase |
-| `/design` | Decisions and/or a spec | Behavior is undefined, or ≥3 decisions are open | Anytime |
+| `/design` | Decisions and/or a spec + Work `kind: design` (`S-nnn`) | Behavior is undefined, or ≥3 decisions are open | Anytime |
 | `/fix` | Patch + proof + `WORK.yaml` `kind: fix` + `done_summary` | Defect is bounded and needs no design | Anytime |
 | `/task` | Patch/docs + proof + `WORK.yaml` `kind: task` + `done_summary` | Intentional small work, not a defect | Anytime |
 | `/audit` | Findings + `WORK.yaml` `kind: audit` + `done_summary` | Scoped review of feature/area/spec/agent-context/process | Anytime |
@@ -774,9 +775,14 @@ append-only files do conflict the resolution is always "keep both lines."
 | `audit` | `/audit` or `/close` (carries verdict) |
 | `ship` | `/ship` |
 
-Low-noise: `check`, `handoff`, `system`.
+Low-noise / process: `check`, `handoff`, `system` (also `close`, `ship`, `launch`, `dashboard`,
+`status`, `triage` when emitted).
 
 `actor` answers the question you will actually ask: what did the agent do while I was away.
+
+**Journal vs Activity page (D-023).** Every wired command still appends here. The **Activity**
+dashboard page lists only the process/ops allowlist; outcome events (`fix`/`task`/`build`/…)
+project on Work and Phase detail instead.
 
 **Staging.** Event append is a contract now and takes effect as each command is wired. Do not
 hand-write events for prose-only sessions — an unwired command logs nothing, and that is correct.
@@ -824,9 +830,9 @@ detail pane on row click.
 | Page | Reads | Answers |
 |---|---|---|
 | **Now** | Active phase, `HANDOFF.md`, git, last `/check` | What am I doing, what do I type next? |
-| **Work** | `WORK.yaml` | What's parked, in flight, or done outside/alongside phases? |
+| **Work** | `WORK.yaml` | What outcome work is parked, in flight, or done? (fix/task/proposal/research/question/audit/design) |
 | **Roadmap** | `Phases/*.md` frontmatter (incl. feature/area), ordered by `order` | What's scheduled, done, canceled? |
-| **Activity** | `.work/activity/*.jsonl` | What happened, and what did the agent do? |
+| **Activity** | `.work/activity/*.jsonl` (process types only — D-023) | What process/ops ran (`handoff`/`close`/`check`/`ship` ± quiet utilities)? |
 | **Knowledge** | Specs, `DECISIONS.md`, `Research/` | What exists, how does it behave, why? |
 | **Signals** | Derived health only | What's drifting, broken-linked, or parse-failing? |
 

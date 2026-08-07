@@ -42,7 +42,8 @@ Detail: `Docs/System/system.md`. Command key: `Docs/System/COMMANDS.md` (audit b
 | Where are we? | `/status` |
 
 Report: *"Logged T-001 (task) — summary."* Ask once if kind ambiguous, then act.
-New Work ids: `F/T/P/R/Q/A-nnn` by kind; legacy `W-*` kept (never rename).
+New Work ids: `F/T/P/R/Q/A/S-nnn` by kind; legacy `W-*` kept (never rename). `S-` = design Work
+(`D-` is decisions only).
 
 ## Work kinds
 
@@ -54,6 +55,7 @@ New Work ids: `F/T/P/R/Q/A-nnn` by kind; legacy `W-*` kept (never rename).
 | `research` | `R-` | Options choice |
 | `question` | `Q-` | Standalone parked uncertainty (no target row) |
 | `audit` | `A-` | Scoped review |
+| `design` | `S-` | Behavior lock via decisions/specs (`/design`) |
 
 **Clarifications** while executing a row → ask founder → append `open_questions` on **that** row.
 Do **not** create a new `question` Work item for the same concern.
