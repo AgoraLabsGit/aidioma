@@ -255,3 +255,5 @@
 {"ts": "2026-08-07T20:41:30Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-048", "status": "complete", "summary": "Docs: Commands overview page + handoff for multi-session phases"}
 {"ts":"2026-08-07T20:55:26Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-012","status":"complete","summary":"lanes: work — pass (typecheck+test+validate)"}
 {"ts":"2026-08-07T20:55:38Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":null,"status":"active","summary":"Reduced close: meta desk → close/* (C-012 green)"}
+{"ts":"2026-08-07T20:56:52Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-37","status":"complete","summary":"Reduced close merged PR #37 @8c88cfd; Docs home refreshed; C-012"}
+{"ts":"2026-08-07T20:56:52Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-37","status":"complete","summary":"Reduced close merged PR #37 @8c88cfd; Docs home refreshed; C-012"}
