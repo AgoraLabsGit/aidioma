@@ -1,101 +1,113 @@
-# Start here
+# Welcome to Praxis
 
-**Don't know what to do? Run `/status`.**
+Praxis is how we run AIdioma: a simple way of working, plus a dashboard that shows what’s going on.
 
-It prints where the project is and what command comes next.
+You don’t need to memorize commands. Describe what you want in plain language — the assistant picks the right move and tells you what it ran.
 
----
-
-## What this is
-
-A process for moving work from idea to production, and a dashboard that shows it.
-
-Two ideas carry the whole system:
-
-1. **One phase at a time.** One outcome, one branch, one merge.
-2. **Write it down or it didn't happen.** Behavior change requires a spec change — enforced at
-   close, not by discipline.
+**First move:** ask *where are we?* (or run `/status`). You’ll get the current picture and a suggested next step. Keep `/dashboard` open while you work.
 
 ---
 
-## File formats — read this once
+## Two kinds of work
 
-Everything you write is **markdown**. The `.json` files only check your work.
+### Big work — a phase
 
-| You open | Format | What it is |
-|---|---|---|
-| `Docs/Specs/**`, `Roadmap/Phases/**`, `Research/**` | `.md` | The real artifacts |
-| `System/Templates/**` | `.md` | Blank forms you copy |
-| `System/schemas/**` | `.json` | Validators. CI reads them. You never edit them by hand |
+A **phase** is a scheduled outcome on the Roadmap: one clear result you can check when it’s done.
 
-The structured fields at the top of each markdown file (between `---` lines) are what the
-dashboard and agents read. The prose below is for people.
+- **Today:** at most one phase is “in flight” at a time.
+- **Later:** we may allow more than one in parallel (planned; not live yet).
+- While a phase is active, research, design tweaks, and fixes that serve *that* outcome usually stay inside it — you don’t open a new phase for every small step.
+
+### Small work — outside a phase
+
+Not everything needs a phase. Fixes, chores, research, and design decisions can run on their own.
+
+- They show up on the **Work** list.
+- When you’re done for the session, finish with a lighter publish step (still called `/close`) so changes land safely.
+- Use a phase when the outcome is big enough to schedule — not for every bug or polish pass.
 
 ---
 
-## Commands
+## How to ask for help
 
-| You want to | Run |
+| You want to… | Say something like… |
 |---|---|
-| Know where things stand | `/status` |
-| Start new work | `/plan` |
-| Do the work | `/run` |
-| Fix something broken | `/fix` |
-| Decide between options | `/research` |
-| Define how something behaves | `/design` |
-| Finish a phase | `/close` |
-| Go live | `/ship` |
-| Run tests | `/check` |
-| See the project | `/dashboard` |
-| Stop for now | `/handoff` |
+| See where things stand | “Where are we?” |
+| Start a bigger outcome | “Let’s plan …” |
+| Do the planned work | “Continue the phase” / “Run it” |
+| Fix something broken | “This is broken: …” |
+| Choose between options | “Which should we use for …?” |
+| Decide how something should behave | “How should … work?” |
+| Finish and publish | “Close this out” |
+| Ship to production | “Ship it” |
+| Pause until next time | “Handoff for now” / “Write a handoff” |
+| Open the dashboard | “Open the dashboard” |
+| See the command map | Open **Docs → Commands** |
 
-**Docs home (D-020):** When `.worktrees/docs` exists, all living `Docs/`, `.work/`, and agent-skill
-writes happen there (`docs/ssot`). Phase/task trees are for product code. `/dashboard` reads that
-tree — if the footer shows a `task/*` or `phase/*` branch, restart `/dashboard`.
-
-**You don't have to memorize these.** Describe the problem in plain language — "button x is too
-large", "which translation API should we use" — and the agent fires the right one and tells you
-which it was.
-
-Full definitions: [`System/COMMANDS.md`](System/COMMANDS.md).
+More detail: **Commands** in this Docs sidebar.
 
 ---
 
-## Where everything lives
+## Multi-session phases and handoffs
 
-| Question | File |
+Most phases take more than one sitting. That’s normal.
+
+1. Work on the phase (`/run`, or just keep going in chat).
+2. When you stop for the day — **before** the outcome is finished — run **`/handoff`** (or ask for a handoff).
+3. Next session: open the dashboard (**Active** shows the phase + your note), ask where things stand, continue.
+4. When the outcome is actually done, **`/close`** to publish. Don’t close just because the day ended.
+
+**What `/handoff` does:** overwrites a short “where I left off” note (`Handoffs/HANDOFF.md`). It does **not** merge, ship, or end the phase. The next agent (or you) reads that note first.
+
+**What `/close` does:** finishes and publishes. With an active phase, that’s the full review + merge. Without a phase, a lighter publish for the session’s work.
+
+---
+
+## What you’ll see on the dashboard
+
+| Page | What it’s for |
+|---|---|
+| **Active** | The phase in flight (if any) and your latest handoff note |
+| **Work** | The list of fixes, chores, research, designs, and proposals |
+| **Roadmap** | Scheduled phases and their state |
+| **Activity** | Recent process events (checks, closes, handoffs, …) |
+| **Knowledge** | Deep library: product, specs, decisions, research |
+| **Docs** | Welcome + Commands overview |
+| **Signals** (bottom icon) | Health warnings derived from the project |
+
+---
+
+## Pause, finish, go live
+
+- **Pause (`/handoff`)** — leave a note for the next session. Use this between days on the same phase.
+- **Finish (`/close`)** — publish when the work (or phase outcome) is ready. Not the same as pausing.
+- **Go live (`/ship`)** — production, only after main is verified. Publishing is not shipping.
+
+---
+
+## Simple map of homes
+
+| Question | Look here |
 |---|---|
 | What are we building? | `PRODUCT.md` |
-| How does this behave? | `Specs/Features/`, `Specs/Areas/` |
-| Why did we choose this? | `DECISIONS.md` |
-| What were the options? | `Research/` |
-| What's happening now? | `Roadmap/` |
-| What's broken? | `FIXES.yaml` |
-| What's next, unscheduled? | `Roadmap/Backlog.md` |
-| What shipped? | `RELEASES.md` |
-| What must never be deleted? | `PRESERVE.md` |
-| Where did I leave off? | `Handoffs/HANDOFF.md` |
-| What are the rules? | `System/system.md` |
+| How should this behave? | Specs |
+| Why did we choose this? | Decisions |
+| What were the options? | Research |
+| What’s scheduled? | Roadmap |
+| What’s on the to-do / fix list? | Work (`WORK.yaml`) |
+| What shipped? | Releases |
+| What must never be deleted? | Preserve |
+| Where did I leave off? | Handoff |
 
-Every question has exactly one home. If you're unsure where something goes, it probably belongs
-in one of these — not a new folder.
+If you’re unsure where something belongs, it probably fits one of these — not a new folder.
 
 ---
 
-## Your first hour
+## Your first ten minutes
 
-1. Read `PRODUCT.md` — what this is and who it's for
-2. Run `/status`
-3. Run `/dashboard` and leave it open
-4. Run whatever `/status` suggested
+1. Skim `PRODUCT.md` — who it’s for and what it never does.
+2. Ask where things stand (`/status`).
+3. Open the dashboard and leave it open.
+4. Do the suggested next step — or describe the problem in plain language.
 
----
-
-## Two things that will save you
-
-**Phases hold many activities.** Research, a spec update, a bug found mid-build — all of it
-happens *inside* the active phase. Don't open a new phase for each. Open one when the outcome
-itself changes.
-
-**Nothing is lost by stopping.** `/handoff` writes down where you are. `PRESERVE.md` protects
-work in progress. `/status --repair` cleans up a session that ended badly.
+**Nothing is lost by stopping.** Use `/handoff` between sessions. Preserve protects rare work-in-progress that must not be deleted.

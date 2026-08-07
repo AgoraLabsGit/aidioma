@@ -125,6 +125,17 @@
         "null"
       ],
       "pattern": "^SPEC-A-[A-Z0-9-]+$"
+    },
+    "context_paths": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Declared repo-relative paths that informed this phase (D-024)"
     }
   },
   "allOf": [

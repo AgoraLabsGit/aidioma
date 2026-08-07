@@ -7,10 +7,9 @@ on:
       - "CLAUDE.md"
       - ".claude/skills/**"
       - "Docs/**"
-      - "Docs.next/**"
       - "Docs.2/**"
-      - "tooling/work-registry/**"
-      - "tooling/work-dashboard/**"
+      - "tooling/run-dashboard.sh"
+      - "tooling/ensure-docs-home.sh"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/work.yml"
@@ -21,10 +20,9 @@ on:
       - "CLAUDE.md"
       - ".claude/skills/**"
       - "Docs/**"
-      - "Docs.next/**"
       - "Docs.2/**"
-      - "tooling/work-registry/**"
-      - "tooling/work-dashboard/**"
+      - "tooling/run-dashboard.sh"
+      - "tooling/ensure-docs-home.sh"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/work.yml"
@@ -44,7 +42,7 @@ jobs:
         with:
           node-version: 22.22.2
           cache: npm
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npm run work:typecheck
       - run: npm run work:test
       - run: npm run work:validate

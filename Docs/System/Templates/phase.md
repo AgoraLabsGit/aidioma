@@ -14,6 +14,7 @@ non_goals: []
 amends_specs: []              # contracts this phase changes (write intent)
 feature: null                 # SPEC-F-* org tag, or null
 area: null                    # SPEC-A-* org tag, or null
+context_paths: null           # optional — material paths (D-024); not a tool-read log
 opened: YYYY-MM-DD
 closed: null
 lessons: null                 # required when state: canceled

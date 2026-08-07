@@ -1,0 +1,4 @@
+{
+  "sonarlint.connectedMode.project": {},
+  "sonarlint.analysisExcludesStandalone": "**/tooling/work-registry/**,**/lesson-content/**,**/Docs.next/**"
+}

@@ -16,7 +16,7 @@ Validated against `System/schemas/work.schema.json`. YAML array.
   context_paths: null        # Context — material paths at done (D-024); not a tool-read log
   open_questions: null
   done_summary: null
-  opened: 2026-08-07
+  opened: 2026-08-07T20:00:00Z   # prefer UTC ISO; legacy YYYY-MM-DD still ok
 ```
 
 | Kind | New id prefix |

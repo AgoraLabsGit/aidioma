@@ -182,3 +182,76 @@
 {"ts":"2026-08-07T19:20:42Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-028","status":"complete","summary":"Re-applied --detail-title-size after styles.css clobber"}
 {"ts":"2026-08-07T19:22:43Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-011","status":"complete","summary":"lanes: work — typecheck+test(39)+validate issues=0 for reduced /close"}
 {"ts":"2026-08-07T19:24:13Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-35","status":"complete","summary":"Reduced close: merged PR #35 (T-027/28/29, F-017); C-011 green; docs/ssot @ 7a374b1"}
+{"ts":"2026-08-07T19:25:28Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-018","status":"active","summary":"Activity Status stale active on phase mid-close (ref null)"}
+{"ts":"2026-08-07T19:25:44Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-018","status":"complete","summary":"Activity Status joins closed phase — clears PHASE-007 15:56 stale active"}
+{"ts":"2026-08-07T19:27:19Z","type":"task","actor":"agent","cmd":"/task","ref":"T-031","status":"active","summary":"Align Praxis wordmark with sidebar nav buttons"}
+{"ts":"2026-08-07T19:27:29Z","type":"task","actor":"agent","cmd":"/task","ref":"T-031","status":"complete","summary":"Align Praxis wordmark with sidebar nav buttons"}
+{"ts":"2026-08-07T19:29:08Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-032","status":"active","summary":"Watch git worktrees metadata for auto-reindex"}
+{"ts":"2026-08-07T19:29:45Z","type":"task","actor":"agent","cmd":"/task","ref":"T-033","status":"active","summary":"Sidebar polish: wordmark align/size, gap, soft selected tab"}
+{"ts":"2026-08-07T19:29:51Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-032","status":"complete","summary":"Watch git worktrees metadata for auto-reindex"}
+{"ts":"2026-08-07T19:30:05Z","type":"task","actor":"agent","cmd":"/task","ref":"T-033","status":"complete","summary":"Sidebar polish: wordmark align/size, gap, soft selected tab"}
+{"ts":"2026-08-07T19:31:31Z","type":"task","actor":"agent","cmd":"/task","ref":"T-034","status":"active","summary":"Fix sidebar brand/nav optical alignment"}
+{"ts":"2026-08-07T19:31:43Z","type":"task","actor":"agent","cmd":"/task","ref":"T-034","status":"complete","summary":"Fix sidebar brand/nav optical alignment"}
+{"ts":"2026-08-07T19:32:48Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-035","status":"active","summary":"Minimal stroke sidebar page icons"}
+{"ts":"2026-08-07T19:33:10Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-035","status":"complete","summary":"Minimal stroke sidebar page icons"}
+{"ts":"2026-08-07T19:37:33Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-036","status":"active","summary":"Restore Praxis wordmark label-column align"}
+{"ts":"2026-08-07T19:38:06Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-036","status":"complete","summary":"Restore Praxis wordmark label-column align"}
+{"ts":"2026-08-07T19:40:30Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-019","status":"active","summary":"Align Signals/Theme foot font badge icons"}
+{"ts":"2026-08-07T19:41:30Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-019","status":"complete","summary":"Align Signals/Theme foot font badge icons"}
+{"ts":"2026-08-07T19:42:00Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-037","status":"active","summary":"Tone down light theme glare"}
+{"ts":"2026-08-07T19:43:00Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-037","status":"complete","summary":"Tone down light theme glare"}
+{"ts":"2026-08-07T19:43:30Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-038","status":"active","summary":"Nav/sidebars match page bg"}
+{"ts":"2026-08-07T19:44:30Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-038","status":"complete","summary":"Nav/sidebars match page bg"}
+{"ts":"2026-08-07T19:45:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-020","status":"active","summary":"Light theme cream shell no pure white"}
+{"ts":"2026-08-07T19:45:40Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-020","status":"complete","summary":"Light theme cream shell no pure white"}
+{"ts":"2026-08-07T19:46:20Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-021","status":"active","summary":"Align Praxis wordmark with nav icons"}
+{"ts":"2026-08-07T19:47:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-021","status":"complete","summary":"Align Praxis wordmark with nav icons"}
+{"ts":"2026-08-07T19:47:20Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-022","status":"active","summary":"Center detail collapse arrow in button"}
+{"ts":"2026-08-07T19:48:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-022","status":"complete","summary":"Center detail collapse arrow in button"}
+{"ts":"2026-08-07T19:48:20Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-023","status":"active","summary":"Warm light-theme table panels vs blue-grey"}
+{"ts":"2026-08-07T19:49:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-023","status":"complete","summary":"Warm light-theme table panels vs blue-grey"}
+{"ts":"2026-08-07T19:49:10Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-039","status":"active","summary":"Page+panel titles use mono like ID"}
+{"ts":"2026-08-07T19:50:00Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-039","status":"complete","summary":"Page+panel titles use mono like ID"}
+{"ts":"2026-08-07T19:52:20Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-040","status":"active","summary":"Steady-state product task/fix worktrees + Docs-home path leases"}
+{"ts":"2026-08-07T19:53:28Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-040","status":"complete","summary":"D-025 product task/fix worktrees + Docs-home path leases"}
+{"ts":"2026-08-07T19:53:30Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-041","status":"active","summary":"Apply sidebar design-review nits"}
+{"ts":"2026-08-07T19:54:30Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-041","status":"complete","summary":"Apply sidebar design-review nits"}
+{"ts":"2026-08-07T19:58:13Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-042","status":"active","summary":"Align /close with D-025 dual-desk publish"}
+{"ts":"2026-08-07T19:58:52Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-042","status":"complete","summary":"Align /close with D-025 dual-desk publish"}
+{"ts": "2026-08-07T20:03:33Z", "type": "design", "actor": "agent", "cmd": "/design", "phase": null, "ref": "S-004", "status": "active", "summary": "Praxis Docs page + compact sidebar-foot controls"}
+{"ts":"2026-08-07T20:05:49Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-024","status":"active","summary":"IDE Problems: work.yml + ghost deleted-path diagnostics"}
+{"ts": "2026-08-07T20:06:00Z", "type": "decide", "actor": "agent", "cmd": "/design", "phase": null, "ref": "D-026", "status": "complete", "summary": "Praxis Docs page + icon-only foot; Adv PASS"}
+{"ts": "2026-08-07T20:06:00Z", "type": "spec", "actor": "agent", "cmd": "/design", "phase": null, "ref": "SPEC-F-DEV-DASHBOARD", "status": "complete", "summary": "Docs page + foot chrome rules (D-026)"}
+{"ts": "2026-08-07T20:06:00Z", "type": "design", "actor": "agent", "cmd": "/design", "phase": null, "ref": "S-004", "status": "complete", "summary": "S-004 done \u2014 D-026 + specs; Adv PASS"}
+{"ts": "2026-08-07T20:06:00Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-043", "status": "active", "summary": "Docs page + icon-only sidebar-foot row"}
+{"ts":"2026-08-07T20:06:26Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-024","status":"complete","summary":"work.yml ignore-scripts; ghosts are deleted-path Sonar/TS"}
+{"ts": "2026-08-07T20:08:00Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-043", "status": "complete", "summary": "Docs page + icon-only sidebar-foot row"}
+{"ts":"2026-08-07T20:08:36Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-024","status":"complete","summary":"Cleared SonarLint H2+bindings cache; workspace excludes; reload triggered"}
+{"ts": "2026-08-07T20:09:18Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-044", "status": "active", "summary": "Narrow sidebar to 180px; smaller foot icons"}
+{"ts": "2026-08-07T20:10:00Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-044", "status": "complete", "summary": "Narrow sidebar to 180px; smaller foot icons"}
+{"ts":"2026-08-07T20:10:30Z","type":"status","actor":"agent","cmd":"/run","phase":null,"ref":"D-026","status":"blocked","summary":"/run refused: no active phase; D-026 already locked; impl T-043 done (unpublished on docs/ssot)"}
+{"ts": "2026-08-07T20:14:15Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": null, "ref": "F-025", "status": "active", "summary": "Docs page: load START/COMMANDS + layout fill"}
+{"ts": "2026-08-07T20:16:00Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": null, "ref": "F-025", "status": "complete", "summary": "Docs page: load START/COMMANDS + layout fill"}
+{"ts": "2026-08-07T20:16:57Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": null, "ref": "F-026", "status": "active", "summary": "Docs prose tables: no vertical CMD wrap"}
+{"ts": "2026-08-07T20:18:00Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": null, "ref": "F-026", "status": "complete", "summary": "Docs prose tables: no vertical CMD wrap"}
+{"ts": "2026-08-07T20:18:05Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-045", "status": "active", "summary": "Docs reader: full-width prose (drop 72ch)"}
+{"ts": "2026-08-07T20:18:40Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-045", "status": "complete", "summary": "Docs reader: full-width prose (drop 72ch)"}
+{"ts": "2026-08-07T20:19:58Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": null, "ref": "F-027", "status": "active", "summary": "Prose: space after md-tables (Docs + detail)"}
+{"ts": "2026-08-07T20:19:58Z", "type": "audit", "actor": "agent", "cmd": "/audit", "phase": null, "ref": "A-008", "status": "active", "summary": "CSS audit: prose/table/detail vertical rhythm"}
+{"ts": "2026-08-07T20:21:30Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": null, "ref": "F-027", "status": "complete", "summary": "Prose: space after md-tables (Docs + detail)"}
+{"ts": "2026-08-07T20:21:30Z", "type": "audit", "actor": "agent", "cmd": "/audit", "phase": null, "ref": "A-008", "status": "complete", "summary": "CSS audit: prose/table/detail vertical rhythm"}
+{"ts": "2026-08-07T20:22:42Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-046", "status": "active", "summary": "Docs TOC: drop secondary sub-lines"}
+{"ts": "2026-08-07T20:22:42Z", "type": "audit", "actor": "agent", "cmd": "/audit", "phase": null, "ref": "A-009", "status": "active", "summary": "Docs language: beginner / customer-facing Praxis guide"}
+{"ts": "2026-08-07T20:22:42Z", "type": "audit", "actor": "agent", "cmd": "/audit", "phase": null, "ref": "A-010", "status": "active", "summary": "Reconcile Praxis reality vs specs + System templates"}
+{"ts": "2026-08-07T20:24:00Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-046", "status": "complete", "summary": "Docs TOC: drop secondary sub-lines"}
+{"ts": "2026-08-07T20:28:00Z", "type": "audit", "actor": "agent", "cmd": "/audit", "phase": null, "ref": "A-009", "status": "complete", "summary": "Docs language: beginner / customer-facing Praxis guide"}
+{"ts": "2026-08-07T20:28:00Z", "type": "audit", "actor": "agent", "cmd": "/audit", "phase": null, "ref": "A-010", "status": "complete", "summary": "Reconcile Praxis reality vs specs + System templates"}
+{"ts": "2026-08-07T20:28:00Z", "type": "design", "actor": "agent", "cmd": "/design", "phase": null, "ref": "S-005", "status": "active", "summary": "Docs page = beginner Praxis guide (amend D-026)"}
+{"ts": "2026-08-07T20:32:00Z", "type": "decide", "actor": "agent", "cmd": "/design", "phase": null, "ref": "D-027", "status": "complete", "summary": "Docs beginner guide; Adv PASS"}
+{"ts": "2026-08-07T20:32:00Z", "type": "design", "actor": "agent", "cmd": "/design", "phase": null, "ref": "S-005", "status": "complete", "summary": "Docs page = beginner Praxis guide (amend D-026)"}
+{"ts": "2026-08-07T20:27:46Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-047", "status": "active", "summary": "Docs TOC: remove Guide and Praxis labels"}
+{"ts": "2026-08-07T20:28:20Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-047", "status": "complete", "summary": "Docs TOC: remove Guide and Praxis labels"}
+{"ts": "2026-08-07T20:39:51Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-048", "status": "active", "summary": "Docs: Commands overview page + handoff for multi-session phases"}
+{"ts": "2026-08-07T20:41:30Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-048", "status": "complete", "summary": "Docs: Commands overview page + handoff for multi-session phases"}
+{"ts":"2026-08-07T20:55:26Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-012","status":"complete","summary":"lanes: work — pass (typecheck+test+validate)"}
+{"ts":"2026-08-07T20:55:38Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":null,"status":"active","summary":"Reduced close: meta desk → close/* (C-012 green)"}

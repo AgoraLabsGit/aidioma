@@ -38,21 +38,7 @@ Superseded by: D-XXX
 
 ---
 
-# FIXES.yaml — entry format
+# Fixes / backlog (retired)
 
-Validated against `System/schemas/fixes.schema.json` in CI. The file is a YAML array; no extra
-keys are permitted.
-
-```yaml
-- id: FIX-000
-  summary: "<what is broken, in the user's words>"
-  status: open              # open | fixed
-  spec: SPEC-F-XXX          # null if no spec owns it yet
-  opened: YYYY-MM-DD
-```
-
-Log the symptom, not the diagnosis. Investigation happens after the entry exists, so nothing is
-lost if the session ends.
-
-If a fix turns out to need design work, move it to `Backlog.md` and delete the entry. One-way
-door — an item is never in both.
+`FIXES.yaml` and `Roadmap/Backlog.md` are retired. Log defects and unscheduled ideas in
+`Docs/WORK.yaml` (`kind: fix` / `proposal` / …). See `Templates/work-entry.md`.

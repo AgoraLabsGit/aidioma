@@ -13,6 +13,8 @@ decisions:
   - D-022
   - D-023
   - D-024
+  - D-026
+  - D-027
 built_by:
   - PHASE-005
 last_amended: PHASE-007
@@ -37,13 +39,23 @@ Lets the founder see phases, Work, Signals, and Knowledge projected from Docs/.
 - Rule: Missing static UI assets return 404 (no Error stack spam); launcher refuses to start when `public/index.html` is absent
 - Rule: Work page shows outcome ledger `WORK.yaml`; Signals shows derived health only
 - Rule: Activity **page** lists process/ops allowlist only (D-023): default `handoff`/`close`/`check`/`ship`; optional chips `launch`/`dashboard`/`status`/`triage`/`system`; no outcome-type rows or chips
-- Rule: Activity Status / Feature / Area join `WORK.yaml` when `ref` is a Work id (ledger SSOT); phase-linked events still use phase tags
+- Rule: Activity Status / Feature / Area join `WORK.yaml` when `ref` is a Work id (ledger SSOT); when `ref` or `phase` is a Phase id and that phase is `closed`/`canceled`, Status shows `done` (stale mid-close `active` with `ref: null` must not stick); phase-linked Feature/Area still use phase tags
 - Rule: Work kinds include `design` (`S-nnn`); UI shows human kind labels (e.g. Design); `D-nnn` remains decisions only (not Work ids); `/design` upserts `status: active` before other edits
 - Rule: Work / Roadmap / Activity ID cells include a copy control; Activity copies `ts type ref` (no durable event id)
 - Rule: `/check` Activity events use durable `ref: C-nnn` (not a Work kind); index exposes `next_check_id`
 - Rule: Topbar git badge shows open worktree count; panel lists worktrees by category (docs/main/phase/task/other) with dirty/ahead and optional GitHub branch link
+- Rule: File watcher includes `<git-common-dir>/worktrees` (when present) so worktree add/remove/prune updates the badge/panel without manual reindex; do not watch checkout trees under `.worktrees/`
 - Rule: UI reads `repo.worktrees` (fallback `repo.sessions`) so a stale dashboard process cannot blank the panel after a field rename
-- Rule: Sidebar brand and document title are **Praxis** (hard-coded; left-aligned Outfit wordmark; same type size as `#page-title`)
+- Rule: Sidebar brand is the official Praxis wordmark SVG (`public/brand/praxis-wordmark-{white,black}.svg`); ~22px; optically aligned to nav icon *ink* (same pad as `.tab` + ~4px logo nudge); selected nav uses soft fill + left accent flush to fill edge (`::before` left -1px); document title remains **Praxis**
+- Rule: Nav sidebar width is `--sidebar-w: 180px`
+- Rule: Sidebar page icons are minimal stroke SVGs in a `1.25em` slot with shared left bearing ~x=4–5 (Active target, Work checklist, Roadmap timeline, Activity pulse, Knowledge book); selected tab icons at full opacity
+- Rule: Sidebar-foot is one horizontal **icon-only** row: **Signals · Docs · Theme** (`.sidebar-foot-btn`); ~28px height; foot icons ~12px (`1em` at 12px) — smaller than nav icons; visible labels omitted — `title` + `aria-label` required; Theme still toggles sun/moon icons
+- Rule: **Docs** is a first-class dashboard page (`docs`, title Docs) — beginner Praxis guide; **not** a main-nav tab (same class as Signals); entry is the sidebar-foot Docs control only (D-026/D-027)
+- Rule: Docs projects customer-facing guide pages: `Docs/START.md` (Welcome) + `Docs/COMMANDS-OVERVIEW.md` (Commands) (D-027 revisit); does **not** project `System/COMMANDS.md` (agent SSOT / Commands panel); does not replace Knowledge (artifact browser)
+- Rule: Docs TOC shows titles only (no file-path sub-lines; no Guide/Praxis chrome labels)
+- Rule: Docs page uses Knowledge reader chrome with fixed ~220px Guide TOC (no collapse control; does not share Knowledge TOC width/collapse prefs); `.page-docs` fills below the topbar like Knowledge; Docs prose is full pane width (no 72ch reading measure — that stays on Knowledge/detail)
+- Rule: Light theme uses a cream shell (`--bg` ~`#ebe6df`) with warm paper panels (`--surface` ~`#f3efe7`) — never pure `#fff` and never cool/blue greys; warmer muted ink; status soft fills ≥16% chroma
+- Rule: Nav sidebar, detail rail, and Knowledge TOC use page `--bg` (light + dark); tables/cards stay on `--surface` panels
 - Rule: Topbar worktrees control uses the GitHub mark icon
 - Rule: Work/Phase detail section labels (D-024): **Brief** = authored intent (Work `note`; Phase `## Brief` if present else `## Context`); **Context** = declared `context_paths` (honest empty if none); **Files** = ownership trees (ledger/spec homes + spec `paths` / phase `amends_specs`)
 - Rule: Work detail also surfaces `open_questions`, `done_summary`, and derived **Activity** trail (`ref === id`, including outcome types)
@@ -58,12 +70,13 @@ Lets the founder see phases, Work, Signals, and Knowledge projected from Docs/.
 - Rule: Feature/Area filters live in a Filters pop-up panel (not primary chip row); Reset clears filters/sort/search per table page; Filters badge is a small count chip
 - Rule: Detail panels (Phase / Work / Signal) share Phase chrome: `phase-view` header, Status `phase-block` + `glance-grid`, optional `phase-card` sections
 - Rule: Detail topbar shows the id once — no path byline (`Docs/…`) and no duplicate id under the title
-- Rule: Detail topbar ID (`#detail-title`) is mono at the same size as `.phase-name` / `--detail-title-size` (not page-title display); copy control sits immediately right of the ID (all pages using `#detail`)
+- Rule: Page titles (`#page-title`), panel titles (`.phase-name`), and detail topbar ID (`#detail-title`) use `--mono` like table IDs; `#detail-title` / `.phase-name` share `--detail-title-size` (not page-title `--fs-2xl`); copy control sits immediately right of the ID
+
 - Rule: Detail collapse control is top-left (larger chevron in the collapsed rail); Close is top-right when expanded and hidden when collapsed; chevron flips (`›` / `‹`)
 - Rule: Detail starts closed on load; `.detail[hidden]` must stay `display: none` (flex must not override `hidden`)
 - Rule: Detail overlays when expanded; while open, workspace keeps a fixed ~52px right gutter for the collapsed rail (no reflow on expand/collapse)
 - Rule: Detail/Knowledge resize gutters are invisible until hover (no persistent thick divider)
-- Rule: Signals entry is the sidebar-foot status pill (not a main-nav item)
+- Rule: Signals entry is the sidebar-foot status control (not a main-nav item); Docs entry is the sidebar-foot Docs control (not a main-nav item)
 
 ## Boundaries
 

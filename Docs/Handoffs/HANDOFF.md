@@ -1,24 +1,24 @@
-# Current handoff — after reduced `/close` (PR #35)
+# Current handoff — after reduced `/close`
 
 **Date:** 2026-08-07
 
-**Branch:** `main` @ `7a374b1` (merge PR #35)
+**Branch:** `main` (post close PR)
 **Active phase:** none
-**Docs home:** `.worktrees/docs` (`docs/ssot`) @ same tip
+**Docs home:** `.worktrees/docs` (`docs/ssot`) — refresh after merge
 **Remotes:** `origin/main` only
 
 ## Done this session
 
-- **T-028** — Detail `#detail-title` + `.phase-name` share `--detail-title-size` (xl)
-- **T-027 / T-029** — Praxis wordmark: drop mark, center, match page-title size
-- **F-017** — Worktrees panel: `worktrees` + `sessions` dual-emit / UI fallback
-- `/check` **C-011** green; reduced close merged
+- Dashboard UX: Praxis wordmark, light theme cream/paper, sidebar/nav polish, detail panels, copy IDs, worktrees watcher, Activity status joins
+- **D-025** — product `/task`/`/fix` desks; Docs-home path leases; dual-desk `/close`
+- **F-024** — `work.yml` `npm ci --ignore-scripts`; drop stale work-registry path filters; workspace Sonar excludes
+- `/check` **C-012** green (work lane)
 
 ## Open
 
 - W-015 — Parallel active phases
-- Untracked `Docs/System/dashboard/public/brand/*.svg` on docs home (not in #35)
 - Product proposals until PHASE-002+
+- SonarCloud ghosts on deleted paths may need IDE Reload / rebind (not repo)
 
 ## Next command
 

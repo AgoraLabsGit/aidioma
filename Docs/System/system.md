@@ -32,7 +32,9 @@ Files are the source of truth. Events are the journal. State is never derived fr
   for a *presumed* future need; malleability (tests, clear seams) still earns its keep.
   Executable lists: `System/protocols/mcoo-checklist.md`.
 - **Proof-first** — A phase closes on demonstrated behavior, not description.
-- **One active phase** — Exactly one. One branch. One worktree.
+- **At most one active phase (today)** — One phase branch/worktree while a phase is in flight.
+  Parallel active phases are planned (`W-015`) — not live. Non-phase `/task` `/fix` `/research`
+  `/design` are first-class and publish via reduced `/close` (D-021/D-025).
 - **Write it down or it didn't happen** — Behavior change requires a spec change.
 - **Audited main** — nothing reaches `origin/main` without passing the three close checks (§10).
   `/close` runs them for a phase; a standalone `/fix` runs them in reduced form. No other path
@@ -505,17 +507,19 @@ PHASE-007 (active)
   └─ /close     → merge
 ```
 
-All of it is one phase, one branch, one close. Every activity emits its own event, so the
-dashboard shows the full texture of the work — while the Roadmap still shows one clean line.
+**Inside an active phase:** activities share that phase’s branch and close. Every activity emits
+its own event, so the dashboard shows the full texture of the work — while the Roadmap still
+shows one clean line for that outcome.
 
 **Do not open a new phase for:** research, a spec update, a bug found mid-build, or a decision
-that arises during work. Those are activities *inside* the active phase.
+that arises during work *on the current outcome*. Those are activities *inside* the active phase.
 
 **Do open a new phase when:** the outcome itself changes, or the work no longer fits one working
 session. That is the only ballooning worth avoiding.
 
-If no phase is active, action commands still work — they simply carry `phase: null` and appear
-under *Unassigned* on the dashboard.
+**Outside a phase:** `/task` `/fix` `/research` `/design` (and friends) still work — they carry
+`phase: null`, appear under Work (unassigned), and publish via **reduced `/close`** (D-021).
+Product code uses `task/*` / `fix/*` desks; Docs/meta stays on Docs home (D-025).
 
 ### Lifecycle
 
@@ -523,7 +527,7 @@ under *Unassigned* on the dashboard.
 |---|---|---|---|
 | `/plan` | New work not on the Roadmap | Create a phase file; name the complexity cost; cut/defer is a valid outcome | Write product code; build unconsumed foundations |
 | `/run` | Start or resume the one active phase | Phase `/triage` (sub-agent) first, then execute outcome; may `/research` `/design` `/fix` `/task` `/audit` `/check` | Merge; expand scope horizontally; continue past a broken contract |
-| `/close` | End session / publish | **Phase active:** triage → `/check` → full Proof/Scope/Publish → merge. **No phase:** reduced close (`protocols/reduced-close.md`) → merge | Merge on FAIL; skip `/check`; refuse `/close` when no phase (must run reduced path); delete `PRESERVE.md` items |
+| `/close` | End session / publish | **Phase active:** triage → `/check` → full Proof/Scope/Publish → dual-desk merge. **No phase:** reduced close (`protocols/reduced-close.md`) — desk inventory (D-025) → publish each | Merge on FAIL; skip `/check`; refuse `/close` when no phase (must run reduced path); delete Docs home; publish only one desk when both dirty; delete `PRESERVE.md` items |
 | `/ship` | Promote to production | Deploy production; append to `RELEASES.md` | Ship on a red check, an open FAIL, or a contested spec |
 
 `/ship` preconditions — all four, or it refuses:
@@ -569,9 +573,10 @@ never need an active phase. `/log` parks; `/triage` classifies and executes clea
 | No active phase | Own short-lived branch, publishes independently |
 
 **Standalone publish** runs the three checks in reduced form: Proof (the fix is demonstrated),
-Scope (path→spec coverage still applies), Publish (clean branch, no orphans). It is a close-class
-action, so the audited-main invariant holds. Requiring a full phase for a one-line CSS fix would
-balloon exactly what the phase container is meant to prevent.
+Scope (path→spec coverage still applies), Publish (every dirty **D-025** desk — product
+`task/*`/`fix/*` PR and/or meta `close/*` from Docs home; never delete Docs home). It is a
+close-class action, so the audited-main invariant holds. Requiring a full phase for a one-line
+CSS fix would balloon exactly what the phase container is meant to prevent.
 
 `/research` never commits code — it writes to `Research/` on whatever branch is checked out.
 
@@ -715,7 +720,8 @@ code quality when code is in the diff.
 
 These are nested lenses, not extra merge gates or named auditor roles (D-019).
 Required Adv steps: `System/protocols/adv-protocol.md`. MCOO FAIL criteria: `System/protocols/mcoo-checklist.md`.
-`/close` with no active phase (and `/fix`/`/task` publish): `System/protocols/reduced-close.md`.
+`/close` with no active phase (and `/fix`/`/task` publish): `System/protocols/reduced-close.md`
+(inventory desks per D-025; dual-desk when product + Docs home both dirty).
 
 | Result | Rule |
 |---|---|
@@ -810,6 +816,10 @@ primary Docs/ + .work/ (+ active phase worktree overlay)
   (`docs/ssot`) when present (P-001 shipped). Writers put `Docs/**`, `.work/**`, root agent
   entrypoints, and `.claude/skills/**` only there. If the home is absent, resolve the primary
   git worktree and overlay the sole `active`/`blocked` phase worktree (D-018 interim).
+- **Non-phase desks (D-025).** Product `/task`/`/fix` → `task/*`/`fix/*` worktrees (not
+  `docs/ssot`). Docs home is meta-only. Concurrent Docs-home writers lease paths via active Work
+  `context_paths` (overlap → wait/park). System-building interim may still edit `Docs/System/**`
+  on Docs home.
 - **Full rebuild on any change.** Under 100ms at this scale. Do not build incremental
   invalidation — it is where tools of this kind usually go wrong.
 - **Debounce is required.** A branch switch changes hundreds of files; without it you fire
@@ -826,19 +836,20 @@ All derived values — reversed area→feature edges, blast radius, drift, unspe
 per-feature timelines, Roadmap ordering — are computed once by the indexer. Pages render
 `index.json` and hold no logic of their own.
 
-Six pages. Each reads a defined source. Every page is a table — one row per artifact — with a
-detail pane on row click.
+Main pages plus foot entries. Table pages are one row per artifact with a detail pane on click;
+**Active**, **Knowledge**, and **Docs** are document/overview viewers (not tables).
 
 | Page | Reads | Answers |
 |---|---|---|
-| **Now** | Active phase, `HANDOFF.md`, git, last `/check` | What am I doing, what do I type next? |
+| **Active** | Active/blocked phases, `HANDOFF.md`, git, last `/check` | What am I doing? |
 | **Work** | `WORK.yaml` | What outcome work is parked, in flight, or done? (fix/task/proposal/research/question/audit/design) |
 | **Roadmap** | `Phases/*.md` frontmatter (incl. feature/area), ordered by `order` | What's scheduled, done, canceled? |
 | **Activity** | `.work/activity/*.jsonl` (process types only — D-023) | What process/ops ran (`handoff`/`close`/`check`/`ship` ± quiet utilities)? |
-| **Knowledge** | Specs, `DECISIONS.md`, `Research/` | What exists, how does it behave, why? |
-| **Signals** | Derived health only | What's drifting, broken-linked, or parse-failing? |
+| **Knowledge** | Specs, `DECISIONS.md`, `Research/`, PRODUCT, Releases | What exists, how does it behave, why? (TOC + reader) |
+| **Docs** | Beginner guide (`START.md` + `COMMANDS-OVERVIEW.md`) | How do I use Praxis? (D-027) |
+| **Signals** (foot) | Derived health only | What's drifting, broken-linked, or parse-failing? |
 
-Handoffs is a card on **Now**, not a page — it is one overwritten file.
+Handoffs is a card on **Active**, not a page — it is one overwritten file.
 
 **Work** is authored. **Signals** are derived (drift, unspecified code, dead specs, stale
 research, contested specs, parse errors, blocked phases). Do not mix them — triage is not the

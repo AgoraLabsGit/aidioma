@@ -63,7 +63,10 @@
       "done_summary": {
         "type": ["string", "null"]
       },
-      "opened": { "type": "string", "format": "date" }
+      "opened": {
+        "type": "string",
+        "description": "Prefer UTC ISO datetime (real Age); legacy date-only YYYY-MM-DD still accepted"
+      }
     }
   }
 }

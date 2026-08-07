@@ -1,12 +1,13 @@
 import { watch, type FSWatcher } from "chokidar";
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { derive, type DeriveIndex } from "../derive/derive.js";
+import { derive, type DeriveIndex, type ProjectionRoots } from "../derive/derive.js";
 import {
   resolveDocsHomeRoot,
+  resolveGitWorktreesMetaDir,
   resolvePrimaryWorktreeRoot,
   type GitWorktree,
 } from "../derive/worktrees.js";
@@ -33,6 +34,14 @@ const staticAssets = new Map([
   ["/index.html", { file: "index.html", contentType: "text/html; charset=utf-8" }],
   ["/styles.css", { file: "styles.css", contentType: "text/css; charset=utf-8" }],
   ["/app.js", { file: "app.js", contentType: "text/javascript; charset=utf-8" }],
+  [
+    "/brand/praxis-wordmark-white.svg",
+    { file: "brand/praxis-wordmark-white.svg", contentType: "image/svg+xml; charset=utf-8" },
+  ],
+  [
+    "/brand/praxis-wordmark-black.svg",
+    { file: "brand/praxis-wordmark-black.svg", contentType: "image/svg+xml; charset=utf-8" },
+  ],
 ]);
 
 export type DashboardServerOptions = {
@@ -51,6 +60,34 @@ type SseClient = ServerResponse;
 export function assertDashboardEnvironment(nodeEnvironment = process.env.NODE_ENV): void {
   if (nodeEnvironment === "production") {
     throw new Error("The work dashboard is local-only and refuses to run in production.");
+  }
+}
+
+/** Build chokidar roots for Docs/activity (+ optional git worktrees metadata). */
+export function collectWatchRoots(
+  projectionRoots: ProjectionRoots,
+  gitWorktreesMetaDir?: string | null,
+): string[] {
+  const roots = [
+    path.join(projectionRoots.primary, "Docs"),
+    path.join(projectionRoots.primary, ".work", "activity"),
+  ];
+  if (projectionRoots.overlay) {
+    roots.push(
+      path.join(projectionRoots.overlay, "Docs"),
+      path.join(projectionRoots.overlay, ".work", "activity"),
+    );
+  }
+  if (gitWorktreesMetaDir) roots.push(gitWorktreesMetaDir);
+  return roots;
+}
+
+async function pathExists(target: string): Promise<boolean> {
+  try {
+    await access(target);
+    return true;
+  } catch {
+    return false;
   }
 }
 
@@ -76,7 +113,7 @@ export function isAllowedHost(host: string | undefined): boolean {
 function setSecurityHeaders(response: ServerResponse): void {
   response.setHeader(
     "Content-Security-Policy",
-    "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+    "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
   );
   response.setHeader("Cache-Control", "no-store, max-age=0");
   response.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
@@ -156,6 +193,24 @@ async function findDocPath(
       relativePath: path.join("Docs", "PRODUCT.md"),
     };
   }
+  if (id === "START") {
+    return {
+      absolutePath: path.join(index.projection_roots.primary, "Docs", "START.md"),
+      relativePath: path.join("Docs", "START.md"),
+    };
+  }
+  if (id === "COMMANDS-OVERVIEW") {
+    return {
+      absolutePath: path.join(index.projection_roots.primary, "Docs", "COMMANDS-OVERVIEW.md"),
+      relativePath: path.join("Docs", "COMMANDS-OVERVIEW.md"),
+    };
+  }
+  if (id === "COMMANDS") {
+    return {
+      absolutePath: path.join(index.projection_roots.primary, "Docs", "System", "COMMANDS.md"),
+      relativePath: path.join("Docs", "System", "COMMANDS.md"),
+    };
+  }
   if (id === "DECISIONS") {
     return {
       absolutePath: path.join(index.projection_roots.primary, "Docs", "DECISIONS.md"),
@@ -219,18 +274,11 @@ export function createDashboardServer(options: DashboardServerOptions = {}): Ser
     }
   };
 
-  const syncWatches = (index: DeriveIndex): void => {
+  const syncWatches = async (index: DeriveIndex): Promise<void> => {
     if (options.watch === false) return;
-    const roots = [
-      path.join(index.projection_roots.primary, "Docs"),
-      path.join(index.projection_roots.primary, ".work", "activity"),
-    ];
-    if (index.projection_roots.overlay) {
-      roots.push(
-        path.join(index.projection_roots.overlay, "Docs"),
-        path.join(index.projection_roots.overlay, ".work", "activity"),
-      );
-    }
+    const metaDir = await resolveGitWorktreesMetaDir(index.projection_roots.primary);
+    const gitMeta = metaDir && (await pathExists(metaDir)) ? metaDir : null;
+    const roots = collectWatchRoots(index.projection_roots, gitMeta);
     const next = new Set(roots);
     const same =
       next.size === watchedRoots.size && [...next].every((root) => watchedRoots.has(root));
@@ -265,7 +313,7 @@ export function createDashboardServer(options: DashboardServerOptions = {}): Ser
         overlayWorktrees: true,
         worktrees: options.worktrees,
       });
-      syncWatches(cachedIndex);
+      await syncWatches(cachedIndex);
       broadcast(cachedIndex);
       return cachedIndex;
     } finally {

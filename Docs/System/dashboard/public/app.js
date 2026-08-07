@@ -5,7 +5,14 @@ const PAGE_META = {
   knowledge: { title: "Knowledge" },
   work: { title: "Work" },
   signals: { title: "Signals" },
+  docs: { title: "Docs" },
 };
+
+/** Beginner Docs (D-027): Welcome + customer Commands overview — not System/COMMANDS.md. */
+const DOCS_ITEMS = [
+  { id: "START", title: "Welcome" },
+  { id: "COMMANDS-OVERVIEW", title: "Commands" },
+];
 
 const DETAIL_WIDTH_KEY = "aidioma-detail-width";
 const TOC_WIDTH_KEY = "aidioma-toc-width";
@@ -103,6 +110,7 @@ const state = {
   workFilters: loadFilters(FILTER_KEYS.work, DEFAULT_FILTERS.work),
   signalsFilters: loadFilters(FILTER_KEYS.signals, DEFAULT_FILTERS.signals),
   knowledgeId: "PRODUCT",
+  docsId: "START",
   selectedId: null,
   lastIndexedAt: null,
   tocCollapsed: readStored(TOC_COLLAPSED_KEY) === "1",
@@ -116,10 +124,12 @@ const panels = {
   knowledge: document.querySelector("#page-knowledge"),
   work: document.querySelector("#page-work"),
   signals: document.querySelector("#page-signals"),
+  docs: document.querySelector("#page-docs"),
 };
 
 const indexedAt = document.querySelector("#indexed-at");
 const issuePill = document.querySelector("#issue-pill");
+const docsPill = document.querySelector("#docs-pill");
 const heartbeat = document.querySelector(".heartbeat");
 const pageTitle = document.querySelector("#page-title");
 const detail = document.querySelector("#detail");
@@ -148,8 +158,7 @@ function writeStored(key, value) {
 
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
-  themeToggle.textContent = theme === "light" ? "◑ Theme" : "◐ Theme";
-  themeToggle.setAttribute("aria-pressed", String(theme === "light"));
+  themeToggle?.setAttribute("aria-pressed", String(theme === "light"));
 }
 
 function escapeHtml(value) {
@@ -564,7 +573,7 @@ function renderMarkdown(raw) {
 
   const closeTable = () => {
     if (inTable) {
-      html.push("</tbody></table>");
+      html.push("</tbody></table></div>");
       inTable = false;
     }
   };
@@ -578,7 +587,7 @@ function renderMarkdown(raw) {
       const cells = trimmed.slice(1, -1).split("|").map((cell) => cell.trim());
       if (/^[-:| ]+$/.test(cells.join("|"))) continue;
       if (!inTable) {
-        html.push("<table class=\"md-table\"><thead>");
+        html.push("<div class=\"md-table-wrap\"><table class=\"md-table\"><thead>");
         html.push(`<tr>${cells.map((cell) => `<th>${inlineMarkdown(cell)}</th>`).join("")}</tr>`);
         html.push("</thead><tbody>");
         inTable = true;
@@ -1450,16 +1459,22 @@ function activityRefPhaseCells(event) {
 }
 
 /**
- * Activity Status column: when `ref` is a Work id, show current WORK.yaml status
- * (ledger SSOT). Event JSON keeps historical status; UI must not leave a stale
- * `active` pill after the Work row is `done`.
- * Non-work events: map `complete` → `done` for pill consistency.
+ * Activity Status column: ledger SSOT overlays event JSON.
+ * - `ref` → Work row status when present
+ * - `ref` or `phase` → Phase id: closed/canceled phases force `done` (stale mid-close
+ *   often logs `status: active` with `ref: null`, e.g. PHASE-007 15:56)
+ * - else map `complete` → `done`
  */
 function activityDisplayStatus(event, index) {
   const ref = event.ref;
   if (ref) {
     const work = (index.work ?? []).find((row) => row.id === ref);
     if (work?.status) return work.status;
+  }
+  const phaseId = ref && String(ref).startsWith("PHASE-") ? ref : event.phase;
+  if (phaseId) {
+    const phase = (index.phases ?? []).find((row) => row.id === phaseId);
+    if (phase?.state === "closed" || phase?.state === "canceled") return "done";
   }
   if (event.status === "complete") return "done";
   return event.status ?? "done";
@@ -1716,6 +1731,60 @@ function renderKnowledge(index) {
   `;
 
   void loadKnowledgeDoc(state.knowledgeId);
+}
+
+async function loadDocsDoc(id) {
+  const pane = document.querySelector("[data-docs-doc]");
+  if (!pane) return;
+
+  pane.innerHTML = `<p class="knowledge-doc-empty">Loading ${escapeHtml(id)}…</p>`;
+  try {
+    const response = await fetch(`/api/doc?id=${encodeURIComponent(id)}`);
+    if (!response.ok) {
+      pane.innerHTML = `<p class="knowledge-doc-empty">Could not load ${escapeHtml(id)}.</p>`;
+      return;
+    }
+    const doc = await response.json();
+    pane.innerHTML = `
+      <p class="doc-path"></p>
+      <div class="doc-meta-slot"></div>
+      <article class="doc-body prose"></article>
+    `;
+    renderDocInto(doc, {
+      pathEl: pane.querySelector(".doc-path"),
+      metaEl: pane.querySelector(".doc-meta-slot"),
+      bodyEl: pane.querySelector(".doc-body"),
+    });
+  } catch {
+    pane.innerHTML = `<p class="knowledge-doc-empty">Could not load ${escapeHtml(id)}.</p>`;
+  }
+}
+
+function renderDocs() {
+  if (!panels.docs) return;
+  const ids = DOCS_ITEMS.map((item) => item.id);
+  if (!ids.includes(state.docsId)) state.docsId = ids[0] ?? "START";
+
+  // Narrow fixed TOC — do not share Knowledge collapse/width prefs.
+  panels.docs.innerHTML = `
+    <div class="knowledge" style="--toc-w:220px">
+      <aside class="knowledge-toc">
+        <ul class="toc-list">
+          ${DOCS_ITEMS.map((item) => `
+            <li>
+              <button type="button" class="toc-item" data-docs-id="${escapeHtml(item.id)}" ${state.docsId === item.id ? 'aria-current="true"' : ""}>
+                <span class="cell-primary">${escapeHtml(item.title)}</span>
+              </button>
+            </li>
+          `).join("")}
+        </ul>
+      </aside>
+      <div class="toc-resize" data-resize="toc" title="Drag to resize"></div>
+      <section class="knowledge-doc" data-docs-doc></section>
+    </div>
+  `;
+
+  void loadDocsDoc(state.docsId);
 }
 
 function issueStatus(issue) {
@@ -1978,15 +2047,20 @@ function updateChrome(index) {
   if (!issuePill) return;
   issuePill.hidden = false;
   issuePill.dataset.alert = high > 0 ? "true" : "false";
-  issuePill.textContent = high > 0
-    ? `● ${high} signal${high === 1 ? "" : "s"}`
-    : "● Signals";
+  const signalsTitle = high > 0
+    ? `${high} signal${high === 1 ? "" : "s"}`
+    : "Signals";
+  issuePill.title = signalsTitle;
   issuePill.setAttribute(
     "aria-label",
     high > 0 ? `Open Signals — ${high} high severity` : "Open Signals",
   );
   if (state.page === "signals") issuePill.setAttribute("aria-current", "page");
   else issuePill.removeAttribute("aria-current");
+  if (docsPill) {
+    if (state.page === "docs") docsPill.setAttribute("aria-current", "page");
+    else docsPill.removeAttribute("aria-current");
+  }
 }
 
 function renderAll() {
@@ -1998,6 +2072,7 @@ function renderAll() {
   renderKnowledge(state.index);
   renderWork(state.index);
   renderSignals(state.index);
+  renderDocs();
 }
 
 function showPage(page) {
@@ -2016,7 +2091,11 @@ function showPage(page) {
     if (page === "signals") issuePill.setAttribute("aria-current", "page");
     else issuePill.removeAttribute("aria-current");
   }
-  if (page === "knowledge") detail.hidden = true;
+  if (docsPill) {
+    if (page === "docs") docsPill.setAttribute("aria-current", "page");
+    else docsPill.removeAttribute("aria-current");
+  }
+  if (page === "knowledge" || page === "docs") detail.hidden = true;
   syncDetailRailGutter();
 }
 
@@ -2412,6 +2491,10 @@ issuePill?.addEventListener("click", () => {
   showPage("signals");
 });
 
+docsPill?.addEventListener("click", () => {
+  showPage("docs");
+});
+
 document.querySelector("#reindex").addEventListener("click", () => {
   void reindex();
 });
@@ -2495,8 +2578,9 @@ document.addEventListener("click", (event) => {
   if (tocCollapse) {
     state.tocCollapsed = true;
     writeStored(TOC_COLLAPSED_KEY, "1");
-    document.querySelector(".knowledge")?.classList.add("toc-collapsed");
-    document.querySelector("[data-toc-expand]")?.removeAttribute("hidden");
+    const shell = tocCollapse.closest(".knowledge");
+    shell?.classList.add("toc-collapsed");
+    shell?.querySelector("[data-toc-expand]")?.removeAttribute("hidden");
     return;
   }
 
@@ -2504,7 +2588,8 @@ document.addEventListener("click", (event) => {
   if (tocExpand) {
     state.tocCollapsed = false;
     writeStored(TOC_COLLAPSED_KEY, "0");
-    document.querySelector(".knowledge")?.classList.remove("toc-collapsed");
+    const shell = tocExpand.closest(".knowledge");
+    shell?.classList.remove("toc-collapsed");
     tocExpand.hidden = true;
     return;
   }
@@ -2517,6 +2602,17 @@ document.addEventListener("click", (event) => {
       else item.removeAttribute("aria-current");
     }
     void loadKnowledgeDoc(state.knowledgeId);
+    return;
+  }
+
+  const docsTocItem = event.target.closest("[data-docs-id]");
+  if (docsTocItem) {
+    state.docsId = docsTocItem.dataset.docsId;
+    for (const item of document.querySelectorAll("[data-docs-id]")) {
+      if (item === docsTocItem) item.setAttribute("aria-current", "true");
+      else item.removeAttribute("aria-current");
+    }
+    void loadDocsDoc(state.docsId);
     return;
   }
 
@@ -2582,7 +2678,7 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  if (state.page === "knowledge") return;
+  if (state.page === "knowledge" || state.page === "docs") return;
   const row = event.target.closest("tr[data-id]");
   if (row?.dataset.id) void openDetail(row.dataset.id);
 });
@@ -2633,12 +2729,12 @@ document.addEventListener("pointerdown", (event) => {
   if (!handle) return;
   event.preventDefault();
   handle.setPointerCapture(event.pointerId);
+  const shell = handle.closest(".knowledge");
   const move = (moveEvent) => {
-    const knowledge = document.querySelector(".knowledge");
-    if (!knowledge) return;
-    const rect = knowledge.getBoundingClientRect();
+    if (!shell) return;
+    const rect = shell.getBoundingClientRect();
     const width = Math.min(Math.max(moveEvent.clientX - rect.left, 220), 480);
-    knowledge.style.setProperty("--toc-w", `${width}px`);
+    shell.style.setProperty("--toc-w", `${width}px`);
     writeStored(TOC_WIDTH_KEY, String(width));
   };
   const up = () => {
