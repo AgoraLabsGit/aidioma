@@ -26,7 +26,8 @@ context.
 ## Commands
 
 See `Docs/System/COMMANDS.md`. Lifecycle: `/plan` `/run` `/close` `/ship`. Action: `/research`
-`/design` `/fix`. Utility: `/status` `/check` `/launch` `/dashboard` `/handoff`. Meta: `/system`.
+`/design` `/fix` `/task`. Utility: `/log` `/triage` `/status` `/check` `/launch` `/dashboard`
+`/handoff`. Meta: `/system`.
 
 - `/run` may commit on the phase branch. Merges require audited close checks.
 - `/handoff` overwrites `Docs/Handoffs/HANDOFF.md` only — no commit/PR/merge.

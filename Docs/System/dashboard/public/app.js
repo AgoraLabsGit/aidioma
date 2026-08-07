@@ -1,9 +1,10 @@
 const PAGE_META = {
   active: { title: "Active", subtitle: "Phases in flight" },
-  roadmap: { title: "Roadmap", subtitle: "Phases by state and order" },
+  roadmap: { title: "Roadmap", subtitle: "Phases by schedule (depends_on → order)" },
   activity: { title: "Activity", subtitle: "Command journal (.work/activity)" },
   knowledge: { title: "Knowledge", subtitle: "Specs, decisions, research, releases" },
-  issues: { title: "Issues", subtitle: "FIXES.yaml + derived signals" },
+  work: { title: "Work", subtitle: "WORK.yaml ledger — fix, task, proposal, research, question, audit" },
+  signals: { title: "Signals", subtitle: "Derived health (drift, parse errors, broken links…)" },
 };
 
 const DETAIL_WIDTH_KEY = "aidioma-detail-width";
@@ -14,9 +15,10 @@ const THEME_KEY = "aidioma-dashboard-theme";
 const state = {
   index: null,
   page: "active",
-  roadmapFilters: { state: "", type: "", q: "", sort: "state" },
-  activityFilters: { actor: "", type: "", phase: "", q: "", sort: "time" },
-  issuesFilters: { severity: "", kind: "", status: "", q: "", sort: "severity" },
+  roadmapFilters: { state: "", type: "", q: "", sort: "schedule" },
+  activityFilters: { type: "", q: "", sort: "time" },
+  workFilters: { kind: "", status: "", q: "", sort: "open-first" },
+  signalsFilters: { severity: "", kind: "", status: "open", q: "", sort: "severity" },
   knowledgeId: "PRODUCT",
   selectedId: null,
   lastIndexedAt: null,
@@ -28,7 +30,8 @@ const panels = {
   roadmap: document.querySelector("#page-roadmap"),
   activity: document.querySelector("#page-activity"),
   knowledge: document.querySelector("#page-knowledge"),
-  issues: document.querySelector("#page-issues"),
+  work: document.querySelector("#page-work"),
+  signals: document.querySelector("#page-signals"),
 };
 
 const indexedAt = document.querySelector("#indexed-at");
@@ -83,7 +86,18 @@ function formatAge(iso) {
   if (minutes < 60) return `${minutes}m ago`;
   const hours = Math.floor(minutes / 60);
   if (hours < 48) return `${hours}h ago`;
-  return `${Math.floor(hours / 24)}d ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 14) return `${days}d ${hours % 24}h ago`;
+  return `${days}d ago`;
+}
+
+/** Table Age from a date-only field (YYYY-MM-DD) — shows hours when under 48h. */
+function formatOpenedAge(opened) {
+  if (!opened) return "—";
+  if (/^\d{4}-\d{2}-\d{2}$/u.test(opened)) {
+    return formatAge(`${opened}T00:00:00.000Z`);
+  }
+  return formatAge(opened);
 }
 
 function copyText(text) {
@@ -101,6 +115,24 @@ function statusHtml(value) {
   return `<span class="status" data-state="${escapeHtml(value)}">${escapeHtml(value)}</span>`;
 }
 
+/** Display SPEC-F-FOO / SPEC-A-BAR as FOO / BAR in tables. Full id in title. */
+function shortSpecId(id) {
+  if (id == null || id === "") return "—";
+  return String(id).replace(/^SPEC-F-/u, "").replace(/^SPEC-A-/u, "");
+}
+
+function shortSpecCell(id) {
+  if (id == null || id === "") return "—";
+  return `<span class="mono" title="${escapeHtml(id)}">${escapeHtml(shortSpecId(id))}</span>`;
+}
+
+function featureAreaFromSpecId(specId) {
+  if (!specId) return { feature: null, area: null };
+  if (String(specId).startsWith("SPEC-A-")) return { feature: null, area: specId };
+  if (String(specId).startsWith("SPEC-F-")) return { feature: specId, area: null };
+  return { feature: specId, area: null };
+}
+
 function chip(name, value, current, label = value) {
   return `<button type="button" class="chip" data-filter="${name}" data-value="${escapeHtml(value)}" aria-pressed="${current === value}">${escapeHtml(label || "All")}</button>`;
 }
@@ -109,13 +141,87 @@ function searchInput(name, value, placeholder) {
   return `<input class="search" type="search" name="${escapeHtml(name)}" value="${escapeHtml(value)}" placeholder="${escapeHtml(placeholder)}" autocomplete="off" />`;
 }
 
-function sortSelect(name, value, options) {
-  return `<label class="sort-label">Sort
-    <select class="sort-select" name="${escapeHtml(name)}">
-      ${options.map(([id, label]) =>
-        `<option value="${escapeHtml(id)}"${value === id ? " selected" : ""}>${escapeHtml(label)}</option>`).join("")}
-    </select>
-  </label>`;
+/** Display truncate for table summary cells (full text in title). */
+const SUMMARY_CAP = 80;
+
+function truncateSummary(text) {
+  const value = String(text ?? "");
+  if (value.length <= SUMMARY_CAP) {
+    return `<span class="cell-primary" title="${escapeHtml(value)}">${escapeHtml(value)}</span>`;
+  }
+  return `<span class="cell-primary" title="${escapeHtml(value)}">${escapeHtml(value.slice(0, SUMMARY_CAP))}…</span>`;
+}
+
+/** Column key → sort key. Only mapped columns are clickable. */
+const TABLE_SORT_KEYS = {
+  roadmap: { id: "schedule", order: "schedule", kind: "type", summary: "title", status: "state", age: "age" },
+  activity: { kind: "type", age: "time" },
+  work: { id: "id", kind: "kind", status: "status", age: "age" },
+  signals: { kind: "kind", summary: "severity", status: "status", age: "age" },
+};
+
+const TABLE_COLUMNS = [
+  ["id", "ID", ""],
+  ["kind", "Kind", ""],
+  ["summary", "Summary", "wrap"],
+  ["feature", "Feature", ""],
+  ["area", "Area", ""],
+  ["status", "Status", ""],
+  ["age", "Age", ""],
+];
+
+/** Roadmap: schedule step (Order) sits right of phase id. */
+const ROADMAP_COLUMNS = [
+  ["id", "ID", ""],
+  ["order", "Order", ""],
+  ["kind", "Kind", ""],
+  ["summary", "Summary", "wrap"],
+  ["feature", "Feature", ""],
+  ["area", "Area", ""],
+  ["status", "Status", ""],
+  ["age", "Age", ""],
+];
+
+function columnsForPage(page) {
+  return page === "roadmap" ? ROADMAP_COLUMNS : TABLE_COLUMNS;
+}
+
+function sortableTh(sortKey, currentSort, label, extraClass = "") {
+  const active = currentSort === sortKey;
+  const classes = ["sortable", extraClass].filter(Boolean).join(" ");
+  return `<th class="${classes}" aria-sort="${active ? "other" : "none"}">
+    <button type="button" class="th-sort" data-sort-key="${escapeHtml(sortKey)}" aria-pressed="${active}">
+      ${escapeHtml(label)}${active ? '<span class="sort-mark" aria-hidden="true">▾</span>' : ""}
+    </button>
+  </th>`;
+}
+
+function tableHeaders(page, currentSort) {
+  const map = TABLE_SORT_KEYS[page] ?? {};
+  return columnsForPage(page).map(([col, label, cls]) => {
+    const sortKey = map[col];
+    if (!sortKey) {
+      return `<th${cls ? ` class="${escapeHtml(cls)}"` : ""}>${escapeHtml(label)}</th>`;
+    }
+    return sortableTh(sortKey, currentSort, label, cls);
+  }).join("");
+}
+
+function applyTableSort(page, sortKey) {
+  if (!state.index) return;
+  if (page === "roadmap") {
+    state.roadmapFilters = { ...state.roadmapFilters, sort: sortKey };
+    renderRoadmap(state.index);
+  } else if (page === "activity") {
+    state.activityFilters = { ...state.activityFilters, sort: sortKey };
+    renderActivity(state.index);
+  } else if (page === "work") {
+    state.workFilters = { ...state.workFilters, sort: sortKey };
+    renderWork(state.index);
+  } else if (page === "signals") {
+    state.signalsFilters = { ...state.signalsFilters, sort: sortKey };
+    renderSignals(state.index);
+  }
 }
 
 function matchesQuery(haystack, q) {
@@ -389,10 +495,17 @@ function gitGlance(index) {
   return `${repo.branch ?? "—"} · ${repo.clean ? "clean" : "dirty"} · ↑${repo.ahead ?? 0} ↓${repo.behind ?? 0}`;
 }
 
-function issuesGlance(index, relatedIssues) {
-  if (relatedIssues.length) return `${relatedIssues.length} related`;
+function signalsGlance(index, relatedSignals) {
+  if (relatedSignals.length) return `${relatedSignals.length} related`;
   const high = (index.issues ?? []).filter((issue) => issue.severity === "high").length;
   return `${high} high / ${(index.issues ?? []).length} total`;
+}
+
+function workGlance(index, phaseId) {
+  const related = (index.work ?? []).filter((row) => row.phase === phaseId);
+  if (related.length) return `${related.length} related`;
+  const open = (index.work ?? []).filter((row) => row.status === "open" || row.status === "active").length;
+  return `${open} open / ${(index.work ?? []).length} total`;
 }
 
 function glanceCellHtml(label, value, { mono = false } = {}) {
@@ -420,7 +533,11 @@ function glanceTwoColHtml(phase, index, relatedIssues) {
     ],
     [
       ["Opened", escapeHtml(phase.opened)],
-      ["Issues", escapeHtml(issuesGlance(index, relatedIssues))],
+      ["Work", escapeHtml(workGlance(index, phase.id))],
+    ],
+    [
+      ["Signals", escapeHtml(signalsGlance(index, relatedIssues))],
+      ["Amends", escapeHtml(specsLabel(phase)), { mono: true }],
     ],
   ];
 
@@ -472,12 +589,23 @@ function pathsBlockHtml(specPaths) {
 }
 
 function relatedIssuesHtml(relatedIssues) {
-  if (!relatedIssues.length) return `<p class="muted">No related issues.</p>`;
+  if (!relatedIssues.length) return `<p class="muted">No related signals.</p>`;
   return `<ul>${relatedIssues.map((issue) => `
     <li>
       <span class="status" data-state="${escapeHtml(issue.severity)}">${escapeHtml(issue.severity)}</span>
       <code>${escapeHtml(issue.ref)}</code>
       <span>${escapeHtml(issue.summary)}</span>
+    </li>`).join("")}</ul>`;
+}
+
+function relatedWorkHtml(index, phaseId) {
+  const rows = (index.work ?? []).filter((row) => row.phase === phaseId);
+  if (!rows.length) return `<p class="muted">No work tagged to this phase.</p>`;
+  return `<ul>${rows.map((row) => `
+    <li>
+      <code>${escapeHtml(row.id)}</code>
+      <span>${escapeHtml(row.kind)}</span>
+      <span>${escapeHtml(row.summary)}</span>
     </li>`).join("")}</ul>`;
 }
 
@@ -561,7 +689,9 @@ function renderPhaseView(phase, index, { primary = false, compact = false } = {}
         </div>
 
         <div class="phase-card-section">
-          <h3 class="now-label">Issues</h3>
+          <h3 class="now-label">Work</h3>
+          ${relatedWorkHtml(index, phase.id)}
+          <h3 class="now-label">Signals</h3>
           ${relatedIssuesHtml(relatedIssues)}
         </div>
 
@@ -660,37 +790,86 @@ function stateRank(value) {
   return { active: 0, blocked: 1, ready: 2, proposed: 3, closed: 4, canceled: 5 }[value] ?? 9;
 }
 
+/** Dependency depth for Roadmap schedule sort (mirrors derive sortPhasesForRoadmap). */
+function phaseScheduleDepths(phases) {
+  const byId = new Map(phases.map((phase) => [phase.id, phase]));
+  const depth = new Map();
+  const visiting = new Set();
+  const walk = (id) => {
+    if (depth.has(id)) return depth.get(id);
+    if (visiting.has(id)) {
+      depth.set(id, 0);
+      return 0;
+    }
+    visiting.add(id);
+    const phase = byId.get(id);
+    let value = 0;
+    if (phase) {
+      for (const dep of phase.depends_on ?? []) {
+        value = Math.max(value, walk(dep) + 1);
+      }
+    }
+    visiting.delete(id);
+    depth.set(id, value);
+    return value;
+  };
+  for (const phase of phases) walk(phase.id);
+  return depth;
+}
+
+/** 1-based schedule step from full phase set (depends_on depth → order → id). */
+function phaseScheduleRanks(phases) {
+  const depths = phaseScheduleDepths(phases);
+  const sorted = [...phases].sort((left, right) =>
+    (depths.get(left.id) ?? 0) - (depths.get(right.id) ?? 0)
+      || left.order - right.order
+      || left.id.localeCompare(right.id));
+  const ranks = new Map();
+  sorted.forEach((phase, index) => ranks.set(phase.id, index + 1));
+  return { depths, ranks };
+}
+
 function renderRoadmap(index) {
   const { state: stateFilter, type: typeFilter, q, sort } = state.roadmapFilters;
+  const { depths, ranks } = phaseScheduleRanks(index.phases);
   let rows = [...index.phases]
     .filter((phase) => (!stateFilter || phase.state === stateFilter) && (!typeFilter || phase.type === typeFilter))
     .filter((phase) => matchesQuery(`${phase.id} ${phase.title} ${specsLabel(phase)}`, q));
 
   rows.sort((left, right) => {
-    if (sort === "order") return left.order - right.order;
+    if (sort === "schedule") {
+      return (ranks.get(left.id) ?? 0) - (ranks.get(right.id) ?? 0);
+    }
     if (sort === "age") return right.age_days - left.age_days;
     if (sort === "title") return left.title.localeCompare(right.title);
-    return stateRank(left.state) - stateRank(right.state) || left.order - right.order;
+    if (sort === "type") return left.type.localeCompare(right.type) || left.order - right.order;
+    if (sort === "state") {
+      return stateRank(left.state) - stateRank(right.state) || left.order - right.order;
+    }
+    return (ranks.get(left.id) ?? 0) - (ranks.get(right.id) ?? 0);
   });
 
-  const body = rows.map((phase) => `
+  const body = rows.map((phase) => {
+    const step = ranks.get(phase.id) ?? "—";
+    return `
     <tr data-id="${escapeHtml(phase.id)}" data-type="${escapeHtml(phase.type)}" data-state="${escapeHtml(phase.state)}" ${state.selectedId === phase.id ? 'data-selected="true"' : ""}>
-      <td><code>${escapeHtml(phase.id)}</code></td>
+      <td class="mono">${escapeHtml(phase.id)}</td>
+      <td class="mono" title="Schedule step (depends_on → order). Frontmatter order=${escapeHtml(String(phase.order))}">${escapeHtml(String(step))}</td>
+      <td class="${phase.type === "design" ? "type-design" : ""}">${escapeHtml(typeLabel(phase.type))}</td>
       <td class="wrap">
-        <span class="cell-primary">${escapeHtml(phase.title)}</span>
+        ${truncateSummary(phase.title)}
         ${
           phase.state === "canceled" && phase.lessons
             ? `<span class="cell-secondary">Lessons: ${escapeHtml(phase.lessons)}</span>`
             : ""
         }
       </td>
-      <td class="${phase.type === "design" ? "type-design" : ""}">${escapeHtml(typeLabel(phase.type))}</td>
+      <td>${shortSpecCell(phase.feature)}</td>
+      <td>${shortSpecCell(phase.area)}</td>
       <td>${statusHtml(phase.state)}</td>
-      <td>${escapeHtml(phase.proof_kind)}</td>
-      <td class="mono wrap">${escapeHtml(specsLabel(phase))}</td>
-      <td title="opened ${escapeHtml(phase.opened ?? "")}">${phase.age_days}d</td>
-    </tr>
-  `).join("");
+      <td title="opened ${escapeHtml(phase.opened ?? "")}">${escapeHtml(formatOpenedAge(phase.opened))}</td>
+    </tr>`;
+  }).join("");
 
   panels.roadmap.innerHTML = `
     <div class="page-toolbar">
@@ -707,18 +886,15 @@ function renderRoadmap(index) {
           ${chip("type", "build", typeFilter, "Build")}
           ${chip("type", "design", typeFilter, "Design")}
         </div>
-        ${sortSelect("roadmap-sort", sort, [["state", "State"], ["order", "Order"], ["age", "Age"], ["title", "Title"]])}
       </div>
     </div>
-    <p class="table-meta">Showing ${rows.length} of ${index.phases.length} · columns: ID, Title, Type, State, Proof, Specs, Age</p>
+    <p class="table-meta">Showing ${rows.length} of ${index.phases.length} · columns: ID, Order, Kind, Summary, Feature, Area, Status, Age</p>
     <div class="table-frame">
       <table>
         <thead>
-          <tr>
-            <th>ID</th><th>Title</th><th>Type</th><th>State</th><th>Proof</th><th>Specs</th><th>Age</th>
-          </tr>
+          <tr>${tableHeaders("roadmap", sort)}</tr>
         </thead>
-        <tbody>${body || `<tr><td colspan="7">No phases match.</td></tr>`}</tbody>
+        <tbody>${body || `<tr><td colspan="8">No phases match.</td></tr>`}</tbody>
       </table>
     </div>
   `;
@@ -735,7 +911,7 @@ function activityRefPhaseCells(event) {
 }
 
 function renderActivity(index) {
-  const { actor, type, phase, q, sort } = state.activityFilters;
+  const { type, q, sort } = state.activityFilters;
   const source = index.activity.current_month ?? [];
   if (source.length === 0) {
     panels.activity.innerHTML = `<div class="empty">Commands will appear here as they run.</div>`;
@@ -743,58 +919,48 @@ function renderActivity(index) {
   }
 
   let events = source
-    .filter((event) => !actor || event.actor === actor)
     .filter((event) => !type || event.type === type)
-    .filter((event) => !phase || event.phase === phase)
     .filter((event) => matchesQuery(`${event.type} ${event.summary} ${event.ref ?? ""} ${event.phase ?? ""} ${event.cmd ?? ""}`, q));
 
   events = [...events].sort((left, right) => {
     if (sort === "type") return left.type.localeCompare(right.type) || right.ts.localeCompare(left.ts);
-    if (sort === "phase") return String(left.phase ?? "").localeCompare(String(right.phase ?? "")) || right.ts.localeCompare(left.ts);
     return right.ts.localeCompare(left.ts);
   });
 
   const types = [...new Set(source.map((event) => event.type))].sort();
-  const phases = [...new Set(source.map((event) => event.phase).filter(Boolean))].sort();
 
   panels.activity.innerHTML = `
     <div class="page-toolbar">
       ${searchInput("activity-q", q, "Search activity…")}
       <div class="filters">
         <div class="chip-group">
-          <span class="chip-label">Actor</span>
-          ${chip("actor", "", actor, "All")}
-          ${chip("actor", "agent", actor)}
-          ${chip("actor", "user", actor)}
-        </div>
-        <div class="chip-group">
           <span class="chip-label">Type</span>
           ${chip("type", "", type, "All")}
           ${types.map((value) => chip("type", value, type)).join("")}
         </div>
-        <div class="chip-group">
-          <span class="chip-label">Phase</span>
-          ${chip("phase", "", phase, "All")}
-          ${phases.map((value) => chip("phase", value, phase)).join("")}
-        </div>
-        ${sortSelect("activity-sort", sort, [["time", "Time"], ["type", "Type"], ["phase", "Phase"]])}
       </div>
     </div>
-    <p class="table-meta">Showing ${events.length} of ${source.length} · Ref+Phase merge when identical · source .work/activity</p>
+    <p class="table-meta">Showing ${events.length} of ${source.length} · columns: ID, Kind, Summary, Feature, Area, Status, Age</p>
     <div class="table-frame">
       <table>
-        <thead><tr><th>Time</th><th>Type</th><th>Actor</th><th class="wrap">Summary</th><th>Ref</th><th>Phase</th><th>Status</th></tr></thead>
+        <thead><tr>${tableHeaders("activity", sort)}</tr></thead>
         <tbody>
-          ${events.map((event) => `
+          ${events.map((event) => {
+            const idLabel = event.ref ?? event.phase ?? "—";
+            const phaseNote = event.phase && event.ref && event.phase !== event.ref
+              ? event.phase
+              : null;
+            return `
             <tr>
-              <td class="mono" title="${escapeHtml(event.ts)}">${escapeHtml(formatAge(event.ts))}</td>
+              <td class="mono" title="${escapeHtml([event.ref, event.phase].filter(Boolean).join(" · "))}">${escapeHtml(idLabel)}${phaseNote ? `<span class="cell-secondary">${escapeHtml(phaseNote)}</span>` : ""}</td>
               <td>${escapeHtml(event.type)}</td>
-              <td>${escapeHtml(event.actor)}</td>
-              <td class="wrap"><span class="cell-primary">${escapeHtml(event.summary)}</span></td>
-              ${activityRefPhaseCells(event)}
+              <td class="wrap">${truncateSummary(event.summary)}</td>
+              <td>—</td>
+              <td>—</td>
               <td>${statusHtml(event.status ?? "complete")}</td>
-            </tr>
-          `).join("") || `<tr><td colspan="7">No events match.</td></tr>`}
+              <td class="mono" title="${escapeHtml(event.ts)}">${escapeHtml(formatAge(event.ts))}</td>
+            </tr>`;
+          }).join("") || `<tr><td colspan="7">No events match.</td></tr>`}
         </tbody>
       </table>
     </div>
@@ -814,7 +980,7 @@ function knowledgeItems(index) {
       items: (index.specs ?? []).map((spec) => ({
         id: spec.id,
         title: spec.title,
-        secondary: `${spec.id} · ${spec.status}`,
+        secondary: `${shortSpecId(spec.id)} · ${spec.status}`,
       })),
     },
     {
@@ -943,11 +1109,110 @@ function issueStatus(issue) {
   return issue.status ?? "open";
 }
 
-function renderIssues(index) {
-  const { severity, kind, status, q, sort } = state.issuesFilters;
+function workBucket(status) {
+  return status === "open" || status === "active" ? "open" : "closed";
+}
+
+function renderWork(index) {
+  const { kind, status, q, sort } = state.workFilters;
+  const source = index.work ?? [];
+  if (source.length === 0) {
+    panels.work.innerHTML = `<div class="empty">No work yet. Run <code>/log</code> or <code>/fix</code>.</div>`;
+    return;
+  }
+
+  let rows = source
+    .filter((row) => !kind || row.kind === kind)
+    .filter((row) => !status || workBucket(row.status) === status)
+    .filter((row) =>
+      matchesQuery(
+        `${row.id} ${row.kind} ${row.summary} ${row.status} ${row.feature ?? ""} ${row.area ?? ""} ${row.note ?? ""}`,
+        q,
+      ));
+
+  const openRank = (row) => (workBucket(row.status) === "open" ? 0 : 1);
+  rows = [...rows].sort((left, right) => {
+    if (sort === "kind") {
+      return openRank(left) - openRank(right)
+        || left.kind.localeCompare(right.kind)
+        || (right.age_days ?? 0) - (left.age_days ?? 0);
+    }
+    if (sort === "status") {
+      return openRank(left) - openRank(right)
+        || left.status.localeCompare(right.status)
+        || (right.age_days ?? 0) - (left.age_days ?? 0);
+    }
+    if (sort === "id") {
+      return openRank(left) - openRank(right) || left.id.localeCompare(right.id);
+    }
+    if (sort === "age") {
+      return (right.age_days ?? 0) - (left.age_days ?? 0);
+    }
+    // open-first (default): open/active above closed, then newer first
+    return openRank(left) - openRank(right) || (right.age_days ?? 0) - (left.age_days ?? 0);
+  });
+
+  const kinds = [...new Set(source.map((row) => row.kind))].sort();
+  const openCount = source.filter((row) => workBucket(row.status) === "open").length;
+  const closedCount = source.filter((row) => workBucket(row.status) === "closed").length;
+  const emptyFiltered = rows.length === 0
+    ? (
+      status === "open" && closedCount > 0
+        ? `No open work. ${closedCount} closed — choose Closed or All.`
+        : status === "closed" && openCount > 0
+          ? `No closed work. ${openCount} open — choose Open or All.`
+          : "No work matches these filters."
+    )
+    : null;
+
+  panels.work.innerHTML = `
+    <div class="page-toolbar">
+      ${searchInput("work-q", q, "Search work…")}
+      <div class="filters">
+        <div class="chip-group">
+          <span class="chip-label">Status</span>
+          ${chip("work-status", "", status, "All")}
+          ${chip("work-status", "open", status, `Open${openCount ? ` (${openCount})` : ""}`)}
+          ${chip("work-status", "closed", status, `Closed${closedCount ? ` (${closedCount})` : ""}`)}
+        </div>
+        <div class="chip-group">
+          <span class="chip-label">Kind</span>
+          ${chip("work-kind", "", kind, "All")}
+          ${kinds.map((value) => chip("work-kind", value, kind)).join("")}
+        </div>
+      </div>
+    </div>
+    <p class="table-meta">Showing ${rows.length} of ${source.length} · Docs/WORK.yaml</p>
+    <div class="table-frame">
+      <table>
+        <thead><tr>${tableHeaders("work", sort)}</tr></thead>
+        <tbody>
+          ${
+            emptyFiltered
+              ? `<tr><td colspan="7">${escapeHtml(emptyFiltered)}</td></tr>`
+              : rows.map((row) => `
+            <tr data-id="${escapeHtml(row.id)}" data-status="${escapeHtml(row.status)}">
+              <td class="mono">${escapeHtml(row.id)}</td>
+              <td>${escapeHtml(row.kind)}</td>
+              <td class="wrap">${truncateSummary(row.summary)}</td>
+              <td>${shortSpecCell(row.feature)}</td>
+              <td>${shortSpecCell(row.area)}</td>
+              <td>${statusHtml(row.status)}</td>
+              <td title="${escapeHtml(row.opened ?? "")}">${escapeHtml(formatOpenedAge(row.opened))}</td>
+            </tr>
+          `).join("")
+          }
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderSignals(index) {
+  const { severity, kind, status, q, sort } = state.signalsFilters;
   const source = index.issues ?? [];
   if (source.length === 0) {
-    panels.issues.innerHTML = `<div class="empty">No issues. Empty is a valid state.</div>`;
+    panels.signals.innerHTML = `<div class="empty">No signals. Empty is a valid state.</div>`;
     return;
   }
 
@@ -972,57 +1237,63 @@ function renderIssues(index) {
   const emptyFiltered = issues.length === 0
     ? (
       status === "open" && closedCount > 0
-        ? `No open issues. ${closedCount} closed — choose Closed or All.`
+        ? `No open signals. ${closedCount} closed — choose Closed or All.`
         : status === "fixed" && openCount > 0
-          ? `No closed issues. ${openCount} open — choose Open or All.`
-          : "No issues match these filters."
+          ? `No closed signals. ${openCount} open — choose Open or All.`
+          : "No signals match these filters."
     )
     : null;
 
-  panels.issues.innerHTML = `
+  panels.signals.innerHTML = `
     <div class="page-toolbar">
-      ${searchInput("issues-q", q, "Search issues…")}
+      ${searchInput("signals-q", q, "Search signals…")}
       <div class="filters">
         <div class="chip-group">
           <span class="chip-label">Status</span>
-          ${chip("status", "", status, "All")}
-          ${chip("status", "open", status, `Open${openCount ? ` (${openCount})` : ""}`)}
-          ${chip("status", "fixed", status, `Closed${closedCount ? ` (${closedCount})` : ""}`)}
+          ${chip("signal-status", "", status, "All")}
+          ${chip("signal-status", "open", status, `Open${openCount ? ` (${openCount})` : ""}`)}
+          ${chip("signal-status", "fixed", status, `Closed${closedCount ? ` (${closedCount})` : ""}`)}
         </div>
         <div class="chip-group">
           <span class="chip-label">Severity</span>
-          ${chip("severity", "", severity, "All")}
-          ${chip("severity", "high", severity)}
-          ${chip("severity", "medium", severity)}
-          ${chip("severity", "low", severity)}
+          ${chip("signal-severity", "", severity, "All")}
+          ${chip("signal-severity", "high", severity)}
+          ${chip("signal-severity", "medium", severity)}
+          ${chip("signal-severity", "low", severity)}
         </div>
         <div class="chip-group">
           <span class="chip-label">Kind</span>
-          ${chip("kind", "", kind, "All")}
-          ${kinds.map((value) => chip("kind", value, kind)).join("")}
+          ${chip("signal-kind", "", kind, "All")}
+          ${kinds.map((value) => chip("signal-kind", value, kind)).join("")}
         </div>
-        ${sortSelect("issues-sort", sort, [["severity", "Severity"], ["age", "Age"], ["kind", "Kind"], ["status", "Status"]])}
       </div>
     </div>
-    <p class="table-meta">${index.paths_scanned_at ? `Slow cycle ${formatAge(index.paths_scanned_at)} · ` : ""}Showing ${issues.length} of ${source.length} · FIXES open+fixed + derived signals</p>
+    <p class="table-meta">${index.paths_scanned_at ? `Slow cycle ${formatAge(index.paths_scanned_at)} · ` : ""}Showing ${issues.length} of ${source.length} · columns: ID, Kind, Summary, Feature, Area, Status, Age</p>
     <div class="table-frame">
       <table>
-        <thead><tr><th>Kind</th><th>Ref</th><th class="wrap">Summary</th><th>Spec</th><th>Age</th><th>Severity</th><th>Status</th></tr></thead>
+        <thead><tr>${tableHeaders("signals", sort)}</tr></thead>
         <tbody>
           ${
             emptyFiltered
               ? `<tr><td colspan="7">${escapeHtml(emptyFiltered)}</td></tr>`
-              : issues.map((issue) => `
+              : issues.map((issue) => {
+                const tags = featureAreaFromSpecId(issue.spec);
+                const ageLabel = issue.age_days == null
+                  ? "—"
+                  : issue.age_days === 0
+                    ? "<24h"
+                    : `${issue.age_days}d`;
+                return `
             <tr data-id="${escapeHtml(issue.ref)}" data-status="${escapeHtml(issueStatus(issue))}">
-              <td>${escapeHtml(issue.kind)}</td>
               <td class="mono">${escapeHtml(issue.ref)}</td>
-              <td class="wrap"><span class="cell-primary">${escapeHtml(issue.summary)}</span></td>
-              <td class="mono">${escapeHtml(issue.spec ?? "—")}</td>
-              <td title="${issue.age_days == null ? "" : `${issue.age_days} day(s)`}">${issue.age_days == null ? "—" : `${issue.age_days}d`}</td>
-              <td class="sev-${escapeHtml(issue.severity)}">${escapeHtml(issue.severity)}</td>
+              <td>${escapeHtml(issue.kind)}</td>
+              <td class="wrap">${truncateSummary(issue.summary)}<span class="cell-secondary sev-${escapeHtml(issue.severity)}">${escapeHtml(issue.severity)}</span></td>
+              <td>${shortSpecCell(tags.feature)}</td>
+              <td>${shortSpecCell(tags.area)}</td>
               <td>${statusHtml(issueStatus(issue))}</td>
-            </tr>
-          `).join("")
+              <td title="${issue.age_days == null ? "" : `${issue.age_days} day(s)`}">${escapeHtml(ageLabel)}</td>
+            </tr>`;
+              }).join("")
           }
         </tbody>
       </table>
@@ -1036,12 +1307,18 @@ function updateChrome(index) {
   const high = index.issues.filter(
     (issue) => issueStatus(issue) === "open" && issue.severity === "high",
   ).length;
-  if (high > 0) {
-    issuePill.hidden = false;
-    issuePill.textContent = `● ${high} issue${high === 1 ? "" : "s"}`;
-  } else {
-    issuePill.hidden = true;
-  }
+  if (!issuePill) return;
+  issuePill.hidden = false;
+  issuePill.dataset.alert = high > 0 ? "true" : "false";
+  issuePill.textContent = high > 0
+    ? `● ${high} signal${high === 1 ? "" : "s"}`
+    : "● Signals";
+  issuePill.setAttribute(
+    "aria-label",
+    high > 0 ? `Open Signals — ${high} high severity` : "Open Signals",
+  );
+  if (state.page === "signals") issuePill.setAttribute("aria-current", "page");
+  else issuePill.removeAttribute("aria-current");
 }
 
 function renderAll() {
@@ -1051,7 +1328,8 @@ function renderAll() {
   renderRoadmap(state.index);
   renderActivity(state.index);
   renderKnowledge(state.index);
-  renderIssues(state.index);
+  renderWork(state.index);
+  renderSignals(state.index);
 }
 
 function showPage(page) {
@@ -1066,6 +1344,10 @@ function showPage(page) {
     if (tab.dataset.page === page) tab.setAttribute("aria-current", "page");
     else tab.removeAttribute("aria-current");
   }
+  if (issuePill) {
+    if (page === "signals") issuePill.setAttribute("aria-current", "page");
+    else issuePill.removeAttribute("aria-current");
+  }
   if (page === "knowledge") detail.hidden = true;
 }
 
@@ -1073,6 +1355,84 @@ function applyDetailWidth(width) {
   const clamped = Math.min(Math.max(width, 360), Math.floor(window.innerWidth * 0.7));
   detail.style.width = `${clamped}px`;
   writeStored(DETAIL_WIDTH_KEY, String(clamped));
+}
+
+function renderWorkQuestions(questions) {
+  if (!questions?.length) return "";
+  const items = questions
+    .map((item) => {
+      const answered = item.answer != null && String(item.answer).length > 0;
+      return `<li>
+        <strong>${escapeHtml(item.q)}</strong>
+        <span class="muted"> · asked ${escapeHtml(item.asked)}</span>
+        <div>${answered ? escapeHtml(item.answer) : "<em class=\"muted\">unanswered</em>"}</div>
+      </li>`;
+    })
+    .join("");
+  return `
+    <section style="margin-top:1rem">
+      <h3 class="now-label">Open questions</h3>
+      <ul class="phase-plain-list">${items}</ul>
+    </section>`;
+}
+
+function renderWorkDetail(row) {
+  const fields = [
+    ["Kind", row.kind],
+    ["Status", row.status],
+    ["Opened", row.opened],
+    ["Age", formatOpenedAge(row.opened)],
+    ["Feature", shortSpecId(row.feature)],
+    ["Area", shortSpecId(row.area)],
+    ["Phase", row.phase ?? "—"],
+    ["Blocked by", row.blocked_by ?? "—"],
+    ["Promoted to", row.promoted_to ?? "—"],
+  ];
+  return `
+    <div class="phase-card">
+      <p class="cell-primary" style="margin:0 0 1rem">${escapeHtml(row.summary)}</p>
+      <dl class="glance-grid">
+        ${fields.map(([label, value]) => `
+          <div class="glance-cell">
+            <dt>${escapeHtml(label)}</dt>
+            <dd class="mono">${escapeHtml(String(value))}</dd>
+          </div>
+        `).join("")}
+      </dl>
+      ${row.note ? `<p class="muted" style="margin-top:1rem">${escapeHtml(row.note)}</p>` : ""}
+      ${renderWorkQuestions(row.open_questions)}
+      ${row.done_summary ? `
+        <section style="margin-top:1rem">
+          <h3 class="now-label">Done summary</h3>
+          <p style="margin:0.35rem 0 0">${escapeHtml(row.done_summary)}</p>
+        </section>` : ""}
+      <p class="muted" style="margin-top:1rem">Ledger row in <code>Docs/WORK.yaml</code> — not a separate markdown ticket.</p>
+    </div>
+  `;
+}
+
+function renderSignalDetail(issue) {
+  const fields = [
+    ["Kind", issue.kind],
+    ["Status", issueStatus(issue)],
+    ["Severity", issue.severity],
+    ["Spec", issue.spec ?? "—"],
+    ["Age", issue.age_days == null ? "—" : issue.age_days === 0 ? "<24h" : `${issue.age_days}d`],
+  ];
+  return `
+    <div class="phase-card">
+      <p class="cell-primary" style="margin:0 0 1rem">${escapeHtml(issue.summary)}</p>
+      <dl class="glance-grid">
+        ${fields.map(([label, value]) => `
+          <div class="glance-cell">
+            <dt>${escapeHtml(label)}</dt>
+            <dd class="mono">${escapeHtml(String(value))}</dd>
+          </div>
+        `).join("")}
+      </dl>
+      <p class="muted" style="margin-top:1rem">Derived signal — not an authored Work row.</p>
+    </div>
+  `;
 }
 
 async function openDetail(id) {
@@ -1083,6 +1443,9 @@ async function openDetail(id) {
   applyDetailWidth(Number(readStored(DETAIL_WIDTH_KEY)) || 560);
 
   const phase = state.index?.phases?.find((item) => item.id === id);
+  const work = state.index?.work?.find((item) => item.id === id);
+  const signal = state.index?.issues?.find((item) => item.ref === id);
+
   if (phase) {
     detailMeta.textContent = phase.sourcePath ? `Docs/${phase.sourcePath}` : "";
     detailFrontmatter.hidden = true;
@@ -1093,9 +1456,27 @@ async function openDetail(id) {
       compact: true,
     });
     await hydratePhaseDocs(detailBody);
+  } else if (work) {
+    detailMeta.textContent = "Docs/WORK.yaml";
+    detailFrontmatter.hidden = true;
+    detailFrontmatter.innerHTML = "";
+    detailBody.className = "doc-body";
+    detailBody.innerHTML = renderWorkDetail(work);
+  } else if (signal) {
+    detailMeta.textContent = "derived signal";
+    detailFrontmatter.hidden = true;
+    detailFrontmatter.innerHTML = "";
+    detailBody.className = "doc-body";
+    detailBody.innerHTML = renderSignalDetail(signal);
   } else {
     const response = await fetch(`/api/doc?id=${encodeURIComponent(id)}`);
-    if (!response.ok) return;
+    if (!response.ok) {
+      detailMeta.textContent = "";
+      detailFrontmatter.hidden = true;
+      detailBody.className = "doc-body";
+      detailBody.innerHTML = `<p class="muted">No detail for ${escapeHtml(id)}.</p>`;
+      return;
+    }
     const doc = await response.json();
     detailBody.className = "doc-body prose";
     renderDocInto(doc, {
@@ -1106,7 +1487,8 @@ async function openDetail(id) {
   }
 
   if (state.page === "roadmap") renderRoadmap(state.index);
-  if (state.page === "issues") renderIssues(state.index);
+  if (state.page === "work") renderWork(state.index);
+  if (state.page === "signals") renderSignals(state.index);
 }
 
 async function loadIndex() {
@@ -1155,6 +1537,10 @@ document.querySelector(".tabs").addEventListener("click", (event) => {
   showPage(button.dataset.page);
 });
 
+issuePill?.addEventListener("click", () => {
+  showPage("signals");
+});
+
 document.querySelector("#reindex").addEventListener("click", () => {
   void reindex();
 });
@@ -1170,7 +1556,8 @@ document.querySelector("#detail-close").addEventListener("click", () => {
   state.selectedId = null;
   if (state.index) {
     if (state.page === "roadmap") renderRoadmap(state.index);
-    if (state.page === "issues") renderIssues(state.index);
+    if (state.page === "work") renderWork(state.index);
+    if (state.page === "signals") renderSignals(state.index);
   }
 });
 
@@ -1227,22 +1614,36 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  const sortButton = event.target.closest("[data-sort-key]");
+  if (sortButton?.dataset.sortKey && state.index) {
+    applyTableSort(state.page, sortButton.dataset.sortKey);
+    return;
+  }
+
   const chipButton = event.target.closest("[data-filter]");
   if (chipButton && state.index) {
     const { filter, value } = chipButton.dataset;
     if (["state", "type"].includes(filter) && state.page === "roadmap") {
       state.roadmapFilters = { ...state.roadmapFilters, [filter]: value };
       renderRoadmap(state.index);
-    } else if (
-      filter === "actor"
-      || filter === "phase"
-      || (filter === "type" && state.page === "activity")
-    ) {
-      state.activityFilters = { ...state.activityFilters, [filter]: value };
+    } else if (filter === "type" && state.page === "activity") {
+      state.activityFilters = { ...state.activityFilters, type: value };
       renderActivity(state.index);
-    } else if (filter === "severity" || filter === "kind" || filter === "status") {
-      state.issuesFilters = { ...state.issuesFilters, [filter]: value };
-      renderIssues(state.index);
+    } else if (filter === "work-status") {
+      state.workFilters = { ...state.workFilters, status: value };
+      renderWork(state.index);
+    } else if (filter === "work-kind") {
+      state.workFilters = { ...state.workFilters, kind: value };
+      renderWork(state.index);
+    } else if (filter === "signal-status") {
+      state.signalsFilters = { ...state.signalsFilters, status: value };
+      renderSignals(state.index);
+    } else if (filter === "signal-severity") {
+      state.signalsFilters = { ...state.signalsFilters, severity: value };
+      renderSignals(state.index);
+    } else if (filter === "signal-kind") {
+      state.signalsFilters = { ...state.signalsFilters, kind: value };
+      renderSignals(state.index);
     }
     return;
   }
@@ -1250,21 +1651,6 @@ document.addEventListener("click", (event) => {
   if (state.page === "knowledge") return;
   const row = event.target.closest("tr[data-id]");
   if (row?.dataset.id) void openDetail(row.dataset.id);
-});
-
-document.addEventListener("change", (event) => {
-  const select = event.target;
-  if (!(select instanceof HTMLSelectElement) || !state.index) return;
-  if (select.name === "roadmap-sort") {
-    state.roadmapFilters = { ...state.roadmapFilters, sort: select.value };
-    renderRoadmap(state.index);
-  } else if (select.name === "activity-sort") {
-    state.activityFilters = { ...state.activityFilters, sort: select.value };
-    renderActivity(state.index);
-  } else if (select.name === "issues-sort") {
-    state.issuesFilters = { ...state.issuesFilters, sort: select.value };
-    renderIssues(state.index);
-  }
 });
 
 document.addEventListener("input", (event) => {
@@ -1287,10 +1673,14 @@ document.addEventListener("input", (event) => {
     state.activityFilters = { ...state.activityFilters, q: input.value };
     renderActivity(state.index);
     restore(panels.activity, "activity-q");
-  } else if (input.name === "issues-q") {
-    state.issuesFilters = { ...state.issuesFilters, q: input.value };
-    renderIssues(state.index);
-    restore(panels.issues, "issues-q");
+  } else if (input.name === "work-q") {
+    state.workFilters = { ...state.workFilters, q: input.value };
+    renderWork(state.index);
+    restore(panels.work, "work-q");
+  } else if (input.name === "signals-q") {
+    state.signalsFilters = { ...state.signalsFilters, q: input.value };
+    renderSignals(state.index);
+    restore(panels.signals, "signals-q");
   } else if (input.name === "knowledge-q") {
     const q = input.value.toLowerCase();
     for (const item of document.querySelectorAll(".toc-item")) {

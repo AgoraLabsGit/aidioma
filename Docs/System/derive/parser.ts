@@ -6,10 +6,12 @@ import {
   phaseSchema,
   researchSchema,
   specSchema,
+  workSchema,
   type FixItem,
   type PhaseFrontmatter,
   type ResearchFrontmatter,
   type SpecFrontmatter,
+  type WorkItem,
 } from "./schema.js";
 
 export class ParseError extends Error {
@@ -107,6 +109,13 @@ export function parseResearchFrontmatter(
     .data;
 }
 
+export function parseWork(source: string, sourcePath = "WORK.yaml"): WorkItem[] {
+  const trimmed = source.trim();
+  if (trimmed.length === 0 || trimmed === "[]") return [];
+  return parseYamlValue(source, sourcePath, workSchema as ZodType<WorkItem[]>);
+}
+
+/** @deprecated Use parseWork */
 export function parseFixes(source: string, sourcePath = "FIXES.yaml"): FixItem[] {
   const trimmed = source.trim();
   if (trimmed.length === 0 || trimmed === "[]") return [];
@@ -190,6 +199,17 @@ export function parseDecisions(source: string, sourcePath = "DECISIONS.md"): {
   }
 
   return { decisions, errors };
+}
+
+/** Slice one `## D-nnn — …` block from DECISIONS.md (living home for all decisions). */
+export function extractDecisionSection(source: string, id: string): string | null {
+  if (!/^D-\d{3}$/u.test(id)) return null;
+  const blocks = source.replaceAll("\r\n", "\n").split(/\n(?=##\s+D-\d{3}\b)/u);
+  for (const block of blocks) {
+    const heading = block.split("\n")[0]?.match(decisionHeading);
+    if (heading?.[1] === id) return block.replace(/\n+$/u, "\n");
+  }
+  return null;
 }
 
 export type ReleaseEntry = {

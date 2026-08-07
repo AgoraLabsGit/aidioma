@@ -4,7 +4,9 @@ import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { derive } from "./derive.js";
+import { derive, sortPhasesForRoadmap } from "./derive.js";
+import { nextWorkId, type PhaseFrontmatter } from "./schema.js";
+import { parseWork } from "./parser.js";
 
 const temporaryDirectories: string[] = [];
 
@@ -67,7 +69,7 @@ title: Broken
     options.malformedPhase
       ? writeFile(path.join(docsRoot, "Roadmap", "Phases", "PHASE-BAD.md"), badPhase)
       : Promise.resolve(),
-    writeFile(path.join(docsRoot, "FIXES.yaml"), "[]\n"),
+    writeFile(path.join(docsRoot, "WORK.yaml"), "[]\n"),
     writeFile(path.join(docsRoot, "DECISIONS.md"), "# Decisions\n"),
     writeFile(path.join(docsRoot, "RELEASES.md"), "# Releases\n"),
     writeFile(path.join(docsRoot, "PRODUCT.md"), "# Product\n"),
@@ -105,20 +107,45 @@ describe("derive", () => {
     expect(index.issues.some((issue) => issue.kind === "parse_error")).toBe(true);
   });
 
-  it("projects open and fixed FIX rows on Issues", async () => {
+  it("projects Work ledger rows separately from Signals", async () => {
     const repositoryRoot = await createDocsFixture();
     await writeFile(
-      path.join(repositoryRoot, "Docs", "FIXES.yaml"),
-      `- id: FIX-001
+      path.join(repositoryRoot, "Docs", "WORK.yaml"),
+      `- id: W-001
+  kind: fix
   summary: "Open defect"
   status: open
-  spec: null
+  feature: null
+  area: null
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
   opened: 2026-08-05
-- id: FIX-002
-  summary: "Closed defect"
-  status: fixed
-  spec: null
+- id: W-002
+  kind: task
+  summary: "Done chore"
+  status: done
+  feature: null
+  area: null
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
   opened: 2026-08-04
+- id: W-003
+  kind: audit
+  summary: "Scoped review"
+  status: done
+  feature: null
+  area: null
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: "ok"
+  opened: 2026-08-05
 `,
     );
 
@@ -128,10 +155,89 @@ describe("derive", () => {
       now: () => new Date("2026-08-05T12:00:00.000Z"),
     });
 
-    const openFix = index.issues.find((issue) => issue.ref === "FIX-001");
-    const fixedFix = index.issues.find((issue) => issue.ref === "FIX-002");
-    expect(openFix).toMatchObject({ kind: "fix", status: "open", severity: "high" });
-    expect(fixedFix).toMatchObject({ kind: "fix", status: "fixed", severity: "low" });
-    expect(index.fixes).toHaveLength(2);
+    expect(index.work).toHaveLength(3);
+    expect(index.work.find((row) => row.id === "W-001")).toMatchObject({
+      kind: "fix",
+      status: "open",
+    });
+    expect(index.work.find((row) => row.id === "W-003")).toMatchObject({
+      kind: "audit",
+      status: "done",
+    });
+    expect(index.issues.some((issue) => issue.kind === "parse_error")).toBe(false);
+    expect(index.issues.some((issue) => issue.ref === "W-001")).toBe(false);
   });
 });
+
+describe("kind-prefixed work ids", () => {
+  it("parses F-/T-/A- ids and allocates next per kind", () => {
+    const rows = parseWork(`
+- id: F-001
+  kind: fix
+  summary: "x"
+  status: open
+  feature: null
+  area: null
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: null
+  opened: 2026-08-07
+- id: W-099
+  kind: task
+  summary: "legacy"
+  status: done
+  feature: null
+  area: null
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  open_questions: null
+  done_summary: null
+  opened: 2026-08-07
+`);
+    expect(rows.map((row) => row.id)).toEqual(["F-001", "W-099"]);
+    expect(nextWorkId("fix", rows.map((row) => row.id))).toBe("F-002");
+    expect(nextWorkId("task", rows.map((row) => row.id))).toBe("T-001");
+    expect(nextWorkId("audit", [])).toBe("A-001");
+  });
+});
+
+describe("sortPhasesForRoadmap", () => {
+  const base = {
+    title: "t",
+    type: "build" as const,
+    proof_kind: "terminal" as const,
+    state: "proposed" as const,
+    from_backlog: null,
+    owner: "founder",
+    outcome: "o",
+    proof: "p",
+    non_goals: [] as string[],
+    amends_specs: [] as string[],
+    feature: null,
+    area: null,
+    opened: "2026-08-07",
+    closed: null,
+    lessons: null,
+  };
+
+  it("orders by depends_on depth before order, so inserts need not renumber", () => {
+    const phases: PhaseFrontmatter[] = [
+      { ...base, id: "PHASE-002", order: 4, depends_on: ["PHASE-001"] },
+      { ...base, id: "PHASE-007", order: 99, depends_on: ["PHASE-001"] },
+      { ...base, id: "PHASE-001", order: 1, depends_on: [] },
+      { ...base, id: "PHASE-008", order: 0, depends_on: ["PHASE-007"] },
+    ];
+    expect(sortPhasesForRoadmap(phases).map((phase) => phase.id)).toEqual([
+      "PHASE-001",
+      "PHASE-002",
+      "PHASE-007",
+      "PHASE-008",
+    ]);
+  });
+});
+

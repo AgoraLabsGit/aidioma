@@ -111,6 +111,20 @@
         "string",
         "null"
       ]
+    },
+    "feature": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^SPEC-F-[A-Z0-9-]+$"
+    },
+    "area": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^SPEC-A-[A-Z0-9-]+$"
     }
   },
   "allOf": [

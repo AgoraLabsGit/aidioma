@@ -19,6 +19,8 @@ non_goals:
   - Two-way command execution from the UI
   - Renaming phase body headings / schema redesign before real data exists
 amends_specs: []
+feature: SPEC-F-DEV-DASHBOARD
+area: SPEC-A-DEVSYSTEM
 opened: 2026-08-05
 closed: 2026-08-05
 lessons: null

@@ -66,3 +66,35 @@ Date: 2026-08-05 · Phase: PHASE-004 · From: — · Affects: []
 Chose: Phase `type: build` (was `implementation`); state `canceled` (was `abandoned`); `/close --cancel`
 Why: Clearer founder-facing labels; same semantics
 Revisit if: External tooling still expects the old enum strings
+
+## D-011 — Work page vs Signals page
+Date: 2026-08-06 · Phase: PHASE-005 · From: — · Affects: []
+Chose: Separate dashboard pages — **Work** (`WORK.yaml`) and **Signals** (derived health)
+Why: Triage authored work is not the same question as indexer alarms; mixing them confused /triage
+Revisit if: Nav cost outweighs clarity and a single page with default ledger filter is preferred
+Supersedes: D-007 claim that one Issues page should house FIXES plus all derived kinds
+
+## D-012 — Work ledger replaces FIXES + Backlog
+Date: 2026-08-06 · Phase: PHASE-005 · From: — · Affects: []
+Chose: Single `Docs/WORK.yaml` with kinds fix|task|proposal|research|question over `FIXES.yaml` + `Backlog.md`
+Why: One capture/do-now home; phases remain schedule SSOT; no second Roadmap
+Revisit if: Ledger becomes a competing schedule (add order fields, dual-write phases)
+
+## D-013 — Thin SPEC stubs for Work feature/area tags
+Date: 2026-08-06 · Phase: PHASE-005 · From: W-020 · Affects: [SPEC-A-DEVSYSTEM, SPEC-A-LEARNER, SPEC-A-CONTENT, SPEC-F-DEV-DASHBOARD, SPEC-F-PRACTICE, SPEC-F-LEXICON, SPEC-F-PROGRESS]
+Chose: Create thin SPEC-A/SPEC-F stubs now so Work and phases can tag feature/area (option C)
+Why: Org spine needs real ids; waiting for PHASE-002 left every Work row null
+Revisit if: Stubs drift from approved PRODUCT.md map and need supersede/merge
+Supersedes: Strict reading of “do not create empty areas in anticipation” for tagging-only stubs
+
+## D-014 — Spanish dictionary source: Kaikki Wiktextract
+Date: 2026-08-07 · Phase: — · From: R-001 · Affects: [SPEC-F-LEXICON, SPEC-A-CONTENT]
+Chose: Kaikki eswiktionary Wiktextract JSONL over FreeDict, WordNet, FreeLing, RAE
+Why: Only downloadable structured Spanish-first senses; open license; curated extract under content pipelines
+Revisit if: CC-BY-SA blocks commercial shipping, or product requires licensed RAE-grade monolingual prose
+
+## D-015 — Kaikki is editorial; DeepL is runtime MT
+Date: 2026-08-07 · Phase: — · From: R-002 · Affects: [SPEC-F-LEXICON, SPEC-A-CONTENT]
+Chose: Keep frozen Lexicon posture — Kaikki offline QA/seed only; DeepL for later Translation/AI fallback; maps own lesson/collection binding
+Why: Different jobs; Kaikki has no stable sense ids or phrase/curriculum authority; Lexicon already uses `lex-*` + contextual maps
+Revisit if: A measured import pipeline publishes reviewed Kaikki candidates into `content/lexicon/` with receipt schema

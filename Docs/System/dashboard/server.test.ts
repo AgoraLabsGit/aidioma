@@ -57,8 +57,24 @@ lessons: null
 # PHASE-001
 `,
     ),
-    writeFile(path.join(docsRoot, "FIXES.yaml"), "[]\n"),
-    writeFile(path.join(docsRoot, "DECISIONS.md"), "# Decisions\n"),
+    writeFile(path.join(docsRoot, "WORK.yaml"), "[]\n"),
+    writeFile(
+      path.join(docsRoot, "DECISIONS.md"),
+      `# Decisions
+
+## D-001 — Fixture decision
+Date: 2026-08-05 · Phase: PHASE-001 · From: — · Affects: []
+Chose: Keep decisions in DECISIONS.md
+Why: One living home
+Revisit if: Per-file decisions land
+
+## D-002 — Other decision
+Date: 2026-08-05 · Phase: PHASE-001 · From: — · Affects: []
+Chose: Second entry for section isolation
+Why: Prove /api/doc slices one block
+Revisit if: Never
+`,
+    ),
     writeFile(path.join(docsRoot, "RELEASES.md"), "# Releases\n"),
     writeFile(path.join(docsRoot, "PRODUCT.md"), "# Product\n"),
     writeFile(path.join(docsRoot, "Handoffs", "HANDOFF.md"), "# Handoff\n"),
@@ -132,6 +148,38 @@ describe("work dashboard", () => {
     });
     expect(html).toContain("AIdioma");
     expect(html).toContain('data-page="active"');
+    expect(html).toContain('data-page="work"');
     expect(html).toContain('data-page="roadmap"');
+    expect(html).toContain('id="issue-pill"');
+    expect(html).toContain('id="page-signals"');
+    expect(html).not.toMatch(/class="tab"[^>]*data-page="signals"/);
+    expect(html).toContain('class="reindex-icon"');
+    const activeAt = html.indexOf('data-page="active"');
+    const workAt = html.indexOf('data-page="work"');
+    const roadmapAt = html.indexOf('data-page="roadmap"');
+    expect(activeAt).toBeGreaterThan(-1);
+    expect(workAt).toBeGreaterThan(activeAt);
+    expect(roadmapAt).toBeGreaterThan(workAt);
+  });
+
+  it("serves individual decision bodies from DECISIONS.md", async () => {
+    const { port } = await startFixtureServer();
+    const { status, body } = await getJson(port, "/api/doc?id=D-001");
+    expect(status).toBe(200);
+    expect(body).toMatchObject({
+      id: "D-001",
+      path: path.join("Docs", "DECISIONS.md"),
+    });
+    const doc = body as { body: string };
+    expect(doc.body).toContain("## D-001 — Fixture decision");
+    expect(doc.body).toContain("Chose: Keep decisions in DECISIONS.md");
+    expect(doc.body).not.toContain("## D-002");
+  });
+
+  it("404s unknown decision ids", async () => {
+    const { port } = await startFixtureServer();
+    const { status, body } = await getJson(port, "/api/doc?id=D-999");
+    expect(status).toBe(404);
+    expect(body).toMatchObject({ error: "Document not found." });
   });
 });

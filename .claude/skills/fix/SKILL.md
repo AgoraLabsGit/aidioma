@@ -5,11 +5,13 @@ description: Reproduce and correct a bounded AIdioma defect with regression and 
 
 # /fix
 
-Read `AGENTS.md` and current Docs memory. Create/update one `Docs/FIXES.yaml` record when that file
-exists (otherwise record in handoff + Backlog note). Reproduce expected versus actual, find root
-cause, add a failing regression when practical, implement the smallest coherent correction, and
-re-prove the path.
+Action. Bounded defect → Work `kind: fix`.
 
-If product design, architecture, coordinated scopes, or multiple sessions are required, promote via
-`/plan` as a phase—do not stretch `/fix`. Use `/close` only when the fix is the active phase scope
-or Mike directs a fix-phase close.
+1. Upsert `WORK.yaml` `kind: fix`, `status: active` (new ids: `F-nnn`; leave legacy `W-*`).
+2. Reproduce on a real path; load owning specs before edits.
+3. If clarification needed — ask; append `open_questions` on **this** row; pause.
+4. Patch + regression/proof when practical.
+5. `status: done` + `done_summary`. Activity event. Report W-id.
+6. If design/multi-session — stop; `/log` `proposal` or confirm `/plan`.
+
+Standalone publish uses reduced Proof/Scope/Publish checks. Prefer a sub-agent for bounded fixes.

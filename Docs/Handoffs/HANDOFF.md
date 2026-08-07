@@ -1,33 +1,32 @@
-# Current handoff — after PHASE-004 close
+# Current handoff — after PHASE-005 close
 
-**Date:** 2026-08-05
+**Date:** 2026-08-07
 
-**Branch:** `main` (phase branch deleted after merge)
-**Worktree:** none for an active phase
-
+**Branch:** `main` (after `/close` merge)
+**Worktree:** primary repo only
 **Active phase:** none
-**Next:** PHASE-002 — Target Product Design (`proposed`)
+**Runtime:** dashboard stopped at close
 
-## Done (PHASE-004)
+## Done
 
-- Dashboard projection proof (Issues open+closed, Activity, filters/time)
-- D-007..D-010 (Issues/Activity naming; Dashboard-spec in System/; `build` + `canceled`)
-- FIX-003, FIX-004 fixed
-- Deferred (not blocking): Activity date-range, per-feature timeline; Backlog dashboard cue
+- PHASE-005 closed — Work ledger + routing v2 + `/audit` + executing/phase-scoped `/triage`
+- Lexicon research included on close (R-001/R-002, D-014/D-015) with founder Scope WARN ack
+- Proposed next: PHASE-007 (audit matrix), PHASE-006 (Knowledge), PHASE-008 (artifact research)
 
-## Not done / next
+## Open (not this phase)
 
-- Mark PHASE-002 `ready` when Mike approves contract, then `/run PHASE-002`
-- Optional later: Backlog page/cue; Activity date-range + feature timeline (BL or phase)
+- W-015 — Parallel active phases (`phase: null`; `/research` later)
+- Product proposals W-005–W-014 — leave until PHASE-002+
 
 ## Preserve
 
-- Lexicon stash: `stash@{0}: lexicon-wip-preserved-after-phase-000` (PRESERVE.md / BL-001)
+- Lexicon stash per `Docs/PRESERVE.md`
 
 ## Next command
 
 ```text
-# Approve PHASE-002 scope, then:
-# edit PHASE-002 state: ready
-/run PHASE-002
+/run PHASE-007
+
+Read .work/context.json and Docs/Handoffs/HANDOFF.md.
+Design: command audit matrix, Active Audits/Tests wiring, Commands header panel.
 ```

@@ -254,11 +254,43 @@ body {
   color: var(--text);
 }
 .issue-pill {
-  color: var(--danger);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 32px;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-subtle);
   font-weight: var(--fw-semibold);
   font-family: var(--mono);
   font-size: var(--fs-2xs);
   padding: 0 var(--space-2);
+  text-align: left;
+  cursor: pointer;
+}
+.issue-pill:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+  border-color: var(--border);
+}
+.issue-pill[data-alert="true"] {
+  color: var(--danger);
+}
+.issue-pill[data-alert="true"]:hover {
+  color: var(--danger);
+  border-color: rgb(255 107 107 / 35%);
+  background: var(--danger-soft);
+}
+.issue-pill[aria-current="page"] {
+  border-color: var(--border-strong);
+  background: var(--surface-subtle);
+  color: var(--text);
+}
+.issue-pill[aria-current="page"][data-alert="true"] {
+  color: var(--danger);
 }
 
 /* ——— Workspace / topbar ——— */
@@ -317,21 +349,23 @@ body {
 .reindex-btn {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  height: 40px;
-  padding: 0 var(--space-4);
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
   background: var(--surface);
   color: var(--text);
   font: inherit;
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-semibold);
+  line-height: 0;
   cursor: pointer;
 }
-.reindex-btn span {
-  font-size: 18px;
-  line-height: 1;
+.reindex-btn .reindex-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
 }
 .reindex-btn:hover {
   border-color: var(--accent-border);
@@ -1043,6 +1077,39 @@ th {
   top: 0;
   z-index: 1;
 }
+th.sortable {
+  padding: 0;
+}
+.th-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  height: var(--row);
+  margin: 0;
+  padding: 0 var(--space-4);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.th-sort:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+.th-sort[aria-pressed="true"] {
+  color: var(--text);
+}
+.sort-mark {
+  font-size: 0.85em;
+  opacity: 0.7;
+}
 tbody tr {
   cursor: pointer;
   transition: background var(--motion-quick) var(--ease-out-quint);
@@ -1136,12 +1203,36 @@ code,
 .status[data-state="proposed"],
 .status[data-state="closed"],
 .status[data-state="superseded"],
-.status[data-state="canceled"] {
+.status[data-state="canceled"],
+.status[data-state="done"],
+.status[data-state="promoted"],
+.status[data-state="fixed"] {
   --tone: var(--text-muted);
   --tone-soft: var(--surface-subtle);
 }
+/* Work ledger statuses */
+.status[data-state="open"] {
+  --tone: var(--warning);
+  --tone-soft: var(--warning-soft);
+}
+.status[data-state="dropped"] {
+  --tone: var(--danger);
+  --tone-soft: var(--danger-soft);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.status[data-state="promoted"] {
+  --tone: var(--accent);
+  --tone-soft: var(--accent-soft);
+}
+.status[data-state="done"] {
+  --tone: var(--success);
+  --tone-soft: var(--success-soft);
+  opacity: 0.85;
+}
 .status[data-state="ready"]::before,
-.status[data-state="proposed"]::before {
+.status[data-state="proposed"]::before,
+.status[data-state="open"]::before {
   background: transparent;
   border: 1.5px solid var(--tone);
 }

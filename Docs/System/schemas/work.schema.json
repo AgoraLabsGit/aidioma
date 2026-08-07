@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "work.schema.json",
+  "title": "Work ledger",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "kind", "summary", "status", "opened"],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^(W|F|T|P|R|Q|A)-[0-9]{3}$",
+        "description": "Legacy W-nnn or kind-prefixed F/T/P/R/Q/A-nnn (new rows)"
+      },
+      "kind": {
+        "enum": ["fix", "task", "proposal", "research", "question", "audit"]
+      },
+      "summary": { "type": "string", "minLength": 1 },
+      "status": {
+        "enum": ["open", "active", "done", "promoted", "dropped"]
+      },
+      "feature": {
+        "type": ["string", "null"],
+        "pattern": "^SPEC-F-[A-Z0-9-]+$"
+      },
+      "area": {
+        "type": ["string", "null"],
+        "pattern": "^SPEC-A-[A-Z0-9-]+$"
+      },
+      "phase": {
+        "type": ["string", "null"],
+        "pattern": "^PHASE-[0-9]{3}$"
+      },
+      "promoted_to": {
+        "type": ["string", "null"]
+      },
+      "blocked_by": {
+        "type": ["string", "null"],
+        "pattern": "^(W|F|T|P|R|Q|A)-[0-9]{3}$"
+      },
+      "note": {
+        "type": ["string", "null"]
+      },
+      "open_questions": {
+        "type": ["array", "null"],
+        "items": {
+          "type": "object",
+          "required": ["q", "asked"],
+          "additionalProperties": false,
+          "properties": {
+            "q": { "type": "string", "minLength": 1 },
+            "answer": { "type": ["string", "null"] },
+            "asked": { "type": "string", "format": "date" }
+          }
+        }
+      },
+      "done_summary": {
+        "type": ["string", "null"]
+      },
+      "opened": { "type": "string", "format": "date" }
+    }
+  }
+}

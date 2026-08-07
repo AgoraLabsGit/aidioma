@@ -4,7 +4,7 @@ title: Core Component Architecture
 type: design
 proof_kind: spec
 state: proposed
-order: 4
+order: 8
 depends_on:
   - PHASE-002
 from_backlog: null
@@ -17,6 +17,8 @@ non_goals:
   - Scheduling implementation before Mike approves order
   - A living Architecture/ folder or architecture bible
 amends_specs: []
+feature: null
+area: SPEC-A-LEARNER
 opened: 2026-08-05
 closed: null
 lessons: null

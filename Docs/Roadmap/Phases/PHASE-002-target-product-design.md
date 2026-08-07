@@ -4,9 +4,9 @@ title: Target Product Design
 type: design
 proof_kind: spec
 state: proposed
-order: 3
+order: 7
 depends_on:
-  - PHASE-001
+  - PHASE-008
 from_backlog: null
 owner: founder
 outcome: "Mike approves one concise PRODUCT.md: learner pages, globals, MVP-versus-later — no internal architecture."
@@ -17,6 +17,8 @@ non_goals:
   - Product-code changes
   - Lexicon publish
 amends_specs: []
+feature: null
+area: SPEC-A-LEARNER
 opened: 2026-08-05
 closed: null
 lessons: null

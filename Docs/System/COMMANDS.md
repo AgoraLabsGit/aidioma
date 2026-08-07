@@ -1,56 +1,69 @@
 ---
 schema_version: 3
 generated_from: System/system.md
-updated: 2026-08-05
+updated: 2026-08-06
 ---
 
 # Commands
 
-Command key for agents and the dashboard. Process detail lives in `System/system.md`.
+Thin key. Detail: `System/system.md`. Staging: hand-edited until `/system` generator ships.
 
-**Staging:** hand-edited until the `/system` generator ships, then locked as a build artifact.
-
-## Lifecycle — mutates phase state, touches git, gated
+## Lifecycle — gated
 
 | Cmd | When | Does | Must not |
 |---|---|---|---|
-| `/plan` | New work not on the Roadmap | Create a phase file; name the complexity cost; cut/defer is a valid outcome | Write product code; build unconsumed foundations |
-| `/run` | Start or resume the one active phase | Execute the phase outcome; commit on the phase branch | Merge; expand scope horizontally; continue past a broken contract |
-| `/close` | Phase complete | Three checks → commit/PR → merge exact head → clean `main`; stop phase-owned servers | Merge on FAIL; expand scope silently; delete anything in `PRESERVE.md` |
-| `/ship` | Promote to production | Deploy production; append to `RELEASES.md` | Ship on a red check, an open FAIL, or a contested spec |
+| `/plan` | New work not on Roadmap | Phase file; MCOO; may promote Work proposal | Product code; unconsumed foundations |
+| `/run` | Start/resume the one active phase | Execute outcome; commit on phase branch | Merge; silent scope expand |
+| `/close` | Phase complete | Phase `/triage` first, then Proof/Scope/Publish → PR → merge | Merge on FAIL; skip phase triage; delete `PRESERVE.md` items |
+| `/ship` | Promote to production | Deploy + `RELEASES.md` | Ship on red check / open FAIL / contested spec |
 
-`/close --cancel` records `lessons:`, deletes the branch, no merge.
-`/close --dry-run` runs the three checks, changes nothing, writes findings to `FIXES.yaml` and `Backlog.md`.
+`/close --cancel` → `canceled`, no merge. `/close --dry-run` → three checks, findings → `WORK.yaml`.
 
-## Action — one unit of work, one artifact, no phase advance
+## Action — one unit, one artifact
 
 | Cmd | Produces | Fires when | Must not |
 |---|---|---|---|
-| `/research` | `Research/R-*.md` + optional decision | A choice between ≥2 external options blocks progress | Commit code; end without a verdict |
-| `/design` | Decisions and/or a spec | Behavior is undefined, or ≥3 decisions are open | Change app behavior; decide more than three things at once |
-| `/fix` | Patch + proof + `FIXES.yaml` entry | Defect is bounded and needs no design | Stretch into design work — that goes to `Backlog.md` |
+| `/research` | `Research/R-*.md` + optional decision | ≥2 external options block progress | Commit code; end without verdict |
+| `/design` | Decisions and/or a spec | Behavior undefined or ≥3 decisions open | Change app behavior silently |
+| `/fix` | Patch + proof + Work `fix` + `done_summary` | Bounded defect | Stretch into design |
+| `/task` | Patch/docs + proof + Work `task` + `done_summary` | Small intentional chore | Stretch into phase |
+| `/audit` | Findings + Work `audit` + `done_summary` | Scoped review (feature/area/spec/agent-context/process) | Replace `/close` merge gate |
 
-## Utility — safe anytime, cannot damage state
+## Utility
 
 | Cmd | Does | Must not |
 |---|---|---|
-| `/status` | Print a brief: active phase, git, runtime, suggested next command; refresh `context.json` | Change any authored file |
-| `/check` | Run tests and lint | Fix what it finds |
-| `/launch` | Stop stale app servers, start the app | Touch production |
-| `/dashboard` | Stop stale dashboard servers, start the dashboard | Run in production |
-| `/handoff` | Overwrite `Handoffs/HANDOFF.md` | Commit, PR, or merge |
-
-`/status --repair` reconciles phase state against git and cleans orphans.
+| `/log` | Park Work row (`open`); classify kind | Implement |
+| `/triage` | Optional `[PHASE\|area\|feature]`; if phase active/named → **sub-agent, that `phase:` only**; auto-do clear `/fix`/`/task`; confirm drop/plan; ask→`open_questions` | Mix other phases / `phase: null` into a phase pass |
+| `/status` | Brief + refresh `context.json` | Edit authored files |
+| `/check` | Tests/lint | Fix findings |
+| `/launch` | App dev server | Production |
+| `/dashboard` | Dashboard server | Production |
+| `/handoff` | Overwrite `HANDOFFS/HANDOFF.md` | Commit/PR/merge |
 
 ## Meta
 
 | Cmd | Does | Must not |
 |---|---|---|
-| `/system` | Edit the framework: `System/` files, templates, schemas, command definitions | Run while a phase is active; write outside `System/`; touch product code |
+| `/system` | Edit `Docs/System/`; context-budget caps | Run while phase `active` (unless phase outcome); write outside System/; product code |
 
-## Rules
+## Intent routing
 
-- **Audited main** — nothing merges without the three close checks. `/close` runs them for a phase; a standalone `/fix` runs them in reduced form.
-- **One active phase** — one branch, one worktree.
-- **Implementation work never happens without a phase.**
-- Utility commands are cheap to add. Lifecycle commands are not. New verbs default to utility.
+| User says | Fire |
+|---|---|
+| Broken / wrong behavior | `/fix` |
+| Small chore now | `/task` |
+| Park / later | `/log` |
+| Triage Work / "triage Devsystem" | `/triage` |
+| Audit X | `/audit` |
+| Which option? | `/research` |
+| How should X behave? | `/design` |
+| Phase-sized idea | `/log` `proposal` or confirm `/plan` |
+| Where are we? | `/status` |
+| Push live | `/ship` |
+
+Report command + id. Ask once if class ambiguous. Always cite Work/phase as `W-015 — Parallel active phases` (id + summary).
+
+**Classifier:** `fix` broken · `task` one-session chore · `proposal` needs `/plan` · `research` options · `question` standalone uncertainty · `audit` review. Clarifications append `open_questions` on the target row — never a new `question` row for the same item.
+
+**Coordinator** owns phase + Work routing. Delegate bounded `/fix`/`/task`/`/audit`/`/triage` batches to sub-agents.
