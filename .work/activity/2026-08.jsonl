@@ -306,3 +306,23 @@
 {"ts":"2026-08-08T18:15:31Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-008","ref":"PHASE-008","status":"complete","summary":"Phase-scoped close triage: 0 open/active/blocked with phase PHASE-008; all 4 phase rows already done (R-004,S-006,R-005,A-037); no execute; no Work blockers for close"}
 {"ts":"2026-08-08T18:17:37Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-008","ref":"PHASE-008","status":"active","summary":"Publishing PHASE-008 artifact molds via close/* (C-015 green; Adv WARN ack dispositioned; Scope WARN amends_specs fixed)"}
 {"ts":"2026-08-08T18:19:15Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-008","ref":"PHASE-008","status":"complete","summary":"Merged PR #43 824f2a0; phase/008 worktree removed; docs home on docs/ssot @ main; C-015 green"}
+{"ts":"2026-08-08T18:32:13Z","type":"audit","ref":"A-038","phase":null,"summary":"Knowledge filter/sort gap review vs table pages","status":"done"}
+{"ts":"2026-08-08T18:40:04Z","type":"design","ref":"S-007","phase":null,"summary":"Knowledge Filters panel + Status Current default","status":"active"}
+{"ts":"2026-08-08T18:40:04Z","type":"task","ref":"T-053","phase":null,"summary":"Implement Knowledge Filters panel + Status + Reset","status":"active"}
+{"ts":"2026-08-08T18:45:00Z","type":"design","ref":"S-007","phase":null,"summary":"Knowledge Filters panel + Status Current locked (Adv WARN)","status":"complete"}
+{"ts":"2026-08-08T18:45:00Z","type":"spec","ref":"SPEC-F-DEV-DASHBOARD","phase":null,"summary":"Knowledge toolbar Filters + Status rules","status":"complete"}
+{"ts":"2026-08-08T18:45:00Z","type":"task","ref":"T-053","phase":null,"summary":"Implement Knowledge Filters panel + Status + Reset","status":"complete"}
+{"ts":"2026-08-08T18:45:45Z","type":"task","ref":"T-054","phase":null,"summary":"Cap Knowledge TOC titles; shorten Research questions","status":"active"}
+{"ts":"2026-08-08T18:47:00Z","type":"task","ref":"T-054","phase":null,"summary":"Cap Knowledge TOC titles; shorten Research questions","status":"complete"}
+{"ts":"2026-08-08T18:50:46Z","type":"audit","ref":"A-039","phase":null,"summary":"Dev System docs thin/outdated inventory","status":"done"}
+{"ts":"2026-08-08T18:57:40Z","type":"task","ref":"T-055","phase":null,"summary":"Knowledge TOC 2-line clamp","status":"complete"}
+{"ts":"2026-08-08T21:56:56Z","type":"task","ref":"T-056","phase":null,"summary":"Knowledge TOC hairline dividers","status":"complete"}
+{"ts":"2026-08-08T21:56:56Z","type":"plan","ref":"PHASE-009","phase":"PHASE-009","summary":"Onboard Praxis Features + Active chrome as next phase","status":"complete"}
+{"ts":"2026-08-08T22:03:29Z","type":"design","ref":"S-008","phase":"PHASE-009","summary":"Spec Active Work write-gate hook","status":"active"}
+{"ts":"2026-08-08T22:05:00Z","type":"spec","ref":"SPEC-F-PRAXIS-ACTIVE-FLUSH","phase":"PHASE-009","summary":"Active Work write gate Spec locked (S-008 Adv PASS)","status":"complete"}
+{"ts":"2026-08-08T22:05:00Z","type":"design","ref":"S-008","phase":"PHASE-009","summary":"SPEC-F-PRAXIS-ACTIVE-FLUSH locked","status":"complete"}
+{"ts":"2026-08-08T22:05:00Z","type":"log","ref":"T-057","phase":"PHASE-009","summary":"Parked ship Active-flush hook + Adv","status":"complete"}
+{"ts":"2026-08-08T22:06:30Z","type":"check","ref":"C-016","phase":null,"summary":"reduced close work-lane: typecheck → test → validate","status":"active","cmd":"/check"}
+{"ts":"2026-08-08T22:06:50Z","type":"check","ref":"C-016","phase":null,"summary":"C-016 PASS work: typecheck+test+validate","status":"complete","cmd":"/check"}
+{"ts":"2026-08-08T22:06:50Z","type":"check","ref":"C-016","phase":null,"summary":"C-016 PASS work: typecheck+test+validate","status":"complete","cmd":"/check"}
+{"ts":"2026-08-08T22:07:00Z","type":"close","ref":null,"phase":null,"summary":"reduced close inventory: meta docs/ssot dirty; no product desk; C-016 PASS","status":"active","cmd":"/close"}

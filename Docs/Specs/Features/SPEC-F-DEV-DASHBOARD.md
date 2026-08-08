@@ -55,9 +55,15 @@ Lets the founder see phases, Work, Signals, and Knowledge projected from Docs/.
 - Rule: Docs projects customer-facing guide pages: `Docs/START.md` (Welcome) + `Docs/COMMANDS-OVERVIEW.md` (Commands) (D-027 revisit); does **not** project `System/COMMANDS.md` (agent SSOT / Commands panel); does not replace Knowledge (artifact browser)
 - Rule: Docs TOC shows titles only (no file-path sub-lines; no Guide/Praxis chrome labels)
 - Rule: Docs page uses Knowledge reader chrome with fixed ~220px Guide TOC (no collapse control; does not share Knowledge TOC width/collapse prefs); `.page-docs` fills below the topbar like Knowledge; Docs prose is full pane width (no 72ch reading measure — that stays on Knowledge/detail)
-- Rule: Knowledge page has a fixed table-style toolbar (search + Type filter chips: All / Product / Feature / Area / Decisions / Research / Releases); TOC lists categories **Product · Feature Specs · Area Specs · Decisions · Research · Releases** (Feature ≠ Area)
+- Rule: Knowledge page has a fixed table-style toolbar (search + Type chips: All / Product / Feature / Area / Decisions / Research / Releases + Status chips: Current (default) / Superseded / All + Filters panel + Reset); TOC lists categories **Product · Feature Specs · Area Specs · Decisions · Research · Releases** (Feature ≠ Area)
+- Rule: Knowledge Feature/Area filters live in the shared Filters pop-up (not primary chips); Reset clears type/status/feature/area/search to defaults (`status` default `current`)
+- Rule: Knowledge Status is global chips with kind-aware buckets — **Current** (default) vs **Superseded** vs **All**. Specs: `status===superseded` or `superseded_by` → superseded (else current, including contested). Research: `status===superseded` → superseded (fresh+stale → current). Decisions: any other decision’s `supersedes` text matching `\bD-nnn\b` (or own `superseded_by`) → superseded. Product/Releases: always current
+- Rule: Knowledge Feature/Area slice — Feature F: Feature F + its primary Area (first `depends_on` SPEC-A-*) + Research/Decisions whose `affects` includes F or that Area. Area A: Area A + Features with any `depends_on` containing A + Research/Decisions whose `affects` includes A or those Features. Both filters AND. **Product always stays in the TOC** unless Type excludes it. Releases drop when Feature or Area is set. Untagged = no resolvable SPEC-F / SPEC-A tags on that axis. Type∩slice empty groups show “None match”
+- Rule: When filters hide the selected Knowledge doc, selection moves to the first remaining TOC id (or Product). Superseded rows are greyed when Status shows them
 - Rule: Knowledge TOC is static (always visible; no collapse control / expand arrow); no “Documents” chrome label — category labels (Product · Feature Specs · …) are enough
-- Rule: Knowledge TOC rows use title + `id · status|date|verdict` secondary; Product is `Product map` / `PRODUCT · active` (not the who/what/never slogan)
+- Rule: Knowledge TOC rows use title + `id · status|date` secondary (Research uses status, not verdict); Product is `Product map` / `PRODUCT · active` (not the who/what/never slogan)
+- Rule: Knowledge TOC titles clamp to **2 lines** (full name in tooltip); authored Spec `title`, Decision `title`, Research `question`, Release `summary` must be ≤60; UI still truncates past 60 with ellipsis inside the clamp
+- Rule: Knowledge TOC list items are separated by a hairline divider between consecutive rows
 - Rule: Knowledge search is a single-line 36px control (same as table pages); never a tall multi-line box
 - Rule: Knowledge detail header is **title + id/copy on one row** (id to the right of title), then outcome below; Status glance + Brief / Connections / Files / Built by / Change log / Audits — no path byline and no `<details>` document-meta dropdown
 - Rule: Knowledge document titles (`.knowledge-detail .phase-name`) are 24px — a step above shared `--detail-title-size` (22px); TOC primary lines use `--fs-base`
@@ -83,7 +89,7 @@ Lets the founder see phases, Work, Signals, and Knowledge projected from Docs/.
 - Rule: Work table defaults to Age newest-first; Roadmap schedule sort pins active phase(s) first, then Order; user sort/filter prefs persist until changed or Reset
 - Rule: Age (and Activity time) columns default to newest-first on first click; second click toggles
 - Rule: No page subtitles under the topbar title; no table “Showing N of M / columns…” meta bylines
-- Rule: Feature/Area filters live in a Filters pop-up panel (not primary chip row); Reset clears filters/sort/search per table page; Filters badge is a small count chip
+- Rule: Feature/Area filters live in a Filters pop-up panel (not primary chip row); Reset clears filters/sort/search per table page and Knowledge; Filters badge is a small count chip
 - Rule: Detail panels (Phase / Work / Signal) share Phase chrome: `phase-view` header, Status `phase-block` + `glance-grid`, optional `phase-card` sections
 - Rule: Detail topbar shows the id once — no path byline (`Docs/…`) and no duplicate id under the title
 - Rule: Page titles (`#page-title`), panel titles (`.phase-name`), and detail topbar ID (`#detail-title`) use `--mono` like table IDs; `#detail-title` / `.phase-name` share `--detail-title-size`; `#page-title` uses `--fs-xl`; copy control sits immediately right of the ID

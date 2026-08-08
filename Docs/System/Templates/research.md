@@ -1,6 +1,6 @@
 ---
 id: R-000
-question: "<the decision this exists to unblock>"
+question: "<short TOC name ≤60 chars>"
 verdict: <chosen option | none>
 status: fresh                 # fresh | stale | superseded
 informed: []                  # [D-012] — decision this produced
@@ -12,9 +12,10 @@ date: YYYY-MM-DD
 <!-- Validated against System/schemas/research.schema.json in CI.
      verdict is required and must be non-empty — use "none" if no option was acceptable.
      phase is null for standalone research.
+     question is the Knowledge TOC title — keep ≤60 characters (full prose lives in ## Question).
      No extra frontmatter keys — additionalProperties is false. -->
 
-# <Question>
+# <Short title matching question>
 
 ## Question
 

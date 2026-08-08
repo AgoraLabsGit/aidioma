@@ -340,11 +340,23 @@ Active UI** (founder removed the command bar / suggested-next box).
 
 ### Knowledge
 
-Artifact browser (PHASE-006): fixed toolbar (search + Type chips) + left **TOC** grouped
+Artifact browser (PHASE-006): fixed toolbar (search + Type chips + Status chips + Filters
+panel + Reset) + left **TOC** grouped
 **Product · Feature Specs · Area Specs · Decisions · Research · Releases** + full-page
 phase-view detail via `/api/doc` (Status glance + Brief / Connections / Files / …). Not four
 tabbed tables. Feature Specs ≠ Area Specs. Mock fixtures (`SPEC-*-MOCK-KNOWLEDGE`,
 `RELEASE-000`) prove connections until PHASE-008 molds land.
+
+Toolbar (S-007 / A-038):
+- Type chips unchanged (All / Product / Feature / Area / Decisions / Research / Releases)
+- Status chips: **Current** (default) / Superseded / All — kind-aware buckets; hide superseded
+  by default (`system.md` deprecation). Decisions superseded via reverse-index of `Supersedes`
+  `D-nnn` tokens (not a nonexistent `superseded_by` on the old row)
+- Filters panel: Feature / Area / Untagged (same chrome as table pages). Slice matching and
+  Product-always / Releases-hide-when-sliced — see `SPEC-F-DEV-DASHBOARD`
+- Reset restores Knowledge defaults (`status: current`, empty type/feature/area/q)
+- No column sort (TOC, not a table)
+- TOC titles single-line, **60**-char cap (ellipsis + tooltip); Research secondary uses status
 
 `PRODUCT.md` / Product map is the default document when Knowledge opens.
 Behavior SSOT: `SPEC-F-DEV-DASHBOARD` Knowledge rules.

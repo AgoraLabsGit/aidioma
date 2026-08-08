@@ -37,7 +37,7 @@ const DEFAULT_FILTERS = {
   activity: { type: "", feature: "", area: "", q: "", sort: "time", sortDir: "desc" },
   work: { kind: "", status: "", feature: "", area: "", q: "", sort: "age", sortDir: "desc" },
   signals: { severity: "", kind: "", status: "open", feature: "", area: "", q: "", sort: "severity", sortDir: "asc" },
-  knowledge: { type: "", q: "" },
+  knowledge: { type: "", status: "current", feature: "", area: "", q: "" },
 };
 
 /** First-click direction per column (second click flips). */
@@ -349,6 +349,7 @@ function rerenderTablePage(page) {
   else if (page === "activity") renderActivity(state.index);
   else if (page === "work") renderWork(state.index);
   else if (page === "signals") renderSignals(state.index);
+  else if (page === "knowledge") renderKnowledge(state.index);
 }
 
 function resetPageFilters(page) {
@@ -357,6 +358,7 @@ function resetPageFilters(page) {
   else if (page === "activity") state.activityFilters = next;
   else if (page === "work") state.workFilters = next;
   else if (page === "signals") state.signalsFilters = next;
+  else if (page === "knowledge") state.knowledgeFilters = next;
   else return;
   state.filterPanelOpen = false;
   persistPageFilters(page);
@@ -368,6 +370,7 @@ function pageFilters(page) {
   if (page === "activity") return state.activityFilters;
   if (page === "work") return state.workFilters;
   if (page === "signals") return state.signalsFilters;
+  if (page === "knowledge") return state.knowledgeFilters;
   return null;
 }
 
@@ -379,6 +382,7 @@ function setPageFilter(page, key, value) {
   else if (page === "activity") state.activityFilters = next;
   else if (page === "work") state.workFilters = next;
   else if (page === "signals") state.signalsFilters = next;
+  else if (page === "knowledge") state.knowledgeFilters = next;
   persistPageFilters(page);
   if (key === "feature" || key === "area") state.filterPanelOpen = true;
   rerenderTablePage(page);
@@ -394,6 +398,8 @@ function searchInput(name, value, placeholder) {
 
 /** Display truncate for table summary cells (full text in title). */
 const SUMMARY_CAP = 80;
+/** Knowledge TOC primary title — one line; authored names should fit (T-054). */
+const KNOWLEDGE_TITLE_CAP = 60;
 
 function truncateSummary(text) {
   const value = String(text ?? "");
@@ -401,6 +407,12 @@ function truncateSummary(text) {
     return `<span class="cell-primary" title="${escapeHtml(value)}">${escapeHtml(value)}</span>`;
   }
   return `<span class="cell-primary" title="${escapeHtml(value)}">${escapeHtml(value.slice(0, SUMMARY_CAP))}…</span>`;
+}
+
+function truncateKnowledgeTitle(text) {
+  const value = String(text ?? "");
+  if (value.length <= KNOWLEDGE_TITLE_CAP) return value;
+  return `${value.slice(0, KNOWLEDGE_TITLE_CAP)}…`;
 }
 
 /** Column key → sort key. Summary is never sortable; every other column is. */
@@ -1617,13 +1629,155 @@ function renderActivity(index) {
   `;
 }
 
+/** Decision ids marked superseded by another decision's `supersedes` text (`D-nnn`) or own superseded_by. */
+function supersededDecisionIds(decisions) {
+  const set = new Set();
+  for (const decision of decisions ?? []) {
+    if (decision.superseded_by) set.add(decision.id);
+    const raw = decision.supersedes;
+    if (!raw || raw === "—" || raw === "-") continue;
+    for (const match of String(raw).matchAll(/\bD-\d+\b/gu)) set.add(match[0]);
+  }
+  return set;
+}
+
+function knowledgeStatusBucket(kind, entry, supersededDecisions) {
+  if (kind === "product" || kind === "releases") return "current";
+  if (kind === "feature" || kind === "area") {
+    if (entry?.status === "superseded" || entry?.superseded_by) return "superseded";
+    return "current";
+  }
+  if (kind === "research") {
+    return entry?.status === "superseded" ? "superseded" : "current";
+  }
+  if (kind === "decisions") {
+    return supersededDecisions.has(entry?.id) ? "superseded" : "current";
+  }
+  return "current";
+}
+
+function matchesKnowledgeStatus(bucket, statusFilter) {
+  if (!statusFilter || statusFilter === "all") return true;
+  if (statusFilter === "current") return bucket === "current";
+  if (statusFilter === "superseded") return bucket === "superseded";
+  return true;
+}
+
+function knowledgeAffectTags(affects) {
+  const list = affects ?? [];
+  return {
+    features: list.filter((id) => String(id).startsWith("SPEC-F-")),
+    areas: list.filter((id) => String(id).startsWith("SPEC-A-")),
+  };
+}
+
+function matchesAnySpecFilter(values, filter) {
+  if (!filter) return true;
+  if (filter === "__none__") return values.length === 0;
+  return values.includes(filter);
+}
+
+/** Feature/Area slice for Knowledge TOC (S-007). Product always in; Releases only when both deep filters empty. */
+function knowledgeMatchesSlice(kind, entry, featureFilter, areaFilter, index) {
+  if (kind === "product") return true;
+  if (kind === "releases") return !featureFilter && !areaFilter;
+
+  const specs = index.specs ?? [];
+  const featureRow = featureFilter && featureFilter !== "__none__"
+    ? specs.find((spec) => spec.id === featureFilter)
+    : null;
+  const featureArea = knowledgePrimaryArea(featureRow);
+  const featuresInArea = areaFilter && areaFilter !== "__none__"
+    ? specs
+      .filter((spec) => spec.kind === "feature" && (spec.depends_on ?? []).includes(areaFilter))
+      .map((spec) => spec.id)
+    : [];
+
+  if (kind === "feature") {
+    const areas = (entry.depends_on ?? []).filter((id) => String(id).startsWith("SPEC-A-"));
+    const featureOk = !featureFilter
+      ? true
+      : featureFilter === "__none__"
+        ? false
+        : entry.id === featureFilter;
+    const areaOk = matchesAnySpecFilter(areas, areaFilter);
+    return featureOk && areaOk;
+  }
+
+  if (kind === "area") {
+    const featureOk = !featureFilter
+      ? true
+      : featureFilter === "__none__"
+        ? true
+        : featureArea === entry.id;
+    const areaOk = !areaFilter
+      ? true
+      : areaFilter === "__none__"
+        ? false
+        : entry.id === areaFilter;
+    return featureOk && areaOk;
+  }
+
+  if (kind === "research" || kind === "decisions") {
+    const tags = knowledgeAffectTags(entry?.affects);
+    let featureOk = true;
+    if (featureFilter === "__none__") featureOk = tags.features.length === 0;
+    else if (featureFilter) {
+      featureOk = tags.features.includes(featureFilter)
+        || (featureArea != null && tags.areas.includes(featureArea));
+    }
+    let areaOk = true;
+    if (areaFilter === "__none__") areaOk = tags.areas.length === 0;
+    else if (areaFilter) {
+      areaOk = tags.areas.includes(areaFilter)
+        || tags.features.some((id) => featuresInArea.includes(id));
+    }
+    return featureOk && areaOk;
+  }
+
+  return true;
+}
+
+function collectKnowledgeSpecOptions(index) {
+  const rows = [];
+  for (const spec of index.specs ?? []) {
+    if (spec.kind === "feature") {
+      rows.push({ feature: spec.id, area: knowledgePrimaryArea(spec) });
+    } else if (spec.kind === "area") {
+      rows.push({ feature: null, area: spec.id });
+    }
+  }
+  for (const item of [...(index.research ?? []), ...(index.decisions ?? [])]) {
+    const tags = knowledgeAffectTags(item.affects);
+    if (!tags.features.length && !tags.areas.length) {
+      rows.push({ feature: null, area: null });
+      continue;
+    }
+    for (const feature of tags.features.length ? tags.features : [null]) {
+      for (const area of tags.areas.length ? tags.areas : [null]) {
+        rows.push({ feature, area });
+      }
+    }
+  }
+  rows.push({ feature: null, area: null }); // Product / Releases → Untagged chips
+  return collectSpecOptions(rows, (row) => row.feature, (row) => row.area);
+}
+
 function knowledgeItems(index) {
   const specs = index.specs ?? [];
+  const supersededDecisions = supersededDecisionIds(index.decisions);
   return [
     {
       id: "product",
       label: "Product",
-      items: [{ id: "PRODUCT", title: "Product map", secondary: "PRODUCT · active" }],
+      items: [{
+        id: "PRODUCT",
+        title: "Product map",
+        titleFull: "Product map",
+        secondary: "PRODUCT · active",
+        statusBucket: "current",
+        entry: null,
+      }],
     },
     {
       id: "feature",
@@ -1632,8 +1786,11 @@ function knowledgeItems(index) {
         .filter((spec) => spec.kind === "feature")
         .map((spec) => ({
           id: spec.id,
-          title: spec.title,
+          title: truncateKnowledgeTitle(spec.title),
+          titleFull: spec.title,
           secondary: `${shortSpecId(spec.id)} · ${spec.status}`,
+          statusBucket: knowledgeStatusBucket("feature", spec, supersededDecisions),
+          entry: spec,
         })),
     },
     {
@@ -1643,8 +1800,11 @@ function knowledgeItems(index) {
         .filter((spec) => spec.kind === "area")
         .map((spec) => ({
           id: spec.id,
-          title: spec.title,
+          title: truncateKnowledgeTitle(spec.title),
+          titleFull: spec.title,
           secondary: `${shortSpecId(spec.id)} · ${spec.status}`,
+          statusBucket: knowledgeStatusBucket("area", spec, supersededDecisions),
+          entry: spec,
         })),
     },
     {
@@ -1652,8 +1812,11 @@ function knowledgeItems(index) {
       label: "Decisions",
       items: (index.decisions ?? []).map((decision) => ({
         id: decision.id,
-        title: decision.title,
+        title: truncateKnowledgeTitle(decision.title),
+        titleFull: decision.title,
         secondary: `${decision.id} · ${decision.date}`,
+        statusBucket: knowledgeStatusBucket("decisions", decision, supersededDecisions),
+        entry: decision,
       })),
     },
     {
@@ -1661,8 +1824,11 @@ function knowledgeItems(index) {
       label: "Research",
       items: (index.research ?? []).map((item) => ({
         id: item.id,
-        title: item.question,
-        secondary: `${item.id} · ${item.verdict}`,
+        title: truncateKnowledgeTitle(item.question),
+        titleFull: item.question,
+        secondary: `${item.id} · ${item.status}`,
+        statusBucket: knowledgeStatusBucket("research", item, supersededDecisions),
+        entry: item,
       })),
     },
     {
@@ -1670,8 +1836,11 @@ function knowledgeItems(index) {
       label: "Releases",
       items: (index.releases ?? []).map((item) => ({
         id: item.id,
-        title: item.summary,
+        title: truncateKnowledgeTitle(item.summary),
+        titleFull: item.summary,
         secondary: `${item.id} · ${item.date}`,
+        statusBucket: knowledgeStatusBucket("releases", item, supersededDecisions),
+        entry: item,
       })),
     },
   ];
@@ -2035,7 +2204,13 @@ function selectKnowledgeDoc(id) {
 }
 
 function renderKnowledge(index) {
-  const { type: typeFilter, q } = state.knowledgeFilters;
+  const {
+    type: typeFilter,
+    status: statusFilter = "current",
+    feature: featureFilter = "",
+    area: areaFilter = "",
+    q,
+  } = state.knowledgeFilters;
   // Knowledge TOC is always visible (no collapse chrome).
   state.tocCollapsed = false;
   const groups = knowledgeItems(index)
@@ -2043,12 +2218,15 @@ function renderKnowledge(index) {
     .map((group) => ({
       ...group,
       items: group.items.filter((item) =>
-        matchesQuery(`${item.id} ${item.title} ${item.secondary}`, q)),
+        matchesKnowledgeStatus(item.statusBucket, statusFilter)
+        && knowledgeMatchesSlice(group.id, item.entry ?? item, featureFilter, areaFilter, index)
+        && matchesQuery(`${item.id} ${item.titleFull ?? item.title} ${item.secondary}`, q)),
     }));
-  const allIds = knowledgeItems(index).flatMap((group) => group.items.map((item) => item.id));
-  if (!allIds.includes(state.knowledgeId)) state.knowledgeId = allIds[0] ?? "PRODUCT";
+  const visibleIds = groups.flatMap((group) => group.items.map((item) => item.id));
+  if (!visibleIds.includes(state.knowledgeId)) state.knowledgeId = visibleIds[0] ?? "PRODUCT";
 
   const tocWidth = Number(readStored(TOC_WIDTH_KEY)) || 320;
+  const specOptions = collectKnowledgeSpecOptions(index);
 
   panels.knowledge.innerHTML = `
     <div class="page-toolbar knowledge-toolbar">
@@ -2064,7 +2242,14 @@ function renderKnowledge(index) {
           ${chip("knowledge-type", "research", typeFilter, "Research")}
           ${chip("knowledge-type", "releases", typeFilter, "Releases")}
         </div>
+        <div class="chip-group">
+          <span class="chip-label">Status</span>
+          ${chip("knowledge-status", "current", statusFilter, "Current")}
+          ${chip("knowledge-status", "superseded", statusFilter, "Superseded")}
+          ${chip("knowledge-status", "all", statusFilter, "All")}
+        </div>
       </div>
+      ${filterPanelHtml("knowledge", state.knowledgeFilters, specOptions)}
     </div>
     <div class="knowledge" style="--toc-w:${tocWidth}px">
       <aside class="knowledge-toc">
@@ -2074,11 +2259,11 @@ function renderKnowledge(index) {
               <h2 class="knowledge-group-label">${escapeHtml(group.label)}</h2>
               ${
                 group.items.length === 0
-                  ? `<p class="cell-secondary">None yet</p>`
+                  ? `<p class="cell-secondary">None match</p>`
                   : `<ul class="toc-list">
                       ${group.items.map((item) => `
                         <li>
-                          <button type="button" class="toc-item" data-knowledge-id="${escapeHtml(item.id)}" ${state.knowledgeId === item.id ? 'aria-current="true"' : ""}>
+                          <button type="button" class="toc-item" data-knowledge-id="${escapeHtml(item.id)}" data-status="${escapeHtml(item.statusBucket)}" title="${escapeHtml(item.titleFull ?? item.title)}" ${state.knowledgeId === item.id ? 'aria-current="true"' : ""}>
                             <span class="cell-primary">${escapeHtml(item.title)}</span>
                             <span class="cell-secondary">${escapeHtml(item.secondary)}</span>
                           </button>
@@ -3032,6 +3217,12 @@ document.addEventListener("click", (event) => {
       renderSignals(state.index);
     } else if (filter === "knowledge-type" && state.page === "knowledge") {
       state.knowledgeFilters = { ...state.knowledgeFilters, type: value };
+      persistPageFilters("knowledge");
+      renderKnowledge(state.index);
+      const restore = panels.knowledge.querySelector('input[name="knowledge-q"]');
+      if (restore) restore.focus();
+    } else if (filter === "knowledge-status" && state.page === "knowledge") {
+      state.knowledgeFilters = { ...state.knowledgeFilters, status: value };
       persistPageFilters("knowledge");
       renderKnowledge(state.index);
       const restore = panels.knowledge.querySelector('input[name="knowledge-q"]');

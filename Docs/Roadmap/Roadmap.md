@@ -12,11 +12,12 @@
 | 4 | [PHASE-007 — Command & System Audit Matrix](Phases/PHASE-007-command-system-audit.md) | design | closed | Audit matrix + Active checks + Commands header panel. |
 | 5 | [PHASE-006 — Knowledge Page Overhaul](Phases/PHASE-006-knowledge-page-overhaul.md) | build | closed | Knowledge UX + mock fixtures; Feature vs Area. |
 | 6 | [PHASE-008 — Spec & Knowledge Artifact Research](Phases/PHASE-008-spec-artifact-research.md) | design | closed | Research panel on artifact molds; refine templates. |
-| 7 | [PHASE-002 — Target Product Design](Phases/PHASE-002-target-product-design.md) | design | proposed | Approve PRODUCT.md map. |
-| 8 | [PHASE-003 — Core Component Architecture](Phases/PHASE-003-core-component-architecture.md) | design | proposed | Minimum areas/components for the map. |
+| 7 | [PHASE-009 — Praxis Features and Active chrome](Phases/PHASE-009-praxis-features-and-active-chrome.md) | build | ready | Praxis Area + page Features; Active→header badge; multi-active tabs contract; system.md kept. |
+| 8 | [PHASE-002 — Target Product Design](Phases/PHASE-002-target-product-design.md) | design | proposed | Approve PRODUCT.md map. |
+| 9 | [PHASE-003 — Core Component Architecture](Phases/PHASE-003-core-component-architecture.md) | design | proposed | Minimum areas/components for the map. |
 | 99 | [PHASE-099 — MOCK dense Lexicon fixture](Phases/PHASE-099-mock-dense-lexicon.md) | build | proposed | UI density fixture only — do not /run. |
 
-**Active:** none · **Next:** `/plan` or `/run PHASE-002` (product map)
+**Active:** none · **Next:** `/run PHASE-009` (Praxis Features + Active chrome)
 
 
 Unscheduled candidates: `Docs/WORK.yaml`. Commands: [`../System/COMMANDS.md`](../System/COMMANDS.md).
