@@ -368,3 +368,6 @@
 {"ts":"2026-08-08T23:10:50Z","type":"task","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"T-059","status":"active","summary":"Re-activate for close publish writes"}
 {"ts":"2026-08-08T23:13:08Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"PHASE-009","status":"complete","summary":"Merged #48+#49 → 1462504; desks cleaned; docs/ssot @ main"}
 {"ts":"2026-08-08T23:13:20Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"PHASE-009","status":"complete","summary":"Final handoff after #48+#49 merge 1462504"}
+{"ts":"2026-08-08T23:14:00Z","type":"close","ref":null,"phase":null,"summary":"Reduced close — leftover close/009-journal handoff after PHASE-009","status":"active","cmd":"/close"}
+{"ts":"2026-08-08T23:14:05Z","type":"check","ref":"C-019","phase":null,"summary":"journal desk work-lane validate","status":"active","cmd":"/check"}
+{"ts":"2026-08-08T23:14:10Z","type":"check","ref":"C-019","phase":null,"summary":"C-019 PASS work:validate","status":"complete","cmd":"/check"}
