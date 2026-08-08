@@ -371,3 +371,4 @@
 {"ts":"2026-08-08T23:14:00Z","type":"close","ref":null,"phase":null,"summary":"Reduced close — leftover close/009-journal handoff after PHASE-009","status":"active","cmd":"/close"}
 {"ts":"2026-08-08T23:14:05Z","type":"check","ref":"C-019","phase":null,"summary":"journal desk work-lane validate","status":"active","cmd":"/check"}
 {"ts":"2026-08-08T23:14:10Z","type":"check","ref":"C-019","phase":null,"summary":"C-019 PASS work:validate","status":"complete","cmd":"/check"}
+{"ts":"2026-08-08T23:14:45Z","type":"close","ref":null,"phase":null,"summary":"Reduced close MERGED PR #51 journal; docs/ssot @ f4e9832; PHASE-009 already closed via #48+#49","status":"complete","cmd":"/close"}
