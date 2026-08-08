@@ -134,7 +134,117 @@ const DEFAULT_FILTERS = {
   activity: { type: "", feature: "", area: "", q: "", sort: "time", sortDir: "desc" },
   work: { kind: "", status: "", feature: "", area: "", q: "", sort: "age", sortDir: "desc" },
   signals: { severity: "", kind: "", status: "open", feature: "", area: "", q: "", sort: "severity", sortDir: "asc" },
+  knowledge: { type: "", status: "current", feature: "", area: "", q: "" },
 } as const;
+
+type KnowledgeSpec = {
+  id: string;
+  kind: "feature" | "area";
+  status: string;
+  depends_on?: string[];
+  superseded_by?: string | null;
+};
+type KnowledgeDecision = { id: string; affects?: string[]; supersedes?: string | null; superseded_by?: string | null };
+type KnowledgeResearch = { id: string; status: string; affects?: string[] };
+
+function knowledgePrimaryArea(entry: { depends_on?: string[] } | null | undefined): string | null {
+  return (entry?.depends_on ?? []).find((id) => String(id).startsWith("SPEC-A-")) ?? null;
+}
+
+function supersededDecisionIds(decisions: KnowledgeDecision[]): Set<string> {
+  const set = new Set<string>();
+  for (const decision of decisions) {
+    if (decision.superseded_by) set.add(decision.id);
+    const raw = decision.supersedes;
+    if (!raw || raw === "—" || raw === "-") continue;
+    for (const match of String(raw).matchAll(/\bD-\d+\b/gu)) set.add(match[0]);
+  }
+  return set;
+}
+
+function knowledgeStatusBucket(
+  kind: string,
+  entry: { id?: string; status?: string; superseded_by?: string | null } | null,
+  supersededDecisions: Set<string>,
+): "current" | "superseded" {
+  if (kind === "product" || kind === "releases") return "current";
+  if (kind === "feature" || kind === "area") {
+    if (entry?.status === "superseded" || entry?.superseded_by) return "superseded";
+    return "current";
+  }
+  if (kind === "research") return entry?.status === "superseded" ? "superseded" : "current";
+  if (kind === "decisions") return entry?.id && supersededDecisions.has(entry.id) ? "superseded" : "current";
+  return "current";
+}
+
+function matchesKnowledgeStatus(bucket: string, statusFilter: string): boolean {
+  if (!statusFilter || statusFilter === "all") return true;
+  if (statusFilter === "current") return bucket === "current";
+  if (statusFilter === "superseded") return bucket === "superseded";
+  return true;
+}
+
+function matchesAnySpecFilter(values: string[], filter: string): boolean {
+  if (!filter) return true;
+  if (filter === "__none__") return values.length === 0;
+  return values.includes(filter);
+}
+
+function knowledgeMatchesSlice(
+  kind: string,
+  entry: KnowledgeSpec | KnowledgeDecision | KnowledgeResearch | { id: string } | null,
+  featureFilter: string,
+  areaFilter: string,
+  index: { specs?: KnowledgeSpec[] },
+): boolean {
+  if (kind === "product") return true;
+  if (kind === "releases") return !featureFilter && !areaFilter;
+
+  const specs = index.specs ?? [];
+  const featureRow = featureFilter && featureFilter !== "__none__"
+    ? specs.find((spec) => spec.id === featureFilter)
+    : null;
+  const featureArea = knowledgePrimaryArea(featureRow ?? null);
+  const featuresInArea = areaFilter && areaFilter !== "__none__"
+    ? specs
+      .filter((spec) => spec.kind === "feature" && (spec.depends_on ?? []).includes(areaFilter))
+      .map((spec) => spec.id)
+    : [];
+
+  if (kind === "feature") {
+    const spec = entry as KnowledgeSpec;
+    const areas = (spec.depends_on ?? []).filter((id) => String(id).startsWith("SPEC-A-"));
+    const featureOk = !featureFilter ? true : featureFilter === "__none__" ? false : spec.id === featureFilter;
+    const areaOk = matchesAnySpecFilter(areas, areaFilter);
+    return featureOk && areaOk;
+  }
+
+  if (kind === "area") {
+    const spec = entry as KnowledgeSpec;
+    const featureOk = !featureFilter ? true : featureFilter === "__none__" ? true : featureArea === spec.id;
+    const areaOk = !areaFilter ? true : areaFilter === "__none__" ? false : spec.id === areaFilter;
+    return featureOk && areaOk;
+  }
+
+  if (kind === "research" || kind === "decisions") {
+    const affects = (entry as KnowledgeDecision | KnowledgeResearch)?.affects ?? [];
+    const features = affects.filter((id) => String(id).startsWith("SPEC-F-"));
+    const areas = affects.filter((id) => String(id).startsWith("SPEC-A-"));
+    let featureOk = true;
+    if (featureFilter === "__none__") featureOk = features.length === 0;
+    else if (featureFilter) {
+      featureOk = features.includes(featureFilter) || (featureArea != null && areas.includes(featureArea));
+    }
+    let areaOk = true;
+    if (areaFilter === "__none__") areaOk = areas.length === 0;
+    else if (areaFilter) {
+      areaOk = areas.includes(areaFilter) || features.some((id) => featuresInArea.includes(id));
+    }
+    return featureOk && areaOk;
+  }
+
+  return true;
+}
 
 function filtersAreDefault(page: keyof typeof DEFAULT_FILTERS, filters: Record<string, string>): boolean {
   const defaults = DEFAULT_FILTERS[page];
@@ -547,5 +657,59 @@ describe("Feature/Area panel filters", () => {
     expect(filtersAreDefault("work", { ...DEFAULT_FILTERS.work, feature: "SPEC-F-LEXICON" })).toBe(false);
     expect(filtersAreDefault("signals", { ...DEFAULT_FILTERS.signals, status: "" })).toBe(false);
     expect(filtersAreDefault("roadmap", { ...DEFAULT_FILTERS.roadmap, sort: "age" })).toBe(false);
+    expect(filtersAreDefault("knowledge", { ...DEFAULT_FILTERS.knowledge })).toBe(true);
+    expect(filtersAreDefault("knowledge", { ...DEFAULT_FILTERS.knowledge, status: "all" })).toBe(false);
+  });
+});
+
+describe("Knowledge filters (S-007)", () => {
+  const specs: KnowledgeSpec[] = [
+    { id: "SPEC-F-DEV-DASHBOARD", kind: "feature", status: "active", depends_on: ["SPEC-A-DEVSYSTEM"] },
+    { id: "SPEC-F-OLD", kind: "feature", status: "superseded", depends_on: ["SPEC-A-DEVSYSTEM"], superseded_by: "SPEC-F-DEV-DASHBOARD" },
+    { id: "SPEC-F-LEXICON", kind: "feature", status: "active", depends_on: ["SPEC-A-CONTENT"] },
+    { id: "SPEC-A-DEVSYSTEM", kind: "area", status: "active" },
+    { id: "SPEC-A-CONTENT", kind: "area", status: "active" },
+  ];
+  const decisions: KnowledgeDecision[] = [
+    { id: "D-018", affects: ["SPEC-A-DEVSYSTEM"], supersedes: null },
+    { id: "D-020", affects: ["SPEC-A-DEVSYSTEM"], supersedes: "D-018 — Main-rooted overlay" },
+    { id: "D-099", affects: [], supersedes: null },
+    { id: "D-050", affects: ["SPEC-F-LEXICON"], supersedes: null },
+  ];
+  const research: KnowledgeResearch[] = [
+    { id: "R-001", status: "fresh", affects: ["SPEC-F-LEXICON", "SPEC-A-CONTENT"] },
+    { id: "R-002", status: "superseded", affects: ["SPEC-A-DEVSYSTEM"] },
+  ];
+  const index = { specs };
+
+  it("hides superseded by default; reverse-indexes decision Supersedes", () => {
+    const superseded = supersededDecisionIds(decisions);
+    expect(superseded.has("D-018")).toBe(true);
+    expect(superseded.has("D-020")).toBe(false);
+    expect(knowledgeStatusBucket("feature", specs[1], superseded)).toBe("superseded");
+    expect(knowledgeStatusBucket("decisions", decisions[0], superseded)).toBe("superseded");
+    expect(knowledgeStatusBucket("research", research[0], superseded)).toBe("current");
+    expect(matchesKnowledgeStatus("superseded", "current")).toBe(false);
+    expect(matchesKnowledgeStatus("current", "current")).toBe(true);
+    expect(DEFAULT_FILTERS.knowledge.status).toBe("current");
+  });
+
+  it("Feature slice keeps Product, drops Releases, pulls Area + related research", () => {
+    expect(knowledgeMatchesSlice("product", { id: "PRODUCT" }, "SPEC-F-LEXICON", "", index)).toBe(true);
+    expect(knowledgeMatchesSlice("releases", { id: "RELEASE-000" }, "SPEC-F-LEXICON", "", index)).toBe(false);
+    expect(knowledgeMatchesSlice("feature", specs[2], "SPEC-F-LEXICON", "", index)).toBe(true);
+    expect(knowledgeMatchesSlice("feature", specs[0], "SPEC-F-LEXICON", "", index)).toBe(false);
+    expect(knowledgeMatchesSlice("area", specs[4], "SPEC-F-LEXICON", "", index)).toBe(true);
+    expect(knowledgeMatchesSlice("research", research[0], "SPEC-F-LEXICON", "", index)).toBe(true);
+    expect(knowledgeMatchesSlice("research", research[1], "SPEC-F-LEXICON", "", index)).toBe(false);
+  });
+
+  it("Area slice includes dependent Features and untagged decisions on Feature axis", () => {
+    expect(knowledgeMatchesSlice("area", specs[3], "", "SPEC-A-DEVSYSTEM", index)).toBe(true);
+    expect(knowledgeMatchesSlice("feature", specs[0], "", "SPEC-A-DEVSYSTEM", index)).toBe(true);
+    expect(knowledgeMatchesSlice("feature", specs[2], "", "SPEC-A-DEVSYSTEM", index)).toBe(false);
+    expect(knowledgeMatchesSlice("decisions", decisions[2], "__none__", "", index)).toBe(true);
+    expect(knowledgeMatchesSlice("decisions", decisions[0], "__none__", "", index)).toBe(true); // area-only → untagged Feature
+    expect(knowledgeMatchesSlice("decisions", decisions[3], "__none__", "", index)).toBe(false);
   });
 });

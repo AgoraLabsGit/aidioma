@@ -1824,10 +1824,13 @@ code,
 .toc-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;
+}
+.toc-list > li + li {
+  border-top: 1px solid var(--border);
 }
 .toc-item {
   width: 100%;
@@ -1849,10 +1852,25 @@ code,
   color: var(--accent);
 }
 .toc-item .cell-primary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
   font-size: var(--fs-base);
 }
 .toc-item .cell-secondary {
+  display: block;
   font-family: var(--mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.toc-item[data-status="superseded"] {
+  opacity: 0.55;
+}
+.toc-item[data-status="superseded"][aria-current="true"] {
+  opacity: 0.8;
 }
 .knowledge-doc {
   overflow: auto;

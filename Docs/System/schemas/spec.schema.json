@@ -8,7 +8,7 @@
   "properties": {
     "id": { "type": "string", "pattern": "^SPEC-[FA]-[A-Z0-9-]+$" },
     "kind": { "enum": ["feature", "area"] },
-    "title": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1, "maxLength": 60 },
     "status": { "enum": ["active", "superseded", "contested"] },
     "superseded_by": { "type": ["string", "null"], "pattern": "^SPEC-[FA]-[A-Z0-9-]+$" },
     "depends_on": { "type": "array", "items": { "type": "string", "pattern": "^SPEC-A-[A-Z0-9-]+$" } },

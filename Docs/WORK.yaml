@@ -168,10 +168,10 @@
   status: open
   feature: null
   area: SPEC-A-DEVSYSTEM
-  phase: null
+  phase: PHASE-009
   promoted_to: null
   blocked_by: null
-  note: "2026-08-06 triage: leave; proposal+adversarial farmed; soft-parallel Rejected as mislabeled hard multi-active; next /research (schema-valid) after PHASE-005 close, then /system — not while a phase is active"
+  note: "PHASE-009 ships Active multi-phase tab chrome only; hard parallel runtime still this proposal. Soft-parallel Rejected 2026-08-06."
   opened: 2026-08-05
 - id: W-016
   kind: fix
@@ -2155,3 +2155,181 @@
   open_questions: null
   done_summary: "Design review panel PASS; agree R-005 verdict A; recommended now: none. Defer GWT/KaC/MADR Consequences/Product metrics. Generic molds confirmed (not domain-overfit)."
   opened: 2026-08-08T18:20:00Z
+- id: A-038
+  kind: audit
+  summary: "Knowledge page filter/sort gap review vs Roadmap/table pages (Feature/Area panel + status fields)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: Founder asked to add Roadmap-style Filters panel for area/slice and review other missing fields (e.g. active vs archived)
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+    - Docs/System/specs/Dashboard-spec.md
+    - Docs/System/system.md
+  open_questions:
+    - q: Area filter — show Feature specs that depend on that area, or only Area group rows?
+      answer: null
+      asked: 2026-08-08
+    - q: Decisions with superseded_by — hide under Current (like specs), or leave unfiltered until a real status field exists?
+      answer: null
+      asked: 2026-08-08
+    - q: Status chips — one global Current/Superseded/All row, or Type-scoped (spec enums vs research enums)?
+      answer: null
+      asked: 2026-08-08
+  done_summary: "Gap confirmed: Knowledge = search+Type only; no Filters panel/Reset/status. No archived enum — specs active|contested|superseded; research fresh|stale|superseded. system.md hide-superseded-by-default not implemented. Recommend /design then /task: Filters panel (Feature/Area) + Status Current default + Reset. Defer verdict/date/age/phase/sort."
+  opened: 2026-08-08T18:32:13Z
+- id: S-007
+  kind: design
+  summary: "Knowledge toolbar: Feature/Area Filters panel + Status Current default + Reset"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Best-shot from A-038; founder feedback on next UI version."
+  context_paths:
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+    - Docs/System/specs/Dashboard-spec.md
+  open_questions:
+    - q: Area filter — show Feature specs that depend on that area, or only Area group rows?
+      answer: Show Area + Features that depend on it + Research/Decisions that affect the Area or those Features
+      asked: 2026-08-08
+    - q: Decisions with superseded_by — hide under Current, or leave unfiltered?
+      answer: Reverse-index Supersedes D-nnn tokens (and superseded_by if set); hide under Current
+      asked: 2026-08-08
+    - q: Status chips — global vs Type-scoped?
+      answer: Global Current / Superseded / All (kind-aware under the hood)
+      asked: 2026-08-08
+  done_summary: "Locked Knowledge toolbar filters in SPEC-F-DEV-DASHBOARD + Dashboard-spec. Adv FAIL→WARN (ack: multi-area primary=first; Type∩slice empty; free-text Supersedes over-mark). Product always visible; Releases hide when sliced."
+  opened: 2026-08-08T18:40:04Z
+- id: T-053
+  kind: task
+  summary: "Implement Knowledge Filters panel, Status Current default, and Reset"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: Implement against S-007 after Adv; proof via filters.test + visual
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/filters.test.ts
+    - Docs/System/dashboard/public/styles.css
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+    - Docs/System/specs/Dashboard-spec.md
+  open_questions: null
+  done_summary: "Shipped Knowledge Filters panel + Status Current/Superseded/All + Reset; slice matching; superseded grey; filters.test 46/46 green."
+  opened: 2026-08-08T18:40:04Z
+
+- id: T-054
+  kind: task
+  summary: "Cap Knowledge TOC titles to one line; shorten long Research questions"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: multi-line Research names in TOC; UI cap + rename current artifacts"
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/styles.css
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+    - Docs/Research/
+    - Docs/System/Templates/research.md
+    - Docs/System/schemas/research.schema.json
+    - Docs/System/schemas/spec.schema.json
+  open_questions: null
+  done_summary: "Knowledge TOC titles single-line ≤60 (ellipsis+tooltip); Research secondary=status; shortened R-003/R-004/R-005 questions; schema maxLength on research.question + spec.title; templates updated. work:test 46/46."
+  opened: 2026-08-08T18:45:45Z
+
+- id: A-039
+  kind: audit
+  summary: "Dev System docs inventory: thin/outdated/sparse vs living System SSOT"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: why SPEC-A-DEVSYSTEM sparse; list files needing update"
+  context_paths:
+    - Docs/Specs/Areas/SPEC-A-DEVSYSTEM.md
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+    - Docs/System/system.md
+    - Docs/System/specs/Dashboard-spec.md
+    - Docs/System/CHANGELOG.md
+    - Docs/DECISIONS.md
+  open_questions: null
+  done_summary: "SPEC-A sparse by D-013+system.md SSOT, not neglect; Behavior under D-028 bar vs frontmatter D-list. P0: thicken or lock pointer policy on SPEC-A; resolve Dashboard-spec draft dual-SSOT. P1: CHANGELOG format/brand; SPEC-F last_amended. P2: MOCK fixtures. system.md/COMMANDS/AGENTS/templates mostly ok."
+  opened: 2026-08-08T18:50:46Z
+- id: T-055
+  kind: task
+  summary: "Knowledge TOC titles use 2-line clamp instead of single-line ellipsis"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: Founder chose wrap (max 2 lines) over lowering char cap
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "TOC primary 2-line clamp; secondary stays 1-line ellipsis; authored ≤60 retained."
+  opened: 2026-08-08T18:57:40Z
+- id: T-056
+  kind: task
+  summary: "Knowledge TOC hairline dividers between document rows"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: Founder ask with /plan session
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "toc-list li+li hairline border; SPEC rule added."
+  opened: 2026-08-08T21:56:56Z
+
+- id: S-008
+  kind: design
+  summary: "Spec: Cursor hook gates material writes until Work status active"
+  status: done
+  feature: SPEC-F-PRAXIS-ACTIVE-FLUSH
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-009
+  promoted_to: null
+  blocked_by: null
+  note: Founder asked Spec + fresh-session kickoff; Required Adv on Spec then on hook impl
+  context_paths:
+    - Docs/Specs/Features/SPEC-F-PRAXIS-ACTIVE-FLUSH.md
+    - Docs/Roadmap/Phases/PHASE-009-praxis-features-and-active-chrome.md
+    - Docs/System/protocols/adv-protocol.md
+  open_questions: null
+  done_summary: "Locked SPEC-F-PRAXIS-ACTIVE-FLUSH. Adv FAIL→PASS (hooks not self-allowlisted; docs-home resolve; parse→deny; human failClosed recovery; Shell non-goal; honest any-active unlock). PHASE-009 amended for ninth Feature. Impl Adv still required at ship."
+  opened: 2026-08-08T22:03:29Z
+- id: T-057
+  kind: task
+  summary: "Ship Cursor Active-flush write gate per SPEC-F-PRAXIS-ACTIVE-FLUSH + Adv"
+  status: open
+  feature: SPEC-F-PRAXIS-ACTIVE-FLUSH
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-009
+  promoted_to: null
+  blocked_by: null
+  note: "Fresh session: implement .cursor/hooks*; Required Adv on hook before done. Spec locked S-008."
+  context_paths: null
+  open_questions: null
+  done_summary: null
+  opened: 2026-08-08T22:03:29Z

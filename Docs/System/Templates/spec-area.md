@@ -1,7 +1,7 @@
 ---
 id: SPEC-A-XXX
 kind: area
-title: <Database | Auth | AI | API | ...>
+title: <short name ≤60 chars>
 status: active                # active | superseded | contested
 superseded_by: null
 vendor: <provider name, or null>

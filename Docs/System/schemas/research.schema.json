@@ -7,7 +7,7 @@
   "additionalProperties": false,
   "properties": {
     "id": { "type": "string", "pattern": "^R-[0-9]{3}$" },
-    "question": { "type": "string", "minLength": 1 },
+    "question": { "type": "string", "minLength": 1, "maxLength": 60 },
     "verdict": { "type": "string", "minLength": 1 },
     "status": { "enum": ["fresh", "stale", "superseded"] },
     "informed": { "type": "array", "items": { "type": "string", "pattern": "^D-[0-9]{3}$" } },

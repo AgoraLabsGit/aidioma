@@ -1,7 +1,7 @@
 ---
 id: SPEC-F-XXX
 kind: feature
-title: <what a user would call it>
+title: <short name ≤60 chars>
 status: active                # active | superseded | contested
 superseded_by: null
 depends_on: []                # [SPEC-A-AUTH, SPEC-A-API]
