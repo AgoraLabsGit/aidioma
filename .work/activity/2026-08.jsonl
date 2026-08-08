@@ -257,3 +257,6 @@
 {"ts":"2026-08-07T20:55:38Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":null,"status":"active","summary":"Reduced close: meta desk → close/* (C-012 green)"}
 {"ts":"2026-08-07T20:56:52Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-37","status":"complete","summary":"Reduced close merged PR #37 @8c88cfd; Docs home refreshed; C-012"}
 {"ts":"2026-08-07T20:56:52Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-37","status":"complete","summary":"Reduced close merged PR #37 @8c88cfd; Docs home refreshed; C-012"}
+{"ts":"2026-08-08T16:26:51Z","type":"status","actor":"agent","cmd":"/status","phase":null,"ref":null,"status":"complete","summary":"No active phase; next /plan; main+docs/ssot clean @1bef091; dashboard :4317 up"}
+{"ts":"2026-08-08T16:30:52Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-006","ref":"PHASE-006","status":"complete","summary":"Phase-scoped triage via sub-agent: 0 open/active with phase PHASE-006 (EMPTY)"}
+{"ts":"2026-08-08T16:35:14Z","type":"run","actor":"agent","cmd":"/run","phase":"PHASE-006","ref":"PHASE-006","status":"active","summary":"Knowledge overhaul implemented: toolbar, Feature≠Area, phase-view detail, mock fixtures, /api/doc releases; work:test 43/43"}

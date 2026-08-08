@@ -11,7 +11,7 @@ import {
   resolvePrimaryWorktreeRoot,
   type GitWorktree,
 } from "../derive/worktrees.js";
-import { extractDecisionSection } from "../derive/parser.js";
+import { extractDecisionSection, extractReleaseSection } from "../derive/parser.js";
 
 const dashboardDirectory = fileURLToPath(new URL(".", import.meta.url));
 const defaultPublicDirectory = path.join(dashboardDirectory, "public");
@@ -240,6 +240,22 @@ async function resolveDocBody(
       const primaryPath = path.join(index.projection_roots.primary, "Docs", relativePath);
       const primarySource = await readFile(primaryPath, "utf8");
       body = extractDecisionSection(primarySource, id);
+      if (body) {
+        return { relativePath: path.join("Docs", relativePath), body };
+      }
+    }
+    if (!body) return null;
+    return { relativePath: path.join("Docs", relativePath), body };
+  }
+  if (/^RELEASE-\d{3}$/u.test(id) && index.releases.some((release) => release.id === id)) {
+    const relativePath = "RELEASES.md";
+    const releasesPath = path.join(docsRootForRelative(index, relativePath), relativePath);
+    const source = await readFile(releasesPath, "utf8");
+    let body = extractReleaseSection(source, id);
+    if (!body && index.projection_roots.overlay) {
+      const primaryPath = path.join(index.projection_roots.primary, "Docs", relativePath);
+      const primarySource = await readFile(primaryPath, "utf8");
+      body = extractReleaseSection(primarySource, id);
       if (body) {
         return { relativePath: path.join("Docs", relativePath), body };
       }

@@ -17,7 +17,8 @@ decisions:
   - D-027
 built_by:
   - PHASE-005
-last_amended: PHASE-007
+  - PHASE-006
+last_amended: PHASE-006
 research: []
 
 paths:
@@ -54,6 +55,10 @@ Lets the founder see phases, Work, Signals, and Knowledge projected from Docs/.
 - Rule: Docs projects customer-facing guide pages: `Docs/START.md` (Welcome) + `Docs/COMMANDS-OVERVIEW.md` (Commands) (D-027 revisit); does **not** project `System/COMMANDS.md` (agent SSOT / Commands panel); does not replace Knowledge (artifact browser)
 - Rule: Docs TOC shows titles only (no file-path sub-lines; no Guide/Praxis chrome labels)
 - Rule: Docs page uses Knowledge reader chrome with fixed ~220px Guide TOC (no collapse control; does not share Knowledge TOC width/collapse prefs); `.page-docs` fills below the topbar like Knowledge; Docs prose is full pane width (no 72ch reading measure — that stays on Knowledge/detail)
+- Rule: Knowledge page has a fixed table-style toolbar (search + Type filter chips: All / Product / Feature / Area / Decisions / Research / Releases); TOC lists categories **Product · Feature Specs · Area Specs · Decisions · Research · Releases** (Feature ≠ Area)
+- Rule: Knowledge detail uses Phase chrome (`phase-view` header + Status glance + Brief/Connections) — no path byline and no `<details>` document-meta dropdown
+- Rule: Knowledge markdown links and Connections buttons navigate in-page via `data-knowledge-link` for `PRODUCT`, `SPEC-*`, `D-nnn`, `R-nnn`, `RELEASE-nnn`
+- Rule: `/api/doc` serves Feature/Area/Research files by id, Decision slices from `DECISIONS.md`, and Release slices from `RELEASES.md`
 - Rule: Light theme uses a cream shell (`--bg` ~`#ebe6df`) with warm paper panels (`--surface` ~`#f3efe7`) — never pure `#fff` and never cool/blue greys; warmer muted ink; status soft fills ≥16% chroma
 - Rule: Nav sidebar, detail rail, and Knowledge TOC use page `--bg` (light + dark); tables/cards stay on `--surface` panels
 - Rule: Topbar worktrees control uses the GitHub mark icon

@@ -1,27 +1,27 @@
-# Current handoff — after reduced `/close`
+# Current handoff — PHASE-006 in flight
 
-**Date:** 2026-08-07
+**Date:** 2026-08-08
 
-**Branch:** `main` (post close PR)
-**Active phase:** none
-**Docs home:** `.worktrees/docs` (`docs/ssot`) — refresh after merge
-**Remotes:** `origin/main` only
+**Branch:** `docs/ssot` (Docs home) + `phase/006` worktree (empty product tree)
+**Active phase:** PHASE-006 — Knowledge Page Overhaul
+**Docs home:** `.worktrees/docs` (`docs/ssot`)
+**Remotes:** `origin/main` only (phase not published)
 
 ## Done this session
 
-- Dashboard UX: Praxis wordmark, light theme cream/paper, sidebar/nav polish, detail panels, copy IDs, worktrees watcher, Activity status joins
-- **D-025** — product `/task`/`/fix` desks; Docs-home path leases; dual-desk `/close`
-- **F-024** — `work.yml` `npm ci --ignore-scripts`; drop stale work-registry path filters; workspace Sonar excludes
-- `/check` **C-012** green (work lane)
+- Activated PHASE-006; empty phase-scoped triage
+- Knowledge toolbar (search + Type chips); Feature Specs ≠ Area Specs
+- Detail uses phase-view chrome (no doc-meta dropdown)
+- Connection navigation via `data-knowledge-link`
+- `/api/doc` Release slices; mock Feature/Area stubs; `work:test` 43/43
 
 ## Open
 
-- W-015 — Parallel active phases
-- Product proposals until PHASE-002+
-- SonarCloud ghosts on deleted paths may need IDE Reload / rebind (not repo)
+- Founder visual ack on Knowledge, then `/close`
+- PHASE-008 still owns real artifact molds (MOCK stubs disposable)
 
 ## Next command
 
 ```text
-/plan   # or /status — pick next Roadmap phase (002 / 006 / 008)
+/close   # after founder visual check of Knowledge
 ```

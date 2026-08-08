@@ -24,6 +24,7 @@ const FILTER_KEYS = {
   activity: "aidioma-filters-activity",
   work: "aidioma-filters-work",
   signals: "aidioma-filters-signals",
+  knowledge: "aidioma-filters-knowledge",
 };
 
 /** Activity page process spine (D-023). Journal still stores all types. */
@@ -36,6 +37,7 @@ const DEFAULT_FILTERS = {
   activity: { type: "", feature: "", area: "", q: "", sort: "time", sortDir: "desc" },
   work: { kind: "", status: "", feature: "", area: "", q: "", sort: "age", sortDir: "desc" },
   signals: { severity: "", kind: "", status: "open", feature: "", area: "", q: "", sort: "severity", sortDir: "asc" },
+  knowledge: { type: "", q: "" },
 };
 
 /** First-click direction per column (second click flips). */
@@ -91,6 +93,7 @@ function persistPageFilters(page) {
     activity: [FILTER_KEYS.activity, () => state.activityFilters],
     work: [FILTER_KEYS.work, () => state.workFilters],
     signals: [FILTER_KEYS.signals, () => state.signalsFilters],
+    knowledge: [FILTER_KEYS.knowledge, () => state.knowledgeFilters],
   }[page];
   if (!pair) return;
   // Never persist free-text search — a leftover q (e.g. "F-005") hides new Work rows
@@ -109,6 +112,7 @@ const state = {
   activityFilters: loadFilters(FILTER_KEYS.activity, DEFAULT_FILTERS.activity),
   workFilters: loadFilters(FILTER_KEYS.work, DEFAULT_FILTERS.work),
   signalsFilters: loadFilters(FILTER_KEYS.signals, DEFAULT_FILTERS.signals),
+  knowledgeFilters: loadFilters(FILTER_KEYS.knowledge, DEFAULT_FILTERS.knowledge),
   knowledgeId: "PRODUCT",
   docsId: "START",
   selectedId: null,
@@ -535,8 +539,25 @@ function parseFrontmatter(raw) {
   return { meta, body };
 }
 
+function isKnowledgeNavId(id) {
+  const value = String(id ?? "");
+  return (
+    value === "PRODUCT"
+    || /^SPEC-[FA]-[A-Z0-9-]+$/u.test(value)
+    || /^D-\d{3}$/u.test(value)
+    || /^R-\d{3}$/u.test(value)
+    || /^RELEASE-\d{3}$/u.test(value)
+  );
+}
+
 function inlineMarkdown(text) {
   return escapeHtml(text)
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => {
+      if (isKnowledgeNavId(href)) {
+        return `<button type="button" class="knowledge-link" data-knowledge-link="${href}">${label}</button>`;
+      }
+      return `[${label}](${href})`;
+    })
     .replace(/`([^`]+)`/g, "<code>$1</code>")
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/\*([^*]+)\*/g, "<em>$1</em>");
@@ -1596,6 +1617,7 @@ function renderActivity(index) {
 }
 
 function knowledgeItems(index) {
+  const specs = index.specs ?? [];
   return [
     {
       id: "product",
@@ -1603,13 +1625,26 @@ function knowledgeItems(index) {
       items: [{ id: "PRODUCT", title: "PRODUCT.md", secondary: "who / what / never" }],
     },
     {
-      id: "specs",
-      label: "Specs",
-      items: (index.specs ?? []).map((spec) => ({
-        id: spec.id,
-        title: spec.title,
-        secondary: `${shortSpecId(spec.id)} · ${spec.status}`,
-      })),
+      id: "feature",
+      label: "Feature Specs",
+      items: specs
+        .filter((spec) => spec.kind === "feature")
+        .map((spec) => ({
+          id: spec.id,
+          title: spec.title,
+          secondary: `${shortSpecId(spec.id)} · ${spec.status}`,
+        })),
+    },
+    {
+      id: "area",
+      label: "Area Specs",
+      items: specs
+        .filter((spec) => spec.kind === "area")
+        .map((spec) => ({
+          id: spec.id,
+          title: spec.title,
+          secondary: `${shortSpecId(spec.id)} · ${spec.status}`,
+        })),
     },
     {
       id: "decisions",
@@ -1641,24 +1676,184 @@ function knowledgeItems(index) {
   ];
 }
 
+function knowledgeLinkButtons(ids) {
+  const list = (ids ?? []).filter(Boolean);
+  if (!list.length) return `<p class="muted">None</p>`;
+  return `<ul class="phase-plain-list">${list.map((id) => `
+    <li><button type="button" class="knowledge-link" data-knowledge-link="${escapeHtml(id)}"><code>${escapeHtml(id)}</code></button></li>
+  `).join("")}</ul>`;
+}
+
+function knowledgeGlancePairs(kind, meta, indexEntry) {
+  if (kind === "product") {
+    return [
+      [["Kind", "Product"], ["Status", statusHtml("active")]],
+      [["Home", "<code>PRODUCT.md</code>"], ["Role", "who / what / never"]],
+    ];
+  }
+  if (kind === "feature" || kind === "area") {
+    return [
+      [["Kind", escapeHtml(kind === "feature" ? "Feature" : "Area")], ["Status", statusHtml(meta.status || indexEntry?.status || "—")]],
+      [["Id", `<code>${escapeHtml(meta.id || indexEntry?.id || "—")}</code>`], ["Amended", escapeHtml(meta.last_amended || indexEntry?.last_amended || "—")]],
+    ];
+  }
+  if (kind === "decision") {
+    return [
+      [["Kind", "Decision"], ["Date", escapeHtml(indexEntry?.date || "—")]],
+      [["Id", `<code>${escapeHtml(indexEntry?.id || meta.id || "—")}</code>`], ["Phase", escapeHtml(indexEntry?.phase || "—")]],
+    ];
+  }
+  if (kind === "research") {
+    return [
+      [["Kind", "Research"], ["Status", statusHtml(meta.status || indexEntry?.status || "—")]],
+      [["Id", `<code>${escapeHtml(meta.id || indexEntry?.id || "—")}</code>`], ["Verdict", escapeHtml(meta.verdict || indexEntry?.verdict || "—")]],
+    ];
+  }
+  if (kind === "release") {
+    return [
+      [["Kind", "Release"], ["Date", escapeHtml(indexEntry?.date || "—")]],
+      [["Id", `<code>${escapeHtml(indexEntry?.id || "—")}</code>`], ["Phase", escapeHtml(indexEntry?.phase || "—")]],
+    ];
+  }
+  return [[["Kind", "Document"], ["Id", `<code>${escapeHtml(meta.id || "—")}</code>`]]];
+}
+
+function knowledgeKindForId(id, index) {
+  if (id === "PRODUCT") return "product";
+  const spec = (index?.specs ?? []).find((item) => item.id === id);
+  if (spec) return spec.kind === "area" ? "area" : "feature";
+  if ((index?.decisions ?? []).some((item) => item.id === id)) return "decision";
+  if ((index?.research ?? []).some((item) => item.id === id)) return "research";
+  if ((index?.releases ?? []).some((item) => item.id === id)) return "release";
+  if (/^D-\d{3}$/u.test(id)) return "decision";
+  if (/^R-\d{3}$/u.test(id)) return "research";
+  if (/^RELEASE-\d{3}$/u.test(id)) return "release";
+  if (/^SPEC-A-/u.test(id)) return "area";
+  if (/^SPEC-F-/u.test(id)) return "feature";
+  return "document";
+}
+
+function knowledgeIndexEntry(id, index) {
+  if (id === "PRODUCT") return null;
+  return (
+    (index?.specs ?? []).find((item) => item.id === id)
+    || (index?.decisions ?? []).find((item) => item.id === id)
+    || (index?.research ?? []).find((item) => item.id === id)
+    || (index?.releases ?? []).find((item) => item.id === id)
+    || null
+  );
+}
+
+function knowledgeTitle(id, meta, indexEntry) {
+  if (id === "PRODUCT") return "Product map";
+  if (indexEntry?.title) return indexEntry.title;
+  if (indexEntry?.question) return indexEntry.question;
+  if (indexEntry?.summary) return indexEntry.summary;
+  if (meta.title) return meta.title;
+  if (meta.question) return meta.question;
+  return id;
+}
+
+function knowledgeOutcome(id, meta, indexEntry, bodyText) {
+  if (id === "PRODUCT") return "Who / what / never — living product map.";
+  if (indexEntry?.outcome) return indexEntry.outcome;
+  if (meta.outcome) return meta.outcome;
+  if (indexEntry?.verdict) return `Verdict: ${indexEntry.verdict}`;
+  if (meta.verdict) return `Verdict: ${meta.verdict}`;
+  if (indexEntry?.summary && indexEntry.summary !== indexEntry.title) return indexEntry.summary;
+  const firstLine = String(bodyText ?? "")
+    .split("\n")
+    .map((line) => line.trim())
+    .find((line) => line && !line.startsWith("#") && !line.startsWith("---"));
+  return firstLine || "Knowledge artifact.";
+}
+
+function knowledgeConnectionsHtml(kind, indexEntry) {
+  if (kind === "feature" || kind === "area") {
+    return `
+      <div class="phase-card-section">
+        <h3 class="now-label">Connections</h3>
+        <h4 class="phase-subhead">Depends on</h4>
+        ${knowledgeLinkButtons(indexEntry?.depends_on ?? [])}
+        <h4 class="phase-subhead">Decisions</h4>
+        ${knowledgeLinkButtons(indexEntry?.decisions ?? [])}
+        <h4 class="phase-subhead">Research</h4>
+        ${knowledgeLinkButtons(indexEntry?.research ?? [])}
+        <h4 class="phase-subhead">Product</h4>
+        ${knowledgeLinkButtons(["PRODUCT"])}
+      </div>`;
+  }
+  if (kind === "research" || kind === "decision" || kind === "release") {
+    return `
+      <div class="phase-card-section">
+        <h3 class="now-label">Connections</h3>
+        ${knowledgeLinkButtons(["PRODUCT"])}
+      </div>`;
+  }
+  if (kind === "product") {
+    return `
+      <div class="phase-card-section">
+        <h3 class="now-label">Connections</h3>
+        ${knowledgeLinkButtons(["SPEC-F-MOCK-KNOWLEDGE", "SPEC-A-MOCK-KNOWLEDGE"])}
+      </div>`;
+  }
+  return "";
+}
+
+function renderKnowledgeDetailShell({ id, title, outcome, glanceHtml, bodyHtml, connectionsHtml }) {
+  return `
+    <article class="phase-view knowledge-detail" data-knowledge-doc-id="${escapeHtml(id)}">
+      <header class="phase-header">
+        <p class="phase-id-row"><code>${escapeHtml(id)}</code>
+          <button type="button" class="icon-btn copy-id" data-copy="${escapeHtml(id)}" title="Copy id" aria-label="Copy id">⧉</button>
+        </p>
+        <h2 class="phase-name">${escapeHtml(title)}</h2>
+        <p class="phase-outcome">${escapeHtml(outcome)}</p>
+      </header>
+      <section class="phase-block">
+        <h3 class="now-label">Status</h3>
+        ${glanceHtml}
+      </section>
+      <section class="phase-card">
+        <div class="phase-card-section">
+          <h3 class="now-label">Brief</h3>
+          <div class="prose">${bodyHtml}</div>
+        </div>
+        ${connectionsHtml}
+      </section>
+    </article>
+  `;
+}
+
+function paintKnowledgeDoc(pane, { id, body }) {
+  const index = state.index;
+  const kind = knowledgeKindForId(id, index);
+  const indexEntry = knowledgeIndexEntry(id, index);
+  const { meta, body: md } = parseFrontmatter(body);
+  const title = knowledgeTitle(id, meta, indexEntry);
+  const outcome = knowledgeOutcome(id, meta, indexEntry, md);
+  const glanceHtml = glancePairsHtml(knowledgeGlancePairs(kind, meta, indexEntry));
+  const bodyHtml = renderMarkdown(md);
+  const connectionsHtml = knowledgeConnectionsHtml(kind, indexEntry);
+  pane.innerHTML = renderKnowledgeDetailShell({
+    id,
+    title,
+    outcome,
+    glanceHtml,
+    bodyHtml,
+    connectionsHtml,
+  });
+}
+
 async function loadKnowledgeDoc(id) {
   const pane = document.querySelector("[data-knowledge-doc]");
   if (!pane) return;
 
   if (id === "PRODUCT") {
-    pane.innerHTML = `
-      <p class="doc-path">Docs/PRODUCT.md</p>
-      <div class="doc-meta-slot"></div>
-      <article class="doc-body prose"></article>
-    `;
-    renderDocInto(
-      { pathLabel: "Docs/PRODUCT.md", body: state.index?.product?.body || "No product map yet." },
-      {
-        pathEl: pane.querySelector(".doc-path"),
-        metaEl: pane.querySelector(".doc-meta-slot"),
-        bodyEl: pane.querySelector(".doc-body"),
-      },
-    );
+    paintKnowledgeDoc(pane, {
+      id,
+      body: state.index?.product?.body || "# Product\n\nNo product map yet.\n",
+    });
     return;
   }
 
@@ -1670,29 +1865,52 @@ async function loadKnowledgeDoc(id) {
       return;
     }
     const doc = await response.json();
-    pane.innerHTML = `
-      <p class="doc-path"></p>
-      <div class="doc-meta-slot"></div>
-      <article class="doc-body prose"></article>
-    `;
-    renderDocInto(doc, {
-      pathEl: pane.querySelector(".doc-path"),
-      metaEl: pane.querySelector(".doc-meta-slot"),
-      bodyEl: pane.querySelector(".doc-body"),
-    });
+    paintKnowledgeDoc(pane, { id, body: doc.body ?? "" });
   } catch {
     pane.innerHTML = `<p class="knowledge-doc-empty">Could not load ${escapeHtml(id)}.</p>`;
   }
 }
 
+function selectKnowledgeDoc(id) {
+  if (!id || !state.index) return;
+  state.knowledgeId = id;
+  for (const item of document.querySelectorAll("[data-knowledge-id]")) {
+    if (item.dataset.knowledgeId === id) item.setAttribute("aria-current", "true");
+    else item.removeAttribute("aria-current");
+  }
+  void loadKnowledgeDoc(id);
+}
+
 function renderKnowledge(index) {
-  const groups = knowledgeItems(index);
-  const allIds = groups.flatMap((group) => group.items.map((item) => item.id));
+  const { type: typeFilter, q } = state.knowledgeFilters;
+  const groups = knowledgeItems(index)
+    .filter((group) => !typeFilter || group.id === typeFilter)
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) =>
+        matchesQuery(`${item.id} ${item.title} ${item.secondary}`, q)),
+    }));
+  const allIds = knowledgeItems(index).flatMap((group) => group.items.map((item) => item.id));
   if (!allIds.includes(state.knowledgeId)) state.knowledgeId = allIds[0] ?? "PRODUCT";
 
   const tocWidth = Number(readStored(TOC_WIDTH_KEY)) || 320;
 
   panels.knowledge.innerHTML = `
+    <div class="page-toolbar knowledge-toolbar">
+      ${searchInput("knowledge-q", q, "Search Knowledge…")}
+      <div class="filters">
+        <div class="chip-group">
+          <span class="chip-label">Type</span>
+          ${chip("knowledge-type", "", typeFilter, "All")}
+          ${chip("knowledge-type", "product", typeFilter, "Product")}
+          ${chip("knowledge-type", "feature", typeFilter, "Feature")}
+          ${chip("knowledge-type", "area", typeFilter, "Area")}
+          ${chip("knowledge-type", "decisions", typeFilter, "Decisions")}
+          ${chip("knowledge-type", "research", typeFilter, "Research")}
+          ${chip("knowledge-type", "releases", typeFilter, "Releases")}
+        </div>
+      </div>
+    </div>
     <div class="knowledge${state.tocCollapsed ? " toc-collapsed" : ""}" style="--toc-w:${tocWidth}px">
       <aside class="knowledge-toc">
         <div class="knowledge-toc-head">
@@ -1700,11 +1918,10 @@ function renderKnowledge(index) {
             <button type="button" class="icon-btn" data-toc-collapse title="Collapse document list" aria-label="Collapse document list">⟨</button>
             <strong>Documents</strong>
           </div>
-          ${searchInput("knowledge-q", "", "Filter documents…")}
         </div>
         <div class="knowledge-groups">
           ${groups.map((group) => `
-            <div class="knowledge-group">
+            <div class="knowledge-group" data-knowledge-group="${escapeHtml(group.id)}">
               <h2 class="knowledge-group-label">${escapeHtml(group.label)}</h2>
               ${
                 group.items.length === 0
@@ -2594,14 +2811,15 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  const knowledgeLink = event.target.closest("[data-knowledge-link]");
+  if (knowledgeLink?.dataset.knowledgeLink && state.index && state.page === "knowledge") {
+    selectKnowledgeDoc(knowledgeLink.dataset.knowledgeLink);
+    return;
+  }
+
   const tocItem = event.target.closest("[data-knowledge-id]");
   if (tocItem && state.index) {
-    state.knowledgeId = tocItem.dataset.knowledgeId;
-    for (const item of document.querySelectorAll("[data-knowledge-id]")) {
-      if (item === tocItem) item.setAttribute("aria-current", "true");
-      else item.removeAttribute("aria-current");
-    }
-    void loadKnowledgeDoc(state.knowledgeId);
+    selectKnowledgeDoc(tocItem.dataset.knowledgeId);
     return;
   }
 
@@ -2668,6 +2886,12 @@ document.addEventListener("click", (event) => {
       state.signalsFilters = { ...state.signalsFilters, kind: value };
       persistPageFilters("signals");
       renderSignals(state.index);
+    } else if (filter === "knowledge-type" && state.page === "knowledge") {
+      state.knowledgeFilters = { ...state.knowledgeFilters, type: value };
+      persistPageFilters("knowledge");
+      renderKnowledge(state.index);
+      const restore = panels.knowledge.querySelector('input[name="knowledge-q"]');
+      if (restore) restore.focus();
     }
     return;
   }
@@ -2716,11 +2940,10 @@ document.addEventListener("input", (event) => {
     renderSignals(state.index);
     restore(panels.signals, "signals-q");
   } else if (input.name === "knowledge-q") {
-    const q = input.value.toLowerCase();
-    for (const item of document.querySelectorAll(".toc-item")) {
-      const text = item.textContent?.toLowerCase() ?? "";
-      item.parentElement.hidden = q ? !text.includes(q) : false;
-    }
+    state.knowledgeFilters = { ...state.knowledgeFilters, q: input.value };
+    persistPageFilters("knowledge");
+    renderKnowledge(state.index);
+    restore(panels.knowledge, "knowledge-q");
   }
 });
 
