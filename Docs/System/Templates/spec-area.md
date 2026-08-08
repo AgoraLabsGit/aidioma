@@ -16,7 +16,8 @@ paths:
 <!-- Validated against System/schemas/spec.schema.json in CI.
      kind: area must NOT declare depends_on — the feature→area edge is one-directional.
      status: superseded requires superseded_by.
-     No extra frontmatter keys — additionalProperties is false. -->
+     No extra frontmatter keys — additionalProperties is false.
+     Mold guidance: D-028 (Rule grammar + stub bar). -->
 
 # <Title>
 
@@ -29,8 +30,11 @@ What this substrate provides to everything built on top of it.
 How it behaves from the perspective of the features using it. Interfaces, guarantees, failure
 modes.
 
-- Rule: <checkable statement>
-- Failure mode: <what happens when it is unavailable — features must know this>
+**Rule grammar (D-028):** present tense, observable, fail-visible (same as Feature). Rules are
+rule-oriented checklists (peer alternative to Given/When/Then).
+
+- Rule: <checkable — e.g. "Auth tokens are verified before any `/api/*` handler runs">
+- Failure mode: <what features observe when this area is down — required>
 
 ## Boundaries
 
@@ -46,6 +50,9 @@ Only if `vendor` is set.
 - Decisions: D-XXX
 
 ---
+
+**Stub bar (D-028):** Purpose ≤3 sentences; ≥1 Rule meeting the grammar; Failure mode non-empty;
+Boundaries non-empty. MOCK fixtures may stay thinner.
 
 **An area exists only if at least one feature declares `depends_on` it.** Do not create area
 specs in anticipation. If nothing depends on it, it is a system concern (`System/`) or a decision

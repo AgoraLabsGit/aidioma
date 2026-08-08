@@ -1,16 +1,6 @@
 # Releases
 
-Append only. One entry per `/ship` (except disposable Knowledge fixtures marked MOCK).
-
-Format (example — not a real entry; use a real `RELEASE-nnn` id when shipping):
-
-```
-## RELEASE-nnn — short summary
-Date: YYYY-MM-DD
-Phase: PHASE-XXX
-```
-
----
+<!-- Entry mold: Docs/System/Templates/release-entry.md (D-029). Append only. -->
 
 ## RELEASE-000 — MOCK Knowledge Releases connection fixture
 Date: 2026-08-08

@@ -288,3 +288,20 @@
 {"ts":"2026-08-08T17:34:54Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-014","status":"active","summary":"reduced close work-lane"}
 {"ts":"2026-08-08T17:35:01Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-014","status":"complete","summary":"C-014 PASS work: typecheck+test+validate"}
 {"ts":"2026-08-08T17:36:11Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"T-052","status":"complete","summary":"Merged PR #41 reduced close T-052; docs home refreshed"}
+{"ts":"2026-08-08T17:42:30Z","type":"run","actor":"agent","cmd":"/run","phase":"PHASE-008","ref":"PHASE-008","status":"active","summary":"Activated PHASE-008 (proposed→active via founder /run); branch phase/008-spec-artifact-research + worktree; phase triage then research panel"}
+{"ts":"2026-08-08T17:42:55Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-008","ref":"PHASE-008","status":"complete","summary":"Phase-scoped triage via sub-agent: 0 open/active/blocked with phase PHASE-008 (EMPTY)"}
+{"ts":"2026-08-08T17:45:00Z","type":"research","actor":"agent","cmd":"/research","phase":"PHASE-008","ref":"R-004","status":"active","summary":"Start artifact-mold research panel R-004"}
+{"ts":"2026-08-08T17:50:00Z","type":"research","actor":"agent","cmd":"/research","phase":"PHASE-008","ref":"R-004","status":"blocked","summary":"R-004 Adv PASS; paused for founder ack on verdict + decision wording"}
+{"ts":"2026-08-08T18:08:00Z","type":"design","actor":"agent","cmd":"/design","phase":"PHASE-008","ref":"S-006","status":"active","summary":"Start mold lock from R-004 (D-028/D-029/D-030)"}
+{"ts":"2026-08-08T18:18:00Z","type":"decide","actor":"agent","cmd":"/design","phase":"PHASE-008","ref":"D-028","status":"complete","summary":"D-028 Spec Rule grammar + stub bar"}
+{"ts":"2026-08-08T18:18:01Z","type":"decide","actor":"agent","cmd":"/design","phase":"PHASE-008","ref":"D-029","status":"complete","summary":"D-029 Product+Release template SSOT"}
+{"ts":"2026-08-08T18:18:02Z","type":"decide","actor":"agent","cmd":"/design","phase":"PHASE-008","ref":"D-030","status":"complete","summary":"D-030 Phase/Research/Decision molds unchanged"}
+{"ts":"2026-08-08T18:18:03Z","type":"design","actor":"agent","cmd":"/design","phase":"PHASE-008","ref":"S-006","status":"complete","summary":"Mold lock Adv PASS; templates+samples updated"}
+{"ts":"2026-08-08T18:18:04Z","type":"research","actor":"agent","cmd":"/research","phase":"PHASE-008","ref":"R-004","status":"complete","summary":"R-004 done; informed D-028/D-029/D-030"}
+{"ts":"2026-08-08T18:20:00Z","type":"research","actor":"agent","cmd":"/research","phase":"PHASE-008","ref":"R-005","status":"active","summary":"Start external peer-mold research for design review panel"}
+{"ts":"2026-08-08T18:20:01Z","type":"audit","actor":"agent","cmd":"/audit","phase":"PHASE-008","ref":"A-037","status":"active","summary":"Design review panel queued behind R-005"}
+{"ts":"2026-08-08T18:35:00Z","type":"research","actor":"agent","cmd":"/research","phase":"PHASE-008","ref":"R-005","status":"complete","summary":"R-005 peer molds Adv PASS; defer further field-sets (MCOO)"}
+{"ts":"2026-08-08T18:35:01Z","type":"audit","actor":"agent","cmd":"/audit","phase":"PHASE-008","ref":"A-037","status":"complete","summary":"Design review panel PASS; agree R-005 A; no mold changes now"}
+{"ts":"2026-08-08T18:15:22Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-008","ref":"C-015","status":"complete","summary":"work lane green: typecheck+test+validate (Docs/templates/research close)"}
+{"ts":"2026-08-08T18:15:31Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-008","ref":"PHASE-008","status":"complete","summary":"Phase-scoped close triage: 0 open/active/blocked with phase PHASE-008; all 4 phase rows already done (R-004,S-006,R-005,A-037); no execute; no Work blockers for close"}
+{"ts":"2026-08-08T18:17:37Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-008","ref":"PHASE-008","status":"active","summary":"Publishing PHASE-008 artifact molds via close/* (C-015 green; Adv WARN ack dispositioned; Scope WARN amends_specs fixed)"}

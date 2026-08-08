@@ -15,10 +15,16 @@ decisions:
   - D-025
   - D-026
   - D-027
+  - D-028
+  - D-029
+  - D-030
 built_by:
   - PHASE-005
-last_amended: null
-research: []
+  - PHASE-008
+last_amended: PHASE-008
+research:
+  - R-004
+  - R-005
 paths:
   - Docs/System/**
   - Docs/WORK.yaml

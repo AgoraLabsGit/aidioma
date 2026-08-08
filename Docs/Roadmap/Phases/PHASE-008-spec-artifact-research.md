@@ -3,7 +3,7 @@ id: PHASE-008
 title: Spec & Knowledge Artifact Research
 type: design
 proof_kind: spec
-state: proposed
+state: closed
 order: 6
 depends_on:
   - PHASE-006
@@ -16,11 +16,14 @@ non_goals:
   - Component architecture (PHASE-003)
   - Dashboard Knowledge chrome (PHASE-006)
   - Inventing many empty SPEC files beyond mold samples
-amends_specs: []
+amends_specs:
+  - SPEC-A-DEVSYSTEM
+  - SPEC-F-PRACTICE
+  - SPEC-A-LEARNER
 feature: null
 area: SPEC-A-DEVSYSTEM
-opened: 2026-08-07
-closed: null
+opened: 2026-08-08
+closed: 2026-08-08
 lessons: null
 ---
 
@@ -50,16 +53,16 @@ Product/Phase/Research/Decision/Release carry actionable fields only.
 
 ## Proof
 
-- [ ] R-file(s) with verdicts (or `none` where keep-as-is)
-- [ ] Decision entries for accepted mold changes
-- [ ] Templates/schemas updated; sample stubs match
-- [ ] Knowledge can render the refined samples
+- [x] R-file(s) with verdicts (or `none` where keep-as-is)
+- [x] Decision entries for accepted mold changes
+- [x] Templates updated; schemas unchanged (as-needed); sample stubs match
+- [x] Knowledge can render the refined samples (derive indexes SPEC-F-PRACTICE, SPEC-A-LEARNER, D-028–D-030, R-004/R-005; visual spot-check via `/dashboard` optional)
 
 ## Close record
 
-- Result:
-- Specs amended:
-- Journal line:
+- Result: PASS (Proof Adv WARN on ack dispositioned — founder approved R-004/D-028–D-030 and accepted R-005; Scope WARN path→spec fixed via amends_specs)
+- Specs amended: SPEC-A-DEVSYSTEM, SPEC-F-PRACTICE, SPEC-A-LEARNER
+- Journal line: Mold research closed — Rule grammar + Product/Release template SSOT; peer panel deferred extras; no product code.
 
 ## Kickoff
 
