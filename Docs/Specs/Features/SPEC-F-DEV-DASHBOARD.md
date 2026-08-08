@@ -59,7 +59,7 @@ Lets the founder see phases, Work, Signals, and Knowledge projected from Docs/.
 - Rule: Knowledge TOC is static (always visible; no collapse control / expand arrow); no “Documents” chrome label — category labels (Product · Feature Specs · …) are enough
 - Rule: Knowledge TOC rows use title + `id · status|date|verdict` secondary; Product is `Product map` / `PRODUCT · active` (not the who/what/never slogan)
 - Rule: Knowledge search is a single-line 36px control (same as table pages); never a tall multi-line box
-- Rule: Knowledge detail header order is **title → id + copy → outcome**; Status glance + Brief / Connections / Files / Built by / Change log / Audits — no path byline and no `<details>` document-meta dropdown
+- Rule: Knowledge detail header is **title + id/copy on one row** (id to the right of title), then outcome below; Status glance + Brief / Connections / Files / Built by / Change log / Audits — no path byline and no `<details>` document-meta dropdown
 - Rule: Knowledge document titles (`.knowledge-detail .phase-name`) are 24px — a step above shared `--detail-title-size` (22px); TOC primary lines use `--fs-base`
 - Rule: Topbar is compact (`--topbar-h` ~52px, vertically centered title); page title uses `--fs-xl` (not oversized display)
 - Rule: Knowledge Brief prose headings stay smaller than section labels (`now-label`) so Status/Brief remain the hierarchy

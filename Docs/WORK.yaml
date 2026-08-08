@@ -2122,3 +2122,22 @@
   done_summary: "Knowledge detail titles 24px (founder tweak from 26); TOC primary --fs-base. Cache bust ?v=phase006-12."
   opened: 2026-08-08T17:01:15Z
 
+- id: T-052
+  kind: task
+  summary: "Knowledge detail: id + copy to the right of title"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: ID/copy should sit beside title, not under it."
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/public/index.html
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Title + id/copy share one flex row; outcome stays below. Spec updated. Cache bust ?v=t052-1."
+  opened: 2026-08-08T17:30:36Z
+

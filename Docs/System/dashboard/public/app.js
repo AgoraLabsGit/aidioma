@@ -1950,10 +1950,12 @@ function renderKnowledgeDetailShell({ id, title, outcome, glanceHtml, sectionsHt
   return `
     <article class="phase-view knowledge-detail" data-knowledge-doc-id="${escapeHtml(id)}">
       <header class="phase-header">
-        <h2 class="phase-name">${escapeHtml(title)}</h2>
-        <p class="phase-id-row"><code>${escapeHtml(id)}</code>
-          <button type="button" class="icon-btn copy-id" data-copy="${escapeHtml(id)}" title="Copy id" aria-label="Copy id">⧉</button>
-        </p>
+        <div class="phase-title-row">
+          <h2 class="phase-name">${escapeHtml(title)}</h2>
+          <p class="phase-id-row"><code>${escapeHtml(id)}</code>
+            <button type="button" class="icon-btn copy-id" data-copy="${escapeHtml(id)}" title="Copy id" aria-label="Copy id">⧉</button>
+          </p>
+        </div>
         <p class="phase-outcome">${escapeHtml(outcome)}</p>
       </header>
       <section class="phase-block">

@@ -282,3 +282,8 @@
 {"ts":"2026-08-08T17:19:47Z","type":"audit","actor":"agent","cmd":"/close","phase":"PHASE-006","ref":"PHASE-006","status":"complete","summary":"Adv PASS after RELEASE-000 fixture; founder visual ack via session UI iteration; C-013 green"}
 {"ts":"2026-08-08T17:19:47Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-006","ref":"PHASE-006","status":"active","summary":"Publishing PHASE-006 Knowledge overhaul via close/*"}
 {"ts":"2026-08-08T17:21:29Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-006","ref":"PHASE-006","status":"complete","summary":"Merged PR #39 bc8e91f; docs home on docs/ssot; phase/006 worktree removed"}
+{"ts":"2026-08-08T17:30:36Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-052","status":"active","summary":"Knowledge detail: id+copy beside title (not below)"}
+{"ts":"2026-08-08T17:31:20Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-052","status":"complete","summary":"T-052: Knowledge title row = title + id/copy; outcome below (?v=t052-1)"}
+{"ts":"2026-08-08T17:34:54Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"T-052","status":"active","summary":"Reduced close: Knowledge title+id row (T-052)"}
+{"ts":"2026-08-08T17:34:54Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-014","status":"active","summary":"reduced close work-lane"}
+{"ts":"2026-08-08T17:35:01Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-014","status":"complete","summary":"C-014 PASS work: typecheck+test+validate"}
