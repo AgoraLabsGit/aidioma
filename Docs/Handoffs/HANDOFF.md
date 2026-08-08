@@ -1,22 +1,20 @@
-# Current handoff — after PHASE-006 close
+# Current handoff — after T-052 reduced close
 
 **Date:** 2026-08-08
 
-**Branch:** `origin/main` (after close merge)
+**Branch:** `origin/main`
 **Active phase:** none
-**Docs home:** `.worktrees/docs` (`docs/ssot`) — refresh via `npm run work:docs-home` after merge
+**Docs home:** `.worktrees/docs` (`docs/ssot`)
 
 ## Done this session
 
-- Closed PHASE-006 — Knowledge Page Overhaul
-- Knowledge: toolbar, Feature≠Area, phase-view detail, Product glance parity, scroll lock
-- Fixtures: SPEC-F/A-MOCK-KNOWLEDGE + RELEASE-000; `/api/doc` slices for Decision/Research/Release
-- Founder visual polish: TOC, Amended label, titles 24px, hidden-page leak, nested scroll
+- T-052: Knowledge detail title + id/copy on one row (outcome below)
+- Earlier: PHASE-006 closed (Knowledge overhaul)
 
 ## Open
 
 - PHASE-008 owns real artifact molds (MOCK stubs disposable)
-- First real `/ship` should replace/remove RELEASE-000 mock when appropriate
+- First real `/ship` may replace/remove RELEASE-000 mock
 
 ## Next command
 
