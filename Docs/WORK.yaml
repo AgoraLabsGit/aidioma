@@ -2513,7 +2513,7 @@
 - id: T-059
   kind: task
   summary: "Close PHASE-009 — publish Praxis Features + Active chrome"
-  status: active
+  status: done
   feature: SPEC-F-PRAXIS-SHELL
   area: SPEC-A-PRAXIS
   phase: PHASE-009
@@ -2531,4 +2531,20 @@
   open_questions: null
   done_summary: "Full /close PHASE-009: triage+C-018+Adv WARN fixed; dual-desk publish (phase hooks + Docs meta)."
   opened: 2026-08-08T23:08:52Z
+
+- id: T-060
+  kind: task
+  summary: "Journal PHASE-009 close handoff"
+  status: done
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  context_paths:
+    - Docs/Handoffs/HANDOFF.md
+  open_questions: null
+  done_summary: "Final HANDOFF after PHASE-009 merge."
+  opened: 2026-08-08T23:13:20Z
 

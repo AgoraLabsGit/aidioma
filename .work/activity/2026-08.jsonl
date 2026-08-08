@@ -366,3 +366,5 @@
 {"ts":"2026-08-08T23:08:57Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-009","ref":"C-018","status":"complete","summary":"work:typecheck+test+validate PASS"}
 {"ts":"2026-08-08T23:10:34Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"PHASE-009","status":"active","summary":"Full close start — triage ok; C-018 PASS; Adv WARN fixed; publishing desks"}
 {"ts":"2026-08-08T23:10:50Z","type":"task","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"T-059","status":"active","summary":"Re-activate for close publish writes"}
+{"ts":"2026-08-08T23:13:08Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"PHASE-009","status":"complete","summary":"Merged #48+#49 → 1462504; desks cleaned; docs/ssot @ main"}
+{"ts":"2026-08-08T23:13:20Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"PHASE-009","status":"complete","summary":"Final handoff after #48+#49 merge 1462504"}
