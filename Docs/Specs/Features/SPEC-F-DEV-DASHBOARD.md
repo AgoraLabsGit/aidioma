@@ -2,8 +2,8 @@
 id: SPEC-F-DEV-DASHBOARD
 kind: feature
 title: Development dashboard and Work ledger
-status: active
-superseded_by: null
+status: superseded
+superseded_by: SPEC-F-PRAXIS-SHELL
 depends_on:
   - SPEC-A-DEVSYSTEM
 decisions:
@@ -18,7 +18,7 @@ decisions:
 built_by:
   - PHASE-005
   - PHASE-006
-last_amended: PHASE-006
+last_amended: PHASE-009
 research: []
 
 paths:
@@ -109,3 +109,10 @@ Does not fire commands or edit artifacts from the UI (V1).
 ## Dependencies
 
 Rests on SPEC-A-DEVSYSTEM for process files and schemas.
+
+## Successor
+
+Superseded by Praxis page Features (PHASE-009):
+`SPEC-F-PRAXIS-SHELL`, `-ACTIVE`, `-WORK`, `-ROADMAP`, `-ACTIVITY`, `-KNOWLEDGE`,
+`-SIGNALS`, `-DOCS`, plus `SPEC-F-PRAXIS-ACTIVE-FLUSH`. Primary `superseded_by` pointer is
+**SPEC-F-PRAXIS-SHELL**.

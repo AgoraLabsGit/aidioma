@@ -3,29 +3,38 @@ id: PHASE-009
 title: Praxis Features and Active chrome
 type: build
 proof_kind: visual
-state: ready
+state: closed
 order: 7
 depends_on:
   - PHASE-008
 from_backlog: A-039
 owner: founder
-outcome: "Praxis Area + per-page Dashboard Features (Shell, Active, Work, Roadmap, Activity, Knowledge, Signals, Docs) own behavior; Active Work write-gate Feature (SPEC-F-PRAXIS-ACTIVE-FLUSH) ships Cursor hook; Dev System ids renamed to Praxis for later extract; Active leaves main nav for a header badge (active-phase count → Active); Active page contracts multi-phase tabs; system.md stays process SSOT and is updated to match."
-proof: "Visual: Active absent from main nav; header badge left of worktrees shows active-phase count and opens Active; Active UI shows tab chrome for N active phases (works with 1 today). Specs: SPEC-A-PRAXIS + SPEC-F-PRAXIS-* (pages + ACTIVE-FLUSH) live; SPEC-A-DEVSYSTEM / SPEC-F-DEV-DASHBOARD superseded; Work/D/R retagged; system.md § dashboard + naming updated. Hook: Adv on shipped .cursor/hooks*."
+outcome: "Praxis Area + page Dashboard Features; ACTIVE-FLUSH Cursor hook; DEVSYSTEM→PRAXIS rename; Active→header badge (tab count) + multi-tab chrome; system.md kept as process SSOT."
+proof: "Visual: Active off main nav; badge opens Active and counts tabs (phases + active Work). Specs Praxis live; DEVSYSTEM/DEV-DASHBOARD superseded. Hook Adv on .cursor/hooks*. work:test green."
 non_goals:
-  - Moving Praxis into a separate git repo/project (label + ids only for later extract)
-  - Enabling hard parallel active phases runtime (W-015) — UI/tabs contract only
-  - Pasting system.md into Spec bodies (system.md remains SSOT; Specs hold checkable page/area rules)
-  - Learner PRODUCT.md / PHASE-002 product map
+  - Moving Praxis into a separate git repo
+  - Hard parallel active-phase runtime (W-015)
+  - Pasting system.md into Spec bodies
+  - Learner PRODUCT.md / PHASE-002
   - Rewriting closed phase history ids
-  - Shell/MCP/Tab write gates (ACTIVE-FLUSH v1 is Agent Write/Delete/StrReplace only)
+  - Shell/MCP/Tab write gates (v1 Agent Write/Delete/StrReplace only)
 amends_specs:
+  - SPEC-A-PRAXIS
   - SPEC-A-DEVSYSTEM
   - SPEC-F-DEV-DASHBOARD
+  - SPEC-F-PRAXIS-SHELL
+  - SPEC-F-PRAXIS-ACTIVE
+  - SPEC-F-PRAXIS-WORK
+  - SPEC-F-PRAXIS-ROADMAP
+  - SPEC-F-PRAXIS-ACTIVITY
+  - SPEC-F-PRAXIS-KNOWLEDGE
+  - SPEC-F-PRAXIS-SIGNALS
+  - SPEC-F-PRAXIS-DOCS
   - SPEC-F-PRAXIS-ACTIVE-FLUSH
 feature: null
-area: SPEC-A-DEVSYSTEM
+area: SPEC-A-PRAXIS
 opened: 2026-08-08
-closed: null
+closed: 2026-08-08
 lessons: null
 ---
 
@@ -33,60 +42,36 @@ lessons: null
 
 ## Context
 
-A-039 showed SPEC-A-DEVSYSTEM is a thin pointer while dashboard behavior lives in one fat
-Feature + System/. Founder wants Praxis-named Area/Features (easy to extract later), each
-Dashboard page as its own Feature, Active demoted from main nav to a header badge, and Active
-ready to tab multiple active phases when W-015 lands. `system.md` stays process SSOT and must
-stay accurate.
+A-039: fat DEVSYSTEM Feature vs thin Area. Split into Praxis-named Area/page Features; demote
+Active to a header badge; tab chrome for concurrent actives (runtime later). Keep `system.md`.
 
 ## Inputs
 
-- Decisions: D-004 (system.md SSOT), D-009 (Dashboard-spec under System/), D-013 (stubs), D-020–D-030
-- Research: R-003, R-004, R-005
-- Audits: A-038 (Knowledge filters), A-039 (Dev System docs inventory)
-- Specs today: SPEC-A-DEVSYSTEM, SPEC-F-DEV-DASHBOARD, Dashboard-spec.md (draft)
-- Proposal related: W-015 — Parallel active phases (runtime deferred; UI contract in this phase)
+- D-004, D-009, D-013, D-020–D-031 · R-003–R-005 · A-038/A-039 · W-015 (deferred)
 
 ## Plan
 
-1. **Rename / supersede:** `SPEC-A-DEVSYSTEM` → `SPEC-A-PRAXIS` (Area). Split `SPEC-F-DEV-DASHBOARD`
-   into Features: `SPEC-F-PRAXIS-SHELL`, `-ACTIVE`, `-WORK`, `-ROADMAP`, `-ACTIVITY`,
-   `-KNOWLEDGE`, `-SIGNALS`, `-DOCS`. Keep ninth Feature `SPEC-F-PRAXIS-ACTIVE-FLUSH` (S-008).
-   Supersede old ids; retag Work / Decisions / Research `feature`/`area` / `affects`.
-2. **Thicken Specs:** Praxis Area gets checkable process invariants (not a full system.md paste).
-   Each page Feature owns that page’s Behavior Rules; Shell owns nav/topbar/Filters chrome/detail rail.
-3. **Active flush hook:** Ship `.cursor/hooks*` per SPEC-F-PRAXIS-ACTIVE-FLUSH; Required Adv on
-   the implementation before that Work is `done`.
-4. **Active chrome:** Remove Active from main sidebar nav. Add header badge immediately left of the
-   worktrees/GitHub control: shows count of `active`(+`blocked` if product rule says so) phases;
-   click opens Active. Spec Active page for **tabs across concurrent active phases** (usable with
-   one phase today; no W-015 runtime).
-5. **Keep `system.md`:** Update dashboard contract + Praxis naming; do not migrate body into Specs.
-6. **Dashboard-spec:** Resolve dual SSOT (approve as architecture note or defer UI to Features).
+1. Supersede DEVSYSTEM/DEV-DASHBOARD → SPEC-A-PRAXIS + SPEC-F-PRAXIS-* (+ ACTIVE-FLUSH).
+2. Thicken Area/page Behavior Rules; Shell owns chrome.
+3. Ship `.cursor/hooks*` (ACTIVE-FLUSH); Required Adv.
+4. Active off nav; badge = Active-tab count; multi-tab UI (no W-015 runtime).
+5. Update `system.md`; Dashboard-spec as architecture note.
 
-**Complexity cost:** Many Feature files + nav chrome + hook. Cut: separate-repo move, parallel-phase
-runtime, Shell write gate, essay dumps into Specs.
+**Complexity cost:** Many Features + chrome + hook. Cut: separate repo, parallel runtime, Shell gate.
 
 ## Proof
 
-- [ ] SPEC-A-PRAXIS + page SPEC-F-PRAXIS-* + SPEC-F-PRAXIS-ACTIVE-FLUSH exist; old DEVSYSTEM / DEV-DASHBOARD superseded
-- [ ] Active flush hook shipped; Adv PASS/WARN-ack on hook recorded
-- [ ] Active not in main nav; header badge count + navigation works
-- [ ] Active page shows multi-phase tab chrome (N≥1)
-- [ ] system.md updated (Praxis naming + Active chrome + page→Feature map)
-- [ ] `work:test` green; founder visual accept
+- [x] Praxis Specs live; DEVSYSTEM/DEV-DASHBOARD superseded
+- [x] Active-flush hook shipped (T-057; phase branch)
+- [x] Active not in main nav; badge + tabs work
+- [x] system.md updated
+- [x] `work:test` green (51); founder `/close`
 
 ## Close record
 
-- Result:
-- Specs amended:
-- Journal line:
-
-## Kickoff
-
-```text
-/run PHASE-009
-
-Read .work/context.json. Praxis Features + Active header badge + multi-active tabs contract;
-keep system.md SSOT; rename DEVSYSTEM→PRAXIS for later extract.
-```
+- Result: Praxis Features + Active chrome + scoped handoffs (D-031) + Active-flush hook.
+- Specs: SPEC-A-PRAXIS, SPEC-F-PRAXIS-*; superseded DEVSYSTEM/DEV-DASHBOARD.
+- Journal: close(PHASE-009): Praxis Features + Active chrome + Active-flush hook
+- Adv: WARN→fixed (badge count SSOT); A-040/Dashboard-spec residue ack
+- MCOO: PASS — W-015/Shell gates cut; task-desk hook duplicate discarded
+- Check: C-018 PASS

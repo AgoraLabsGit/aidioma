@@ -2,12 +2,15 @@
 schema_version: 1
 id: DASH-SPEC-V1
 title: Development Dashboard V1
-status: draft
+status: architecture-note
 owner: founder
-implements: DEV-SYSTEM-V3
+implements: SPEC-A-PRAXIS
 ---
 
 # Development Dashboard V1
+
+> **PHASE-009:** Architecture note only. Checkable Behavior Rules live in
+> `SPEC-F-PRAXIS-*` Features (+ `SPEC-A-PRAXIS`). Do not treat this file as competing SSOT.
 
 A local read-only projection of the development system. It answers, in three seconds: what am I
 doing, what happened, what exists, what's broken.
@@ -353,13 +356,13 @@ Toolbar (S-007 / A-038):
   by default (`system.md` deprecation). Decisions superseded via reverse-index of `Supersedes`
   `D-nnn` tokens (not a nonexistent `superseded_by` on the old row)
 - Filters panel: Feature / Area / Untagged (same chrome as table pages). Slice matching and
-  Product-always / Releases-hide-when-sliced — see `SPEC-F-DEV-DASHBOARD`
+  Product-always / Releases-hide-when-sliced — see `SPEC-F-PRAXIS-KNOWLEDGE`
 - Reset restores Knowledge defaults (`status: current`, empty type/feature/area/q)
 - No column sort (TOC, not a table)
 - TOC titles single-line, **60**-char cap (ellipsis + tooltip); Research secondary uses status
 
 `PRODUCT.md` / Product map is the default document when Knowledge opens.
-Behavior SSOT: `SPEC-F-DEV-DASHBOARD` Knowledge rules.
+Behavior SSOT: `SPEC-F-PRAXIS-KNOWLEDGE` (and sibling `SPEC-F-PRAXIS-*` Features).
 
 ### Docs
 
@@ -479,6 +482,6 @@ Steps 1–4 are independently useful. Step 7 depends on specs having populated `
 - Activity: events from `.work/activity/`; new command appends a line and appears after reindex
 - Time: "ago" / age columns match source timestamps (`ts`, `opened`, `indexed_at`)
 - Sort/filter chips and clickable column headers on Roadmap, Activity, Work, Signals change the visible rows correctly; Summary never sortable; all other columns sortable
-- `PHASE-099` appears only because its phase `.md` exists (never mocked in JS)
+- Phases appear only because their phase `.md` exists (never mocked in JS); mock `PHASE-099` removed
 - `specs/Dashboard-spec.md` stays under `Docs/System/` until a later promote-to-`SPEC-*` decision (D-009)
 - Schema/derive module changes require restarting `/dashboard` (file watch re-derives data, not reloaded Zod enums)

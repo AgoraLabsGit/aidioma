@@ -27,7 +27,7 @@ Runtime substrate for the learner-facing web app: UI, session, and client routes
 
 ## Boundaries
 
-Authored curriculum content is SPEC-A-CONTENT. Dev dashboard / process tooling is SPEC-A-DEVSYSTEM.
+Authored curriculum content is SPEC-A-CONTENT. Praxis dashboard / process tooling is SPEC-A-PRAXIS.
 This stub demonstrates the Area mold (D-028).
 
 ## Vendor

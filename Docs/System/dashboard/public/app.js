@@ -115,6 +115,7 @@ const state = {
   knowledgeFilters: loadFilters(FILTER_KEYS.knowledge, DEFAULT_FILTERS.knowledge),
   knowledgeId: "PRODUCT",
   docsId: "START",
+  activeTabId: null,
   selectedId: null,
   lastIndexedAt: null,
   tocCollapsed: readStored(TOC_COLLAPSED_KEY) === "1",
@@ -580,6 +581,7 @@ function renderMarkdown(raw) {
   const lines = withoutComments.replace(/\r\n/g, "\n").split("\n");
   const html = [];
   let listType = null; // "ul" | "ol" | "check"
+  let listItemOpen = false;
   let inTable = false;
   let paragraph = [];
 
@@ -589,7 +591,14 @@ function renderMarkdown(raw) {
     paragraph = [];
   };
 
+  const closeListItem = () => {
+    if (!listItemOpen) return;
+    html.push("</li>");
+    listItemOpen = false;
+  };
+
   const closeList = () => {
+    closeListItem();
     if (!listType) return;
     html.push(listType === "ol" ? "</ol>" : "</ul>");
     listType = null;
@@ -651,8 +660,10 @@ function renderMarkdown(raw) {
     if (checklist) {
       flushParagraph();
       openList("check", "md-checklist proof-checklist");
+      closeListItem();
       const checked = checklist[1].toLowerCase() === "x";
-      html.push(`<li data-checked="${checked}">${checkIcon(checked)}<span class="proof-checklist-label">${inlineMarkdown(checklist[2])}</span></li>`);
+      html.push(`<li data-checked="${checked}">${checkIcon(checked)}<span class="proof-checklist-label">${inlineMarkdown(checklist[2])}</span>`);
+      listItemOpen = true;
       continue;
     }
 
@@ -660,7 +671,9 @@ function renderMarkdown(raw) {
     if (ordered) {
       flushParagraph();
       openList("ol");
-      html.push(`<li>${inlineMarkdown(ordered[1])}</li>`);
+      closeListItem();
+      html.push(`<li>${inlineMarkdown(ordered[1])}`);
+      listItemOpen = true;
       continue;
     }
 
@@ -668,10 +681,12 @@ function renderMarkdown(raw) {
     if (bullet) {
       flushParagraph();
       openList("ul");
+      closeListItem();
       const item = bullet[1].trim();
       html.push(item
-        ? `<li>${inlineMarkdown(item)}</li>`
-        : `<li class="muted">(empty)</li>`);
+        ? `<li>${inlineMarkdown(item)}`
+        : `<li class="muted">(empty)`);
+      listItemOpen = true;
       continue;
     }
 
@@ -687,7 +702,11 @@ function renderMarkdown(raw) {
       continue;
     }
 
-    // Soft-wrapped source lines belong to one paragraph until a blank line.
+    // Soft-wrapped source lines stay in the open list item; else one paragraph until blank.
+    if (listType && listItemOpen) {
+      html.push(` ${inlineMarkdown(trimmed)}`);
+      continue;
+    }
     closeList();
     paragraph.push(trimmed);
   }
@@ -836,15 +855,28 @@ function extractProofChecklistFromBody(body) {
     .filter((line) => /^[-*]\s+\[[ xX]\]/.test(line));
 }
 
-function gitGlance(index) {
-  const repo = index.repo ?? {};
-  return `${repo.branch ?? "—"} · ${repo.clean ? "clean" : "dirty"} · ↑${repo.ahead ?? 0} ↓${repo.behind ?? 0}`;
+function formatGitGlance(status) {
+  if (!status?.branch) return "—";
+  return `${status.branch} · ${status.clean ? "clean" : "dirty"} · ↑${status.ahead ?? 0} ↓${status.behind ?? 0}`;
 }
 
-function signalsGlance(index, relatedSignals) {
-  if (relatedSignals.length) return `${relatedSignals.length} related`;
-  const high = (index.issues ?? []).filter((issue) => issue.severity === "high").length;
-  return `${high} high / ${(index.issues ?? []).length} total`;
+/** Phase Status Git — desk for this phase, never Docs-home `index.repo` alone. */
+function gitGlanceForPhase(phase, index) {
+  if (phase?.git?.branch) return formatGitGlance(phase.git);
+  if (
+    index.projection_roots?.overlay_phase === phase?.id
+    && index.projection_roots?.overlay_branch
+  ) {
+    return formatGitGlance({
+      branch: index.projection_roots.overlay_branch,
+      clean: index.repo?.clean,
+      ahead: index.repo?.ahead,
+      behind: index.repo?.behind,
+    });
+  }
+  const match = repoWorktrees(index).find((tree) => tree.phase_id === phase?.id);
+  if (match?.branch) return formatGitGlance(match);
+  return "no phase worktree";
 }
 
 function workGlance(index, phaseId) {
@@ -864,7 +896,7 @@ function glanceCellHtml(label, value, { mono = false, title = "" } = {}) {
   `;
 }
 
-function glanceTwoColHtml(phase, index, relatedIssues) {
+function glanceTwoColHtml(phase, index) {
   const pairs = [
     [
       ["State", statusHtml(phase.state)],
@@ -872,7 +904,7 @@ function glanceTwoColHtml(phase, index, relatedIssues) {
     ],
     [
       ["Type", escapeHtml(typeLabel(phase.type))],
-      ["Git", escapeHtml(gitGlance(index)), { mono: true }],
+      ["Git", escapeHtml(gitGlanceForPhase(phase, index)), { mono: true }],
     ],
     [
       ["Owner", escapeHtml(phase.owner ?? "—")],
@@ -881,10 +913,6 @@ function glanceTwoColHtml(phase, index, relatedIssues) {
     [
       ["Opened", escapeHtml(phase.opened)],
       ["Work", escapeHtml(workGlance(index, phase.id))],
-    ],
-    [
-      ["Signals", escapeHtml(signalsGlance(index, relatedIssues))],
-      ["Amends", escapeHtml(specsLabel(phase)), { mono: true }],
     ],
   ];
 
@@ -917,6 +945,18 @@ function listOrEmpty(items, empty = "None") {
 function codeListOrEmpty(ids, empty = "None") {
   if (!ids?.length) return `<p class="muted">${escapeHtml(empty)}</p>`;
   return `<p>${ids.map((id) => `<code>${escapeHtml(id)}</code>`).join(" ")}</p>`;
+}
+
+/** Specs amended: Files-style id + title rows (not inline code soup). */
+function amendedSpecsHtml(specPaths, empty = "None yet") {
+  if (!specPaths.length) return `<p class="muted">${escapeHtml(empty)}</p>`;
+  return specPaths.map((spec) => {
+    const title = spec.title && spec.title !== spec.id ? ` ${escapeHtml(spec.title)}` : "";
+    return `
+    <div class="path-group">
+      <div class="path-group-title"><code>${escapeHtml(spec.id)}</code>${title}</div>
+    </div>`;
+  }).join("");
 }
 
 function pathsBlockHtml(specPaths) {
@@ -963,7 +1003,6 @@ function renderPhaseView(phase, index, { primary = false, compact = false } = {}
   const specPaths = phaseSpecPaths(index, phase);
   const nonGoals = phase.non_goals ?? [];
   const deps = phase.depends_on ?? [];
-  const specs = phase.amends_specs ?? [];
 
   return `
     <article class="phase-view${compact ? " phase-view-compact" : ""}" data-phase="${escapeHtml(phase.id)}" data-phase-doc="${escapeHtml(phase.id)}">
@@ -984,7 +1023,7 @@ function renderPhaseView(phase, index, { primary = false, compact = false } = {}
 
       <section class="phase-block">
         <h3 class="now-label">Status</h3>
-        ${glanceTwoColHtml(phase, index, relatedIssues)}
+        ${glanceTwoColHtml(phase, index)}
       </section>
 
       <section class="phase-card">
@@ -1031,7 +1070,7 @@ function renderPhaseView(phase, index, { primary = false, compact = false } = {}
 
         <div class="phase-card-section">
           <h3 class="now-label">Specs amended</h3>
-          ${codeListOrEmpty(specs, "None yet")}
+          ${amendedSpecsHtml(specPaths, "None yet")}
         </div>
 
         <div class="phase-card-section">
@@ -1209,6 +1248,31 @@ function syncWorktreesBadge(index) {
   }
 }
 
+function syncActiveBadge(index) {
+  const countEl = document.querySelector("#active-phase-count");
+  const button = document.querySelector("#active-badge-btn");
+  /** Same set as Active tabs: in-flight phases + status:active Work. */
+  const count = activeTabItems(index).length;
+  if (countEl) countEl.textContent = String(count);
+  if (button) {
+    const phases = currentPhases(index).length;
+    const work = currentActiveWork(index).length;
+    const label =
+      count === 0
+        ? "nothing in flight"
+        : [
+            phases ? `${phases} phase${phases === 1 ? "" : "s"}` : null,
+            work ? `${work} active Work` : null,
+          ]
+            .filter(Boolean)
+            .join(" · ");
+    button.title = `Active — ${label}`;
+    button.setAttribute("aria-label", `Open Active — ${label}`);
+    if (state.page === "active") button.setAttribute("aria-current", "page");
+    else button.removeAttribute("aria-current");
+  }
+}
+
 function renderWorktreesPanel(index) {
   const body = document.querySelector("#worktrees-panel-body");
   if (!body) return;
@@ -1311,44 +1375,88 @@ async function hydratePhaseDocs(root = document) {
   }));
 }
 
-function renderActive(index) {
-  const phases = currentPhases(index);
-  const ready = index.phases.find((item) => item.state === "ready");
+/** Work rows currently executing (Active-flush / do-now). */
+function currentActiveWork(index) {
+  return (index.work ?? []).filter((row) => row.status === "active");
+}
 
-  if (phases.length === 0) {
+/** Active tabs: in-flight phases first, then status:active Work. */
+function activeTabItems(index) {
+  const phases = currentPhases(index).map((phase) => ({
+    kind: "phase",
+    id: phase.id,
+    title: phase.title,
+    phase,
+  }));
+  const work = currentActiveWork(index).map((row) => ({
+    kind: "work",
+    id: row.id,
+    title: row.summary,
+    row,
+  }));
+  return [...phases, ...work];
+}
+
+function renderActive(index) {
+  const tabs = activeTabItems(index);
+  const ready = index.phases.find((item) => item.state === "ready");
+  /** Handoff only when attached to the selected tab (D-031). */
+  const handoffForTab = (tabId) => {
+    const ref = index.handoff?.ref;
+    if (!ref || ref !== tabId) return "";
+    const body = index.handoff.body?.trim();
+    if (!body) return "";
+    return `
+      <section class="phase-block">
+        <h3 class="now-label">Handoff ${index.handoff.updated_at ? `· ${escapeHtml(formatAge(index.handoff.updated_at))}` : ""}</h3>
+        <pre class="handoff">${escapeHtml(body)}</pre>
+      </section>`;
+  };
+
+  if (tabs.length === 0) {
+    state.activeTabId = null;
     panels.active.innerHTML = `
       <div class="now">
         <div class="phase-view">
           <header class="phase-header">
-            <p class="phase-id-row">No phase in flight</p>
+            <p class="phase-id-row">Nothing in flight</p>
             <h2 class="phase-name">${ready ? escapeHtml(ready.title) : "Nothing active"}</h2>
-            <p class="phase-outcome">${ready ? escapeHtml(ready.outcome) : "Promote a ready phase with /run, or schedule one with /plan."}</p>
+            <p class="phase-outcome">${ready ? escapeHtml(ready.outcome) : "Promote a ready phase with /run, flush a Work row active, or schedule with /plan."}</p>
           </header>
         </div>
-        <section class="phase-block">
-          <h3 class="now-label">Handoff</h3>
-          <pre class="handoff">${escapeHtml(index.handoff.body || "No handoff yet.")}</pre>
-        </section>
       </div>
     `;
     return;
   }
 
+  if (!tabs.some((tab) => tab.id === state.activeTabId)) {
+    state.activeTabId = tabs[0].id;
+  }
+  const selected = tabs.find((tab) => tab.id === state.activeTabId) ?? tabs[0];
+  const tabButtons = tabs
+    .map((tab) => {
+      const selectedAttr = tab.id === selected.id ? ' aria-selected="true"' : ' aria-selected="false"';
+      const label = `${tab.id} · ${tab.title}`;
+      const kindClass = tab.kind === "work" ? " active-phase-tab-work" : "";
+      return `<button type="button" class="active-phase-tab${kindClass}" role="tab" data-active-tab="${escapeHtml(tab.id)}" data-active-kind="${tab.kind}"${selectedAttr} title="${escapeHtml(label)}">${escapeHtml(tab.id)}</button>`;
+    })
+    .join("");
+
+  const panel =
+    selected.kind === "phase"
+      ? renderPhaseView(selected.phase, index, { primary: true })
+      : renderWorkDetail(selected.row, index, { primary: true });
+
   panels.active.innerHTML = `
     <div class="now">
-      ${phases.length > 1 ? `<p class="now-hint multi-note">${phases.length} phases in flight. Same layout per phase — ready for parallel work later.</p>` : ""}
-      <div class="phase-stack">
-        ${phases.map((phase, index_) => renderPhaseView(phase, index, {
-          primary: index_ === 0,
-        })).join("")}
+      <div class="active-phase-tabs" role="tablist" aria-label="In-flight phases and active Work">${tabButtons}</div>
+      <div class="active-phase-panel" role="tabpanel">
+        ${panel}
       </div>
-      <section class="phase-block">
-        <h3 class="now-label">Handoff ${index.handoff.updated_at ? `· ${escapeHtml(formatAge(index.handoff.updated_at))}` : ""}</h3>
-        <pre class="handoff">${escapeHtml(index.handoff.body || "No handoff yet.")}</pre>
-      </section>
+      ${handoffForTab(selected.id)}
     </div>
   `;
-  void hydratePhaseDocs(panels.active);
+  if (selected.kind === "phase") void hydratePhaseDocs(panels.active);
 }
 
 function stateRank(value) {
@@ -2588,6 +2696,7 @@ function updateChrome(index) {
       : "Interim D-018 primary root — Docs home is D-020/P-001";
   }
   syncWorktreesBadge(index);
+  syncActiveBadge(index);
   if (!document.querySelector("#worktrees-panel")?.hidden) {
     renderWorktreesPanel(index);
   }
@@ -2636,6 +2745,11 @@ function showPage(page) {
   for (const tab of document.querySelectorAll(".tab")) {
     if (tab.dataset.page === page) tab.setAttribute("aria-current", "page");
     else tab.removeAttribute("aria-current");
+  }
+  const activeBadge = document.querySelector("#active-badge-btn");
+  if (activeBadge) {
+    if (page === "active") activeBadge.setAttribute("aria-current", "page");
+    else activeBadge.removeAttribute("aria-current");
   }
   if (issuePill) {
     if (page === "signals") issuePill.setAttribute("aria-current", "page");
@@ -2793,7 +2907,7 @@ function renderWorkFiles(index, row) {
 }
 
 /** Work detail — same section chrome as Phase details (Status block + card sections). */
-function renderWorkDetail(row, index) {
+function renderWorkDetail(row, index, { primary = false } = {}) {
   const pairs = [
     [
       ["Kind", escapeHtml(workKindLabel(row.kind)), { mono: true }],
@@ -2833,8 +2947,9 @@ function renderWorkDetail(row, index) {
     .join("");
 
   return `
-    <article class="phase-view phase-view-compact">
+    <article class="phase-view${primary ? "" : " phase-view-compact"}" data-work="${escapeHtml(row.id)}">
       <header class="phase-header">
+        ${primary ? `<p class="phase-id-row"><code>${escapeHtml(row.id)}</code></p>` : ""}
         <h2 class="phase-name">${escapeHtml(row.summary)}</h2>
         <p class="phase-outcome">Ledger row in <code>Docs/WORK.yaml</code> — not a separate markdown ticket.</p>
       </header>
@@ -3056,6 +3171,19 @@ document.querySelector("#commands-panel-btn")?.addEventListener("click", () => {
 
 document.querySelector("#commands-panel-close")?.addEventListener("click", () => {
   setCommandsPanelOpen(false);
+});
+
+document.querySelector("#active-badge-btn")?.addEventListener("click", () => {
+  setWorktreesPanelOpen(false);
+  setCommandsPanelOpen(false);
+  showPage("active");
+});
+
+panels.active?.addEventListener("click", (event) => {
+  const tab = event.target.closest("[data-active-tab]");
+  if (!tab?.dataset.activeTab || !state.index) return;
+  state.activeTabId = tab.dataset.activeTab;
+  renderActive(state.index);
 });
 
 document.querySelector("#worktrees-panel-btn")?.addEventListener("click", () => {

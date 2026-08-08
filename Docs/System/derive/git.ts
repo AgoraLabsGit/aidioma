@@ -273,16 +273,25 @@ export async function readGitStatus(
       session_count: projected.length,
     };
   } catch {
+    // Non-git fixtures still accept injected worktrees (tests / edge).
+    let projected: RepoWorktree[] = [];
+    if (options?.worktrees?.length) {
+      try {
+        projected = await projectRepoWorktrees(repositoryRoot, options.worktrees);
+      } catch {
+        projected = [];
+      }
+    }
     return {
       project_name: projectNameFromRemote(null, repositoryRoot),
       branch: "unknown",
       clean: false,
       ahead: 0,
       behind: 0,
-      worktrees: [],
-      worktree_count: 0,
-      sessions: [],
-      session_count: 0,
+      worktrees: projected,
+      worktree_count: projected.length,
+      sessions: projected,
+      session_count: projected.length,
     };
   }
 }

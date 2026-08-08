@@ -7,6 +7,7 @@ import {
   ParseError,
   parseDecisions,
   parseFrontmatter,
+  parseHandoffDocument,
   parseReleases,
   parseResearchFrontmatter,
   parseSpecFrontmatter,
@@ -77,10 +78,20 @@ export type ActivityEvent = {
   summary: string;
 };
 
+/** Desk worktree for a phase when a matching `phase/*` checkout exists. */
+export type PhaseGitGlance = {
+  branch: string;
+  clean: boolean;
+  ahead: number;
+  behind: number;
+};
+
 export type ProjectedPhase = PhaseFrontmatter & {
   age_days: number;
   activity_count: number;
   sourcePath: string;
+  /** Matching phase worktree; null when no desk (do not use Docs-home repo). */
+  git: PhaseGitGlance | null;
 };
 
 export type ProjectedSpec = SpecFrontmatter & {
@@ -117,7 +128,7 @@ export type DeriveIndex = {
   };
   /** Derived health signals (not the Work ledger). */
   issues: IndexIssue[];
-  handoff: { updated_at: string | null; body: string };
+  handoff: { ref: string | null; updated_at: string | null; body: string };
   last_check: { status: string | null; ts: string | null; ref: string | null };
   /** Next Activity check id (`C-nnn`) for `/check` emitters. */
   next_check_id: string;
@@ -410,6 +421,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
   let work: ProjectedWork[] = [];
   let releases: ReleaseEntry[] = [];
   let handoffBody = "";
+  let handoffRef: string | null = null;
   let handoffUpdatedAt: string | null = null;
   let productBody = "";
   let blockedReason: string | null = null;
@@ -435,6 +447,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
         age_days: dayDiff(data.opened, now),
         activity_count: 0,
         sourcePath: relative,
+        git: null,
       });
     } catch (error) {
       const summary =
@@ -537,7 +550,9 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
   const handoffPath = path.join(docsRoot, "Handoffs", "HANDOFF.md");
   const handoffSource = await readOptional(handoffPath);
   if (handoffSource !== null) {
-    handoffBody = handoffSource;
+    const parsed = parseHandoffDocument(handoffSource);
+    handoffRef = parsed.ref;
+    handoffBody = parsed.body;
     try {
       const metadata = await stat(handoffPath);
       handoffUpdatedAt = metadata.mtime.toISOString();
@@ -576,6 +591,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
           age_days: dayDiff(data.opened, now),
           activity_count: 0,
           sourcePath: relative,
+          git: null,
         };
         phaseById.set(data.id, projected);
         overlayDocPaths.add(relative);
@@ -635,7 +651,9 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
     const overlayHandoffPath = path.join(overlayDocs, "Handoffs", "HANDOFF.md");
     const overlayHandoff = await readOptional(overlayHandoffPath);
     if (overlayHandoff !== null) {
-      handoffBody = overlayHandoff;
+      const parsed = parseHandoffDocument(overlayHandoff);
+      handoffRef = parsed.ref;
+      handoffBody = parsed.body;
       overlayDocPaths.add("Handoffs/HANDOFF.md");
       try {
         const metadata = await stat(overlayHandoffPath);
@@ -879,6 +897,23 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
   const repo = await readGitStatus(repositoryRoot, {
     worktrees: options.worktrees,
   });
+  const worktreeByPhase = new Map(
+    repo.worktrees
+      .filter((tree) => tree.phase_id && tree.branch)
+      .map((tree) => [tree.phase_id as string, tree]),
+  );
+  for (const phase of phases) {
+    const tree = worktreeByPhase.get(phase.id);
+    phase.git =
+      tree && tree.branch
+        ? {
+            branch: tree.branch,
+            clean: tree.clean,
+            ahead: tree.ahead,
+            behind: tree.behind,
+          }
+        : null;
+  }
   const sortedPhases = sortPhasesForRoadmap(phases);
   const next_command = suggestNextCommand(sortedPhases, repo, blockedReason);
   const latestRelease = [...releases].sort((left, right) => right.date.localeCompare(left.date))[0];
@@ -911,7 +946,7 @@ export async function derive(options: DeriveOptions = {}): Promise<DeriveIndex> 
     releases,
     activity,
     issues,
-    handoff: { updated_at: handoffUpdatedAt, body: handoffBody },
+    handoff: { ref: handoffRef, updated_at: handoffUpdatedAt, body: handoffBody },
     last_check,
     next_check_id,
     in_production: {

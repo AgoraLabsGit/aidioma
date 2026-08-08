@@ -1,5 +1,5 @@
 import { parseDocument } from "yaml";
-import type { ZodType } from "zod";
+import { z, type ZodType } from "zod";
 
 import {
   fixesSchema,
@@ -13,6 +13,15 @@ import {
   type SpecFrontmatter,
   type WorkItem,
 } from "./schema.js";
+
+/** Phase id or Work id (F/T/P/R/Q/A/S-nnn or legacy W-*). */
+const handoffRefSchema = z
+  .string()
+  .regex(/^(PHASE-[0-9]{3}|[FTPRQAS]-[0-9]{3}|W-[0-9]+)$/u);
+
+const handoffFrontmatterSchema = z.object({
+  ref: handoffRefSchema,
+});
 
 export class ParseError extends Error {
   readonly sourcePath: string;
@@ -107,6 +116,30 @@ export function parseResearchFrontmatter(
 ): ResearchFrontmatter {
   return parseFrontmatter(source, sourcePath, researchSchema as ZodType<ResearchFrontmatter>)
     .data;
+}
+
+/**
+ * HANDOFF.md — optional YAML frontmatter with required `ref` when present.
+ * Missing/invalid frontmatter → `ref: null` (unscoped; Active does not project).
+ */
+export function parseHandoffDocument(
+  source: string,
+  sourcePath = "Handoffs/HANDOFF.md",
+): { ref: string | null; body: string } {
+  const normalized = source.replaceAll("\r\n", "\n");
+  if (!normalized.startsWith("---\n")) {
+    return { ref: null, body: source };
+  }
+  try {
+    const { data, body } = parseFrontmatter(
+      source,
+      sourcePath,
+      handoffFrontmatterSchema as ZodType<{ ref: string }>,
+    );
+    return { ref: data.ref, body };
+  } catch {
+    return { ref: null, body: source };
+  }
 }
 
 export function parseWork(source: string, sourcePath = "WORK.yaml"): WorkItem[] {

@@ -713,3 +713,125 @@ describe("Knowledge filters (S-007)", () => {
     expect(knowledgeMatchesSlice("decisions", decisions[3], "__none__", "", index)).toBe(false);
   });
 });
+
+/**
+ * Soft-wrap list contract mirroring Docs/System/dashboard/public/app.js renderMarkdown.
+ * F-032: wrapped Plan steps must stay one <li> (not close/reopen ol → every step "1").
+ */
+function renderMarkdownListContract(raw: string): string {
+  const escapeHtml = (s: string) =>
+    s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const inline = (s: string) =>
+    escapeHtml(s)
+      .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  const lines = String(raw ?? "").replace(/\r\n/g, "\n").split("\n");
+  const html: string[] = [];
+  let listType: "ol" | "ul" | null = null;
+  let listItemOpen = false;
+  const closeListItem = () => {
+    if (!listItemOpen) return;
+    html.push("</li>");
+    listItemOpen = false;
+  };
+  const closeList = () => {
+    closeListItem();
+    if (!listType) return;
+    html.push(listType === "ol" ? "</ol>" : "</ul>");
+    listType = null;
+  };
+  for (const line of lines) {
+    const trimmed = line.trim();
+    const ordered = line.match(/^\d+\.\s+(.*)$/);
+    if (ordered) {
+      if (listType !== "ol") {
+        closeList();
+        html.push("<ol>");
+        listType = "ol";
+      }
+      closeListItem();
+      html.push(`<li>${inline(ordered[1])}`);
+      listItemOpen = true;
+      continue;
+    }
+    const bullet = line.match(/^(?:-|\*(?!\*))\s+(.*)$/);
+    if (bullet) {
+      if (listType !== "ul") {
+        closeList();
+        html.push("<ul>");
+        listType = "ul";
+      }
+      closeListItem();
+      html.push(`<li>${inline(bullet[1].trim())}`);
+      listItemOpen = true;
+      continue;
+    }
+    if (!trimmed) {
+      closeList();
+      continue;
+    }
+    if (listType && listItemOpen) {
+      html.push(` ${inline(trimmed)}`);
+      continue;
+    }
+    closeList();
+    html.push(`<p>${inline(trimmed)}</p>`);
+  }
+  closeList();
+  return html.join("");
+}
+
+describe("renderMarkdown soft-wrapped lists (F-032)", () => {
+  it("keeps continuation lines inside one ol li and one ol", () => {
+    const md = [
+      "1. **Rename:** `SPEC-A-DEVSYSTEM` → `SPEC-A-PRAXIS`",
+      "   into Features: `SPEC-F-PRAXIS-SHELL`.",
+      "2. **Thicken Specs:** Praxis Area invariants.",
+      "   Each page Feature owns Behavior Rules.",
+      "",
+      "**Complexity cost:** Cut parallel runtime.",
+    ].join("\n");
+    const html = renderMarkdownListContract(md);
+    expect(html.match(/<ol>/g)?.length).toBe(1);
+    expect(html.match(/<li>/g)?.length).toBe(2);
+    expect(html).toContain("into Features:");
+    expect(html).toContain("Each page Feature owns Behavior Rules.");
+    expect(html).toContain("<p><strong>Complexity cost:</strong> Cut parallel runtime.</p>");
+    expect(html.indexOf("</ol>")).toBeLessThan(html.indexOf("Complexity cost"));
+  });
+});
+
+/** Mirrors activeTabItems / syncActiveBadge count in public/app.js (F-034). */
+function activeBadgeCount(index: {
+  phases?: { state: string }[];
+  work?: { status: string }[];
+}): number {
+  const phases = (index.phases ?? []).filter(
+    (phase) => phase.state === "active" || phase.state === "blocked",
+  ).length;
+  const work = (index.work ?? []).filter((row) => row.status === "active").length;
+  return phases + work;
+}
+
+describe("Active badge count (F-034)", () => {
+  it("counts in-flight phases plus status:active Work", () => {
+    expect(
+      activeBadgeCount({
+        phases: [
+          { state: "active" },
+          { state: "ready" },
+          { state: "blocked" },
+        ],
+        work: [
+          { status: "active" },
+          { status: "open" },
+          { status: "active" },
+        ],
+      }),
+    ).toBe(4);
+  });
+
+  it("is zero when nothing is in flight", () => {
+    expect(activeBadgeCount({ phases: [{ state: "ready" }], work: [{ status: "open" }] })).toBe(0);
+  });
+});

@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark light" />
     <title>Praxis</title>
-    <link rel="stylesheet" href="/styles.css?v=t052-1" />
-    <script src="/app.js?v=t052-1" defer></script>
+    <link rel="stylesheet" href="/styles.css?v=phase009-7" />
+    <script src="/app.js?v=phase009-7" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -30,15 +30,6 @@
         />
       </div>
       <nav class="tabs" aria-label="Dashboard pages">
-        <button type="button" class="tab" data-page="active" aria-current="page">
-          <span class="tab-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" focusable="false">
-              <circle cx="12" cy="12" r="7.25" />
-              <circle cx="12" cy="12" r="2.25" />
-            </svg>
-          </span>
-          Active
-        </button>
         <button type="button" class="tab" data-page="work">
           <span class="tab-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" focusable="false">
@@ -142,6 +133,19 @@
           <div class="heartbeat">
             <span id="indexed-at">indexed —</span>
           </div>
+          <button
+            id="active-badge-btn"
+            type="button"
+            class="reindex-btn active-badge-btn"
+            title="Open Active"
+            aria-label="Open Active — 0 phases in flight"
+          >
+            <svg class="reindex-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="12" r="7.25" fill="none" stroke="currentColor" stroke-width="1.5" />
+              <circle cx="12" cy="12" r="2.25" fill="currentColor" stroke="none" />
+            </svg>
+            <span id="active-phase-count" class="active-phase-count">0</span>
+          </button>
           <button
             id="worktrees-panel-btn"
             type="button"
