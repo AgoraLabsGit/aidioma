@@ -281,3 +281,4 @@
 {"ts":"2026-08-08T17:19:21Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-006","ref":"C-013","status":"complete","summary":"C-013 PASS work: typecheck+test+validate"}
 {"ts":"2026-08-08T17:19:47Z","type":"audit","actor":"agent","cmd":"/close","phase":"PHASE-006","ref":"PHASE-006","status":"complete","summary":"Adv PASS after RELEASE-000 fixture; founder visual ack via session UI iteration; C-013 green"}
 {"ts":"2026-08-08T17:19:47Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-006","ref":"PHASE-006","status":"active","summary":"Publishing PHASE-006 Knowledge overhaul via close/*"}
+{"ts":"2026-08-08T17:21:29Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-006","ref":"PHASE-006","status":"complete","summary":"Merged PR #39 bc8e91f; docs home on docs/ssot; phase/006 worktree removed"}
