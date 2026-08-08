@@ -2,20 +2,27 @@
 ref: PHASE-009
 ---
 
-# Handoff — PHASE-009 closed (publish in flight)
+# Handoff — after PHASE-009 close
 
 **Date:** 2026-08-08
 
-PHASE-009 close checks passed (C-018). Publishing dual desks: phase hooks PR + Docs-home meta PR.
+**Merged:** PR #48 (Active-flush hooks) + PR #49 (Praxis meta) → `main` `1462504`
 
-## After merge
+## State
 
-- No active phase — next `/plan` or `/run` PHASE-002 when ready
-- W-015 remains open proposal (parallel phases runtime)
-- Refresh Docs home: `npm run work:docs-home`
+- No active phase
+- Docs home: `docs/ssot` @ `origin/main`
+- Hooks on main: `.cursor/hooks*`
+
+## Open (not this phase)
+
+- W-015 — Parallel active phases runtime (proposal)
+- PHASE-002 / PHASE-003 proposed on Roadmap
 
 ## Next command
 
 ```text
-/status
+/plan
 ```
+
+or `/status` / `/run` when ready for PHASE-002.
