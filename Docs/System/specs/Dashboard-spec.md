@@ -340,11 +340,14 @@ Active UI** (founder removed the command bar / suggested-next box).
 
 ### Knowledge
 
-Artifact browser: left **TOC** (grouped Product / Specs / Decisions / Research / Releases) +
-full-page markdown reader via `/api/doc`. Not four tabbed tables (live UI; PHASE-006 may still
-refine). Filter box on the TOC. Contested/superseded handling stays in the Specs group.
+Artifact browser (PHASE-006): fixed toolbar (search + Type chips) + left **TOC** grouped
+**Product · Feature Specs · Area Specs · Decisions · Research · Releases** + full-page
+phase-view detail via `/api/doc` (Status glance + Brief / Connections / Files / …). Not four
+tabbed tables. Feature Specs ≠ Area Specs. Mock fixtures (`SPEC-*-MOCK-KNOWLEDGE`,
+`RELEASE-000`) prove connections until PHASE-008 molds land.
 
-`PRODUCT.md` is the default document when Knowledge opens.
+`PRODUCT.md` / Product map is the default document when Knowledge opens.
+Behavior SSOT: `SPEC-F-DEV-DASHBOARD` Knowledge rules.
 
 ### Docs
 

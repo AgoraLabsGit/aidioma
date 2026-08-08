@@ -73,7 +73,7 @@
 
   --row: 44px;
   --sidebar-w: 180px;
-  --topbar-h: 64px;
+  --topbar-h: 52px;
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
   --mono: ui-monospace, "SF Mono", "Menlo", "Cascadia Mono", monospace;
 }
@@ -131,7 +131,10 @@ body {
 }
 body {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
+  min-height: 0;
+  overflow: hidden;
   font-family: var(--sans);
   color: var(--text);
   background: var(--bg);
@@ -343,8 +346,13 @@ html:not([data-theme="light"]) .theme-icon-sun {
 }
 .page-docs {
   padding: 0;
-  height: calc(100vh - var(--topbar-h));
+  flex: 1 1 auto;
+  height: 100%;
+  max-height: 100%;
   min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 .page-docs .knowledge {
   --toc-w: 220px;
@@ -362,19 +370,21 @@ html:not([data-theme="light"]) .theme-icon-sun {
 .workspace {
   flex: 1;
   min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   background: var(--bg);
+  overflow: hidden;
   /* Fixed rail gutter while detail is open — does not change on expand/collapse */
   padding-right: var(--detail-rail-gutter, 0px);
 }
 .topbar {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   gap: var(--space-4);
   min-height: var(--topbar-h);
-  padding: var(--space-4) var(--space-6) var(--space-3);
+  padding: var(--space-2) var(--space-6);
   border-bottom: 1px solid var(--divider);
   background: var(--bg);
   position: sticky;
@@ -388,15 +398,14 @@ html:not([data-theme="light"]) .theme-icon-sun {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding-bottom: 2px;
 }
 #page-title {
   margin: 0;
   font-family: var(--mono);
-  font-size: var(--fs-2xl);
+  font-size: var(--fs-xl);
   font-weight: var(--fw-semibold);
   letter-spacing: -0.03em;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 .heartbeat {
   display: flex;
@@ -590,6 +599,9 @@ html:not([data-theme="light"]) .theme-icon-sun {
 main {
   flex: 1;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 }
 .page {
   padding: var(--space-5) var(--space-6) 40px;
@@ -604,9 +616,15 @@ main {
   margin-bottom: var(--space-4);
 }
 .search {
-  flex: 0 1 240px;
-  width: 240px;
+  /* Never use flex-basis on the block axis — in a column TOC it became a tall box. */
+  flex: 0 0 auto;
+  align-self: center;
+  box-sizing: border-box;
+  width: min(240px, 100%);
+  max-width: 240px;
   height: 36px;
+  min-height: 36px;
+  max-height: 36px;
   padding: 0 var(--space-3);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -614,6 +632,16 @@ main {
   color: var(--text);
   font: inherit;
   font-size: var(--fs-sm);
+  line-height: 36px;
+  resize: none;
+}
+.knowledge-toc .search,
+.knowledge-toolbar .search {
+  width: min(240px, 100%);
+  max-width: 240px;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
 }
 .search::placeholder {
   color: var(--text-subtle);
@@ -1644,16 +1672,26 @@ code,
 
 /* ——— Knowledge doc viewer ——— */
 .page-knowledge {
+  /* Fill main (not 100vh) so mobile sidebar stack does not force body scroll. */
   padding: 0;
-  height: calc(100vh - var(--topbar-h));
+  flex: 1 1 auto;
+  height: 100%;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  overflow: hidden;
+}
+/* Author display:flex must not override HTML hidden (was leaking Knowledge under other pages). */
+.page[hidden],
+.page-knowledge[hidden],
+.page-docs[hidden] {
+  display: none !important;
 }
 .page-knowledge .knowledge-toolbar {
   flex: 0 0 auto;
   margin: 0;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-4);
   border-bottom: 1px solid var(--border);
   background: var(--bg);
 }
@@ -1684,25 +1722,61 @@ code,
 .knowledge-link:hover {
   color: var(--text);
 }
+.page-knowledge .knowledge-doc {
+  /* Sole vertical scroll pane for Knowledge detail (not .knowledge-detail). */
+  padding: 0;
+  overflow: auto;
+  min-height: 0;
+  background: var(--bg);
+}
 .knowledge-detail {
   padding: var(--space-4) var(--space-5);
-  overflow: auto;
-  height: 100%;
   box-sizing: border-box;
+  --phase-title-size: 24px; /* a step above shared --detail-title-size (22px) for readability */
 }
-.knowledge.toc-collapsed {
-  grid-template-columns: 0 0 minmax(0, 1fr);
+.knowledge-detail .phase-header {
+  gap: var(--space-1);
 }
-.knowledge.toc-collapsed .knowledge-toc,
-.knowledge.toc-collapsed .toc-resize {
-  display: none;
+.knowledge-detail .phase-id-row {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: 2px;
+}
+.knowledge-detail .phase-outcome {
+  margin-top: var(--space-2);
+}
+/* Brief body headings stay under section labels (Status / Brief / …). */
+.knowledge-detail .prose h1 {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  margin: 0 0 0.5em;
+}
+.knowledge-detail .prose h2 {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  margin: 1.1em 0 0.4em;
+}
+.knowledge-detail .prose h3 {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  margin: 1em 0 0.35em;
 }
 .knowledge-toc {
   border-right: 0;
   background: var(--bg);
   overflow: auto;
-  padding: var(--space-4);
+  padding: var(--space-3) var(--space-4);
   min-width: 0;
+}
+.knowledge-toc-title {
+  display: block;
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
 }
 .toc-resize,
 .detail-resize {
@@ -1716,37 +1790,11 @@ code,
 .detail-resize:active {
   background: var(--accent);
 }
-.toc-expand {
-  position: absolute;
-  left: var(--space-3);
-  top: var(--space-3);
-  z-index: 2;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
-  border-radius: var(--radius-md);
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font: inherit;
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-semibold);
-  cursor: pointer;
-}
 .knowledge-toc-head {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
-}
-.toc-head-row {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
   gap: var(--space-2);
+  margin-bottom: var(--space-3);
 }
 .knowledge-groups {
   display: flex;
@@ -1789,7 +1837,7 @@ code,
   color: var(--accent);
 }
 .toc-item .cell-primary {
-  font-size: var(--fs-sm);
+  font-size: var(--fs-base);
 }
 .toc-item .cell-secondary {
   font-family: var(--mono);
@@ -2134,13 +2182,20 @@ code,
   }
   .knowledge {
     grid-template-columns: 1fr;
+    grid-template-rows: minmax(120px, 32%) minmax(0, 1fr);
+    min-height: 0;
   }
   .toc-resize {
     display: none;
   }
   .knowledge-toc {
-    max-height: 240px;
+    max-height: none;
+    min-height: 0;
     border-bottom: 1px solid var(--divider);
+  }
+  .page-knowledge .knowledge-doc,
+  .page-docs .knowledge-doc {
+    min-height: 0;
   }
 }
 
@@ -2156,12 +2211,28 @@ code,
     border-right: 0;
     border-bottom: 1px solid var(--divider);
   }
+  .sidebar-brand {
+    padding-top: var(--space-3);
+  }
   .tabs {
     flex-direction: row;
     flex-wrap: wrap;
   }
   .tab {
     width: auto;
+  }
+  .topbar {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+    padding: var(--space-2) var(--space-4);
+  }
+  .topbar-right {
+    margin-left: auto;
+  }
+  /* Avoid “indexed …” painting over #page-title on narrow widths. */
+  #indexed-at {
+    display: none;
   }
   .page {
     padding: var(--space-4);

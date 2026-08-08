@@ -1997,3 +1997,128 @@
   open_questions: null
   done_summary: "Docs TOC: Welcome + Commands (COMMANDS-OVERVIEW.md). START: multi-session /handoff section. Specs/D-027 updated."
   opened: 2026-08-07T20:39:51Z
+
+- id: T-049
+  kind: task
+  summary: "Knowledge: tighter topbar, id under title, static Documents TOC, font hierarchy"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-006
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: less space above header; id+copy below title; static menu no arrow; consistent fonts."
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/public/index.html
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Topbar compact (52px, centered). Knowledge header = title → id+copy → outcome. Documents TOC static (no collapse arrow). Brief prose headings demoted under section labels. Fixed empty detail (pathsBlockHtml misuse). work:test 43/43. Hard-refresh dashboard (?v=phase006-6)."
+  opened: 2026-08-08T16:40:57Z
+
+- id: F-028
+  kind: fix
+  summary: "Knowledge page content leaked at bottom of other pages"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-006
+  promoted_to: null
+  blocked_by: null
+  note: "Repro: open Work/Active — Knowledge chrome still visible below. Cause: .page-knowledge { display:flex } overrides HTML hidden (same class as detail[hidden] bug)."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/public/index.html
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "`.page[hidden]` / `.page-knowledge[hidden]` force display:none (flex no longer leaks Knowledge). Spec rule + cache bust ?v=phase006-7. Proof: Work page CDP display:none + offsetHeight 0; bottom scroll shows work table only."
+  opened: 2026-08-08T16:44:22Z
+
+- id: T-050
+  kind: task
+  summary: "Knowledge TOC: drop Documents label; PRODUCT row uses code · status"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-006
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: remove Documents; PRODUCT secondary was slogan not id pattern."
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/index.html
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Removed Documents TOC chrome. PRODUCT row = Product map / PRODUCT · active (same id · status pattern as specs). Cache bust ?v=phase006-8."
+  opened: 2026-08-08T16:48:43Z
+
+- id: A-011
+  kind: audit
+  summary: "Knowledge Product Status glance vs Feature/Area specs"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-006
+  promoted_to: null
+  blocked_by: null
+  note: "Lens: seams / schema drift. Founder: Product detail fields differ from other specs."
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Verdict misaligned. Product used Home/Role/Version/Semver vs Feature Feature/Area/Amended/Version proxy/Built by. Cause: hardcoded product branch + no PRODUCT index. Nested overflow noted. Slot parity + scroll fixed in F-029/F-030."
+  opened: 2026-08-08T16:53:23Z
+
+- id: F-029
+  kind: fix
+  summary: "Knowledge Status glance: Amended label (drop Last)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-006
+  promoted_to: null
+  blocked_by: null
+  note: "Also align Product glance slots to Feature pattern (A-011)."
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Renamed Last amended → Amended. Product glance uses same slots as Feature/Area with honest —/living. Version proxy tooltip. Spec + ?v=phase006-10."
+  opened: 2026-08-08T16:53:23Z
+
+- id: F-030
+  kind: fix
+  summary: "Knowledge detail nested scroll (double overflow)"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-006
+  promoted_to: null
+  blocked_by: null
+  note: "knowledge-doc and knowledge-detail both overflow:auto."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/public/index.html
+  open_questions: null
+  done_summary: "Viewport-locked shell; Knowledge fills main (not 100vh); single .knowledge-doc scroll. Proof: bodyScrollable false, docCanScroll true."
+  opened: 2026-08-08T16:53:23Z
+
+- id: T-051
+  kind: task
+  summary: "Knowledge detail document titles a bit larger"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-DEVSYSTEM
+  phase: PHASE-006
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: titles hard to read."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/public/index.html
+    - Docs/Specs/Features/SPEC-F-DEV-DASHBOARD.md
+  open_questions: null
+  done_summary: "Knowledge detail titles 24px (founder tweak from 26); TOC primary --fs-base. Cache bust ?v=phase006-12."
+  opened: 2026-08-08T17:01:15Z
+

@@ -1,27 +1,26 @@
-# Current handoff — PHASE-006 in flight
+# Current handoff — after PHASE-006 close
 
 **Date:** 2026-08-08
 
-**Branch:** `docs/ssot` (Docs home) + `phase/006` worktree (empty product tree)
-**Active phase:** PHASE-006 — Knowledge Page Overhaul
-**Docs home:** `.worktrees/docs` (`docs/ssot`)
-**Remotes:** `origin/main` only (phase not published)
+**Branch:** `origin/main` (after close merge)
+**Active phase:** none
+**Docs home:** `.worktrees/docs` (`docs/ssot`) — refresh via `npm run work:docs-home` after merge
 
 ## Done this session
 
-- Activated PHASE-006; empty phase-scoped triage
-- Knowledge toolbar (search + Type chips); Feature Specs ≠ Area Specs
-- Detail uses phase-view chrome (no doc-meta dropdown)
-- Connection navigation via `data-knowledge-link`
-- `/api/doc` Release slices; mock Feature/Area stubs; `work:test` 43/43
+- Closed PHASE-006 — Knowledge Page Overhaul
+- Knowledge: toolbar, Feature≠Area, phase-view detail, Product glance parity, scroll lock
+- Fixtures: SPEC-F/A-MOCK-KNOWLEDGE + RELEASE-000; `/api/doc` slices for Decision/Research/Release
+- Founder visual polish: TOC, Amended label, titles 24px, hidden-page leak, nested scroll
 
 ## Open
 
-- Founder visual ack on Knowledge, then `/close`
-- PHASE-008 still owns real artifact molds (MOCK stubs disposable)
+- PHASE-008 owns real artifact molds (MOCK stubs disposable)
+- First real `/ship` should replace/remove RELEASE-000 mock when appropriate
 
 ## Next command
 
 ```text
-/close   # after founder visual check of Knowledge
+/status
+# or /run PHASE-008
 ```

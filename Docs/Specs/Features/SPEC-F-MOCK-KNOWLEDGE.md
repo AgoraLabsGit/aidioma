@@ -34,6 +34,7 @@ Disposable Feature stub for PHASE-006 Knowledge proof. Not a product mold — PH
 - Area: [SPEC-A-MOCK-KNOWLEDGE](SPEC-A-MOCK-KNOWLEDGE)
 - Research sample: [R-001](R-001)
 - Decision sample: [D-014](D-014)
+- Release sample: [RELEASE-000](RELEASE-000)
 
 ## Boundaries
 
