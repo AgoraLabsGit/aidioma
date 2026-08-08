@@ -326,3 +326,5 @@
 {"ts":"2026-08-08T22:06:50Z","type":"check","ref":"C-016","phase":null,"summary":"C-016 PASS work: typecheck+test+validate","status":"complete","cmd":"/check"}
 {"ts":"2026-08-08T22:06:50Z","type":"check","ref":"C-016","phase":null,"summary":"C-016 PASS work: typecheck+test+validate","status":"complete","cmd":"/check"}
 {"ts":"2026-08-08T22:07:00Z","type":"close","ref":null,"phase":null,"summary":"reduced close inventory: meta docs/ssot dirty; no product desk; C-016 PASS","status":"active","cmd":"/close"}
+{"ts":"2026-08-08T22:08:30Z","type":"close","ref":null,"phase":null,"summary":"reduced close MERGED PR #46 @390922f; C-016 PASS; next /run PHASE-009","status":"complete","cmd":"/close"}
+{"ts":"2026-08-08T22:08:30Z","type":"close","ref":null,"phase":null,"summary":"reduced close MERGED PR #46 @390922f; C-016 PASS; next /run PHASE-009","status":"complete","cmd":"/close"}

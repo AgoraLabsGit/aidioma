@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-08
 
-**Branch:** `origin/main` (pending this close merge)
+**Branch:** `origin/main` @ 390922f
 **Active phase:** none
 **Next phase:** `PHASE-009` (ready) — Praxis Features and Active chrome
 **Docs home:** `.worktrees/docs` (`docs/ssot`)
