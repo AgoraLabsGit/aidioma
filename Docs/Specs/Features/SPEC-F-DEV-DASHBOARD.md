@@ -17,7 +17,8 @@ decisions:
   - D-027
 built_by:
   - PHASE-005
-last_amended: PHASE-007
+  - PHASE-006
+last_amended: PHASE-006
 research: []
 
 paths:
@@ -54,6 +55,21 @@ Lets the founder see phases, Work, Signals, and Knowledge projected from Docs/.
 - Rule: Docs projects customer-facing guide pages: `Docs/START.md` (Welcome) + `Docs/COMMANDS-OVERVIEW.md` (Commands) (D-027 revisit); does **not** project `System/COMMANDS.md` (agent SSOT / Commands panel); does not replace Knowledge (artifact browser)
 - Rule: Docs TOC shows titles only (no file-path sub-lines; no Guide/Praxis chrome labels)
 - Rule: Docs page uses Knowledge reader chrome with fixed ~220px Guide TOC (no collapse control; does not share Knowledge TOC width/collapse prefs); `.page-docs` fills below the topbar like Knowledge; Docs prose is full pane width (no 72ch reading measure — that stays on Knowledge/detail)
+- Rule: Knowledge page has a fixed table-style toolbar (search + Type filter chips: All / Product / Feature / Area / Decisions / Research / Releases); TOC lists categories **Product · Feature Specs · Area Specs · Decisions · Research · Releases** (Feature ≠ Area)
+- Rule: Knowledge TOC is static (always visible; no collapse control / expand arrow); no “Documents” chrome label — category labels (Product · Feature Specs · …) are enough
+- Rule: Knowledge TOC rows use title + `id · status|date|verdict` secondary; Product is `Product map` / `PRODUCT · active` (not the who/what/never slogan)
+- Rule: Knowledge search is a single-line 36px control (same as table pages); never a tall multi-line box
+- Rule: Knowledge detail header order is **title → id + copy → outcome**; Status glance + Brief / Connections / Files / Built by / Change log / Audits — no path byline and no `<details>` document-meta dropdown
+- Rule: Knowledge document titles (`.knowledge-detail .phase-name`) are 24px — a step above shared `--detail-title-size` (22px); TOC primary lines use `--fs-base`
+- Rule: Topbar is compact (`--topbar-h` ~52px, vertically centered title); page title uses `--fs-xl` (not oversized display)
+- Rule: Knowledge Brief prose headings stay smaller than section labels (`now-label`) so Status/Brief remain the hierarchy
+- Rule: Knowledge Status glance uses shared slots — Type/Status · Feature/Area · Created/Amended · Version proxy/Built by; Product uses the same slots with honest “—” / `living` (no Home/Role/Semver special-case)
+- Rule: Glance label is **Amended** (not “Last amended”); **Version proxy** = stand-in for semver (`last_amended` phase id, else `living`) — tooltip restates this
+- Rule: Knowledge detail has one vertical scroll pane (`.knowledge-doc`); `.knowledge-detail` must not nest a second `overflow: auto`
+- Rule: Shell is viewport-locked (`body`/`workspace` `overflow: hidden`); table pages scroll in `main`; Knowledge/Docs fill `main` (`height: 100%`, not `100vh`) so stacked sidebar/TOC never grows past the viewport
+- Rule: Knowledge Change log and Audits project activity journal rows with matching `ref` (no invented per-file git history)
+- Rule: Knowledge markdown links and Connections buttons navigate in-page via `data-knowledge-link` for `PRODUCT`, `SPEC-*`, `D-nnn`, `R-nnn`, `RELEASE-nnn`
+- Rule: `/api/doc` serves Feature/Area/Research files by id, Decision slices from `DECISIONS.md`, and Release slices from `RELEASES.md`
 - Rule: Light theme uses a cream shell (`--bg` ~`#ebe6df`) with warm paper panels (`--surface` ~`#f3efe7`) — never pure `#fff` and never cool/blue greys; warmer muted ink; status soft fills ≥16% chroma
 - Rule: Nav sidebar, detail rail, and Knowledge TOC use page `--bg` (light + dark); tables/cards stay on `--surface` panels
 - Rule: Topbar worktrees control uses the GitHub mark icon
@@ -70,10 +86,11 @@ Lets the founder see phases, Work, Signals, and Knowledge projected from Docs/.
 - Rule: Feature/Area filters live in a Filters pop-up panel (not primary chip row); Reset clears filters/sort/search per table page; Filters badge is a small count chip
 - Rule: Detail panels (Phase / Work / Signal) share Phase chrome: `phase-view` header, Status `phase-block` + `glance-grid`, optional `phase-card` sections
 - Rule: Detail topbar shows the id once — no path byline (`Docs/…`) and no duplicate id under the title
-- Rule: Page titles (`#page-title`), panel titles (`.phase-name`), and detail topbar ID (`#detail-title`) use `--mono` like table IDs; `#detail-title` / `.phase-name` share `--detail-title-size` (not page-title `--fs-2xl`); copy control sits immediately right of the ID
+- Rule: Page titles (`#page-title`), panel titles (`.phase-name`), and detail topbar ID (`#detail-title`) use `--mono` like table IDs; `#detail-title` / `.phase-name` share `--detail-title-size`; `#page-title` uses `--fs-xl`; copy control sits immediately right of the ID
 
 - Rule: Detail collapse control is top-left (larger chevron in the collapsed rail); Close is top-right when expanded and hidden when collapsed; chevron flips (`›` / `‹`)
 - Rule: Detail starts closed on load; `.detail[hidden]` must stay `display: none` (flex must not override `hidden`)
+- Rule: Inactive page panels stay `display: none` via `.page[hidden]` (`.page-knowledge { display: flex }` must not override `hidden`)
 - Rule: Detail overlays when expanded; while open, workspace keeps a fixed ~52px right gutter for the collapsed rail (no reflow on expand/collapse)
 - Rule: Detail/Knowledge resize gutters are invisible until hover (no persistent thick divider)
 - Rule: Signals entry is the sidebar-foot status control (not a main-nav item); Docs entry is the sidebar-foot Docs control (not a main-nav item)

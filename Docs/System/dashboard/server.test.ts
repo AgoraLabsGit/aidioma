@@ -33,6 +33,8 @@ async function createFixture() {
   const docsRoot = path.join(repositoryRoot, "Docs");
   await mkdir(path.join(docsRoot, "Roadmap", "Phases"), { recursive: true });
   await mkdir(path.join(docsRoot, "Specs", "Features"), { recursive: true });
+  await mkdir(path.join(docsRoot, "Specs", "Areas"), { recursive: true });
+  await mkdir(path.join(docsRoot, "Research"), { recursive: true });
   await mkdir(path.join(docsRoot, "Handoffs"), { recursive: true });
   await mkdir(path.join(docsRoot, "System"), { recursive: true });
   await Promise.all([
@@ -77,8 +79,79 @@ Why: Prove /api/doc slices one block
 Revisit if: Never
 `,
     ),
-    writeFile(path.join(docsRoot, "RELEASES.md"), "# Releases\n"),
-    writeFile(path.join(docsRoot, "PRODUCT.md"), "# Product\n"),
+    writeFile(
+      path.join(docsRoot, "RELEASES.md"),
+      `# Releases
+
+## RELEASE-001 — Fixture release
+Date: 2026-08-05
+Phase: PHASE-001
+`,
+    ),
+    writeFile(path.join(docsRoot, "PRODUCT.md"), "# Product\n\nFixture product map.\n"),
+    writeFile(
+      path.join(docsRoot, "Specs", "Features", "SPEC-F-MOCK.md"),
+      `---
+id: SPEC-F-MOCK
+kind: feature
+title: Fixture feature
+status: active
+superseded_by: null
+depends_on:
+  - SPEC-A-MOCK
+decisions: []
+built_by: []
+last_amended: null
+research: []
+paths:
+  - Docs/System/dashboard/**
+---
+
+# Fixture feature
+
+Links [PRODUCT](PRODUCT) and [SPEC-A-MOCK](SPEC-A-MOCK).
+`,
+    ),
+    writeFile(
+      path.join(docsRoot, "Specs", "Areas", "SPEC-A-MOCK.md"),
+      `---
+id: SPEC-A-MOCK
+kind: area
+title: Fixture area
+status: active
+superseded_by: null
+vendor: null
+decisions: []
+built_by: []
+last_amended: null
+research: []
+paths:
+  - Docs/System/dashboard/**
+---
+
+# Fixture area
+
+Links [SPEC-F-MOCK](SPEC-F-MOCK).
+`,
+    ),
+    writeFile(
+      path.join(docsRoot, "Research", "R-001.md"),
+      `---
+id: R-001
+question: "Fixture research question"
+verdict: "Fixture verdict"
+status: fresh
+informed: []
+affects: []
+phase: null
+date: 2026-08-05
+---
+
+# R-001
+
+Fixture research body.
+`,
+    ),
     writeFile(path.join(docsRoot, "START.md"), "# Welcome to Praxis\n\nOrientation.\n"),
     writeFile(
       path.join(docsRoot, "COMMANDS-OVERVIEW.md"),
@@ -220,6 +293,28 @@ describe("work dashboard", () => {
     expect(doc.body).toContain("## D-001 — Fixture decision");
     expect(doc.body).toContain("Chose: Keep decisions in DECISIONS.md");
     expect(doc.body).not.toContain("## D-002");
+  });
+
+  it("serves each Knowledge kind via /api/doc (PRODUCT, Feature, Area, Decision, Research, Release)", async () => {
+    const { port } = await startFixtureServer();
+    const cases = [
+      { id: "PRODUCT", needle: "Fixture product map" },
+      { id: "SPEC-F-MOCK", needle: "Fixture feature" },
+      { id: "SPEC-A-MOCK", needle: "Fixture area" },
+      { id: "D-001", needle: "Fixture decision" },
+      { id: "R-001", needle: "Fixture research" },
+      { id: "RELEASE-001", needle: "Fixture release" },
+    ] as const;
+    for (const item of cases) {
+      const { status, body } = await getJson(port, `/api/doc?id=${item.id}`);
+      expect(status, item.id).toBe(200);
+      expect((body as { body: string }).body, item.id).toContain(item.needle);
+    }
+    const index = await getJson(port, "/api/index");
+    expect(index.status).toBe(200);
+    const specs = (index.body as { specs: Array<{ id: string; kind: string }> }).specs;
+    expect(specs.find((spec) => spec.id === "SPEC-F-MOCK")?.kind).toBe("feature");
+    expect(specs.find((spec) => spec.id === "SPEC-A-MOCK")?.kind).toBe("area");
   });
 
   it("serves Praxis Docs guide sources START and COMMANDS-OVERVIEW", async () => {

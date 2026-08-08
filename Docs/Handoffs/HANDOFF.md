@@ -1,27 +1,26 @@
-# Current handoff — after reduced `/close`
+# Current handoff — after PHASE-006 close
 
-**Date:** 2026-08-07
+**Date:** 2026-08-08
 
-**Branch:** `main` (post close PR)
+**Branch:** `origin/main` (after close merge)
 **Active phase:** none
-**Docs home:** `.worktrees/docs` (`docs/ssot`) — refresh after merge
-**Remotes:** `origin/main` only
+**Docs home:** `.worktrees/docs` (`docs/ssot`) — refresh via `npm run work:docs-home` after merge
 
 ## Done this session
 
-- Dashboard UX: Praxis wordmark, light theme cream/paper, sidebar/nav polish, detail panels, copy IDs, worktrees watcher, Activity status joins
-- **D-025** — product `/task`/`/fix` desks; Docs-home path leases; dual-desk `/close`
-- **F-024** — `work.yml` `npm ci --ignore-scripts`; drop stale work-registry path filters; workspace Sonar excludes
-- `/check` **C-012** green (work lane)
+- Closed PHASE-006 — Knowledge Page Overhaul
+- Knowledge: toolbar, Feature≠Area, phase-view detail, Product glance parity, scroll lock
+- Fixtures: SPEC-F/A-MOCK-KNOWLEDGE + RELEASE-000; `/api/doc` slices for Decision/Research/Release
+- Founder visual polish: TOC, Amended label, titles 24px, hidden-page leak, nested scroll
 
 ## Open
 
-- W-015 — Parallel active phases
-- Product proposals until PHASE-002+
-- SonarCloud ghosts on deleted paths may need IDE Reload / rebind (not repo)
+- PHASE-008 owns real artifact molds (MOCK stubs disposable)
+- First real `/ship` should replace/remove RELEASE-000 mock when appropriate
 
 ## Next command
 
 ```text
-/plan   # or /status — pick next Roadmap phase (002 / 006 / 008)
+/status
+# or /run PHASE-008
 ```

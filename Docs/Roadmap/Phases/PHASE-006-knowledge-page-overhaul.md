@@ -3,7 +3,7 @@ id: PHASE-006
 title: Knowledge Page Overhaul
 type: build
 proof_kind: visual
-state: proposed
+state: closed
 order: 5
 depends_on:
   - PHASE-007
@@ -16,12 +16,13 @@ non_goals:
   - Redesigning spec templates (PHASE-008)
   - Promoting Dashboard-spec to SPEC-*
   - Learner-app Knowledge surfaces
-amends_specs: []
+amends_specs:
+  - SPEC-F-DEV-DASHBOARD
 feature: SPEC-F-DEV-DASHBOARD
 area: SPEC-A-DEVSYSTEM
 opened: 2026-08-06
-closed: null
-lessons: null
+closed: 2026-08-08
+lessons: "Author display:flex must not override HTML hidden (page panels + detail). Knowledge height must fill main (not 100vh) when sidebar stacks. RELEASES format examples must not match ## RELEASE-nnn or parseReleases treats them as entries."
 ---
 
 # PHASE-006 — Knowledge Page Overhaul
@@ -50,17 +51,17 @@ hardens (PHASE-008 / PHASE-002).
 
 ## Proof
 
-- [ ] Search sizing matches table pages
-- [ ] Feature Specs and Area Specs are separate categories
-- [ ] Detail layout matches Roadmap phase detail
-- [ ] Mock fixtures cover each knowledge kind; connections load
-- [ ] Dashboard-spec updated; `work:test` green
+- [x] Search sizing matches table pages
+- [x] Feature Specs and Area Specs are separate categories
+- [x] Detail layout matches Roadmap phase detail
+- [x] Mock fixtures cover each knowledge kind; connections load
+- [x] Dashboard-spec updated; `work:test` green
 
 ## Close record
 
-- Result:
-- Specs amended:
-- Journal line:
+- Result: Closed — Knowledge toolbar + Feature≠Area + phase-view detail + Product glance parity + viewport-locked scroll; MOCK Feature/Area stubs + RELEASE-000 fixture; `/api/doc` Decision/Research/Release slices. Founder visual iteration this session (TOC, glance, titles, scroll). Proof: C-013 work lane green (43/43); `/api/doc?id=RELEASE-000` live.
+- Specs amended: SPEC-F-DEV-DASHBOARD
+- Journal line: Knowledge usable like Roadmap detail; next `/plan` or `/run PHASE-008` (artifact molds)
 
 ## Kickoff
 

@@ -221,6 +221,17 @@ export type ReleaseEntry = {
 
 const releaseHeading = /^##\s+(RELEASE-\d{3})\s+[—-]\s+(.+?)\s*$/u;
 
+/** Slice one `## RELEASE-nnn — …` block from RELEASES.md. */
+export function extractReleaseSection(source: string, id: string): string | null {
+  if (!/^RELEASE-\d{3}$/u.test(id)) return null;
+  const blocks = source.replaceAll("\r\n", "\n").split(/\n(?=##\s+RELEASE-\d{3}\b)/u);
+  for (const block of blocks) {
+    const heading = block.split("\n")[0]?.match(releaseHeading);
+    if (heading?.[1] === id) return block.replace(/\n+$/u, "\n");
+  }
+  return null;
+}
+
 export function parseReleases(source: string): ReleaseEntry[] {
   const releases: ReleaseEntry[] = [];
   const blocks = source.split(/\n(?=##\s+RELEASE-\d{3}\b)/u);
