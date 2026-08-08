@@ -2,8 +2,8 @@
 id: SPEC-A-DEVSYSTEM
 kind: area
 title: Development system
-status: active
-superseded_by: null
+status: superseded
+superseded_by: SPEC-A-PRAXIS
 vendor: null
 decisions:
   - D-013
@@ -21,7 +21,7 @@ decisions:
 built_by:
   - PHASE-005
   - PHASE-008
-last_amended: PHASE-008
+last_amended: PHASE-009
 research:
   - R-004
   - R-005
@@ -54,3 +54,7 @@ Learner product behavior is not this area. Dashboard-spec stays under System/ (D
 ## Vendor
 
 null
+
+## Successor
+
+Superseded by **SPEC-A-PRAXIS** (PHASE-009 rename for later extract).

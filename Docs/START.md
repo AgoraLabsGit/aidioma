@@ -57,7 +57,7 @@ Most phases take more than one sitting. That’s normal.
 3. Next session: open the dashboard (**Active** shows the phase + your note), ask where things stand, continue.
 4. When the outcome is actually done, **`/close`** to publish. Don’t close just because the day ended.
 
-**What `/handoff` does:** overwrites a short “where I left off” note (`Handoffs/HANDOFF.md`). It does **not** merge, ship, or end the phase. The next agent (or you) reads that note first.
+**What `/handoff` does:** overwrites a short “where I left off” note (`Handoffs/HANDOFF.md`) attached to one in-flight phase or active Work (`ref`). Active shows it only on that tab. It does **not** merge, ship, or end the phase.
 
 **What `/close` does:** finishes and publishes. With an active phase, that’s the full review + merge. Without a phase, a lighter publish for the session’s work.
 
@@ -67,7 +67,7 @@ Most phases take more than one sitting. That’s normal.
 
 | Page | What it’s for |
 |---|---|
-| **Active** | The phase in flight (if any) and your latest handoff note |
+| **Active** | In-flight phase(s) and active Work; handoff only if attached to the selected tab |
 | **Work** | The list of fixes, chores, research, designs, and proposals |
 | **Roadmap** | Scheduled phases and their state |
 | **Activity** | Recent process events (checks, closes, handoffs, …) |

@@ -5,10 +5,11 @@ title: Active Work write gate
 status: active
 superseded_by: null
 depends_on:
-  - SPEC-A-DEVSYSTEM
+  - SPEC-A-PRAXIS
 decisions: []
-built_by: []
-last_amended: null
+built_by:
+  - PHASE-009
+last_amended: PHASE-009
 research: []
 paths:
   - .cursor/hooks.json
@@ -28,9 +29,11 @@ Agent-path gate (not a full filesystem lockdown).
 - Rule: When Docs-home `Docs/WORK.yaml` has **zero** rows with `status: active`, Cursor Agent
   `preToolUse` **denies** file-mutation tools whose `tool_name` is `Write`, `Delete`, or
   `StrReplace` (and any additional edit tool names the shipped hook lists in its allow-check)
-- Rule: Docs-home root is resolved once per hook run: prefer `AIDIOMA_DOCS_HOME` if set;
-  else `.worktrees/docs` under the workspace root when that directory exists; else the
-  workspace root. The gate reads **only** `{docsHome}/Docs/WORK.yaml`
+- Rule: Docs-home root is resolved once per hook run: (1) `AIDIOMA_DOCS_HOME` if set;
+  (2) `{workspace}/.worktrees/docs` when that directory exists; (3) else climb workspace
+  ancestors for `.worktrees/docs` (D-025 `task/*` / `fix/*` desks); (4) else the
+  workspace root when it already holds `Docs/WORK.yaml` (Docs-home opened as workspace);
+  (5) else the workspace root. The gate reads **only** `{docsHome}/Docs/WORK.yaml`
 - Rule: Always allow (even with zero active Work): `{docsHome}/Docs/WORK.yaml` and
   `{docsHome}/.work/activity/**` (and the same paths relative to workspace when docsHome is
   the workspace root)
@@ -59,5 +62,5 @@ Agent-path gate (not a full filesystem lockdown).
 
 ## Dependencies
 
-Needs SPEC-A-DEVSYSTEM (process / Docs home / Work ledger). Cursor project hooks under
+Needs SPEC-A-PRAXIS (process / Docs home / Work ledger). Cursor project hooks under
 `.cursor/` at the workspace root that agents use for Docs-home work.

@@ -158,7 +158,10 @@ Fixture research body.
       "# Commands overview\n\nCustomer command map.\n",
     ),
     writeFile(path.join(docsRoot, "System", "COMMANDS.md"), "# Commands\n\nLifecycle map.\n"),
-    writeFile(path.join(docsRoot, "Handoffs", "HANDOFF.md"), "# Handoff\n"),
+    writeFile(
+      path.join(docsRoot, "Handoffs", "HANDOFF.md"),
+      "---\nref: PHASE-001\n---\n\n# Handoff\n",
+    ),
   ]);
   return repositoryRoot;
 }
@@ -261,23 +264,28 @@ describe("work dashboard", () => {
     expect(html).toContain("/brand/praxis-wordmark-white.svg");
     expect(html).toContain('id="worktrees-panel-btn"');
     expect(html).toContain('id="worktrees-panel"');
-    expect(html).toContain('data-page="active"');
+    expect(html).toContain('id="active-badge-btn"');
+    expect(html).toContain('id="active-phase-count"');
+    expect(html).toContain('id="page-active"');
     expect(html).toContain('data-page="work"');
     expect(html).toContain('data-page="roadmap"');
     expect(html).toContain('id="issue-pill"');
     expect(html).toContain('id="docs-pill"');
     expect(html).toContain('id="page-signals"');
     expect(html).toContain('id="page-docs"');
+    expect(html).not.toMatch(/class="tab"[^>]*data-page="active"/);
     expect(html).not.toMatch(/class="tab"[^>]*data-page="signals"/);
     expect(html).not.toMatch(/class="tab"[^>]*data-page="docs"/);
     expect(html).toContain('class="reindex-icon"');
     expect(html).toContain('id="commands-panel-btn"');
     expect(html).toContain('id="commands-panel"');
-    const activeAt = html.indexOf('data-page="active"');
+    const activeBadgeAt = html.indexOf('id="active-badge-btn"');
+    const worktreesAt = html.indexOf('id="worktrees-panel-btn"');
     const workAt = html.indexOf('data-page="work"');
     const roadmapAt = html.indexOf('data-page="roadmap"');
-    expect(activeAt).toBeGreaterThan(-1);
-    expect(workAt).toBeGreaterThan(activeAt);
+    expect(activeBadgeAt).toBeGreaterThan(-1);
+    expect(worktreesAt).toBeGreaterThan(activeBadgeAt);
+    expect(workAt).toBeGreaterThan(-1);
     expect(roadmapAt).toBeGreaterThan(workAt);
   });
 
@@ -408,7 +416,7 @@ lessons: null
     );
     await writeFile(
       path.join(overlay, "Docs", "Handoffs", "HANDOFF.md"),
-      "# Handoff\nFrom overlay worktree\n",
+      "---\nref: PHASE-001\n---\n\n# Handoff\nFrom overlay worktree\n",
     );
 
     const worktrees = [
@@ -427,7 +435,10 @@ lessons: null
     expect(status).toBe(200);
     expect(body).toMatchObject({
       phases: [expect.objectContaining({ id: "PHASE-001", state: "active" })],
-      handoff: expect.objectContaining({ body: expect.stringContaining("From overlay worktree") }),
+      handoff: expect.objectContaining({
+        ref: "PHASE-001",
+        body: expect.stringContaining("From overlay worktree"),
+      }),
       projection_roots: expect.objectContaining({
         overlay_phase: "PHASE-001",
         overlay_branch: "phase/001",

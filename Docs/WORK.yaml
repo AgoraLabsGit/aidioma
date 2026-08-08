@@ -12,8 +12,8 @@
   kind: fix
   summary: Proof checklist showed checkmark-in-circle glyphs and misaligned status dots
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -23,8 +23,8 @@
   kind: fix
   summary: Phase Plan/Inputs list text overlapped inline code (table-style CSS grid on li)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -34,8 +34,8 @@
   kind: fix
   summary: Roadmap showed only design phases after type rename to build (stale dashboard process)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ROADMAP
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -45,8 +45,8 @@
   kind: fix
   summary: Issues page looked empty when all FIX rows were closed (Open filter default)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -167,7 +167,7 @@
   summary: Parallel active phases
   status: open
   feature: null
-  area: SPEC-A-DEVSYSTEM
+  area: SPEC-A-PRAXIS
   phase: PHASE-009
   promoted_to: null
   blocked_by: null
@@ -177,8 +177,8 @@
   kind: fix
   summary: Knowledge page cannot load decision bodies (/api/doc resolves DECISIONS only, not D-xxx)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -190,8 +190,8 @@
   kind: proposal
   summary: Wire audit and test infra into phase workflows (Active stubs → real /check and close checks)
   status: promoted
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: PHASE-007
   blocked_by: null
@@ -201,8 +201,8 @@
   kind: task
   summary: Kind-prefixed work ids (F-/T-/P-/Q-/R-) instead of single W- namespace
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -217,8 +217,8 @@
   kind: task
   summary: Clickable column-header sort on all dashboard tables
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -230,8 +230,8 @@
   kind: question
   summary: How to tag Work feature/area before SPEC-F/SPEC-A files exist (provisional tags vs wait for PHASE-002/003)?
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -241,8 +241,8 @@
   kind: task
   summary: Assign feature/area on Work rows once tagging rule is decided
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: W-020
@@ -252,8 +252,8 @@
   kind: fix
   summary: "Work page: open/active rows sort first by default"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-WORK
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -263,8 +263,8 @@
   kind: fix
   summary: Work status chips need distinct colors (open/active/done/promoted/dropped)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -274,8 +274,8 @@
   kind: task
   summary: Cap summary length (chars/words) so all dashboard table rows stay 1–2 lines
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -290,8 +290,8 @@
   kind: task
   summary: Show Age with hours (not days-only) on dashboard tables
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -301,8 +301,8 @@
   kind: fix
   summary: Hide SPEC-F-/SPEC-A- prefixes in dashboard table Feature/Area cells
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -312,8 +312,8 @@
   kind: fix
   summary: Tag proposed/closed phases with feature/area org fields
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -323,8 +323,8 @@
   kind: fix
   summary: Standardize table columns to ID, Kind, Summary, Feature, Area, Status, Age
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -334,8 +334,8 @@
   kind: task
   summary: Agent questions about Work/phases must include a concise summary (not bare ids like W-015)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -347,8 +347,8 @@
   kind: task
   summary: Move Work nav below Active and above Roadmap
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ROADMAP
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -358,8 +358,8 @@
   kind: proposal
   summary: "Work routing v2: executing /triage, Work open_questions field, /audit kind+command, agent-context size discipline"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: PHASE-005
   blocked_by: null
@@ -371,8 +371,8 @@
   kind: audit
   summary: "Agent-context audit: AGENTS.md, COMMANDS.md, skills size and routing fit"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -384,8 +384,8 @@
   kind: fix
   summary: Work page blank / parse_error when kind audit (stale derive enum)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-WORK
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -397,8 +397,8 @@
   kind: task
   summary: "Activity: drop Actor/Phase filters; filters on same row as search; drop actor sub-line"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -410,8 +410,8 @@
   kind: task
   summary: Remove Sort select on table pages that have clickable column headers
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -423,8 +423,8 @@
   kind: audit
   summary: Confirm summaries are capped on all dashboard tables
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -436,8 +436,8 @@
   kind: question
   summary: What is Signals for, and should it leave main nav for a warning icon/panel?
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SIGNALS
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -452,8 +452,8 @@
   kind: task
   summary: Phase-scoped /triage via sub-agent; /close hygiene before audits
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -465,8 +465,8 @@
   kind: proposal
   summary: Knowledge page overhaul with mock-spec fixtures (PHASE-006)
   status: promoted
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: PHASE-006
   blocked_by: null
@@ -479,7 +479,7 @@
   summary: Research panel to refine Feature/Area/Product/Phase/Research artifact molds
   status: promoted
   feature: null
-  area: SPEC-A-DEVSYSTEM
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: PHASE-008
   blocked_by: null
@@ -491,8 +491,8 @@
   kind: fix
   summary: Phase insert forced order renumbering; derive sorted by order only (contract says depends_on first)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -504,8 +504,8 @@
   kind: task
   summary: Remove Refresh text from dashboard reindex button (icon only)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -517,8 +517,8 @@
   kind: fix
   summary: Reindex icon too small in icon-only button; Roadmap default sorted by state not schedule
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ROADMAP
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -530,8 +530,8 @@
   kind: task
   summary: Roadmap Order column — 1-based schedule step right of phase ID
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ROADMAP
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -543,8 +543,8 @@
   kind: fix
   summary: "Dashboard: reindex icon centering; Work empty from T-001 parse_error [43]; Signals via foot pill"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SIGNALS
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -556,8 +556,8 @@
   kind: fix
   summary: "Clear 15 Signals: SPEC last_amended dates broke Lexicon/Content parse → broken_link cascade"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SIGNALS
+  area: SPEC-A-PRAXIS
   phase: PHASE-005
   promoted_to: null
   blocked_by: null
@@ -569,8 +569,8 @@
   kind: proposal
   summary: Implement D-020 Docs+System home worktree; retire D-018 overlay
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -591,8 +591,8 @@
   kind: task
   summary: path→lens map for /close Proof conditional lenses (A-001 residual)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -604,8 +604,8 @@
   kind: task
   summary: Reduced-close mini checklist for standalone /fix /task publish (A-001 residual)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -617,8 +617,8 @@
   kind: audit
   summary: "Command system design: interlock, Adv/MCOO operationalization, project-agnostic skills"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-007
   promoted_to: null
   blocked_by: null
@@ -630,8 +630,8 @@
   kind: fix
   summary: Commands/skills used product/learner coupling — make process project-agnostic
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: PHASE-007
   promoted_to: null
   blocked_by: null
@@ -643,8 +643,8 @@
   kind: fix
   summary: Restore status pill + filter chip colors lost when stashed off task/t-002 (not merged with PHASE-007)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -656,8 +656,8 @@
   kind: task
   summary: Persist dashboard page + filters/sorts across refresh (localStorage)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -669,8 +669,8 @@
   kind: task
   summary: Organize Docs/System — protocols/ and specs/ subfolders
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -682,8 +682,8 @@
   kind: task
   summary: /close dispatches reduced close when no phase active (D-021)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -695,8 +695,8 @@
   kind: audit
   summary: Stale dashboard + Docs home write-path (D-020) agent-context
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-WORK
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -719,8 +719,8 @@
   kind: task
   summary: Wire Docs home write rule into writer skills + refresh ensure-docs-home
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -732,8 +732,8 @@
   kind: audit
   summary: Work ledger immediacy — active rows appear when /task /fix /research start
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-WORK
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -752,8 +752,8 @@
   kind: audit
   summary: Command skills — default sub-agent delegation for /run and peers
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -770,8 +770,8 @@
   kind: task
   summary: All table columns sortable except Summary; serve dashboard UI from Docs home
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -783,8 +783,8 @@
   kind: task
   summary: Apply A-004 delegation defaults into command skills
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -796,8 +796,8 @@
   kind: task
   summary: Dashboard table filter panel (Feature/Area) + Reset on all table pages
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -809,8 +809,8 @@
   kind: fix
   summary: Work Age uses date-only midnight UTC (fake hours); active rows not shown until done
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -822,8 +822,8 @@
   kind: fix
   summary: Activity Status shows event active after Work is done — sync to Work ledger
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -835,8 +835,8 @@
   kind: fix
   summary: Table column sort is one-way only — toggle asc/desc on second click
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -848,8 +848,8 @@
   kind: audit
   summary: "Design review: Work ledger vs Activity journal wiring and status/filter UX"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -861,8 +861,8 @@
   kind: fix
   summary: Persisted Work search hides new active rows (Activity still shows them)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -874,8 +874,8 @@
   kind: fix
   summary: Dashboard from phase/task cwd serves wrong tree → ENOENT spam in terminal
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -887,8 +887,8 @@
   kind: task
   summary: VISIBILITY TEST — leave active; confirm on Work Open + Activity
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -900,8 +900,8 @@
   kind: fix
   summary: Activity Feature/Area stay empty for Work-ref events (phase-only join)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -913,8 +913,8 @@
   kind: task
   summary: "Dashboard UI: remove page/table bylines; shrink Filters badge"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -926,8 +926,8 @@
   kind: audit
   summary: "UI audit: components, page template, fonts/styling consistency"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -939,8 +939,8 @@
   kind: task
   summary: "Detail panels: match Phase layout; collapse top-left; remove half-height border"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -952,8 +952,8 @@
   kind: audit
   summary: Phase Files/Work/Signals/Audits/Tests wiring + Work/Activity detail intelligence
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -980,8 +980,8 @@
   kind: task
   summary: "Detail panels: remove path byline + duplicate id under header"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -993,8 +993,8 @@
   kind: fix
   summary: "Detail panel: Close broken; collapse chevron direction; collapsed rail blocks UI"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1006,8 +1006,8 @@
   kind: task
   summary: "Detail chrome: larger chevron; Close top-right expanded only"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1019,8 +1019,8 @@
   kind: task
   summary: Stop workspace reflow when detail panel opens/collapses
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1032,8 +1032,8 @@
   kind: task
   summary: Age columns default sort newest-first on all tables
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1045,8 +1045,8 @@
   kind: fix
   summary: Collapsed detail rail overlaps topbar — reserve fixed rail gutter only
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1058,8 +1058,8 @@
   kind: fix
   summary: Detail rail still overlaps topbar; panel reopens on refresh
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1071,8 +1071,8 @@
   kind: task
   summary: "/design skill: append activity active flush at start (like /audit)"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1084,8 +1084,8 @@
   kind: task
   summary: Work surfaces activity trails; restore kind design (S-nnn); Activity page retire path
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1097,8 +1097,8 @@
   kind: design
   summary: Work is primary visibility; activity.jsonl projected into Work/Phase detail; Activity page optional
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1113,8 +1113,8 @@
   kind: design
   summary: Keep Work + Activity pages; Activity = process spine (D-023)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1126,8 +1126,8 @@
   kind: fix
   summary: Work detail missing Context and Files sections (Phase parity)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1139,8 +1139,8 @@
   kind: fix
   summary: WORK.yaml S-001 kind design fails validate (enum missing design)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1152,8 +1152,8 @@
   kind: design
   summary: Brief vs Context labels; declared context_paths (not auto tool-reads)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1171,8 +1171,8 @@
   kind: task
   summary: Implement D-024 Brief/Context/Files + Work/Phase context_paths
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1191,8 +1191,8 @@
   kind: task
   summary: "Dashboard defaults: Work newest-first; Roadmap active then next by order"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ROADMAP
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1208,8 +1208,8 @@
   kind: task
   summary: Copy row IDs; humanize Work kind labels (Design); keep D-/S- prefixes
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1225,8 +1225,8 @@
   kind: task
   summary: "Detail title: larger ID + copy button next to collapse"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1242,8 +1242,8 @@
   kind: task
   summary: C-nnn check ids; topbar git sessions badge + panel
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1262,8 +1262,8 @@
   kind: fix
   summary: Backfill check activity refs to C-nnn
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1279,8 +1279,8 @@
   kind: task
   summary: "Late ledger: worktrees rename + project_name brand (PR #33)"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1296,8 +1296,8 @@
   kind: task
   summary: Praxis brand + GitHub mark on worktrees badge
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1313,8 +1313,8 @@
   kind: fix
   summary: Worktrees panel empty — API sessions vs UI worktrees
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1329,8 +1329,8 @@
   kind: task
   summary: "Praxis brand: drop mark, larger type"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1345,8 +1345,8 @@
   kind: task
   summary: Detail panel heading size matches title (#detail-title + .phase-name)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1361,8 +1361,8 @@
   kind: task
   summary: Center Praxis; match page-title size
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1376,8 +1376,8 @@
   kind: task
   summary: Praxis left-align + Outfit wordmark
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1392,8 +1392,8 @@
   kind: fix
   summary: Activity Status stays active for mid-close with phase set and ref null
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1408,8 +1408,8 @@
   kind: task
   summary: Align Praxis wordmark with sidebar nav buttons
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1423,8 +1423,8 @@
   kind: task
   summary: Watch git worktrees metadata so dashboard auto-reindexes on add/remove
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1440,8 +1440,8 @@
   kind: task
   summary: "Sidebar polish: wordmark align/size, gap, soft selected tab"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1455,8 +1455,8 @@
   kind: task
   summary: Fix sidebar brand/nav optical alignment
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1471,8 +1471,8 @@
   kind: task
   summary: Replace sidebar page icons with minimal stroke SVGs
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVITY
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1488,8 +1488,8 @@
   kind: task
   summary: Restore Praxis wordmark size + label-column alignment
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1504,8 +1504,8 @@
   kind: fix
   summary: Align Signals and Theme foot control font, badge, and icon sizing
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SIGNALS
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1521,8 +1521,8 @@
   kind: task
   summary: Tone down light theme glare (duskier shell, deeper ink, stronger chips)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1538,8 +1538,8 @@
   kind: task
   summary: Nav and sidebars use page bg; tables keep surface panels
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1554,8 +1554,8 @@
   kind: fix
   summary: "Light theme: cream shell, kill pure-white panels"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1570,8 +1570,8 @@
   kind: fix
   summary: Align Praxis wordmark with nav icon column
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1586,8 +1586,8 @@
   kind: fix
   summary: Center detail panel collapse arrow inside its button
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1601,8 +1601,8 @@
   kind: fix
   summary: "Light theme tables: warm paper panels (not blue-grey)"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1617,8 +1617,8 @@
   kind: task
   summary: Page + panel titles use mono (same as ID)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1634,7 +1634,7 @@
   summary: "Steady-state: product /task /fix use task|fix worktrees; Docs home meta-only + path leases"
   status: done
   feature: null
-  area: SPEC-A-DEVSYSTEM
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1654,8 +1654,8 @@
   kind: task
   summary: Apply sidebar design-review nits (logo, accent, icons)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1672,7 +1672,7 @@
   summary: Align /close + reduced-close with D-025 dual-desk publish
   status: done
   feature: null
-  area: SPEC-A-DEVSYSTEM
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1691,8 +1691,8 @@
   kind: design
   summary: Praxis Docs page + compact sidebar-foot controls
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SIGNALS
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1711,7 +1711,7 @@
   summary: "Clear IDE Problems: work.yml npm ci scripts + ghost Sonar/TS on deleted paths"
   status: done
   feature: null
-  area: SPEC-A-DEVSYSTEM
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1726,8 +1726,8 @@
   kind: task
   summary: Docs page + icon-only sidebar-foot row
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SIGNALS
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1746,8 +1746,8 @@
   kind: task
   summary: Narrow sidebar to 180px; smaller foot icons
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SIGNALS
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1762,8 +1762,8 @@
   kind: fix
   summary: "Docs page: load START/COMMANDS + layout fill"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1779,8 +1779,8 @@
   kind: fix
   summary: "Docs prose tables: no vertical CMD wrap"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1795,8 +1795,8 @@
   kind: task
   summary: "Docs reader: full-width prose (drop 72ch)"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1811,8 +1811,8 @@
   kind: fix
   summary: "Prose: space after md-tables (Docs + detail)"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1826,8 +1826,8 @@
   kind: audit
   summary: "CSS audit: prose/table/detail vertical rhythm"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1841,8 +1841,8 @@
   kind: task
   summary: "Docs TOC: drop secondary sub-lines"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1856,8 +1856,8 @@
   kind: audit
   summary: "Docs language: beginner / customer-facing Praxis guide"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1874,7 +1874,7 @@
   summary: Reconcile Praxis reality vs specs + System templates
   status: done
   feature: null
-  area: SPEC-A-DEVSYSTEM
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1892,8 +1892,8 @@
   kind: design
   summary: Docs page = beginner Praxis guide (amend D-026)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-DOCS
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1912,8 +1912,8 @@
   kind: task
   summary: "Docs TOC: remove Guide and Praxis labels"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1927,8 +1927,8 @@
   kind: task
   summary: "Docs: Commands overview page + handoff for multi-session phases"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-ACTIVE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -1945,8 +1945,8 @@
   kind: task
   summary: "Knowledge: tighter topbar, id under title, static Documents TOC, font hierarchy"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: PHASE-006
   promoted_to: null
   blocked_by: null
@@ -1963,8 +1963,8 @@
   kind: fix
   summary: Knowledge page content leaked at bottom of other pages
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: PHASE-006
   promoted_to: null
   blocked_by: null
@@ -1980,8 +1980,8 @@
   kind: task
   summary: "Knowledge TOC: drop Documents label; PRODUCT row uses code · status"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: PHASE-006
   promoted_to: null
   blocked_by: null
@@ -1997,8 +1997,8 @@
   kind: audit
   summary: Knowledge Product Status glance vs Feature/Area specs
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: PHASE-006
   promoted_to: null
   blocked_by: null
@@ -2013,8 +2013,8 @@
   kind: fix
   summary: "Knowledge Status glance: Amended label (drop Last)"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: PHASE-006
   promoted_to: null
   blocked_by: null
@@ -2029,8 +2029,8 @@
   kind: fix
   summary: Knowledge detail nested scroll (double overflow)
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: PHASE-006
   promoted_to: null
   blocked_by: null
@@ -2045,8 +2045,8 @@
   kind: task
   summary: Knowledge detail document titles a bit larger
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: PHASE-006
   promoted_to: null
   blocked_by: null
@@ -2062,8 +2062,8 @@
   kind: task
   summary: "Knowledge detail: id + copy to the right of title"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -2081,7 +2081,7 @@
   summary: "Artifact mold panel: Feature/Area/Product/Phase/Research/Decision/Release keep-trim-add"
   status: done
   feature: null
-  area: SPEC-A-DEVSYSTEM
+  area: SPEC-A-PRAXIS
   phase: PHASE-008
   promoted_to: null
   blocked_by: null
@@ -2101,7 +2101,7 @@
   summary: "Lock artifact molds: Spec Rule grammar/stub bar; Product+Release template SSOT; Phase/Research/Decision unchanged"
   status: done
   feature: null
-  area: SPEC-A-DEVSYSTEM
+  area: SPEC-A-PRAXIS
   phase: PHASE-008
   promoted_to: null
   blocked_by: null
@@ -2122,7 +2122,7 @@
   summary: External peer molds for Feature/Area/Product/Phase/Research/Decision/Release (generic software)
   status: done
   feature: null
-  area: SPEC-A-DEVSYSTEM
+  area: SPEC-A-PRAXIS
   phase: PHASE-008
   promoted_to: null
   blocked_by: null
@@ -2142,7 +2142,7 @@
   summary: "Design review panel: living molds vs external peer best practices (generic software)"
   status: done
   feature: null
-  area: SPEC-A-DEVSYSTEM
+  area: SPEC-A-PRAXIS
   phase: PHASE-008
   promoted_to: null
   blocked_by: null
@@ -2159,8 +2159,8 @@
   kind: audit
   summary: "Knowledge page filter/sort gap review vs Roadmap/table pages (Feature/Area panel + status fields)"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -2186,8 +2186,8 @@
   kind: design
   summary: "Knowledge toolbar: Feature/Area Filters panel + Status Current default + Reset"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -2211,8 +2211,8 @@
   kind: task
   summary: "Implement Knowledge Filters panel, Status Current default, and Reset"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -2231,8 +2231,8 @@
   kind: task
   summary: "Cap Knowledge TOC titles to one line; shorten long Research questions"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -2253,8 +2253,8 @@
   kind: audit
   summary: "Dev System docs inventory: thin/outdated/sparse vs living System SSOT"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -2273,8 +2273,8 @@
   kind: task
   summary: "Knowledge TOC titles use 2-line clamp instead of single-line ellipsis"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -2289,8 +2289,8 @@
   kind: task
   summary: "Knowledge TOC hairline dividers between document rows"
   status: done
-  feature: SPEC-F-DEV-DASHBOARD
-  area: SPEC-A-DEVSYSTEM
+  feature: SPEC-F-PRAXIS-KNOWLEDGE
+  area: SPEC-A-PRAXIS
   phase: null
   promoted_to: null
   blocked_by: null
@@ -2307,7 +2307,7 @@
   summary: "Spec: Cursor hook gates material writes until Work status active"
   status: done
   feature: SPEC-F-PRAXIS-ACTIVE-FLUSH
-  area: SPEC-A-DEVSYSTEM
+  area: SPEC-A-PRAXIS
   phase: PHASE-009
   promoted_to: null
   blocked_by: null
@@ -2322,14 +2322,213 @@
 - id: T-057
   kind: task
   summary: "Ship Cursor Active-flush write gate per SPEC-F-PRAXIS-ACTIVE-FLUSH + Adv"
-  status: open
+  status: done
   feature: SPEC-F-PRAXIS-ACTIVE-FLUSH
-  area: SPEC-A-DEVSYSTEM
+  area: SPEC-A-PRAXIS
   phase: PHASE-009
   promoted_to: null
   blocked_by: null
-  note: "Fresh session: implement .cursor/hooks*; Required Adv on hook before done. Spec locked S-008."
-  context_paths: null
+  note: "Fresh session: implement .cursor/hooks*; Required Adv on hook before done. Spec locked S-008. Re-flushed after concurrent /close refreshed Docs home."
+  context_paths:
+    - .cursor/hooks.json
+    - .cursor/hooks/active-flush-gate.mjs
+    - Docs/Specs/Features/SPEC-F-PRAXIS-ACTIVE-FLUSH.md
+    - Docs/System/protocols/adv-protocol.md
   open_questions: null
-  done_summary: null
-  opened: 2026-08-08T22:03:29Z
+  done_summary: "Shipped Active-flush gate on task/t-057-active-flush-hook: .cursor/hooks.json (preToolUse matcher Write|Delete|StrReplace, failClosed:true) + .cursor/hooks/active-flush-gate.mjs. Docs-home resolve AIDIOMA_DOCS_HOME|.worktrees/docs|ancestor climb|workspace; always-allow only that WORK.yaml + .work/activity/**; hooks not self-allowlisted. Spec resolve rule amended for D-025 desks. Adv FAIL (sibling docs-home miss) → fix → Adv PASS (sub-agent). Proof: stdin scenarios deny/allow/parse/missing/climb. Publish via /close."
+  opened: 2026-08-08T22:09:33Z
+
+- id: T-058
+  kind: task
+  summary: "Execute PHASE-009 — Praxis Features + Active chrome"
+  status: done
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
+  phase: PHASE-009
+  promoted_to: null
+  blocked_by: null
+  note: "Execute vehicle for PHASE-009; outcome ready — /close in progress (founder invoked). W-015 stays open proposal (non-goal)."
+  context_paths:
+    - Docs/Roadmap/Phases/PHASE-009-praxis-features-and-active-chrome.md
+    - Docs/Specs/
+    - Docs/System/dashboard/
+    - Docs/System/system.md
+    - Docs/WORK.yaml
+    - .cursor/hooks.json
+    - .cursor/hooks/
+  open_questions: null
+  done_summary: "PHASE-009 outcome implemented and ready for full close: Praxis Area + page Features + ACTIVE-FLUSH; Active badge/tabs + scoped handoffs (D-031); hook T-057; visual fixes F-031–F-034. Founder invoked /close — close in progress. W-015 parallel-runtime remains open proposal (phase non-goal)."
+  opened: 2026-08-08T22:19:17Z
+
+- id: A-040
+  kind: audit
+  summary: "Adv audit: PHASE-009 Praxis Area + page Feature specs"
+  status: done
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
+  phase: PHASE-009
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: adversarial pass on generated Praxis specs"
+  context_paths:
+    - Docs/Specs/Areas/SPEC-A-PRAXIS.md
+    - Docs/Specs/Features/SPEC-F-PRAXIS-SHELL.md
+    - Docs/Specs/Features/SPEC-F-PRAXIS-ACTIVE.md
+    - Docs/Specs/Features/SPEC-F-PRAXIS-WORK.md
+    - Docs/Specs/Features/SPEC-F-PRAXIS-ROADMAP.md
+    - Docs/Specs/Features/SPEC-F-PRAXIS-ACTIVITY.md
+    - Docs/Specs/Features/SPEC-F-PRAXIS-KNOWLEDGE.md
+    - Docs/Specs/Features/SPEC-F-PRAXIS-SIGNALS.md
+    - Docs/Specs/Features/SPEC-F-PRAXIS-DOCS.md
+    - Docs/Specs/Features/SPEC-F-PRAXIS-ACTIVE-FLUSH.md
+    - Docs/System/protocols/adv-protocol.md
+  open_questions: null
+  done_summary: "ADV WARN (founder ack). Praxis Area+9 Features+ACTIVE-FLUSH exist; DEVSYSTEM/DEV-DASHBOARD superseded; validate 0 issues. WARN: (1) page Feature frontmatter reused broad D-011–D-027 set — Active/Work/etc. over-claim decisions they do not own; trim per page. (2) SPEC-A-PRAXIS at most one active phase vs Shell/Active N-tab + active+blocked badge — intentional UI contract ahead of W-015; keep wording that process!=UI. No FAIL. UI matches badge/tabs. Recommend trim decision lists before /close."
+  opened: 2026-08-08T22:37:32Z
+- id: A-041
+  kind: audit
+  summary: "Gap scan: Decisions/Designs/Tasks/Research missing core Specs"
+  status: done
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
+  phase: PHASE-009
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: find missing core Specs beyond Praxis page split"
+  context_paths:
+    - Docs/DECISIONS.md
+    - Docs/WORK.yaml
+    - Docs/Research/
+    - Docs/Specs/
+  open_questions: null
+  done_summary: "Gap scan: Praxis page Features covered. No Decision Affects -> missing Spec. S-008->ACTIVE-FLUSH ok. P1 candidates: SPEC for content generation pipeline (W-013 feat null); SPEC-F-TRANSLATION/MT-AI (DeepL/D-015 mentioned in Lexicon boundaries, no Feature). P2: auth/session/onboarding — wait PHASE-002 PRODUCT map. Non-gaps: Practice/Progress/Lexicon/Content/Learner/Praxis pages. W-015 stays proposal (no runtime Spec yet). Recommend /log or /design for Translation + Content-pipeline only if a consumer ships soon."
+  opened: 2026-08-08T22:37:32Z
+
+- id: S-009
+  kind: design
+  summary: "Active page tabs include status:active Work (phase-style chrome)"
+  status: done
+  feature: SPEC-F-PRAXIS-ACTIVE
+  area: SPEC-A-PRAXIS
+  phase: PHASE-009
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: active task specs show on Active like phases; not Activity chips"
+  context_paths:
+    - Docs/Specs/Features/SPEC-F-PRAXIS-ACTIVE.md
+    - Docs/System/dashboard/public/app.js
+    - Docs/DECISIONS.md
+  open_questions: null
+  done_summary: "Locked SPEC-F-PRAXIS-ACTIVE: Active tabs = in-flight phases + status:active Work; Work tabs use phase-style detail chrome; header badge stays phases-only; D-023 preserved (not Activity chips). UI app.js shipped. Adv PASS (coordinator; sub-agent unavailable): no overclaim vs D-023; badge/Work separation honest; empty state covers Work-only."
+  opened: 2026-08-08T22:39:13Z
+
+- id: S-010
+  kind: design
+  summary: "Handoff requires phase/Work ref; Active projects only on matching tab"
+  status: done
+  feature: SPEC-F-PRAXIS-ACTIVE
+  area: SPEC-A-PRAXIS
+  phase: PHASE-009
+  promoted_to: null
+  blocked_by: null
+  note: "Scoped Active handoffs plan; D-031"
+  context_paths:
+    - Docs/Specs/Features/SPEC-F-PRAXIS-ACTIVE.md
+    - Docs/Handoffs/HANDOFF.md
+    - Docs/System/derive/derive.ts
+    - Docs/System/dashboard/public/app.js
+  open_questions: null
+  done_summary: "D-031 + SPEC-F-PRAXIS-ACTIVE: HANDOFF.md requires ref (phase or active Work); derive exposes handoff.ref; Active shows Handoff only when tab id matches. Skill/COMMANDS/system/START updated. Adv PASS (coordinator): overwrite kept; no Handoffs page; unscoped missing ref."
+  opened: 2026-08-08T22:56:57Z
+
+- id: F-031
+  kind: fix
+  summary: "Active phase Git glance shows docs/ssot instead of phase worktree"
+  status: done
+  feature: SPEC-F-PRAXIS-ACTIVE
+  area: SPEC-A-PRAXIS
+  phase: PHASE-009
+  promoted_to: null
+  blocked_by: null
+  note: "gitGlance uses index.repo (Docs home); should prefer worktree.phase_id match"
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/Specs/Features/SPEC-F-PRAXIS-ACTIVE.md
+  open_questions: null
+  done_summary: "Phase Status Git uses phase.git from matching phase worktree (not Docs-home repo.branch). UI gitGlanceForPhase + derive attach; SPEC-F-PRAXIS-ACTIVE rule; regression in derive.test."
+  opened: 2026-08-08T22:59:28Z
+
+- id: F-032
+  kind: fix
+  summary: "Active Plan section splits soft-wrapped steps into boxed rows (all show 1)"
+  status: done
+  feature: SPEC-F-PRAXIS-ACTIVE
+  area: SPEC-A-PRAXIS
+  phase: PHASE-009
+  promoted_to: null
+  blocked_by: null
+  note: "Visual accept on T-058: Plan chrome breaks mid-sentence; prefer plain list + soft-wrap fix in renderMarkdown"
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/filters.test.ts
+  open_questions: null
+  done_summary: "Plan soft-wraps stay in one <li> (renderMarkdown); Plan/Inputs use plain numbered/bulleted lists instead of boxed rows. Proof: PHASE-009 Plan → 1 ol / 6 li; work:test 49; browser Active Plan 1–6."
+  opened: 2026-08-08T23:02:11Z
+
+- id: F-033
+  kind: fix
+  summary: "Specs amended dumps space-separated codes; should match Files list layout"
+  status: done
+  feature: SPEC-F-PRAXIS-ACTIVE
+  area: SPEC-A-PRAXIS
+  phase: PHASE-009
+  promoted_to: null
+  blocked_by: null
+  note: "Visual accept: Specs amended like Files (id + title rows), not inline code soup"
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+  open_questions: null
+  done_summary: "Specs amended uses Files-style id+title rows (amendedSpecsHtml); no inline code soup."
+  opened: 2026-08-08T23:04:49Z
+
+- id: F-034
+  kind: fix
+  summary: "Active badge count ignores status:active Work tabs"
+  status: done
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
+  phase: PHASE-009
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: badge should match Active tabs (phases + active Work)"
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/Specs/Features/SPEC-F-PRAXIS-SHELL.md
+    - Docs/Specs/Features/SPEC-F-PRAXIS-ACTIVE.md
+  open_questions: null
+  done_summary: "Active badge count = activeTabItems (phases + status:active Work). Specs ACTIVE+SHELL amended; filters.test F-034."
+  opened: 2026-08-08T23:05:13Z
+
+- id: T-059
+  kind: task
+  summary: "Close PHASE-009 — publish Praxis Features + Active chrome"
+  status: active
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
+  phase: PHASE-009
+  promoted_to: null
+  blocked_by: null
+  note: "Full /close unlock + publish dual desks"
+  context_paths:
+    - Docs/Roadmap/Phases/PHASE-009-praxis-features-and-active-chrome.md
+    - Docs/WORK.yaml
+    - Docs/Handoffs/HANDOFF.md
+    - Docs/System/
+    - Docs/Specs/
+    - .cursor/hooks.json
+    - .cursor/hooks/
+  open_questions: null
+  done_summary: "Full /close PHASE-009: triage+C-018+Adv WARN fixed; dual-desk publish (phase hooks + Docs meta)."
+  opened: 2026-08-08T23:08:52Z
+

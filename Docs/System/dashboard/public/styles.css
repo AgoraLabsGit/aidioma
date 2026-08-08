@@ -448,10 +448,12 @@ html:not([data-theme="light"]) .theme-icon-sun {
   opacity: 0.7;
 }
 
-.worktrees-badge-btn {
+.worktrees-badge-btn,
+.active-badge-btn {
   position: relative;
 }
-.worktrees-count {
+.worktrees-count,
+.active-phase-count {
   position: absolute;
   top: -4px;
   right: -4px;
@@ -466,6 +468,46 @@ html:not([data-theme="light"]) .theme-icon-sun {
   font-weight: var(--fw-semibold);
   line-height: 16px;
   text-align: center;
+}
+.active-badge-btn[aria-current="page"] {
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.active-phase-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-2);
+}
+.active-phase-tab {
+  appearance: none;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-subtle);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.active-phase-tab:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+.active-phase-tab[aria-selected="true"] {
+  color: var(--accent);
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+}
+.active-phase-tab-work {
+  font-variant-numeric: tabular-nums;
+}
+.active-phase-panel {
+  min-width: 0;
 }
 .worktrees-panel .worktree-row {
   display: grid;
@@ -1284,90 +1326,62 @@ main {
 }
 
 /*
- * Phase lists: row + divider chrome for steps/checklists, but NEVER display:grid/flex
- * on prose <li> — that makes each <code> a separate grid/flex item and overlaps text.
- * Real key→value maps: authored markdown tables (.md-table) only.
- * Flat exclusion lists (.phase-plain-list): light bullets, not table chrome.
+ * Phase lists: plain bullets/numbers for Plan/Inputs/Out of scope.
+ * NEVER display:grid/flex on prose <li> — each <code> becomes a grid item and overlaps.
+ * Proof checklists keep row chrome below. Authored key→value maps: .md-table only.
  */
-.phase-card-section .phase-plain-list {
+.phase-card-section .phase-plain-list,
+.phase-card-section .prose ul:not(.md-checklist):not(.proof-checklist),
+.phase-card-section .prose ol {
   list-style: none;
-  margin: var(--space-2) 0 0;
+  margin: var(--space-2) 0 0.85em;
   padding: 0;
+  width: 100%;
   border: 0;
+  border-radius: 0;
   background: transparent;
+  overflow: visible;
+  counter-reset: phase-step;
 }
-.phase-card-section .phase-plain-list li {
+.phase-card-section .phase-plain-list {
+  margin-bottom: 0;
+}
+.phase-card-section .phase-plain-list li,
+.phase-card-section .prose ul:not(.md-checklist):not(.proof-checklist) li,
+.phase-card-section .prose ol li {
   display: block;
   position: relative;
   margin: 0;
   padding: 0.35rem 0 0.35rem 1.1rem;
   border: 0;
   color: var(--phase-body-color, var(--text-muted));
-  line-height: 1.5;
+  font-size: inherit;
+  line-height: 1.55;
+  word-break: break-word;
 }
-.phase-card-section .phase-plain-list li::before {
+.phase-card-section .prose ol li {
+  padding-left: 1.75rem;
+  counter-increment: phase-step;
+}
+.phase-card-section .prose ol li::before {
+  content: counter(phase-step) ".";
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  width: 1.5rem;
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  color: var(--text-subtle);
+  line-height: 1.55;
+}
+.phase-card-section .phase-plain-list li::before,
+.phase-card-section .prose ul:not(.md-checklist):not(.proof-checklist) li::before {
   content: "";
   position: absolute;
   left: 0.15rem;
   top: 0.75rem;
   width: 5px;
   height: 5px;
-  border-radius: 50%;
-  background: var(--text-subtle);
-}
-.phase-card-section > ul:not(.phase-plain-list),
-.phase-card-section .prose ul,
-.phase-card-section .prose ol {
-  list-style: none;
-  margin: var(--space-2) 0 0.85em;
-  padding: 0;
-  width: 100%;
-  border: 1px solid var(--divider);
-  border-radius: var(--radius-md);
-  background: var(--surface);
-  overflow: hidden;
-  counter-reset: phase-step;
-}
-.phase-card-section > ul:not(.phase-plain-list) li,
-.phase-card-section .prose ul li,
-.phase-card-section .prose ol li {
-  display: block;
-  position: relative;
-  margin: 0;
-  padding: 0.7rem var(--space-3) 0.7rem 2.5rem;
-  border-top: 1px solid var(--divider);
-  color: var(--phase-body-color, var(--text-muted));
-  font-size: inherit;
-  line-height: 1.55;
-  word-break: break-word;
-}
-.phase-card-section > ul:not(.phase-plain-list) li:first-child,
-.phase-card-section .prose ul li:first-child,
-.phase-card-section .prose ol li:first-child {
-  border-top: 0;
-}
-.phase-card-section .prose ol li {
-  counter-increment: phase-step;
-}
-.phase-card-section .prose ol li::before {
-  content: counter(phase-step);
-  position: absolute;
-  left: var(--space-3);
-  top: 0.75rem;
-  width: 1.25rem;
-  font-family: var(--mono);
-  font-size: var(--fs-xs);
-  color: var(--text-subtle);
-  line-height: 1.4;
-}
-.phase-card-section > ul:not(.phase-plain-list) li::before,
-.phase-card-section .prose ul:not(.md-checklist):not(.proof-checklist) li::before {
-  content: "";
-  position: absolute;
-  left: calc(var(--space-3) + 0.35rem);
-  top: 1.05rem;
-  width: 6px;
-  height: 6px;
   border-radius: 50%;
   background: var(--text-subtle);
 }

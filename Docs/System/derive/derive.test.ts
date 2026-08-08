@@ -76,7 +76,10 @@ title: Broken
     writeFile(path.join(docsRoot, "DECISIONS.md"), "# Decisions\n"),
     writeFile(path.join(docsRoot, "RELEASES.md"), "# Releases\n"),
     writeFile(path.join(docsRoot, "PRODUCT.md"), "# Product\n"),
-    writeFile(path.join(docsRoot, "Handoffs", "HANDOFF.md"), "# Handoff\nNext: /run\n"),
+    writeFile(
+      path.join(docsRoot, "Handoffs", "HANDOFF.md"),
+      "---\nref: PHASE-001\n---\n\n# Handoff\nNext: /run\n",
+    ),
     writeFile(path.join(docsRoot, "Roadmap", "Roadmap.md"), "# Roadmap\n"),
   ]);
 
@@ -96,6 +99,46 @@ describe("derive", () => {
     expect(index.phases[0]?.id).toBe("PHASE-001");
     expect(index.next_command).toBe("/run");
     expect(index.handoff.body).toContain("Next: /run");
+    expect(index.handoff.ref).toBe("PHASE-001");
+  });
+
+  it("treats handoff without valid ref as unscoped", async () => {
+    const repositoryRoot = await createDocsFixture();
+    await writeFile(
+      path.join(repositoryRoot, "Docs", "Handoffs", "HANDOFF.md"),
+      "# Handoff\nNo frontmatter\n",
+    );
+    const index = await derive({
+      repositoryRoot,
+      writeIndex: false,
+      now: () => new Date("2026-08-05T12:00:00.000Z"),
+    });
+    expect(index.handoff.ref).toBeNull();
+    expect(index.handoff.body).toContain("No frontmatter");
+  });
+
+  it("attaches phase.git from matching phase worktree not projection repo", async () => {
+    const repositoryRoot = await createDocsFixture();
+    const phaseDesk = path.join(repositoryRoot, ".worktrees", "phase-001");
+    await mkdir(phaseDesk, { recursive: true });
+    const index = await derive({
+      repositoryRoot,
+      writeIndex: false,
+      overlayWorktrees: false,
+      worktrees: [
+        { path: repositoryRoot, head: "aaa", branch: "docs/ssot", isPrimary: true },
+        {
+          path: phaseDesk,
+          head: "bbb",
+          branch: "phase/001-dev-system-dashboard",
+          isPrimary: false,
+        },
+      ],
+      now: () => new Date("2026-08-05T12:00:00.000Z"),
+    });
+    expect(index.phases[0]?.id).toBe("PHASE-001");
+    expect(index.phases[0]?.git?.branch).toBe("phase/001-dev-system-dashboard");
+    expect(index.phases[0]?.git?.branch).not.toBe("docs/ssot");
   });
 
   it("records parse_error without crashing", async () => {
@@ -417,7 +460,7 @@ Live in worktree.
     );
     await writeFile(
       path.join(overlay, "Docs", "Handoffs", "HANDOFF.md"),
-      "# Handoff\nActive in overlay\n",
+      "---\nref: PHASE-001\n---\n\n# Handoff\nActive in overlay\n",
     );
     await writeFile(
       path.join(overlay, "Docs", "Research", "R-003.md"),
@@ -483,7 +526,10 @@ date: 2026-08-07
     });
 
     expect(index.phases[0]).toMatchObject({ id: "PHASE-001", state: "active" });
-    expect(index.handoff.body).toContain("Active in overlay");
+    expect(index.handoff).toMatchObject({
+      ref: "PHASE-001",
+      body: expect.stringContaining("Active in overlay"),
+    });
     expect(index.research.some((item) => item.id === "R-003")).toBe(true);
     expect(index.work.some((row) => row.id === "T-001")).toBe(true);
     expect(index.activity.current_month.some((event) => event.summary === "overlay event")).toBe(

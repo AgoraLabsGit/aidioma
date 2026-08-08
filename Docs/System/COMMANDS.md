@@ -48,7 +48,7 @@ never delete Docs home.
 | `/check` | Path-aware tests/lint; record `last_check` | Is the test run; must not fix | — |
 | `/launch` | App dev server | none | — |
 | `/dashboard` | Ensure+refresh Docs home (`.worktrees/docs` / `docs/ssot`); project that tree (else D-018) | none | — |
-| `/handoff` | Overwrite `Handoffs/HANDOFF.md` | none | — |
+| `/handoff` | Overwrite `Handoffs/HANDOFF.md` with required `ref` (phase or active Work) | none | — |
 
 **Triage mode:** Inside `/run` / active phase → that phase’s Work only (implicit). No active phase → unassigned (`phase: null`) batch.
 

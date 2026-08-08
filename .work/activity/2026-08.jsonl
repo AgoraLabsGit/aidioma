@@ -328,3 +328,41 @@
 {"ts":"2026-08-08T22:07:00Z","type":"close","ref":null,"phase":null,"summary":"reduced close inventory: meta docs/ssot dirty; no product desk; C-016 PASS","status":"active","cmd":"/close"}
 {"ts":"2026-08-08T22:08:30Z","type":"close","ref":null,"phase":null,"summary":"reduced close MERGED PR #46 @390922f; C-016 PASS; next /run PHASE-009","status":"complete","cmd":"/close"}
 {"ts":"2026-08-08T22:08:30Z","type":"close","ref":null,"phase":null,"summary":"reduced close MERGED PR #46 @390922f; C-016 PASS; next /run PHASE-009","status":"complete","cmd":"/close"}
+{"ts":"2026-08-08T22:09:33Z","type":"task","ref":"T-057","phase":"PHASE-009","summary":"Re-flush active after Docs-home refresh wiped ledger; continue Active-flush hook","status":"active","cmd":"/task"}
+{"ts":"2026-08-08T22:10:46Z","type":"task","ref":"T-057","phase":"PHASE-009","summary":"Shipped Active-flush hook; Adv FAIL→PASS; desk task/t-057-active-flush-hook","status":"complete","cmd":"/task"}
+{"ts":"2026-08-08T22:13:19Z","type":"task","ref":"T-057","phase":"PHASE-009","summary":"Live proof: Cursor preToolUse denied Write with zero active; probe file absent","status":"complete","cmd":"/task"}
+{"ts":"2026-08-08T22:19:36Z","type":"run","ref":"PHASE-009","phase":"PHASE-009","summary":"Activate + /run PHASE-009 Praxis Features and Active chrome","status":"active","cmd":"/run"}
+{"ts":"2026-08-08T22:19:36Z","type":"task","ref":"T-058","phase":"PHASE-009","summary":"Execute PHASE-009 — unlock Active-flush + run outcome","status":"active","cmd":"/run"}
+{"ts":"2026-08-08T22:20:54Z","type":"triage","ref":"PHASE-009","phase":"PHASE-009","summary":"Phase-scoped triage: W-015 leave; T-058 leave; T-057 done (hooks untracked on phase+task desks — publish still needed); S-008 done skipped; no auto-exec","status":"complete","cmd":"/triage"}
+{"ts":"2026-08-08T22:24:06Z","type":"run","ref":"PHASE-009","phase":"PHASE-009","summary":"Praxis specs split + Active badge/tabs UI + system.md; validate ok","status":"active","cmd":"/run"}
+{"ts":"2026-08-08T22:37:33Z","type":"audit","ref":"A-040","phase":"PHASE-009","summary":"Adv audit Praxis specs — active","status":"active","cmd":"/audit"}
+{"ts":"2026-08-08T22:37:33Z","type":"audit","ref":"A-041","phase":"PHASE-009","summary":"Gap scan missing core Specs — active","status":"active","cmd":"/audit"}
+{"ts":"2026-08-08T22:38:17Z","type":"audit","ref":"A-040","phase":"PHASE-009","summary":"Adv WARN on Praxis specs — decision frontmatter + one-active vs tabs","status":"complete","cmd":"/audit"}
+{"ts":"2026-08-08T22:38:17Z","type":"audit","ref":"A-041","phase":"PHASE-009","summary":"Gap scan: Translation + content-pipeline Spec candidates; Praxis covered","status":"complete","cmd":"/audit"}
+{"ts":"2026-08-08T22:38:28Z","type":"audit","ref":"A-040","phase":"PHASE-009","summary":"Adv WARN on Praxis specs — decision frontmatter + one-active vs tabs","status":"complete","cmd":"/audit"}
+{"ts":"2026-08-08T22:38:28Z","type":"audit","ref":"A-041","phase":"PHASE-009","summary":"Gap scan: Translation + content-pipeline Spec candidates; Praxis covered","status":"complete","cmd":"/audit"}
+{"ts":"2026-08-08T22:39:13Z","type":"design","ref":"S-009","phase":"PHASE-009","summary":"Active page shows active Work with phase-style chrome","status":"active","cmd":"/design"}
+{"ts":"2026-08-08T22:39:53Z","type":"spec","ref":"SPEC-F-PRAXIS-ACTIVE","phase":"PHASE-009","summary":"Active page tabs include status:active Work (S-009)","status":"complete","cmd":"/design"}
+{"ts":"2026-08-08T22:44:57Z","type":"task","ref":"T-058","phase":"PHASE-009","summary":"Deleted mock PHASE-099 fixture from Roadmap","status":"complete","cmd":"/task"}
+{"ts":"2026-08-08T22:45:42Z","type":"close","ref":"PHASE-009","phase":"PHASE-009","summary":"Full close start — PHASE-009 active; inventory dual desks","status":"active","cmd":"/close"}
+{"ts":"2026-08-08T22:46:30Z","type":"triage","ref":"PHASE-009","phase":"PHASE-009","summary":"Phase triage: 7 rows leave; close blocked on T-058 + visual accept + dirty Docs-home","status":"complete","cmd":"/triage"}
+{"ts":"2026-08-08T22:46:35Z","type":"check","ref":"C-017","phase":"PHASE-009","summary":"close work-lane: typecheck → test → validate","status":"active","cmd":"/check"}
+{"ts":"2026-08-08T22:47:10Z","type":"check","ref":"C-017","phase":"PHASE-009","summary":"C-017 PASS work: typecheck+test(46)+validate","status":"complete","cmd":"/check"}
+{"ts":"2026-08-08T22:47:15Z","type":"close","ref":"PHASE-009","phase":"PHASE-009","summary":"Proof FAIL — founder visual accept pending; no merge","status":"failed","cmd":"/close"}
+{"ts":"2026-08-08T22:56:57Z","type":"design","ref":"S-010","phase":"PHASE-009","summary":"Scoped handoffs — active design","status":"active","cmd":"/design"}
+{"ts":"2026-08-08T22:58:34Z","type":"design","actor":"agent","cmd":"/design","phase":"PHASE-009","ref":"S-010","status":"complete","summary":"D-031 scoped handoffs: ref required; Active matches tab"}
+{"ts":"2026-08-08T22:59:28Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-009","ref":"F-031","status":"active","summary":"Phase Git glance uses docs/ssot not phase worktree"}
+{"ts":"2026-08-08T23:00:34Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-009","ref":"F-031","status":"complete","summary":"Phase Git glance uses phase worktree not docs/ssot"}
+{"ts": "2026-08-08T23:02:11Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": "PHASE-009", "ref": "F-032", "status": "active", "summary": "Plan section soft-wrap/row chrome broken on Active"}
+{"ts": "2026-08-08T23:04:14Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": "PHASE-009", "ref": "F-032", "status": "complete", "summary": "Plan section plain list + soft-wrap fix"}
+{"ts":"2026-08-08T23:04:24Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-009","ref":"T-058","status":"complete","summary":"Remove Signals+Amends from phase Status glance"}
+{"ts": "2026-08-08T23:04:49Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": "PHASE-009", "ref": "F-033", "status": "active", "summary": "Specs amended inline codes \u2192 Files-style list"}
+{"ts":"2026-08-08T23:04:53Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-009","ref":"F-033","status":"active","summary":"Active badge should count active Work tabs"}
+{"ts":"2026-08-08T23:05:13Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-009","ref":"F-033","status":"complete","summary":"Specs amended Files-style list (lease release)"}
+{"ts":"2026-08-08T23:05:13Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-009","ref":"F-034","status":"active","summary":"Active badge should count active Work tabs"}
+{"ts":"2026-08-08T23:05:30Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-009","ref":"F-034","status":"complete","summary":"Active badge counts phases + active Work"}
+{"ts":"2026-08-08T23:08:30Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-009","ref":"PHASE-009","status":"complete","summary":"Phase triage: W-015 leave (proposal); T-058 done (outcome ready, /close in progress); no other open|active"}
+{"ts":"2026-08-08T23:08:52Z","type":"task","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"T-059","status":"active","summary":"Close PHASE-009 unlock + publish"}
+{"ts":"2026-08-08T23:08:57Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-009","ref":"C-018","status":"complete","summary":"work:typecheck+test+validate PASS"}
+{"ts":"2026-08-08T23:10:34Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"PHASE-009","status":"active","summary":"Full close start — triage ok; C-018 PASS; Adv WARN fixed; publishing desks"}
+{"ts":"2026-08-08T23:10:50Z","type":"task","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"T-059","status":"active","summary":"Re-activate for close publish writes"}

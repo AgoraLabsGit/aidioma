@@ -81,7 +81,7 @@ Why: One capture/do-now home; phases remain schedule SSOT; no second Roadmap
 Revisit if: Ledger becomes a competing schedule (add order fields, dual-write phases)
 
 ## D-013 — Thin SPEC stubs for Work feature/area tags
-Date: 2026-08-06 · Phase: PHASE-005 · From: W-020 · Affects: [SPEC-A-DEVSYSTEM, SPEC-A-LEARNER, SPEC-A-CONTENT, SPEC-F-DEV-DASHBOARD, SPEC-F-PRACTICE, SPEC-F-LEXICON, SPEC-F-PROGRESS]
+Date: 2026-08-06 · Phase: PHASE-005 · From: W-020 · Affects: [SPEC-A-PRAXIS, SPEC-A-LEARNER, SPEC-A-CONTENT, SPEC-F-PRAXIS-SHELL, SPEC-F-PRACTICE, SPEC-F-LEXICON, SPEC-F-PROGRESS]
 Chose: Create thin SPEC-A/SPEC-F stubs now so Work and phases can tag feature/area (option C)
 Why: Org spine needs real ids; waiting for PHASE-002 left every Work row null
 Revisit if: Stubs drift from approved PRODUCT.md map and need supersede/merge
@@ -100,19 +100,19 @@ Why: Different jobs; Kaikki has no stable sense ids or phrase/curriculum authori
 Revisit if: A measured import pipeline publishes reviewed Kaikki candidates into `content/lexicon/` with receipt schema
 
 ## D-018 — Main-rooted dashboard with active worktree overlay
-Date: 2026-08-07 · Phase: PHASE-007 · From: R-003 · Affects: [SPEC-F-DEV-DASHBOARD, SPEC-A-DEVSYSTEM]
+Date: 2026-08-07 · Phase: PHASE-007 · From: R-003 · Affects: [SPEC-F-PRAXIS-SHELL, SPEC-A-PRAXIS]
 Chose: One `/dashboard` always rooted at the primary git worktree; `derive()` overlays the single active-phase worktree’s phases, HANDOFF, Research, WORK.yaml, and activity — over dual-writing `state: active` onto main or a separate live-mirror file
 Why: Founder needs live phase/work/activity on one main-rooted dashboard before `/close` merges; phase branch remains schedule SSOT for audited main
 Revisit if: Overlay merge rules drift from Docs SSOT, or parallel active phase worktrees become real (W-015)
 
 ## D-019 — Command audit bars, /check protocol, and May-invoke links
-Date: 2026-08-07 · Phase: PHASE-007 · From: R-003 · Affects: [SPEC-A-DEVSYSTEM, SPEC-F-DEV-DASHBOARD]
+Date: 2026-08-07 · Phase: PHASE-007 · From: R-003 · Affects: [SPEC-A-PRAXIS, SPEC-F-PRAXIS-SHELL]
 Chose: Nest close lenses under Proof/Scope/Publish; required Adv on `/research` `/design` `/close` claims; `/run` starts with implicit phase `/triage` (sub-agent) and no mandatory Adv; path-aware `/check` inside `/close` and standalone; explicit May-invoke / Must-precede links on every command (incl. `/plan`/`/design` review Research first)
 Why: Thin optional `/audit` failed founder intent; agents must chain commands from instructions, not invent workflow
 Revisit if: Required Adv on every `/run` coding slice becomes the default, or May-invoke tables drift from skills
 
 ## D-020 — Docs+System home worktree (multi-agent SSOT)
-Date: 2026-08-07 · Phase: PHASE-007 · From: — · Affects: [SPEC-A-DEVSYSTEM, SPEC-F-DEV-DASHBOARD]
+Date: 2026-08-07 · Phase: PHASE-007 · From: — · Affects: [SPEC-A-PRAXIS, SPEC-F-PRAXIS-SHELL]
 Chose: Permanent **Docs home** worktree as the only writable SSOT for `Docs/**` (including `Docs/System/`) and `.work/**`; phase/task worktrees are for product code; `/dashboard` always roots at the Docs home — over D-018 primary+overlay and over dual-writing Docs across agent worktrees
 Why: Founder runs parallel agents (phase + tasks/fixes/research). Overlay still assumes one “live” Docs writer and merges trees; separate agent checkouts of `Docs/` diverge (`state: proposed` vs `active`). One Docs home gives one camera and one ledger without inventing multi-root truth.
 Revisit if: Docs-home merge lag blocks phase close, or two agents editing the same Docs-home files thrash `WORK.yaml` worse than overlay did
@@ -158,13 +158,13 @@ Shipped (P-001, 2026-08-07): `resolveDocsHomeRoot`, dashboard pin, `npm run work
 skills/AGENTS/COMMANDS. D-018 overlay remains only when Docs home is absent.
 
 ## D-021 — `/close` dispatches phase close or reduced close
-Date: 2026-08-07 · Phase: — · From: — · Affects: [SPEC-A-DEVSYSTEM]
+Date: 2026-08-07 · Phase: — · From: — · Affects: [SPEC-A-PRAXIS]
 Chose: `/close` always — active phase → full phase close; no phase → reduced close (`protocols/reduced-close.md`) — over a separate publish verb or refusing `/close` outside phases
 Why: Founders end sessions with `/close`; a doc-only reduced-close path was skipped by agents; one verb must publish both phase and standalone work
 Revisit if: Reduced path accidentally skips Required Adv on phase claims, or non-phase closes balloon into full phase ritual
 
 ## D-022 — Work is primary visibility; activity.jsonl stays the journal
-Date: 2026-08-07 · Phase: — · From: S-001 · Affects: [SPEC-F-DEV-DASHBOARD, SPEC-A-DEVSYSTEM]
+Date: 2026-08-07 · Phase: — · From: S-001 · Affects: [SPEC-F-PRAXIS-SHELL, SPEC-A-PRAXIS]
 Chose: Durable command work is visible on the **Work** table/detail; `.work/activity/*.jsonl` remains the append-only journal and is **projected** into Work (and Phase) detail by `ref` / `phase` — over turning every activity event into its own Work row, and over keeping Activity as the only place to see command history
 Why: Founder wants one place to follow work; Activity page becomes redundant for that job once trails land on Work. Ledger (authored Work rows) and journal (events) stay separate homes — UI primary shifts to Work
 Revisit if: Phase-lifecycle events (`/run` `/close` `/check` without Work ref) are invisible after Activity nav removal, or Work Open is drowned by event-like rows
@@ -178,7 +178,7 @@ Revisit if: Phase-lifecycle events (`/run` `/close` `/check` without Work ref) a
 Work detail Activity section; `/fix` `/task` `/audit` `/research` `/design` Work active flush; Activity page optional (nav removal after founder ack on S-001)
 
 ## D-023 — Work vs Activity page jobs (process spine)
-Date: 2026-08-07 · Phase: — · From: S-002 · Affects: [SPEC-F-DEV-DASHBOARD, SPEC-A-DEVSYSTEM]
+Date: 2026-08-07 · Phase: — · From: S-002 · Affects: [SPEC-F-PRAXIS-SHELL, SPEC-A-PRAXIS]
 Chose: Keep **both** Work and Activity pages with hard UI separation — over removing Activity (D-022 optional-nav) and over showing the full journal on Activity
 Why: Founder treats plan/design/research/audit as outcome work like tasks/fixes; Activity must not duplicate that table. Process/ops still need a home.
 Revisit if: Process-only Activity is too sparse to use, or founder wants a full flight-recorder page again
@@ -210,7 +210,7 @@ Adv: WARN (ack) — default rows = always-shown process types only; Type chips �
 - Agents loading `.work/activity/**`
 
 ## D-024 — Brief vs Context; declared `context_paths`
-Date: 2026-08-07 · Phase: — · From: S-003 · Affects: [SPEC-F-DEV-DASHBOARD, SPEC-A-DEVSYSTEM]
+Date: 2026-08-07 · Phase: — · From: S-003 · Affects: [SPEC-F-PRAXIS-SHELL, SPEC-A-PRAXIS]
 Chose: Detail **Brief** = authored intent (Work `note`; Phase `## Brief` else `## Context`); **Context** = declared `context_paths`; **Files** = ownership trees — over auto tool-read capture and over keeping prose labeled “Context”
 Why: Founder wants Context to mean “what was used,” but session reads are not deterministic without instrumentation; declared paths are honest and durable
 Revisit if: A reliable capture hook lands (skills/hooks) that can append reads without false completeness claims
@@ -233,7 +233,7 @@ Adv: WARN — dual vocabulary during transition (file `## Context` = UI Brief; U
 - Dashboard Work/Phase detail: sections **Brief**, **Context**, **Files** (in that order where present)
 
 ## D-025 — Non-phase trees: product vs Docs home
-Date: 2026-08-07 · Phase: — · From: — · Affects: [SPEC-A-DEVSYSTEM]
+Date: 2026-08-07 · Phase: — · From: — · Affects: [SPEC-A-PRAXIS]
 Chose: Steady-state **product** `/task`/`/fix` run in dedicated `task/*` / `fix/*` worktrees (product code only); **Docs home** remains the only writer for `Docs/**`, `.work/**`, root agent entrypoints, and `.claude/skills/**`. Concurrent Docs-home editors claim overlapping paths via active Work `context_paths` — second agent waits or parks — over every non-phase session coding on `docs/ssot`
 Why: System-building temporarily concentrates chores on Docs home; once AIdioma product work dominates, non-phase code should isolate like phases. D-020 already forbids Docs writes on task trees; this locks the converse routing and a light lease for the shared meta tree
 Revisit if: Path leases are ignored in practice, or System UI moves out of `Docs/System/` into a product package
@@ -271,7 +271,7 @@ While most work is System/dashboard, Docs-home `/task`/`/fix` for `Docs/System/*
 - Phase close unchanged: code PR + Docs-home meta (D-020)
 
 ## D-026 — Praxis Docs page (operator guide)
-Date: 2026-08-07 · Phase: — · From: — · Affects: [SPEC-F-DEV-DASHBOARD, SPEC-A-DEVSYSTEM]
+Date: 2026-08-07 · Phase: — · From: — · Affects: [SPEC-F-PRAXIS-SHELL, SPEC-A-PRAXIS]
 Chose: First-class dashboard page **Docs** (`docs`) as the Praxis PM operator guide — foot entry with Signals/Theme; V1 content = living `Docs/START.md` + `Docs/System/COMMANDS.md`; sidebar-foot is one icon-only row (Signals · Docs · Theme) — over main-nav Docs tab, Knowledge reuse, or a separate authored guide file
 Why: Founders need an in-product how-to for Praxis without dumping `system.md` or conflating the guide with Knowledge’s artifact browser. Living START/COMMANDS stay SSOT; the page projects them.
 Revisit if: Guide needs more than START+COMMANDS (e.g. curated narrative), or Docs belongs in main nav after usage data
@@ -295,13 +295,13 @@ Revisit if: Guide needs more than START+COMMANDS (e.g. curated narrative), or Do
 
 ### Implement via
 
-- `SPEC-F-DEV-DASHBOARD` + `Dashboard-spec` Shell/Pages
+- `SPEC-F-PRAXIS-SHELL` + `Dashboard-spec` Shell/Pages
 - UI task: page panel + foot Docs control + icon-only foot row (T-043)
 
 **Superseded content rule:** D-027 — Docs projects beginner guide only (not COMMANDS.md).
 
 ## D-027 — Docs page is a beginner Praxis guide
-Date: 2026-08-07 · Phase: — · From: A-009 · Affects: [SPEC-F-DEV-DASHBOARD, SPEC-A-DEVSYSTEM]
+Date: 2026-08-07 · Phase: — · From: A-009 · Affects: [SPEC-F-PRAXIS-SHELL, SPEC-A-PRAXIS]
 Chose: Docs page projects a **customer-facing beginner guide** (`Docs/START.md` rewritten) only — over projecting `COMMANDS.md` / agent SSOT on the Docs page
 Why: Founder wants a complete beginner to understand Praxis; COMMANDS.md is the agent command key. D-026 V1 content rule failed that goal (A-009).
 Revisit if: A separate `GUIDE.md` home apart from START is clearer than START + COMMANDS-OVERVIEW
@@ -322,20 +322,27 @@ Supersedes: D-026 content V1 (START + System/COMMANDS projection). Keeps D-026 p
 - Shipping full `system.md` on the Docs page
 
 ## D-028 — Spec Rule grammar and stub bar
-Date: 2026-08-08 · Phase: PHASE-008 · From: R-004 · Affects: [SPEC-A-DEVSYSTEM]
+Date: 2026-08-08 · Phase: PHASE-008 · From: R-004 · Affects: [SPEC-A-PRAXIS]
 Chose: Keep Feature/Area section spines; amend Spec templates with checkable Rule grammar + stub bar; refine sample Feature + Area stubs — over Docs.2 essay sections, YAML-only specs, ADR-on-Feature, or schema Rule-count now
 Why: Living templates already had the right homes; the real gap was vague Rules that agents cannot prove
 Revisit if: First real Feature `/close` lacks a named field, or vague Rules recur after the stub bar → enable CI prose check (R-004 option F)
 
 ## D-029 — Product and Release format templates
-Date: 2026-08-08 · Phase: PHASE-008 · From: R-004 · Affects: [SPEC-A-DEVSYSTEM]
+Date: 2026-08-08 · Phase: PHASE-008 · From: R-004 · Affects: [SPEC-A-PRAXIS]
 Chose: `Templates/product.md` + `Templates/release-entry.md` as format SSOT; living `PRODUCT.md` / `RELEASES.md` keep content only — over leaving format inline-only or inventing new Product/Release sections now
 Why: All seven artifact families get a mold home without stealing PHASE-002 product depth or first `/ship` Release evidence design
 Revisit if: PHASE-002 changes Product sections, or first real `/ship` needs Release fields beyond Date/Phase/summary
 
 ## D-030 — Phase, Research, and Decision molds unchanged
-Date: 2026-08-08 · Phase: PHASE-008 · From: R-004 · Affects: [SPEC-A-DEVSYSTEM]
+Date: 2026-08-08 · Phase: PHASE-008 · From: R-004 · Affects: [SPEC-A-PRAXIS]
 Chose: No field-set changes to Phase, Research, or Decision molds (`none`)
 Why: Those molds already carry development-critical fields; peer ADR/RFC shapes map to existing homes
 Revisit if: A later phase proves a missing field blocked `/run`, `/research`, or `/design`
+
+## D-031 — Handoff attaches to one phase or active Work
+Date: 2026-08-08 · Phase: PHASE-009 · From: S-010 · Affects: [SPEC-F-PRAXIS-ACTIVE, SPEC-A-PRAXIS]
+Chose: Keep one overwritten `Handoffs/HANDOFF.md` with required YAML `ref` (active/blocked `PHASE-nnn` or `status: active` Work id); Active projects the note **only** on the matching tab — over a global handoff footer under every tab, a Handoffs page, or per-id archive files
+Why: A session note about PHASE-009 is misleading when viewing T-058 (and vice versa); attachment makes projection honest without adding a page or history store
+Revisit if: Parallel in-flight Work needs retained notes per id (then consider per-ref files)
+Adv: PASS — MCOO; overwrite semantics preserved; missing `ref` stays unscoped (no false attach)
 

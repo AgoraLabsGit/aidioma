@@ -82,7 +82,7 @@ anticipation.
 | Phase | What are we doing now | `Roadmap/Phases/` | Dies at close |
 | Work item | Parked or do-now non-phase work | `WORK.yaml` | Until done / promoted / dropped |
 | Release | What went live | `RELEASES.md` | Permanent, append-only |
-| Handoff | Where did I leave off | `Handoffs/HANDOFF.md` | Overwritten each session |
+| Handoff | Where did I leave off (for one phase or active Work) | `Handoffs/HANDOFF.md` (`ref` required) | Overwritten each session |
 
 `Roadmap/Backlog.md` and `FIXES.yaml` are **retired** (PHASE-005). Their contents live in `WORK.yaml`.
 
@@ -596,7 +596,7 @@ If `/fix` or `/task` needs design or multi-session scope, `/log` as `proposal` (
 | `/check` | Path-aware tests/lint; append activity `check` → `last_check` | Fix what it finds |
 | `/launch` | Stop stale app servers, start the app | Touch production |
 | `/dashboard` | Stop stale dashboard servers; ensure+refresh Docs home (D-020); project that tree. **Interim only if home absent:** primary + active-phase overlay (D-018) | Run in production; dual-write Docs onto phase/task trees |
-| `/handoff` | Overwrite `Handoffs/HANDOFF.md` | Commit, PR, or merge |
+| `/handoff` | Overwrite `Handoffs/HANDOFF.md` with required `ref` (in-flight phase or `status: active` Work) | Commit, PR, or merge; unscoped handoff (no `ref`) |
 
 **Handoffs are not archived.** They hold ephemeral mental state — valuable for six hours,
 misleading after six weeks, and dangerous when an agent loads an abandoned plan as current. The
@@ -839,17 +839,28 @@ per-feature timelines, Roadmap ordering — are computed once by the indexer. Pa
 Main pages plus foot entries. Table pages are one row per artifact with a detail pane on click;
 **Active**, **Knowledge**, and **Docs** are document/overview viewers (not tables).
 
-| Page | Reads | Answers |
-|---|---|---|
-| **Active** | Active/blocked phases, `HANDOFF.md`, git, last `/check` | What am I doing? |
-| **Work** | `WORK.yaml` | What outcome work is parked, in flight, or done? (fix/task/proposal/research/question/audit/design) |
-| **Roadmap** | `Phases/*.md` frontmatter (incl. feature/area), ordered by `order` | What's scheduled, done, canceled? |
-| **Activity** | `.work/activity/*.jsonl` (process types only — D-023) | What process/ops ran (`handoff`/`close`/`check`/`ship` ± quiet utilities)? |
-| **Knowledge** | Specs, `DECISIONS.md`, `Research/`, PRODUCT, Releases | What exists, how does it behave, why? (TOC + reader) |
-| **Docs** | Beginner guide (`START.md` + `COMMANDS-OVERVIEW.md`) | How do I use Praxis? (D-027) |
-| **Signals** (foot) | Derived health only | What's drifting, broken-linked, or parse-failing? |
+**Praxis naming (PHASE-009):** Area `SPEC-A-PRAXIS` + page Features `SPEC-F-PRAXIS-*`
+(Shell, Active, Work, Roadmap, Activity, Knowledge, Signals, Docs) and
+`SPEC-F-PRAXIS-ACTIVE-FLUSH`. Supersedes `SPEC-A-DEVSYSTEM` / `SPEC-F-DEV-DASHBOARD`.
+`system.md` remains process SSOT; page Behavior Rules live in those Features.
 
-Handoffs is a card on **Active**, not a page — it is one overwritten file.
+| Page | Feature | Reads | Answers |
+|---|---|---|---|
+| **Active** (header badge, not main nav) | `SPEC-F-PRAXIS-ACTIVE` | Active/blocked phases, active Work, `HANDOFF.md` when `ref` matches selected tab | What am I doing? |
+| **Work** | `SPEC-F-PRAXIS-WORK` | `WORK.yaml` | What outcome work is parked, in flight, or done? |
+| **Roadmap** | `SPEC-F-PRAXIS-ROADMAP` | `Phases/*.md` frontmatter (incl. feature/area), ordered by `order` | What's scheduled, done, canceled? |
+| **Activity** | `SPEC-F-PRAXIS-ACTIVITY` | `.work/activity/*.jsonl` (process types only — D-023) | What process/ops ran? |
+| **Knowledge** | `SPEC-F-PRAXIS-KNOWLEDGE` | Specs, `DECISIONS.md`, `Research/`, PRODUCT, Releases | What exists, how does it behave, why? |
+| **Docs** (foot) | `SPEC-F-PRAXIS-DOCS` | Beginner guide (`START.md` + `COMMANDS-OVERVIEW.md`) | How do I use Praxis? (D-027) |
+| **Signals** (foot) | `SPEC-F-PRAXIS-SIGNALS` | Derived health only | What's drifting, broken-linked, or parse-failing? |
+
+Shared chrome (nav/topbar/Filters/detail rail/brand/theme/worktrees + **Active header badge**) is
+`SPEC-F-PRAXIS-SHELL`. Active is opened from that badge (count of Active tabs: in-flight phases +
+`status: active` Work); the
+Active page uses tab chrome across concurrent in-flight phases (UI contract; hard parallel runtime
+is still `W-015`).
+
+Handoff is a block on **Active** for the selected tab only (when `HANDOFF.md` `ref` matches), not a page — one overwritten file attached to a phase or active Work (D-031).
 
 **Work** is authored. **Signals** are derived (drift, unspecified code, dead specs, stale
 research, contested specs, parse errors, blocked phases). Do not mix them — triage is not the
