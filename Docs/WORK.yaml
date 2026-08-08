@@ -2513,7 +2513,7 @@
 - id: T-059
   kind: task
   summary: "Close PHASE-009 — publish Praxis Features + Active chrome"
-  status: active
+  status: done
   feature: SPEC-F-PRAXIS-SHELL
   area: SPEC-A-PRAXIS
   phase: PHASE-009
