@@ -287,3 +287,4 @@
 {"ts":"2026-08-08T17:34:54Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"T-052","status":"active","summary":"Reduced close: Knowledge title+id row (T-052)"}
 {"ts":"2026-08-08T17:34:54Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-014","status":"active","summary":"reduced close work-lane"}
 {"ts":"2026-08-08T17:35:01Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-014","status":"complete","summary":"C-014 PASS work: typecheck+test+validate"}
+{"ts":"2026-08-08T17:36:11Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"T-052","status":"complete","summary":"Merged PR #41 reduced close T-052; docs home refreshed"}
