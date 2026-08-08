@@ -8,8 +8,9 @@ depends_on:
   - SPEC-A-LEARNER
 decisions: []
 built_by: []
-last_amended: null
-research: []
+last_amended: PHASE-008
+research:
+  - R-004
 paths:
   - apps/web/src/components/practice-workspace.tsx
   - apps/web/app/**/practice/**
@@ -19,16 +20,17 @@ paths:
 
 ## Purpose
 
-Learner practices target language through the practice workspace.
+Lets a learner run scored practice attempts in the web app’s practice workspace.
 
 ## Behavior
 
-- Rule: Practice UI is the primary learning surface in the web app
+- Rule: A scored practice attempt starts only from a route under `apps/web/app/**/practice/**`
 
 ## Boundaries
 
-Lexicon directory and progress systems are separate features.
+Does not own lexicon browse (SPEC-F-LEXICON) or durable progress storage (SPEC-F-PROGRESS).
+This stub demonstrates the Feature mold (D-028); fuller product map is later product-design work.
 
 ## Dependencies
 
-Rests on SPEC-A-LEARNER.
+Needs SPEC-A-LEARNER for UI, session, and client routes.

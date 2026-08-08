@@ -321,3 +321,21 @@ Supersedes: D-026 content V1 (START + System/COMMANDS projection). Keeps D-026 p
 - Deleting or diluting `COMMANDS.md` as agent SSOT
 - Shipping full `system.md` on the Docs page
 
+## D-028 — Spec Rule grammar and stub bar
+Date: 2026-08-08 · Phase: PHASE-008 · From: R-004 · Affects: [SPEC-A-DEVSYSTEM]
+Chose: Keep Feature/Area section spines; amend Spec templates with checkable Rule grammar + stub bar; refine sample Feature + Area stubs — over Docs.2 essay sections, YAML-only specs, ADR-on-Feature, or schema Rule-count now
+Why: Living templates already had the right homes; the real gap was vague Rules that agents cannot prove
+Revisit if: First real Feature `/close` lacks a named field, or vague Rules recur after the stub bar → enable CI prose check (R-004 option F)
+
+## D-029 — Product and Release format templates
+Date: 2026-08-08 · Phase: PHASE-008 · From: R-004 · Affects: [SPEC-A-DEVSYSTEM]
+Chose: `Templates/product.md` + `Templates/release-entry.md` as format SSOT; living `PRODUCT.md` / `RELEASES.md` keep content only — over leaving format inline-only or inventing new Product/Release sections now
+Why: All seven artifact families get a mold home without stealing PHASE-002 product depth or first `/ship` Release evidence design
+Revisit if: PHASE-002 changes Product sections, or first real `/ship` needs Release fields beyond Date/Phase/summary
+
+## D-030 — Phase, Research, and Decision molds unchanged
+Date: 2026-08-08 · Phase: PHASE-008 · From: R-004 · Affects: [SPEC-A-DEVSYSTEM]
+Chose: No field-set changes to Phase, Research, or Decision molds (`none`)
+Why: Those molds already carry development-critical fields; peer ADR/RFC shapes map to existing homes
+Revisit if: A later phase proves a missing field blocked `/run`, `/research`, or `/design`
+
