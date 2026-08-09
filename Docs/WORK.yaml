@@ -2958,7 +2958,7 @@
 - id: T-070
   kind: task
   summary: "Reduced /close — publish Docs-home session (F-039 + Praxis plan)"
-  status: active
+  status: done
   feature: SPEC-F-PRAXIS-ACTIVE
   area: SPEC-A-PRAXIS
   phase: null
@@ -2970,6 +2970,6 @@
     - Docs/Handoffs/HANDOFF.md
     - .work/activity/
   open_questions: null
-  done_summary: null
+  done_summary: "Published Docs-home meta via close/f036-active-empty-praxis-plan (F-039 Active empty + Praxis plan seed)."
   opened: 2026-08-09T00:22:00Z
 
