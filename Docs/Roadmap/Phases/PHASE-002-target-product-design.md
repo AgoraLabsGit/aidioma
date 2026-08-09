@@ -5,8 +5,7 @@ type: design
 proof_kind: spec
 state: proposed
 order: 7
-depends_on:
-  - PHASE-009
+depends_on: []
 from_backlog: null
 owner: founder
 outcome: "Mike approves one concise PRODUCT.md: learner pages, globals, MVP-versus-later — no internal architecture."

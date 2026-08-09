@@ -2,19 +2,20 @@
 ref: PHASE-011
 ---
 
-# Handoff — after reduced /close (chip UI + phase seeds)
+# Handoff — PHASE-011 dual-instance ready to close
 
-**Date:** 2026-08-08
+**Date:** 2026-08-09
 
 ## State
 
-- Published Docs-home meta: Praxis Settings/color mode, Kind/Status chip unify + palette,
-  `/task` same-vs-fresh rule, Active empty fixes, PHASE-010/011 seeds + R-006/decisions.
-- **Next:** `/run PHASE-011` — extract to `Praxis.v2`
-- Then `/run PHASE-010` **inside Praxis.v2** (depends_on PHASE-011)
+- Two Praxis projects separated and validated:
+  - **Praxis.v2** — Praxis-dev bootstrap (validate 0 issues; dashboard :4335 preferred)
+  - **AIdioma** — learner project (validate 0 issues; dashboard :4317 preferred)
+- D-057 port binding + Docs-home env scoped to clone family (no cross-bleed)
+- **Next:** `/close`
 
 ## Next command
 
 ```text
-/run PHASE-011
+/close
 ```

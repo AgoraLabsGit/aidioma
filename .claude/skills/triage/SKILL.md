@@ -1,0 +1,31 @@
+---
+name: triage
+description: Classify and execute open Docs/WORK.yaml rows by phase/area/feature — auto-do clear fixes/tasks via sub-agents; confirm drop/plan. Use when the operator says /triage.
+---
+
+# /triage
+
+Utility that **does work**. Phase-scoped or named-phase triage **must** run in a sub-agent
+(phase Work only). Unassigned batch: prefer a sub-agent (preserve coordinator context).
+
+## Mode (implicit)
+
+| Context | Scope |
+|---|---|
+| Inside `/run` / phase active | That phase’s Work only — no typed PHASE id required |
+| Explicit `/triage PHASE-nnn` | That phase only |
+| No active phase | Unassigned (`phase: null`) ± area/feature filter |
+
+## Steps
+
+0. **Docs home (D-020):** Read/write `WORK.yaml` + activity in `.worktrees/docs` when present.
+1. Resolve mode → load matching open/active rows.
+2. Classify: **do** | **blocked** | **plan** | **drop** | **leave**. Cite `W-nnn — summary`.
+3. Auto-execute clear `/fix`/`/task` via sub-agents; `done_summary`.
+   Product rows → `task/*`/`fix/*` worktrees (D-025). Docs-home path leases on overlap.
+4. Confirm drop / `/plan` / lifecycle. Clarifications → `open_questions` on that row.
+5. **Unassigned batch finished with material changes** → `/check`; `/audit` if big/risky.
+6. Activity event. Report ids.
+
+**May invoke:** `/fix`, `/task`; after unassigned batch → `/check`, optional `/audit`.  
+**Must not:** mix other phases or `phase: null` into a phase-scoped pass.

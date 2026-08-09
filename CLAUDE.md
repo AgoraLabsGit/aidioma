@@ -1,4 +1,4 @@
 # AIdioma agent entry point
 
-Read `AGENTS.md`. This repo is the learner product; Praxis process lives in sibling
-`Praxis.v2` — open that repo for `/plan` `/run` `/close` `/dashboard` and System docs.
+Read and follow `AGENTS.md`. This repo is the AIdioma Praxis project. Praxis product
+development is the sibling `Praxis.v2` project — separate Docs/Work/dashboard.

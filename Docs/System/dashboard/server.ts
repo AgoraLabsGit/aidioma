@@ -1,4 +1,5 @@
 import { watch, type FSWatcher } from "chokidar";
+import { createHash } from "node:crypto";
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
@@ -26,8 +27,35 @@ function isEnoent(error: unknown): boolean {
       (error as { code?: unknown }).code === "ENOENT",
   );
 }
-const DEFAULT_PORT = 4317;
+
+/** D-057 — concurrent dashboard ports */
+export const DASHBOARD_PORT_BASE = 4317;
+export const DASHBOARD_PORT_RANGE = 20;
 const DEBOUNCE_MS = 300;
+
+/** Preferred port in 4317–4336 from SHA-256 of primary worktree root (D-057). */
+export function preferredDashboardPort(primaryWorktreeRoot: string): number {
+  const digest = createHash("sha256").update(primaryWorktreeRoot, "utf8").digest();
+  const n = digest.readUInt32BE(0);
+  return DASHBOARD_PORT_BASE + (n % DASHBOARD_PORT_RANGE);
+}
+
+export function dashboardPortCandidates(preferred: number): number[] {
+  const ports: number[] = [];
+  for (let i = 0; i < DASHBOARD_PORT_RANGE; i += 1) {
+    ports.push(DASHBOARD_PORT_BASE + ((preferred - DASHBOARD_PORT_BASE + i) % DASHBOARD_PORT_RANGE));
+  }
+  return ports;
+}
+
+function isAddressInUse(error: unknown): boolean {
+  return Boolean(
+    error &&
+      typeof error === "object" &&
+      "code" in error &&
+      (error as { code?: unknown }).code === "EADDRINUSE",
+  );
+}
 
 const staticAssets = new Map([
   ["/", { file: "index.html", contentType: "text/html; charset=utf-8" }],
@@ -543,7 +571,7 @@ export function createDashboardServer(options: DashboardServerOptions = {}): Ser
   return server;
 }
 
-export async function listenOnLoopback(server: Server, port = DEFAULT_PORT): Promise<number> {
+export async function listenOnLoopback(server: Server, port = DASHBOARD_PORT_BASE): Promise<number> {
   if (!Number.isInteger(port) || port < 0 || port > 65_535) {
     throw new Error("Dashboard port must be an integer from 0 through 65535.");
   }
@@ -564,14 +592,58 @@ export async function listenOnLoopback(server: Server, port = DEFAULT_PORT): Pro
   return address.port;
 }
 
+/** Bind preferred port or bump within D-057 range. Pin mode never bumps. */
+export async function listenOnLoopbackWithPortPolicy(
+  server: Server,
+  options: { preferred: number; pinned: boolean },
+): Promise<{ port: number; mode: "preferred" | "bumped" | "pinned" }> {
+  if (options.pinned) {
+    try {
+      const port = await listenOnLoopback(server, options.preferred);
+      return { port, mode: "pinned" };
+    } catch (error) {
+      if (isAddressInUse(error)) {
+        throw new Error(
+          `Dashboard pin port ${options.preferred} is already in use (D-057: explicit --port / PRAXIS_DASHBOARD_PORT does not bump).`,
+        );
+      }
+      throw error;
+    }
+  }
+
+  const tried: number[] = [];
+  for (const candidate of dashboardPortCandidates(options.preferred)) {
+    tried.push(candidate);
+    try {
+      const port = await listenOnLoopback(server, candidate);
+      return {
+        port,
+        mode: candidate === options.preferred ? "preferred" : "bumped",
+      };
+    } catch (error) {
+      if (!isAddressInUse(error)) throw error;
+      // try next
+    }
+  }
+  throw new Error(
+    `No free dashboard port in ${DASHBOARD_PORT_BASE}–${DASHBOARD_PORT_BASE + DASHBOARD_PORT_RANGE - 1} (tried ${tried.join(", ")}).`,
+  );
+}
+
 type CliOptions = {
   docsRoot?: string;
-  port: number;
+  pinnedPort: number | null;
 };
 
 function parseCliOptions(argumentsList: string[]): CliOptions {
   let docsRoot: string | undefined;
-  let port = DEFAULT_PORT;
+  let pinnedPort: number | null = null;
+  const envRaw = process.env.PRAXIS_DASHBOARD_PORT?.trim();
+  if (envRaw) {
+    const n = Number(envRaw);
+    if (!Number.isInteger(n)) throw new Error("PRAXIS_DASHBOARD_PORT must be an integer.");
+    pinnedPort = n;
+  }
   for (let index = 0; index < argumentsList.length; index += 1) {
     const argument = argumentsList[index];
     if (argument === "--docs-root") {
@@ -581,25 +653,36 @@ function parseCliOptions(argumentsList: string[]): CliOptions {
     } else if (argument === "--port") {
       const value = argumentsList[index + 1];
       if (!value) throw new Error("--port requires a number.");
-      port = Number(value);
+      const n = Number(value);
+      if (!Number.isInteger(n)) throw new Error("--port must be an integer.");
+      pinnedPort = n;
       index += 1;
     } else {
       throw new Error(`Unknown dashboard option: ${argument}`);
     }
   }
-  return { docsRoot, port };
+  return { docsRoot, pinnedPort };
 }
 
 async function run(): Promise<void> {
   assertDashboardEnvironment();
   const options = parseCliOptions(process.argv.slice(2));
+  const primaryWorktreeRoot = await resolvePrimaryWorktreeRoot(packageRepositoryRoot);
+  const preferred =
+    options.pinnedPort ?? preferredDashboardPort(primaryWorktreeRoot);
+  const pinned = options.pinnedPort !== null;
   const server = createDashboardServer({
     docsRoot: options.docsRoot,
     onError: (error) => console.error(error),
     watch: true,
   });
-  const port = await listenOnLoopback(server, options.port);
-  console.log(`AIdioma work dashboard: http://127.0.0.1:${port}`);
+  const { port, mode } = await listenOnLoopbackWithPortPolicy(server, {
+    preferred,
+    pinned,
+  });
+  console.log(`Praxis dashboard: http://127.0.0.1:${port}`);
+  console.log(`primaryWorktreeRoot: ${primaryWorktreeRoot}`);
+  console.log(`portMode: ${mode} (preferred ${preferred})`);
 
   const close = () => server.close(() => process.exit(0));
   process.once("SIGINT", close);

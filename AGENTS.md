@@ -1,24 +1,32 @@
-# AIdioma agent rules (consumer mode)
+# AIdioma agent rules
 
-AIdioma is the **learner product**. Praxis (development system, dashboard, skills, hooks)
-lives in the sibling repo:
+This repo is the **AIdioma Praxis project** (learner product + its own process ledger).
 
-**`/Users/mike/Documents/Coding/Projects/Praxis.v2`**
+Praxis **product** development (bootstrap / productization) lives in the sibling repo
+`/Users/mike/Documents/Coding/Projects/Praxis.v2` — a separate Praxis project with its own
+`Docs/`, `WORK.yaml`, and dashboard.
 
-## Start here (this repo)
+## Start here
 
-1. Product code: `apps/web/`, `packages/`, `content/`.
-2. Learner docs: `Docs/Specs/` (learner areas/features), `Docs/PRESERVE.md`, `Docs.2/` (frozen).
-3. Do **not** treat `Docs/System/` as living Praxis SSOT — see stub README there after Docs publish.
-4. Process commands (`/plan` `/run` `/close` `/dashboard` `/triage` …): open **Praxis.v2** and
-   follow its `AGENTS.md`.
+1. Read this file and `Docs/AGENTS.md`.
+2. **Docs home (D-020):** If `.worktrees/docs` exists (`npm run work:docs-home`), treat that
+   worktree as the only writable SSOT for `Docs/**`, `.work/**`, this file, `CLAUDE.md`, and
+   `.claude/skills/**`.
+3. **Non-phase desk (D-025):** Product `/task`/`/fix` → `task/*`/`fix/*` worktrees.
+4. Living docs: `Docs/START.md`, `Docs/System/system.md`, `Docs/System/COMMANDS.md`,
+   `Docs/Handoffs/HANDOFF.md`, active phase under `Docs/Roadmap/Phases/`.
+5. Treat `Docs.2/` as frozen evidence only. Never dual-write living state there.
+6. `apps/web/`, packages, `content/` prove learner product behavior.
 
-## Desks
+## Dual Praxis projects
 
-- Product `/task` `/fix` → `task/*` / `fix/*` worktrees under AIdioma.
-- Praxis meta → Praxis.v2 (and its Docs home when used).
+| Project | Repo | Data |
+|---|---|---|
+| AIdioma | this repo | Learner specs, AIdioma Work/phases/research |
+| Praxis dev | `../Praxis.v2` | Praxis product specs, Praxis Work/phases/research |
 
-## Git
+Do not mix project ledgers. Each runs its own `work:dashboard` (D-057 ports avoid collisions).
 
-- `origin/main` is the durable AIdioma branch.
-- Preserve items in `Docs/PRESERVE.md` (including Lexicon stash).
+## Commands
+
+See `Docs/System/COMMANDS.md`. `/launch` is for the learner app; `/dashboard` is this project's Praxis UI.
