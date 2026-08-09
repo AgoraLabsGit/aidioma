@@ -2,18 +2,22 @@
 ref: null
 ---
 
-# Handoff — after reduced /close (S-011 / T-073)
+# Handoff — after PHASE-011 /close
 
 **Date:** 2026-08-09
 
 ## State
 
-- **Active phase:** none (PHASE-011 ready; desk may exist)
-- **Parked:** S-011 (table soft-cap design), T-073 (implement when scale hurts)
-- **Next:** `/run PHASE-011` or continue extract desk
+- PHASE-011 closed: dual Praxis projects (AIdioma + Praxis.v2) separated.
+- AIdioma: learner roadmap (PHASE-002/003 proposed).
+- Praxis.v2: next `/run PHASE-010` (productization design).
 
 ## Next command
 
 ```text
-/run PHASE-011
+# In Praxis.v2:
+/run PHASE-010
+
+# Or in AIdioma:
+/status
 ```

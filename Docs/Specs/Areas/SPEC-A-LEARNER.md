@@ -8,8 +8,7 @@ vendor: null
 decisions: []
 built_by: []
 last_amended: PHASE-008
-research:
-  - R-004
+research: []
 paths:
   - apps/web/**
 ---

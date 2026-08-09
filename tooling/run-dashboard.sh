@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Serve dashboard from Docs home (D-020) even when invoked from a phase/task worktree.
+# Forwards CLI args (e.g. --port) and PRAXIS_DASHBOARD_PORT (D-057).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -17,7 +18,7 @@ resolve_primary() {
 }
 
 PRIMARY="$(resolve_primary "$START_ROOT")"
-DOCS_HOME="${AIDIOMA_DOCS_HOME:-$PRIMARY/.worktrees/docs}"
+DOCS_HOME="${AIDIOMA_DOCS_HOME:-${PRAXIS_DOCS_HOME:-$PRIMARY/.worktrees/docs}}"
 
 pick_server() {
   local candidate
@@ -49,4 +50,4 @@ fi
 
 # Run with the checkout that owns the server (Docs home when present).
 cd "$(cd "$(dirname "$SERVER")/../../.." && pwd)"
-exec npx tsx "$SERVER"
+exec npx tsx "$SERVER" "$@"
