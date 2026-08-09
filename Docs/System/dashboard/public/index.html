@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark light" />
     <title>Praxis</title>
-    <link rel="stylesheet" href="/styles.css?v=phase009-7" />
-    <script src="/app.js?v=phase009-7" defer></script>
+    <link rel="stylesheet" href="/styles.css?v=chip-noborder-1" />
+    <script src="/app.js?v=active-empty-2" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -121,6 +121,22 @@
             </svg>
           </span>
         </button>
+        <button
+          id="settings-pill"
+          type="button"
+          class="sidebar-foot-btn settings-pill"
+          title="Settings"
+          aria-label="Open Settings"
+        >
+          <span class="foot-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+              />
+            </svg>
+          </span>
+        </button>
       </div>
     </aside>
 
@@ -204,6 +220,7 @@
         <section id="page-work" class="page" data-page-panel="work" hidden></section>
         <section id="page-signals" class="page" data-page-panel="signals" hidden></section>
         <section id="page-docs" class="page page-docs" data-page-panel="docs" hidden></section>
+        <section id="page-settings" class="page page-settings" data-page-panel="settings" hidden></section>
       </main>
     </div>
 

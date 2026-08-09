@@ -2548,3 +2548,428 @@
   done_summary: "Final HANDOFF after PHASE-009 merge."
   opened: 2026-08-08T23:13:20Z
 
+- id: P-002
+  kind: proposal
+  summary: "Productize Praxis: extension + CLI foreman design phase"
+  status: promoted
+  feature: null
+  area: SPEC-A-PRAXIS
+  phase: PHASE-010
+  promoted_to: PHASE-010
+  blocked_by: null
+  note: "/plan PHASE-010 — seed from founding session; R-006 + D-032–D-045"
+  context_paths:
+    - Docs/Research/R-006.md
+    - Docs/DECISIONS.md
+    - Docs/Roadmap/Roadmap.md
+    - Docs/Roadmap/Phases/PHASE-010-praxis-productization-design.md
+    - Docs/WORK.yaml
+    - Docs/Handoffs/HANDOFF.md
+    - .work/activity/
+  open_questions: null
+  done_summary: "Promoted to PHASE-010 (ready). R-006 + D-032–D-045 logged."
+  opened: 2026-08-08T23:20:00Z
+
+- id: R-006
+  kind: research
+  summary: "Productize Praxis: extension + CLI foreman options"
+  status: done
+  feature: null
+  area: SPEC-A-PRAXIS
+  phase: PHASE-010
+  promoted_to: null
+  blocked_by: null
+  note: "Founding-session options lock; Adv WARN"
+  context_paths:
+    - Docs/Research/R-006.md
+    - Docs/DECISIONS.md
+  open_questions: null
+  done_summary: "R-006 verdict C; informed D-032–D-045; ADV WARN (multi-runner MCOO, hooks half-det)."
+  opened: 2026-08-08T23:20:00Z
+
+- id: T-061
+  kind: task
+  summary: "Handoff after /plan PHASE-010"
+  status: done
+  feature: null
+  area: SPEC-A-PRAXIS
+  phase: PHASE-010
+  promoted_to: null
+  blocked_by: null
+  note: null
+  context_paths:
+    - Docs/Handoffs/HANDOFF.md
+  open_questions: null
+  done_summary: "HANDOFF.md → /run PHASE-010"
+  opened: 2026-08-08T23:22:00Z
+
+- id: P-003
+  kind: proposal
+  summary: "Extract Praxis into Praxis.v2 repo before productization design"
+  status: promoted
+  feature: null
+  area: SPEC-A-PRAXIS
+  phase: PHASE-011
+  promoted_to: PHASE-011
+  blocked_by: null
+  note: "/plan PHASE-011 before PHASE-010; also seed auth/web hosting into PHASE-010"
+  context_paths:
+    - Docs/Roadmap/Phases/PHASE-011-praxis-v2-extract.md
+    - Docs/Roadmap/Phases/PHASE-010-praxis-productization-design.md
+    - Docs/Roadmap/Roadmap.md
+    - Docs/DECISIONS.md
+    - Docs/WORK.yaml
+    - Docs/Handoffs/HANDOFF.md
+    - .work/activity/
+  open_questions: null
+  done_summary: "Promoted PHASE-011; PHASE-010 depends_on PHASE-011; D-046–D-048."
+  opened: 2026-08-08T23:35:00Z
+
+- id: T-062
+  kind: task
+  summary: "PHASE-010 seed: distribution Extension|CLI + UI combo matrix"
+  status: done
+  feature: null
+  area: SPEC-A-PRAXIS
+  phase: PHASE-010
+  promoted_to: null
+  blocked_by: null
+  note: null
+  context_paths:
+    - Docs/Roadmap/Phases/PHASE-010-praxis-productization-design.md
+    - Docs/DECISIONS.md
+    - Docs/WORK.yaml
+    - .work/activity/
+  open_questions: null
+  done_summary: "PHASE-010 Distribution section + install×UI matrix; D-049."
+  opened: 2026-08-08T23:40:00Z
+
+- id: T-063
+  kind: task
+  summary: "PHASE-010 correct UX: native chat primary trigger"
+  status: done
+  feature: null
+  area: SPEC-A-PRAXIS
+  phase: PHASE-010
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: prefer native chat; alt = lookalike Praxis chat via CLI. Do not assume panel Run buttons."
+  context_paths:
+    - Docs/Roadmap/Phases/PHASE-010-praxis-productization-design.md
+    - Docs/DECISIONS.md
+    - Docs/WORK.yaml
+    - .work/activity/
+  open_questions: null
+  done_summary: "D-050 supersedes D-039; PHASE-010 chat/trigger UX corrected."
+  opened: 2026-08-08T23:50:00Z
+
+- id: T-064
+  kind: task
+  summary: "PHASE-010: auto vs manual routing + hooks install path"
+  status: done
+  feature: null
+  area: SPEC-A-PRAXIS
+  phase: PHASE-010
+  promoted_to: null
+  blocked_by: null
+  note: null
+  context_paths:
+    - Docs/Roadmap/Phases/PHASE-010-praxis-productization-design.md
+    - Docs/DECISIONS.md
+    - Docs/WORK.yaml
+    - .work/activity/
+  open_questions: null
+  done_summary: "D-051 Auto/Manual routing; D-052 hooks install via ext/CLI, enforce by host."
+  opened: 2026-08-08T23:55:00Z
+
+- id: T-065
+  kind: task
+  summary: "PHASE-010: per-host install + action→model routing"
+  status: done
+  feature: null
+  area: SPEC-A-PRAXIS
+  phase: PHASE-010
+  promoted_to: null
+  blocked_by: null
+  note: null
+  context_paths:
+    - Docs/Roadmap/Phases/PHASE-010-praxis-productization-design.md
+    - Docs/DECISIONS.md
+    - Docs/WORK.yaml
+    - .work/activity/
+  open_questions: null
+  done_summary: "D-053 host install adapters; D-054 action→model/runner routing."
+  opened: 2026-08-09T00:00:00Z
+
+- id: T-066
+  kind: task
+  summary: "PHASE-010: model list projection into Dashboard"
+  status: done
+  feature: null
+  area: SPEC-A-PRAXIS
+  phase: PHASE-010
+  promoted_to: null
+  blocked_by: null
+  note: null
+  context_paths:
+    - Docs/Roadmap/Phases/PHASE-010-praxis-productization-design.md
+    - Docs/DECISIONS.md
+    - Docs/WORK.yaml
+    - .work/activity/
+  open_questions: null
+  done_summary: "D-055 model list bridge; SPEC-F-PRAXIS-MODELS; IDE auto-detect notes in PHASE-010."
+  opened: 2026-08-09T00:05:00Z
+
+- id: T-067
+  kind: task
+  summary: "PHASE-010: clarify runner availability probing"
+  status: done
+  feature: null
+  area: SPEC-A-PRAXIS
+  phase: PHASE-010
+  promoted_to: null
+  blocked_by: null
+  note: null
+  context_paths:
+    - Docs/Roadmap/Phases/PHASE-010-praxis-productization-design.md
+    - Docs/DECISIONS.md
+    - Docs/WORK.yaml
+    - .work/activity/
+  open_questions: null
+  done_summary: "D-056 + PHASE-010 Runner availability discovery section; RUNNERS Feature seed Rules."
+  opened: 2026-08-09T00:15:00Z
+
+- id: F-035
+  kind: fix
+  summary: "Active empty state: remove hardcoded Nothing in flight"
+  status: done
+  feature: SPEC-F-PRAXIS-ACTIVE
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Empty Active showed Nothing in flight above ready phase title — confusing"
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/index.html
+  open_questions: null
+  done_summary: "Empty Active no longer shows Nothing in flight; ready phase shows id + title + outcome."
+  opened: 2026-08-09T00:14:41Z
+
+- id: F-039
+  kind: fix
+  summary: "Active empty: do not project ready phase as Active header"
+  status: done
+  feature: SPEC-F-PRAXIS-ACTIVE
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "F-035 still rendered ready id/title/outcome under Active — looked in-flight"
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/index.html
+    - Docs/Specs/Features/SPEC-F-PRAXIS-ACTIVE.md
+  open_questions: null
+  done_summary: "Empty Active = Nothing active + Next ready: PHASE-id prompt; no ready title/outcome header."
+  opened: 2026-08-09T00:19:00Z
+
+- id: T-062
+  kind: task
+  summary: "Swap Roadmap blocked/canceled chip colors"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "blocked → red; canceled → purple (filter + table chips)"
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/specs/Dashboard-spec.md
+  open_questions: null
+  done_summary: "Blocked=red, canceled=purple on Roadmap State filter chips + Status pills; Dashboard-spec hue line updated."
+  opened: 2026-08-08T23:27:01Z
+
+- id: T-063
+  kind: task
+  summary: "Add Active status filter chip on Work page"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "All | Open | Active | Closed — Open exact; Active exact; Closed bucket"
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/filters.test.ts
+    - Docs/System/specs/Dashboard-spec.md
+  open_questions: null
+  done_summary: "Work Status chips: All/Open/Active/Closed; Open+Active exact match; Closed bucket unchanged. filters.test 51/51; Dashboard-spec updated."
+  opened: 2026-08-08T23:32:01Z
+
+- id: T-064
+  kind: task
+  summary: "Roadmap ready=green, closed=grey"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Phase ready→success; closed→muted grey (filter+status). Work Closed chip grey to match."
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/specs/Dashboard-spec.md
+  open_questions: null
+  done_summary: "Phase ready=green, closed=grey (filter+status pills); Work Closed chip grey; Signals Closed(fixed) stays green; Dashboard-spec hue lines updated."
+  opened: 2026-08-08T23:39:17Z
+
+- id: A-042
+  kind: audit
+  summary: "Design review: Kind chips color vs settings"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Advisory canvas — Kind/Type color budget + color-mode pref feasibility"
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/specs/Dashboard-spec.md
+  open_questions: null
+  done_summary: "Rec: B neutral Kind pills; settings feasible (status|rich|mono). Canvas kind-chips-color-review. Await founder pick."
+  opened: 2026-08-08T23:41:00Z
+
+- id: T-067
+  kind: task
+  summary: "Neutral Kind pills on Work, Roadmap, Activity tables"
+  status: done
+  feature: SPEC-F-DEV-DASHBOARD
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "A-042 option B — shape without hue; Status keeps color"
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/specs/Dashboard-spec.md
+  open_questions: null
+  done_summary: "Neutral mono Kind pills on Work/Roadmap/Activity tables + detail glances; Status keeps hue. Dashboard-spec visual register; filters.test 51/51."
+  opened: 2026-08-09T00:04:29Z
+
+- id: T-068
+  kind: task
+  summary: "Kind chip colors + Settings page color mode"
+  status: done
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: neutral Kind pills pointless; want colors + Settings color control. Default rich."
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/public/index.html
+    - Docs/System/specs/Dashboard-spec.md
+    - Docs/Specs/Features/SPEC-F-PRAXIS-SHELL.md
+  open_questions: null
+  done_summary: "Settings 4th foot link + Color mode (rich/status/mono); Kind/Type hues in rich; specs SHELL+Dashboard. filters.test 51/51."
+  opened: 2026-08-09T00:06:25Z
+
+- id: T-069
+  kind: task
+  summary: "Clarify /task same-outcome vs fresh Work id rule"
+  status: done
+  feature: null
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Founder: keep polish under active task; new outcome → new T-nnn. Keep short."
+  context_paths:
+    - .claude/skills/task/SKILL.md
+    - Docs/System/COMMANDS.md
+  open_questions: null
+  done_summary: "Added same-vs-fresh rule to /task skill + COMMANDS.md: polish under active T-nnn; new outcome → new id."
+  opened: 2026-08-09T00:11:32Z
+
+- id: F-036
+  kind: fix
+  summary: "Unify Kind/Status into one chip component; remove status dot"
+  status: done
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Kind must match Status pill; drop ::before dot; one statusChipHtml helper"
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/specs/Dashboard-spec.md
+    - Docs/Specs/Features/SPEC-F-PRAXIS-SHELL.md
+  open_questions: null
+  done_summary: "statusChipHtml shared for Status+Kind; removed .status::before dot; .kind removed; Signals Kind uses same chip; specs updated."
+  opened: 2026-08-09T00:16:34Z
+
+- id: F-037
+  kind: fix
+  summary: "Separate Kind chip hues; drop cyan; split close vs ship"
+  status: done
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Add orange/rose/copper/slate; never use --info (cyan) on chips"
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/specs/Dashboard-spec.md
+    - Docs/System/dashboard/public/index.html
+    - Docs/Specs/Features/SPEC-F-PRAXIS-SHELL.md
+  open_questions: null
+  done_summary: "Chip palette +orange/rose/copper/slate; cyan banned on chips; check=orange, close=green, ship=rose; SHELL+Dashboard-spec updated."
+  opened: 2026-08-09T00:18:19Z
+
+- id: F-038
+  kind: fix
+  summary: "Remove perimeter border from status/kind chips"
+  status: done
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Restore transparent border like pre-F-036 status pills"
+  context_paths:
+    - Docs/System/dashboard/public/styles.css
+    - Docs/System/dashboard/public/index.html
+  open_questions: null
+  done_summary: ".status chips use transparent border again (fill only, no perimeter line)."
+  opened: 2026-08-09T00:19:43Z
+
+- id: T-070
+  kind: task
+  summary: "Reduced /close — publish Docs-home session (F-039 + Praxis plan)"
+  status: active
+  feature: SPEC-F-PRAXIS-ACTIVE
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Meta desk publish via close/*"
+  context_paths:
+    - Docs/WORK.yaml
+    - Docs/Handoffs/HANDOFF.md
+    - .work/activity/
+  open_questions: null
+  done_summary: null
+  opened: 2026-08-09T00:22:00Z
+

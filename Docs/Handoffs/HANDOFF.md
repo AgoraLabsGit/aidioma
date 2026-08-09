@@ -1,28 +1,19 @@
 ---
-ref: PHASE-009
+ref: null
 ---
 
-# Handoff — after PHASE-009 close
+# Handoff — after reduced /close (F-039 + Praxis plan seed)
 
-**Date:** 2026-08-08
-
-**Merged:** PR #48 (Active-flush hooks) + PR #49 (Praxis meta) → `main` `1462504`
+**Date:** 2026-08-09
 
 ## State
 
-- No active phase
-- Docs home: `docs/ssot` @ `origin/main`
-- Hooks on main: `.cursor/hooks*`
-
-## Open (not this phase)
-
-- W-015 — Parallel active phases runtime (proposal)
-- PHASE-002 / PHASE-003 proposed on Roadmap
+- **Active phase:** none
+- **Published:** Active empty state (F-035/F-039); Praxis productization plan seed (R-006, D-032–D-056, PHASE-011 next, PHASE-010 after extract)
+- **Next:** `/run PHASE-011` — extract Praxis → `Praxis.v2`
 
 ## Next command
 
 ```text
-/plan
+/run PHASE-011
 ```
-
-or `/status` / `/run` when ready for PHASE-002.

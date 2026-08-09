@@ -229,19 +229,21 @@ Computed by the indexer; never authored.
 │ Active │                    indexed 3s ago [⟳]            │
 │ Work   ├─────────────────────────────────────────────────┤
 │ …      │ search + filters (one row) · table (header + Sort) │
-│ ⚠ 📄 ◐ │  ← foot icons: Signals · Docs · Theme (not nav)  │
+│ ⚠ 📄 ◐ ⚙ │  ← foot icons: Signals · Docs · Theme · Settings (not nav)  │
 └────────┴─────────────────────────────────────────────────┘
         detail pane (resizable) slides from right on row click
 ```
 
-- Every page except **Active** is a table (Knowledge and Docs are document viewers).
+- Every page except **Active** is a table (Knowledge and Docs are document viewers; **Settings**
+  is a preferences page).
 - Row click → detail pane: frontmatter fields on top, markdown body fetched and rendered on
   demand via `/api/doc?id=`. Bodies are never embedded in `index.json`.
 - Cross-links: any id in any cell is clickable and routes to its artifact.
 - Stale heartbeat (>60s) turns the indicator amber.
-- **Signals** and **Docs** are not main-nav tabs. Open them from the sidebar-foot icon row.
-- Sidebar-foot: one horizontal **icon-only** row — Signals · Docs · Theme (matched chrome;
-  labels via `title` / `aria-label` only).
+- **Signals**, **Docs**, and **Settings** are not main-nav tabs. Open them from the sidebar-foot
+  icon row.
+- Sidebar-foot: one horizontal **icon-only** row — Signals · Docs · Theme · Settings (matched
+  chrome; labels via `title` / `aria-label` only).
 
 ### Visual register
 
@@ -249,18 +251,21 @@ Computed by the indexer; never authored.
 |---|---|
 | Type | System sans for UI; monospace for ids, paths, timestamps, page titles, and panel titles |
 | Density | ~32px rows, no card padding, table-first |
-| Status | Colored dot **plus** text label — never color alone |
+| Status | Shared `.status` tone chip (text label + fill; **no** leading dot) — never color alone |
+| Kind / Type | Same `statusChipHtml` / `.status` chip (`data-variant=kind`); hues when Color = Rich; muted for Status only / Monochrome |
+| Chip palette | blue · green · amber · red · purple · orange · rose · copper · slate · muted — **never cyan** (`--info`) on chips |
+| Color mode | Pref `aidioma-dashboard-color-mode`: `rich` (default) · `status` · `mono` — set on Settings |
 | Chrome | Sidebar nav + table pages. No charts / analytics widgets in V1 |
 | Light theme | Cream shell (`#ebe6df`) + warm paper panels (`#f3efe7`); no pure white / cool blue-grey |
 | Chrome fill | Nav / detail / Knowledge TOC = page `--bg`; tables + elevated cards = `--surface` |
 
 Phase state colors (Status pills + Roadmap State chips; unique hues):
-active blue · ready cyan · proposed amber · blocked purple · closed green · canceled red.
+active blue · ready green · proposed amber · blocked red · closed grey · canceled purple.
 
 Other statuses: done/complete/ok/fixed/fresh green · open/contested/stale amber ·
 failed/dropped red · superseded grey · promoted blue.
 
-Status/severity filter chips use the same hues: Work Open amber / Closed green;
+Status/severity filter chips use the same hues: Work Open amber / Active blue / Closed grey;
 Signals Open amber / Closed(fixed) green; severity high red · medium amber · low muted.
 
 **Table toolbar (Roadmap, Activity, Work, Signals):**
@@ -273,9 +278,9 @@ Signals Open amber / Closed(fixed) green; severity high red · medium amber · l
   ▾ desc). Persists as `sort` + `sortDir` with page filters.
 - Activity Feature/Area resolve from the event’s phase row when present.
 
-Preferences (localStorage): last page; each table page’s chips + sort + sortDir + Feature/Area
-(survive refresh). **Search `q` is not persisted** (F-008) — leftover search hid new Work rows
-while Activity still showed them.
+Preferences (localStorage): last page; theme; color mode (`rich`/`status`/`mono`); each table
+page’s chips + sort + sortDir + Feature/Area (survive refresh). **Search `q` is not persisted**
+(F-008) — leftover search hid new Work rows while Activity still showed them.
 
 ---
 
@@ -378,6 +383,19 @@ Beginner Praxis guide (D-026 chrome + D-027 content). **Not** Knowledge (artifac
 
 Detail pane stays closed on Docs (full-page reader, same class as Knowledge).
 
+### Settings
+
+Local Appearance preferences. **Not** main nav.
+
+| | |
+|---|---|
+| Page id | `settings` (title **Settings**) |
+| Entry | Sidebar-foot Settings control (4th icon: after Theme) |
+| Color | Chips `rich` (default) · `status` · `mono` → `localStorage` + `data-color` |
+| Theme | Shown as current value; toggle remains sidebar-foot Theme |
+
+Detail pane stays closed on Settings.
+
 ### Work
 
 Authored **outcome** ledger from `WORK.yaml`. Separate from Signals (D-011) and from Activity’s
@@ -386,7 +404,7 @@ process spine (D-023). Plan/design/research/audit are outcome work (correct home
 | ID | Kind | Summary | Feature | Area | Status | Age |
 
 Kinds: `fix` · `task` · `proposal` · `research` · `question` · `audit` · `design` (`S-nnn`).
-Status filters: Open = `open`+`active`; Closed = `done`+`promoted`+`dropped`.
+Status filters: Open = `open`; Active = `active`; Closed = `done`+`promoted`+`dropped`.
 Table summaries capped at 80 chars (tooltip = full). **Default sort: Age newest-first**
 (`sort: age`, `sortDir: desc`). **Sortable headers:** every column except Summary (ID, Kind,
 Feature, Area, Status, Age). Click toggles **asc/desc** (▴/▾); persists with filters until the

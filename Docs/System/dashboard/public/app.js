@@ -6,6 +6,7 @@ const PAGE_META = {
   work: { title: "Work" },
   signals: { title: "Signals" },
   docs: { title: "Docs" },
+  settings: { title: "Settings" },
 };
 
 /** Beginner Docs (D-027): Welcome + customer Commands overview — not System/COMMANDS.md. */
@@ -18,6 +19,9 @@ const DETAIL_WIDTH_KEY = "aidioma-detail-width";
 const TOC_WIDTH_KEY = "aidioma-toc-width";
 const TOC_COLLAPSED_KEY = "aidioma-toc-collapsed";
 const THEME_KEY = "aidioma-dashboard-theme";
+/** Color intensity: rich (Kind+Status hues) | status (Status only) | mono (muted). */
+const COLOR_MODE_KEY = "aidioma-dashboard-color-mode";
+const COLOR_MODES = ["rich", "status", "mono"];
 const PAGE_KEY = "aidioma-dashboard-page";
 const FILTER_KEYS = {
   roadmap: "aidioma-filters-roadmap",
@@ -130,6 +134,7 @@ const panels = {
   work: document.querySelector("#page-work"),
   signals: document.querySelector("#page-signals"),
   docs: document.querySelector("#page-docs"),
+  settings: document.querySelector("#page-settings"),
 };
 
 const indexedAt = document.querySelector("#indexed-at");
@@ -144,6 +149,7 @@ const detailMeta = document.querySelector("#detail-meta");
 const detailFrontmatter = document.querySelector("#detail-frontmatter");
 const detailBody = document.querySelector("#detail-body");
 const themeToggle = document.querySelector("#theme-toggle");
+const settingsPill = document.querySelector("#settings-pill");
 
 function readStored(key) {
   try {
@@ -164,6 +170,62 @@ function writeStored(key, value) {
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
   themeToggle?.setAttribute("aria-pressed", String(theme === "light"));
+}
+
+function normalizeColorMode(value) {
+  return COLOR_MODES.includes(value) ? value : "rich";
+}
+
+function applyColorMode(mode) {
+  const next = normalizeColorMode(mode);
+  document.documentElement.dataset.color = next;
+  writeStored(COLOR_MODE_KEY, next);
+  return next;
+}
+
+function currentColorMode() {
+  return normalizeColorMode(document.documentElement.dataset.color || readStored(COLOR_MODE_KEY));
+}
+
+const COLOR_MODE_OPTIONS = [
+  { value: "rich", label: "Rich", hint: "Kind + Status colors" },
+  { value: "status", label: "Status only", hint: "Status hues; Kind muted" },
+  { value: "mono", label: "Monochrome", hint: "Muted chips everywhere" },
+];
+
+function renderSettings() {
+  if (!panels.settings) return;
+  const mode = currentColorMode();
+  const theme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+  panels.settings.innerHTML = `
+    <div class="settings-panel">
+      <section class="settings-section">
+        <h2 class="settings-heading">Appearance</h2>
+        <p class="settings-hint">Local preferences only (this browser). Theme toggle stays in the sidebar foot.</p>
+        <div class="settings-field">
+          <span class="settings-label">Theme</span>
+          <span class="settings-value mono">${escapeHtml(theme)}</span>
+        </div>
+        <div class="settings-field">
+          <span class="settings-label">Color</span>
+          <div class="filters" role="group" aria-label="Color mode">
+            <div class="chip-group">
+              ${COLOR_MODE_OPTIONS.map((opt) => `
+                <button
+                  type="button"
+                  class="chip"
+                  data-color-mode="${escapeHtml(opt.value)}"
+                  aria-pressed="${mode === opt.value ? "true" : "false"}"
+                  title="${escapeHtml(opt.hint)}"
+                >${escapeHtml(opt.label)}</button>
+              `).join("")}
+            </div>
+          </div>
+        </div>
+        <p class="settings-hint">${escapeHtml(COLOR_MODE_OPTIONS.find((opt) => opt.value === mode)?.hint ?? "")}</p>
+      </section>
+    </div>
+  `;
 }
 
 function escapeHtml(value) {
@@ -222,8 +284,22 @@ function copyText(text) {
   return Promise.resolve();
 }
 
+/**
+ * Shared tone chip for Status + Kind/Type (no leading dot).
+ * `variant`: "status" (lifecycle) | "kind" (taxonomy — hues only when Color=rich).
+ */
+function statusChipHtml(value, label = value, { variant = "status" } = {}) {
+  if (value == null || value === "" || value === "—") return "—";
+  const text = label == null || label === "" ? value : label;
+  return `<span class="status" data-variant="${escapeHtml(variant)}" data-state="${escapeHtml(String(value))}">${escapeHtml(String(text))}</span>`;
+}
+
 function statusHtml(value) {
-  return `<span class="status" data-state="${escapeHtml(value)}">${escapeHtml(value)}</span>`;
+  return statusChipHtml(value);
+}
+
+function kindHtml(value, label = value) {
+  return statusChipHtml(value, label, { variant: "kind" });
 }
 
 /** Display SPEC-F-FOO / SPEC-A-BAR as FOO / BAR in tables. Full id in title. */
@@ -903,7 +979,7 @@ function glanceTwoColHtml(phase, index) {
       ["Proof", escapeHtml(phase.proof_kind)],
     ],
     [
-      ["Type", escapeHtml(typeLabel(phase.type))],
+      ["Type", kindHtml(phase.type, typeLabel(phase.type))],
       ["Git", escapeHtml(gitGlanceForPhase(phase, index)), { mono: true }],
     ],
     [
@@ -1415,13 +1491,15 @@ function renderActive(index) {
 
   if (tabs.length === 0) {
     state.activeTabId = null;
+    const nextStep = ready
+      ? `Next ready: ${ready.id}. Promote with /run, flush a Work row active, or schedule with /plan.`
+      : "Promote a ready phase with /run, flush a Work row active, or schedule with /plan.";
     panels.active.innerHTML = `
       <div class="now">
         <div class="phase-view">
           <header class="phase-header">
-            <p class="phase-id-row">Nothing in flight</p>
-            <h2 class="phase-name">${ready ? escapeHtml(ready.title) : "Nothing active"}</h2>
-            <p class="phase-outcome">${ready ? escapeHtml(ready.outcome) : "Promote a ready phase with /run, flush a Work row active, or schedule with /plan."}</p>
+            <h2 class="phase-name">Nothing active</h2>
+            <p class="phase-outcome">${escapeHtml(nextStep)}</p>
           </header>
         </div>
       </div>
@@ -1543,7 +1621,7 @@ function renderRoadmap(index) {
     <tr data-id="${escapeHtml(phase.id)}" data-type="${escapeHtml(phase.type)}" data-state="${escapeHtml(phase.state)}" ${state.selectedId === phase.id ? 'data-selected="true"' : ""}>
       ${idCopyCell(phase.id, { title: "Copy phase id" })}
       <td class="mono" title="Schedule step (depends_on → order). Frontmatter order=${escapeHtml(String(phase.order))}">${escapeHtml(String(step))}</td>
-      <td class="${phase.type === "design" ? "type-design" : ""}">${escapeHtml(typeLabel(phase.type))}</td>
+      <td>${kindHtml(phase.type, typeLabel(phase.type))}</td>
       <td class="wrap">
         ${truncateSummary(phase.title)}
         ${
@@ -1723,7 +1801,7 @@ function renderActivity(index) {
                   ? `<span class="cell-secondary">${escapeHtml(phaseNote)}</span>`
                   : "",
               })}
-              <td>${escapeHtml(event.type)}</td>
+              <td>${kindHtml(event.type)}</td>
               <td class="wrap">${truncateSummary(event.summary)}</td>
               <td>${shortSpecCell(activityTags(index, event).feature)}</td>
               <td>${shortSpecCell(activityTags(index, event).area)}</td>
@@ -2453,6 +2531,13 @@ function workBucket(status) {
   return status === "open" || status === "active" ? "open" : "closed";
 }
 
+/** Work Status chips: Open/Active exact; Closed = done|promoted|dropped. */
+function matchesWorkStatusFilter(rowStatus, filter) {
+  if (!filter) return true;
+  if (filter === "closed") return workBucket(rowStatus) === "closed";
+  return rowStatus === filter;
+}
+
 function renderWork(index) {
   const { kind, status, feature, area, q, sort, sortDir = "asc" } = state.workFilters;
   const source = index.work ?? [];
@@ -2463,7 +2548,7 @@ function renderWork(index) {
 
   let rows = source
     .filter((row) => !kind || row.kind === kind)
-    .filter((row) => !status || workBucket(row.status) === status)
+    .filter((row) => matchesWorkStatusFilter(row.status, status))
     .filter((row) => matchesSpecFilter(row.feature, feature) && matchesSpecFilter(row.area, area))
     .filter((row) =>
       matchesQuery(
@@ -2504,15 +2589,18 @@ function renderWork(index) {
   });
 
   const kinds = [...new Set(source.map((row) => row.kind))].sort();
-  const openCount = source.filter((row) => workBucket(row.status) === "open").length;
+  const openCount = source.filter((row) => row.status === "open").length;
+  const activeCount = source.filter((row) => row.status === "active").length;
   const closedCount = source.filter((row) => workBucket(row.status) === "closed").length;
   const emptyFiltered = rows.length === 0
     ? (
-      status === "open" && closedCount > 0
-        ? `No open work. ${closedCount} closed — choose Closed or All.`
-        : status === "closed" && openCount > 0
-          ? `No closed work. ${openCount} open — choose Open or All.`
-          : "No work matches these filters."
+      status === "open" && (activeCount > 0 || closedCount > 0)
+        ? `No open work.${activeCount ? ` ${activeCount} active —` : ""}${closedCount ? ` ${closedCount} closed —` : ""} choose Active, Closed, or All.`
+        : status === "active" && (openCount > 0 || closedCount > 0)
+          ? `No active work.${openCount ? ` ${openCount} open —` : ""}${closedCount ? ` ${closedCount} closed —` : ""} choose Open, Closed, or All.`
+          : status === "closed" && (openCount > 0 || activeCount > 0)
+            ? `No closed work.${openCount ? ` ${openCount} open —` : ""}${activeCount ? ` ${activeCount} active —` : ""} choose Open, Active, or All.`
+            : "No work matches these filters."
     )
     : null;
 
@@ -2526,6 +2614,7 @@ function renderWork(index) {
           <span class="chip-label">Status</span>
           ${chip("work-status", "", status, "All")}
           ${chip("work-status", "open", status, `Open${openCount ? ` (${openCount})` : ""}`)}
+          ${chip("work-status", "active", status, `Active${activeCount ? ` (${activeCount})` : ""}`)}
           ${chip("work-status", "closed", status, `Closed${closedCount ? ` (${closedCount})` : ""}`)}
         </div>
         <div class="chip-group">
@@ -2546,7 +2635,7 @@ function renderWork(index) {
               : rows.map((row) => `
             <tr data-id="${escapeHtml(row.id)}" data-status="${escapeHtml(row.status)}">
               ${idCopyCell(row.id, { title: "Copy work id" })}
-              <td title="${escapeHtml(row.kind)}">${escapeHtml(workKindLabel(row.kind))}</td>
+              <td title="${escapeHtml(row.kind)}">${kindHtml(row.kind, workKindLabel(row.kind))}</td>
               <td class="wrap">${truncateSummary(row.summary)}</td>
               <td>${shortSpecCell(row.feature)}</td>
               <td>${shortSpecCell(row.area)}</td>
@@ -2668,7 +2757,7 @@ function renderSignals(index) {
                 return `
             <tr data-id="${escapeHtml(issue.ref)}" data-status="${escapeHtml(issueStatus(issue))}">
               <td class="mono">${escapeHtml(issue.ref)}</td>
-              <td>${escapeHtml(issue.kind)}</td>
+              <td>${kindHtml(issue.kind)}</td>
               <td class="wrap">${truncateSummary(issue.summary)}<span class="cell-secondary sev-${escapeHtml(issue.severity)}">${escapeHtml(issue.severity)}</span></td>
               <td>${shortSpecCell(tags.feature)}</td>
               <td>${shortSpecCell(tags.area)}</td>
@@ -2732,6 +2821,7 @@ function renderAll() {
   renderWork(state.index);
   renderSignals(state.index);
   renderDocs();
+  renderSettings();
 }
 
 function showPage(page) {
@@ -2740,7 +2830,7 @@ function showPage(page) {
   const meta = PAGE_META[page] ?? PAGE_META.active;
   pageTitle.textContent = meta.title;
   for (const [name, panel] of Object.entries(panels)) {
-    panel.hidden = name !== page;
+    if (panel) panel.hidden = name !== page;
   }
   for (const tab of document.querySelectorAll(".tab")) {
     if (tab.dataset.page === page) tab.setAttribute("aria-current", "page");
@@ -2759,7 +2849,12 @@ function showPage(page) {
     if (page === "docs") docsPill.setAttribute("aria-current", "page");
     else docsPill.removeAttribute("aria-current");
   }
-  if (page === "knowledge" || page === "docs") detail.hidden = true;
+  if (settingsPill) {
+    if (page === "settings") settingsPill.setAttribute("aria-current", "page");
+    else settingsPill.removeAttribute("aria-current");
+  }
+  if (page === "knowledge" || page === "docs" || page === "settings") detail.hidden = true;
+  if (page === "settings") renderSettings();
   syncDetailRailGutter();
 }
 
@@ -2910,7 +3005,7 @@ function renderWorkFiles(index, row) {
 function renderWorkDetail(row, index, { primary = false } = {}) {
   const pairs = [
     [
-      ["Kind", escapeHtml(workKindLabel(row.kind)), { mono: true }],
+      ["Kind", kindHtml(row.kind, workKindLabel(row.kind))],
       ["Status", statusHtml(row.status)],
     ],
     [
@@ -2968,7 +3063,7 @@ function renderSignalDetail(issue) {
     issue.age_days == null ? "—" : issue.age_days === 0 ? "<24h" : `${issue.age_days}d`;
   const pairs = [
     [
-      ["Kind", escapeHtml(issue.kind), { mono: true }],
+      ["Kind", kindHtml(issue.kind)],
       ["Status", statusHtml(issueStatus(issue))],
     ],
     [
@@ -3160,6 +3255,17 @@ docsPill?.addEventListener("click", () => {
   showPage("docs");
 });
 
+settingsPill?.addEventListener("click", () => {
+  showPage("settings");
+});
+
+panels.settings?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-color-mode]");
+  if (!button?.dataset.colorMode) return;
+  applyColorMode(button.dataset.colorMode);
+  renderSettings();
+});
+
 document.querySelector("#reindex").addEventListener("click", () => {
   void reindex();
 });
@@ -3215,6 +3321,7 @@ themeToggle.addEventListener("click", () => {
   const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
   writeStored(THEME_KEY, next);
   applyTheme(next);
+  if (state.page === "settings") renderSettings();
 });
 
 document.querySelector("#detail-close").addEventListener("click", (event) => {
@@ -3440,6 +3547,7 @@ setInterval(() => {
 }, 1000);
 
 applyTheme(readStored(THEME_KEY) === "light" ? "light" : "dark");
+applyColorMode(readStored(COLOR_MODE_KEY) || "rich");
 // Detail stays closed until a row is opened — never auto-show on refresh.
 detail.hidden = true;
 detail.classList.remove("collapsed");

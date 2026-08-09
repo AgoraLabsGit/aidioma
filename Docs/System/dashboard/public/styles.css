@@ -39,8 +39,18 @@
   --danger-soft: rgb(255 107 107 / 14%);
   --blocked: #b48cff;
   --blocked-soft: rgb(180 140 255 / 16%);
+  /* --info (cyan) kept for non-chip UI only — do not use on chips (too close to success). */
   --info: #3ecfcf;
   --info-soft: rgb(62 207 207 / 14%);
+  /* Extra chip hues (Kind/Type taxonomy) */
+  --orange: #ff9f43;
+  --orange-soft: rgb(255 159 67 / 16%);
+  --rose: #f472b6;
+  --rose-soft: rgb(244 114 182 / 16%);
+  --copper: #d4a574;
+  --copper-soft: rgb(212 165 116 / 16%);
+  --slate: #9aa8c7;
+  --slate-soft: rgb(154 168 199 / 16%);
 
   --shadow-floating: 0 16px 44px rgb(0 0 0 / 62%);
 
@@ -115,6 +125,14 @@
   --blocked-soft: rgb(95 53 196 / 16%);
   --info: #0c7f7f;
   --info-soft: rgb(12 127 127 / 16%);
+  --orange: #c45f12;
+  --orange-soft: rgb(196 95 18 / 16%);
+  --rose: #b83280;
+  --rose-soft: rgb(184 50 128 / 16%);
+  --copper: #8a5a2b;
+  --copper-soft: rgb(138 90 43 / 16%);
+  --slate: #4a5a78;
+  --slate-soft: rgb(74 90 120 / 16%);
 
   --shadow-floating: 0 12px 32px rgb(16 24 40 / 12%);
 }
@@ -364,6 +382,46 @@ html:not([data-theme="light"]) .theme-icon-sun {
   font-size: var(--fs-sm);
   font-weight: var(--fw-semibold);
   color: var(--text-muted);
+}
+.page-settings {
+  padding: var(--space-5) var(--space-4);
+  overflow: auto;
+}
+.settings-panel {
+  max-width: 520px;
+}
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.settings-heading {
+  margin: 0;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  font-family: var(--mono);
+}
+.settings-hint {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+.settings-label {
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+.settings-value {
+  font-size: var(--fs-sm);
+  color: var(--text);
 }
 
 /* ——— Workspace / topbar ——— */
@@ -872,24 +930,24 @@ main {
   --chip-tone-soft: var(--accent-soft);
 }
 .chip[data-filter="state"][data-value="ready"] {
-  --chip-tone: var(--info);
-  --chip-tone-soft: var(--info-soft);
+  --chip-tone: var(--success);
+  --chip-tone-soft: var(--success-soft);
 }
 .chip[data-filter="state"][data-value="proposed"] {
   --chip-tone: var(--warning);
   --chip-tone-soft: var(--warning-soft);
 }
 .chip[data-filter="state"][data-value="blocked"] {
-  --chip-tone: var(--blocked);
-  --chip-tone-soft: var(--blocked-soft);
-}
-.chip[data-filter="state"][data-value="closed"] {
-  --chip-tone: var(--success);
-  --chip-tone-soft: var(--success-soft);
-}
-.chip[data-filter="state"][data-value="canceled"] {
   --chip-tone: var(--danger);
   --chip-tone-soft: var(--danger-soft);
+}
+.chip[data-filter="state"][data-value="closed"] {
+  --chip-tone: var(--text-muted);
+  --chip-tone-soft: var(--surface-subtle);
+}
+.chip[data-filter="state"][data-value="canceled"] {
+  --chip-tone: var(--blocked);
+  --chip-tone-soft: var(--blocked-soft);
 }
 
 /* Work + Signals status buckets */
@@ -898,7 +956,14 @@ main {
   --chip-tone: var(--warning);
   --chip-tone-soft: var(--warning-soft);
 }
-.chip[data-filter="work-status"][data-value="closed"],
+.chip[data-filter="work-status"][data-value="active"] {
+  --chip-tone: var(--accent);
+  --chip-tone-soft: var(--accent-soft);
+}
+.chip[data-filter="work-status"][data-value="closed"] {
+  --chip-tone: var(--text-muted);
+  --chip-tone-soft: var(--surface-subtle);
+}
 .chip[data-filter="signal-status"][data-value="fixed"] {
   --chip-tone: var(--success);
   --chip-tone-soft: var(--success-soft);
@@ -1564,13 +1629,90 @@ code,
   font-size: var(--fs-xs);
 }
 
-/* ——— Status (dot + label; every table Status column) ———
- * Phase: active blue · ready cyan · proposed amber · blocked purple · closed green · canceled red
+/* Kind/Type filter chips — colored only in rich mode */
+html[data-color="rich"] .chip[data-filter="work-kind"]:not([data-value=""]),
+html[data-color="rich"] .chip[data-filter="type"]:not([data-value=""]) {
+  color: var(--chip-tone);
+  border-color: color-mix(in srgb, var(--chip-tone) 45%, transparent);
+  background: var(--chip-tone-soft);
+}
+html[data-color="rich"] .chip[data-filter="work-kind"]:not([data-value=""])[aria-pressed="true"],
+html[data-color="rich"] .chip[data-filter="type"]:not([data-value=""])[aria-pressed="true"] {
+  color: var(--chip-tone);
+  border-color: var(--chip-tone);
+  background: var(--chip-tone-soft);
+  font-weight: var(--fw-semibold);
+}
+html[data-color="rich"] .chip[data-filter="work-kind"][data-value="fix"],
+html[data-color="rich"] .chip[data-filter="type"][data-value="blocked"] {
+  --chip-tone: var(--danger);
+  --chip-tone-soft: var(--danger-soft);
+}
+html[data-color="rich"] .chip[data-filter="work-kind"][data-value="task"],
+html[data-color="rich"] .chip[data-filter="type"][data-value="build"],
+html[data-color="rich"] .chip[data-filter="type"][data-value="handoff"] {
+  --chip-tone: var(--accent);
+  --chip-tone-soft: var(--accent-soft);
+}
+html[data-color="rich"] .chip[data-filter="work-kind"][data-value="proposal"],
+html[data-color="rich"] .chip[data-filter="type"][data-value="launch"],
+html[data-color="rich"] .chip[data-filter="type"][data-value="triage"] {
+  --chip-tone: var(--warning);
+  --chip-tone-soft: var(--warning-soft);
+}
+html[data-color="rich"] .chip[data-filter="work-kind"][data-value="research"] {
+  --chip-tone: var(--copper);
+  --chip-tone-soft: var(--copper-soft);
+}
+html[data-color="rich"] .chip[data-filter="type"][data-value="check"] {
+  --chip-tone: var(--orange);
+  --chip-tone-soft: var(--orange-soft);
+}
+html[data-color="rich"] .chip[data-filter="type"][data-value="dashboard"] {
+  --chip-tone: var(--slate);
+  --chip-tone-soft: var(--slate-soft);
+}
+html[data-color="rich"] .chip[data-filter="work-kind"][data-value="question"],
+html[data-color="rich"] .chip[data-filter="type"][data-value="status"] {
+  --chip-tone: var(--text-muted);
+  --chip-tone-soft: var(--surface-subtle);
+}
+html[data-color="rich"] .chip[data-filter="work-kind"][data-value="audit"],
+html[data-color="rich"] .chip[data-filter="type"][data-value="close"] {
+  --chip-tone: var(--success);
+  --chip-tone-soft: var(--success-soft);
+}
+html[data-color="rich"] .chip[data-filter="type"][data-value="ship"] {
+  --chip-tone: var(--rose);
+  --chip-tone-soft: var(--rose-soft);
+}
+html[data-color="rich"] .chip[data-filter="work-kind"][data-value="design"],
+html[data-color="rich"] .chip[data-filter="type"][data-value="design"],
+html[data-color="rich"] .chip[data-filter="type"][data-value="system"] {
+  --chip-tone: var(--blocked);
+  --chip-tone-soft: var(--blocked-soft);
+}
+
+/* Monochrome: mute Status / severity chips too */
+html[data-color="mono"] .status {
+  --tone: var(--text-muted);
+  --tone-soft: var(--surface-subtle);
+}
+html[data-color="mono"] .chip[data-filter="state"]:not([data-value=""]),
+html[data-color="mono"] .chip[data-filter="work-status"]:not([data-value=""]),
+html[data-color="mono"] .chip[data-filter="signal-status"]:not([data-value=""]),
+html[data-color="mono"] .chip[data-filter="signal-severity"]:not([data-value=""]) {
+  --chip-tone: var(--text-muted);
+  --chip-tone-soft: var(--surface-subtle);
+}
+
+/* ——— Status chip (shared Status + Kind/Type; no leading dot) ———
+ * Phase: active blue · ready green · proposed amber · blocked red · closed grey · canceled purple
+ * Kind/Type hues apply only when data-variant=kind and Color=rich
  */
 .status {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
   font-size: var(--fs-xs);
   font-weight: var(--fw-medium);
   color: var(--tone, var(--text-muted));
@@ -1579,39 +1721,31 @@ code,
   background: var(--tone-soft, var(--surface-subtle));
   border: 1px solid transparent;
 }
-.status::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--tone, var(--text-muted));
-  flex: 0 0 auto;
-}
 
 .status[data-state="active"] {
   --tone: var(--accent);
   --tone-soft: var(--accent-soft);
 }
 .status[data-state="ready"] {
-  --tone: var(--info);
-  --tone-soft: var(--info-soft);
+  --tone: var(--success);
+  --tone-soft: var(--success-soft);
 }
 .status[data-state="proposed"] {
   --tone: var(--warning);
   --tone-soft: var(--warning-soft);
 }
 .status[data-state="blocked"] {
-  --tone: var(--blocked);
-  --tone-soft: var(--blocked-soft);
+  --tone: var(--danger);
+  --tone-soft: var(--danger-soft);
 }
 .status[data-state="closed"] {
-  --tone: var(--success);
-  --tone-soft: var(--success-soft);
+  --tone: var(--text-muted);
+  --tone-soft: var(--surface-subtle);
   opacity: 0.9;
 }
 .status[data-state="canceled"] {
-  --tone: var(--danger);
-  --tone-soft: var(--danger-soft);
+  --tone: var(--blocked);
+  --tone-soft: var(--blocked-soft);
   text-decoration: line-through;
   text-decoration-thickness: 1px;
 }
@@ -1647,14 +1781,58 @@ code,
   --tone-soft: var(--accent-soft);
 }
 
-.status[data-state="ready"]::before,
-.status[data-state="proposed"]::before,
-.status[data-state="open"]::before {
-  background: transparent;
-  border: 1.5px solid var(--tone);
+/* Kind/Type taxonomy hues (same .status chip; Color=rich only) */
+html[data-color="rich"] .status[data-variant="kind"][data-state="fix"] {
+  --tone: var(--danger);
+  --tone-soft: var(--danger-soft);
 }
-.status[data-state="active"]::before {
-  box-shadow: 0 0 0 3px var(--accent-soft);
+html[data-color="rich"] .status[data-variant="kind"][data-state="task"],
+html[data-color="rich"] .status[data-variant="kind"][data-state="build"],
+html[data-color="rich"] .status[data-variant="kind"][data-state="handoff"] {
+  --tone: var(--accent);
+  --tone-soft: var(--accent-soft);
+}
+html[data-color="rich"] .status[data-variant="kind"][data-state="proposal"],
+html[data-color="rich"] .status[data-variant="kind"][data-state="launch"],
+html[data-color="rich"] .status[data-variant="kind"][data-state="triage"] {
+  --tone: var(--warning);
+  --tone-soft: var(--warning-soft);
+}
+html[data-color="rich"] .status[data-variant="kind"][data-state="research"] {
+  --tone: var(--copper);
+  --tone-soft: var(--copper-soft);
+}
+html[data-color="rich"] .status[data-variant="kind"][data-state="check"] {
+  --tone: var(--orange);
+  --tone-soft: var(--orange-soft);
+}
+html[data-color="rich"] .status[data-variant="kind"][data-state="dashboard"] {
+  --tone: var(--slate);
+  --tone-soft: var(--slate-soft);
+}
+html[data-color="rich"] .status[data-variant="kind"][data-state="question"],
+html[data-color="rich"] .status[data-variant="kind"][data-state="status"] {
+  --tone: var(--text-muted);
+  --tone-soft: var(--surface-subtle);
+}
+html[data-color="rich"] .status[data-variant="kind"][data-state="audit"],
+html[data-color="rich"] .status[data-variant="kind"][data-state="close"] {
+  --tone: var(--success);
+  --tone-soft: var(--success-soft);
+}
+html[data-color="rich"] .status[data-variant="kind"][data-state="ship"] {
+  --tone: var(--rose);
+  --tone-soft: var(--rose-soft);
+}
+html[data-color="rich"] .status[data-variant="kind"][data-state="design"],
+html[data-color="rich"] .status[data-variant="kind"][data-state="system"] {
+  --tone: var(--blocked);
+  --tone-soft: var(--blocked-soft);
+}
+html[data-color="status"] .status[data-variant="kind"],
+html[data-color="mono"] .status[data-variant="kind"] {
+  --tone: var(--text-muted);
+  --tone-soft: var(--surface-subtle);
 }
 
 .sev-high {

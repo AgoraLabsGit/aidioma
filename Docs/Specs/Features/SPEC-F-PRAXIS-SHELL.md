@@ -31,7 +31,7 @@ paths:
 
 ## Purpose
 
-Shared Praxis dashboard chrome: brand, nav, topbar, Filters, detail rail, theme, worktrees.
+Shared Praxis dashboard chrome: brand, nav, topbar, Filters, detail rail, theme, settings, worktrees.
 
 ## Behavior
 
@@ -42,7 +42,11 @@ Shared Praxis dashboard chrome: brand, nav, topbar, Filters, detail rail, theme,
 - Rule: Nav sidebar width is `--sidebar-w: 180px`
 - Rule: Main nav tabs are **Work · Roadmap · Activity · Knowledge** only — **Active is not a main-nav tab**
 - Rule: Sidebar page icons are minimal stroke SVGs in a `1.25em` slot with shared left bearing ~x=4–5; selected tab icons at full opacity
-- Rule: Sidebar-foot is one horizontal icon-only row: **Signals · Docs · Theme** (`.sidebar-foot-btn`); visible labels omitted — `title` + `aria-label` required
+- Rule: Sidebar-foot is one horizontal icon-only row: **Signals · Docs · Theme · Settings** (`.sidebar-foot-btn`); visible labels omitted — `title` + `aria-label` required
+- Rule: **Settings** is a foot page (not main nav): Appearance shows current theme + Color mode chips (`rich` default · `status` · `mono`) persisted as `aidioma-dashboard-color-mode` / `data-color`; Theme toggle remains in the foot
+- Rule: Status and Kind/Type table/detail pills share one component (`statusChipHtml` → `.status`, no leading dot); Kind uses `data-variant=kind`
+- Rule: Chip hue set includes orange/rose/copper/slate; **never** assign cyan (`--info`) to chips
+- Rule: Color mode gates Kind/Type hues (`rich`); `status` mutes Kind only; `mono` mutes Kind and Status/severity chips
 - Rule: Topbar is compact (`--topbar-h` ~52px); page title uses `--fs-xl` and `--mono`
 - Rule: Topbar **Active badge** sits immediately left of the worktrees/GitHub control; shows count of Active tabs (in-flight phases + `status: active` Work); click navigates to Active; always visible (including `0`)
 - Rule: Topbar git badge shows open worktree count; panel lists worktrees by category (docs/main/phase/task/other) with dirty/ahead and optional GitHub branch link; control uses the GitHub mark icon

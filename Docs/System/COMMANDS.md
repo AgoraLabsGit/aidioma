@@ -32,6 +32,9 @@ Never refuse `/close` because no phase is active — run reduced close.
 | `/fix` | Patch + proof + Work `fix` + `done_summary` | Required proof; publish via `/close` (reduced) | `/check`; `/close` to publish; optional `/audit`; `/log`/`/plan` if stretches |
 | `/task` | Patch/docs + proof + Work `task` + `done_summary` | Required proof (light); publish via `/close` (reduced) | `/check`; `/close` to publish; optional `/audit`; `/log`/`/plan` if stretches |
 
+**`/task` same vs fresh:** polish/finish the active outcome on that `T-nnn`; new outcome or
+prior task already `done` → new id. Implementation steps are not separate Work rows.
+
 **Desks (D-025):** Product `/task`/`/fix` → `task/*`/`fix/*` worktrees. Meta → Docs home.
 Docs-home path leases via active Work `context_paths` (overlap → wait/park).
 **`/close` publish:** every dirty session desk — product PR + meta `close/*` when both dirty;
