@@ -103,15 +103,22 @@ Target path (default): sibling of AIdioma —
 
 - [x] `Praxis.v2` is a git repo with Praxis System/dashboard/skills/hooks/work scripts
 - [x] `npm run work:validate` and `work:test` pass in Praxis.v2
-- [x] `work:dashboard` serves Praxis UI from Praxis.v2
-- [x] AIdioma no longer treats `Docs/System` as living Praxis SSOT (moved or clearly stubbed)
-- [x] Inventory table residuals listed in Close record
+- [x] `work:dashboard` serves Praxis UI from Praxis.v2 (D-057 preferred port)
+- [x] AIdioma is a separate Praxis project with learner-only Docs/Work data (validate 0 issues)
+- [x] Both projects can run dashboards concurrently without port collision (D-057)
+- [x] Inventory residuals listed in Close record
 
 ## Close record
 
-- Result: Dual Praxis projects separated. Praxis.v2 = Praxis-dev (10 phases, ~186 Work, validate 0 issues, D-057 ports). AIdioma = learner project (3 phases, 15 Work, harness restored, validate 0 issues). Concurrent dashboards on distinct ports proved. Docs-home env scoped to clone family.
-- Specs amended: SPEC-F-PRAXIS-SHELL (D-057); AIdioma learner specs research scrubbed
-- Journal line: PHASE-011 dual-instance separation complete — ready /close
+- Result: Dual Praxis **projects** (separate ledgers/specs/phases). Each checkout has a living harness `Docs/System` (forked copy; not a single System SSOT). Project data separated and validated.
+- Residuals (inventory):
+  - AIdioma Work still includes open `S-011` / `T-073` (dashboard soft-cap park; AIdioma shell polish) — intentional, not Praxis-dev productization.
+  - AIdioma `P-003` remains `promoted` to PHASE-011 (ledger history).
+  - Praxis.v2 `WORK.yaml` may still contain historical strings mentioning Lexicon/learner in closed-row notes — no living learner specs; validate 0 issues.
+  - Harness System code is duplicated across repos (expected for dual-instance); Praxis.v2 is upstream for productization; AIdioma copy runs the learner project.
+  - Praxis.v2 is local-only (no GitHub remote) unless founder asks later (phase non-goal).
+- Specs amended: SPEC-F-PRAXIS-SHELL (D-057) in Praxis.v2; AIdioma learner specs research arrays scrubbed
+- Journal line: PHASE-011 closed — dual Praxis projects separated; next `/run PHASE-010` in Praxis.v2
 
 ## Kickoff
 
