@@ -437,3 +437,10 @@
 {"ts":"2026-08-09T00:22:30Z","type":"task","ref":"T-071","phase":null,"summary":"Deduped T-070→T-071 close handoff row","status":"complete","cmd":"/close"}
 {"ts":"2026-08-09T00:23:14Z","type":"task","ref":"T-072","phase":null,"summary":"Active — journal close PR 53","status":"active","cmd":"/close"}
 {"ts":"2026-08-09T00:23:14Z","type":"close","ref":"T-072","phase":null,"summary":"Reduced close merged PR #53 a385186 — chip UI + Settings + phase seeds; next /run PHASE-011","status":"complete","cmd":"/close"}
+{"ts":"2026-08-09T17:04:06Z","type":"log","ref":"S-011","phase":null,"summary":"Park S-011 dashboard table soft-cap design","status":"open","cmd":"/log"}
+{"ts":"2026-08-09T17:04:06Z","type":"log","ref":"T-073","phase":null,"summary":"Park T-073 deferred soft render cap task","status":"open","cmd":"/log"}
+{"ts":"2026-08-09T17:05:33Z","type":"check","ref":"C-022","phase":null,"summary":"C-022 work lane reduced close S-011/T-073","status":"running","cmd":"/check"}
+{"ts":"2026-08-09T17:05:30Z","type":"run","ref":"PHASE-011","phase":"PHASE-011","summary":"Activate + /run PHASE-011 Extract Praxis to Praxis.v2","status":"active","cmd":"/run"}
+{"ts":"2026-08-09T17:05:30Z","type":"task","ref":"T-074","phase":"PHASE-011","summary":"Execute PHASE-011 — extract Praxis to Praxis.v2","status":"active","cmd":"/run"}
+{"ts":"2026-08-09T17:05:48Z","type":"check","ref":"C-022","phase":null,"summary":"C-022 work lane PASS","status":"complete","cmd":"/check"}
+{"ts":"2026-08-09T17:05:48Z","type":"close","ref":"T-074","phase":null,"summary":"Reduced close publish S-011 T-073 park","status":"complete","cmd":"/close"}
