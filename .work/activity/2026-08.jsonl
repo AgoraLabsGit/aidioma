@@ -432,3 +432,6 @@
 {"ts":"2026-08-09T00:22:05Z","type":"task","ref":"T-070","phase":null,"summary":"Active Work T-070 reduced close publish","status":"active","cmd":"/close"}
 {"ts":"2026-08-09T00:22:06Z","type":"fix","ref":"F-039","phase":null,"summary":"Renumber Active-empty fix F-036→F-039 (chip F-036 collision)","status":"done","cmd":"/close"}
 {"ts":"2026-08-09T00:22:30Z","type":"close","ref":"T-070","phase":null,"summary":"Reduced close publish Docs-home F-039 Active empty + Praxis plan seed","status":"complete","cmd":"/close"}
+{"ts":"2026-08-09T00:21:44Z","type":"task","ref":"T-070","phase":null,"summary":"Active — close handoff","status":"active","cmd":"/close"}
+{"ts":"2026-08-09T00:21:44Z","type":"task","ref":"T-070","phase":null,"summary":"Close handoff written","status":"complete","cmd":"/close"}
+{"ts":"2026-08-09T00:22:30Z","type":"task","ref":"T-071","phase":null,"summary":"Deduped T-070→T-071 close handoff row","status":"complete","cmd":"/close"}

@@ -1,16 +1,17 @@
 ---
-ref: null
+ref: PHASE-011
 ---
 
-# Handoff — after reduced /close (F-039 + Praxis plan seed)
+# Handoff — after reduced /close (chip UI + phase seeds)
 
-**Date:** 2026-08-09
+**Date:** 2026-08-08
 
 ## State
 
-- **Active phase:** none
-- **Published:** Active empty state (F-035/F-039); Praxis productization plan seed (R-006, D-032–D-056, PHASE-011 next, PHASE-010 after extract)
-- **Next:** `/run PHASE-011` — extract Praxis → `Praxis.v2`
+- Published Docs-home meta: Praxis Settings/color mode, Kind/Status chip unify + palette,
+  `/task` same-vs-fresh rule, Active empty fixes, PHASE-010/011 seeds + R-006/decisions.
+- **Next:** `/run PHASE-011` — extract to `Praxis.v2`
+- Then `/run PHASE-010` **inside Praxis.v2** (depends_on PHASE-011)
 
 ## Next command
 

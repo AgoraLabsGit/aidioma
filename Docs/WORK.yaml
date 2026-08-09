@@ -472,7 +472,7 @@
   blocked_by: null
   note: null
   open_questions: null
-  done_summary: null
+  done_summary: "HANDOFF after reduced close → /run PHASE-011"
   opened: 2026-08-07
 - id: W-040
   kind: proposal
@@ -2972,4 +2972,21 @@
   open_questions: null
   done_summary: "Published Docs-home meta via close/f036-active-empty-praxis-plan (F-039 Active empty + Praxis plan seed)."
   opened: 2026-08-09T00:22:00Z
+
+- id: T-071
+  kind: task
+  summary: "Reduced /close handoff after chip UI publish"
+  status: done
+  feature: null
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  context_paths:
+    - Docs/Handoffs/HANDOFF.md
+    - .work/activity/
+  open_questions: null
+  done_summary: "HANDOFF after reduced close → /run PHASE-011"
+  opened: 2026-08-09T00:21:44Z
 
