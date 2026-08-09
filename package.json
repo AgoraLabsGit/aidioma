@@ -26,19 +26,11 @@
     "prototype:export": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts",
     "prototype:check": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts --check",
     "practice:candidates": "npm run practice:candidates --workspace @aidioma/web --",
-    "work:validate": "tsx Docs/System/derive/validate.ts",
-    "work:typecheck": "tsc -p Docs/System/derive/tsconfig.json",
-    "work:test": "vitest run Docs/System/derive Docs/System/dashboard",
-    "work:dashboard": "bash tooling/run-dashboard.sh",
-    "work:docs-home": "bash tooling/ensure-docs-home.sh"
+    "praxis:hint": "node -e \"console.log('Praxis lives in ../Praxis.v2 \u2014 npm run work:* there')\""
   },
   "devDependencies": {
     "@types/node": "^22.20.1",
-    "chokidar": "^4.0.3",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3",
-    "vitest": "4.1.10",
-    "yaml": "2.8.2",
-    "zod": "3.25.76"
+    "typescript": "^5.6.3"
   }
 }
