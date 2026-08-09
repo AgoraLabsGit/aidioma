@@ -3,7 +3,7 @@ id: PHASE-011
 title: Extract Praxis to Praxis.v2 repo
 type: build
 proof_kind: terminal
-state: active
+state: closed
 order: 9
 depends_on: []
 from_backlog: P-003
@@ -35,7 +35,7 @@ context_paths:
   - package.json
   - .github/workflows/work.yml
 opened: 2026-08-08
-closed: null
+closed: 2026-08-09
 lessons: null
 ---
 

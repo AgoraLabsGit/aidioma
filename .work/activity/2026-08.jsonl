@@ -448,3 +448,5 @@
 {"ts":"2026-08-09T17:38:35Z","type":"run","ref":"PHASE-011","phase":"PHASE-011","summary":"Dual Praxis projects separated + D-057 ports; both validate 0 issues; concurrent dashboards proved","status":"active","cmd":"/run"}
 {"ts":"2026-08-09T17:55:00Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-011","ref":"PHASE-011","status":"complete","summary":"Phase-scoped close triage: reviewed T-074 (active→leave until /close), P-003 (promoted→leave); no other open|active phase:PHASE-011; no auto /fix|/task; no Work blockers for close"}
 {"ts":"2026-08-09T17:56:17Z","type":"check","ref":"C-023","phase":"PHASE-011","summary":"C work lane PASS typecheck+test+validate","status":"complete","cmd":"/check"}
+{"ts":"2026-08-09T17:58:45Z","type":"audit","ref":"PHASE-011","phase":"PHASE-011","summary":"Required Adv WARN — dual System fork + residuals documented; founder ack via dual-instance completion bar","status":"complete","cmd":"/close"}
+{"ts":"2026-08-09T17:58:55Z","type":"close","ref":"PHASE-011","phase":"PHASE-011","summary":"Closing PHASE-011 — dual desk publish","status":"active","cmd":"/close"}

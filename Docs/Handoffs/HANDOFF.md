@@ -1,21 +1,23 @@
 ---
-ref: PHASE-011
+ref: null
 ---
 
-# Handoff — PHASE-011 dual-instance ready to close
+# Handoff — after PHASE-011 /close
 
 **Date:** 2026-08-09
 
 ## State
 
-- Two Praxis projects separated and validated:
-  - **Praxis.v2** — Praxis-dev bootstrap (validate 0 issues; dashboard :4335 preferred)
-  - **AIdioma** — learner project (validate 0 issues; dashboard :4317 preferred)
-- D-057 port binding + Docs-home env scoped to clone family (no cross-bleed)
-- **Next:** `/close`
+- PHASE-011 closed: dual Praxis projects (AIdioma + Praxis.v2) separated.
+- AIdioma: learner roadmap (PHASE-002/003 proposed).
+- Praxis.v2: next `/run PHASE-010` (productization design).
 
 ## Next command
 
 ```text
-/close
+# In Praxis.v2:
+/run PHASE-010
+
+# Or in AIdioma:
+/status
 ```
