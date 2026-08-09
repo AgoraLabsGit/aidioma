@@ -346,3 +346,155 @@ Why: A session note about PHASE-009 is misleading when viewing T-058 (and vice v
 Revisit if: Parallel in-flight Work needs retained notes per id (then consider per-ref files)
 Adv: PASS — MCOO; overwrite semantics preserved; missing `ref` stays unscoped (no false attach)
 
+## D-032 — Delivery vehicle: VS Code-compatible extension first
+Date: 2026-08-08 · Phase: PHASE-010 · From: R-006 · Affects: [SPEC-A-PRAXIS]
+Chose: Ship as a VS Code-compatible extension first over Theia/custom desktop first
+Why: Faster path to real IDE surfaces; Theia remains contingency if marketplace/host constraints bite
+Revisit if: Extension host APIs block core workflow UI/hooks for two consecutive milestones
+
+## D-033 — Product identity: workflow harness, not coding agent
+Date: 2026-08-08 · Phase: PHASE-010 · From: R-006 · Affects: [SPEC-A-PRAXIS]
+Chose: Brand/position Praxis as PM/workflow harness over competing on chat/coding-agent quality
+Why: Models and coding loops already ship via agent CLIs; Praxis wins on gates, proof, ledger
+Revisit if: Paying users demand a first-party agent loop as the primary product surface
+
+## D-034 — System spine: Extension UI + praxis CLI + store + runners
+Date: 2026-08-08 · Phase: PHASE-010 · From: R-006 · Affects: [SPEC-A-PRAXIS]
+Chose: Extension UI + `praxis` CLI (foreman) + DB/files + pluggable agent CLI runners over IDE-SDK-centric spine
+Why: Clear ownership: UI/orchestration/proof kept; coding execution outsourced to CLIs
+Revisit if: CLI orchestration cannot enforce gates/proof with acceptable latency or reliability
+
+## D-035 — Agent integration: thin CLI runner interface
+Date: 2026-08-08 · Phase: PHASE-010 · From: R-006 · Affects: [SPEC-A-PRAXIS]
+Chose: Thin runner interface over agent CLIs (Cursor `agent`, Claude, Codex) over per-IDE SDK adapters as spine
+Why: One ABI across hosts; avoids N SDK adapters and host lock-in
+Revisit if: Required host lacks a usable CLI and only exposes an SDK that cannot be wrapped thinly
+
+## D-036 — Workflow runtime: thin custom stage machine (v1)
+Date: 2026-08-08 · Phase: PHASE-010 · From: R-006 · Affects: [SPEC-A-PRAXIS]
+Chose: Custom AIDLC-like stage machine in praxis CLI/core over Mastra or Temporal for v1
+Why: Workflow is gates/ledger/proof, not durable cloud orchestration; keep runtime thin and owned
+Revisit if: Multi-day durable jobs or distributed retries become core requirements
+
+## D-037 — Mastra scope: not v1 workflow engine
+Date: 2026-08-08 · Phase: PHASE-010 · From: R-006 · Affects: [SPEC-A-PRAXIS]
+Chose: Exclude Mastra from v1 workflow runtime; consider only later for in-process Gateway agents
+Why: Avoid framework gravity before the stage machine and ledger prove out
+Revisit if: We own an in-process Gateway agent loop that needs Mastra primitives
+
+## D-038 — Build vs buy boundary
+Date: 2026-08-08 · Phase: PHASE-010 · From: R-006 · Affects: [SPEC-A-PRAXIS]
+Chose: Outsource IDE shell + coding agents/models via CLIs; keep UI, praxis CLI, workflow/ledger/gates/proof
+Why: Concentrate differentiation where Praxis already has process truth
+Revisit if: Outsourced surfaces routinely break gate enforcement or proof capture
+
+## D-039 — Chat: no primary Praxis chat product
+Date: 2026-08-08 · Phase: PHASE-010 · From: R-006 · Affects: [SPEC-A-PRAXIS]
+Chose: No primary Praxis chat; optional later VS Code `@praxis` Chat Participant; Cursor = panels + native agent + hooks — over webview+`vscode.lm` as primary
+Why: Chat quality is commoditized; Praxis value is workflow control surfaces; Cursor lacks usable host LM/chat participant APIs
+Revisit if: Extension UX proves unusable without a first-class chat entrypoint
+Superseded by: D-050
+
+## D-050 — Trigger UX: native IDE chat preferred; panels are projection
+Date: 2026-08-08 · Phase: PHASE-010 · From: — · Affects: [SPEC-A-PRAXIS]
+Chose: Primary operator trigger = **native IDE chat** (+ skills/hooks/`praxis` as enforced by design); dashboard remains read/projection like today’s prototype — over assuming Praxis panel command buttons. Alternate later: lookalike Praxis chat webview that shells agent CLIs (native-chat feel, CLI backend). Reject webview+`vscode.lm` as the CLI substitute.
+Why: Founder wants fewer maintained surfaces; current prototype has no in-UI pipeline triggers; determinism stays in hooks + CLI/state, not in a custom chat product for MVP
+Revisit if: Native chat + hooks cannot enforce Praxis stages in practice, or users cannot discover how to start work without explicit Praxis chrome
+Supersedes: D-039
+
+## D-051 — Routing: Auto vs Manual command mode
+Date: 2026-08-08 · Phase: PHASE-010 · From: — · Affects: [SPEC-A-PRAXIS]
+Chose: Support a setting **Auto** (agent may auto-route to the correct Praxis action/command without an explicit user slash) vs **Manual** (user must name the command). Auto is a desired intelligent default, not a failure mode of native chat.
+Why: Founder wants an intelligent system that acts without constant manual triggers; Manual preserves explicit control when needed
+Revisit if: Auto-routing misclassifies enough to burn trust, or hosts cannot be steered reliably into Work/ledger updates
+
+## D-052 — Hooks installed via Extension and/or CLI; enforced by host
+Date: 2026-08-08 · Phase: PHASE-010 · From: — · Affects: [SPEC-A-PRAXIS]
+Chose: Praxis ships hook scripts/config; **Extension** and/or **`praxis hooks install` / init** place them in the workspace (or user hooks); the **IDE/agent host** executes them — over Praxis UI enforcing hooks itself
+Why: Hooks are a host agent-loop feature; Praxis can only supply and install policy
+Revisit if: A host removes project hooks or forbids extension-written hook configs
+
+## D-053 — Per-host install adapters for hooks/skills layout
+Date: 2026-08-08 · Phase: PHASE-010 · From: — · Affects: [SPEC-A-PRAXIS]
+Chose: `praxis init` / Extension detect host (Cursor, VS Code, Claude Code, Codex, …) and write the **correct on-disk format** for hooks/skills; shared policy, thin layout adapters — over one universal hooks file for all IDEs
+Why: Each host has different config paths/schemas; wrong format = silent no-op
+Revisit if: A standard (e.g. ACP-wide hooks) makes per-host layouts unnecessary
+
+## D-054 — Action→model (and action→runner) routing in config
+Date: 2026-08-08 · Phase: PHASE-010 · From: — · Affects: [SPEC-A-PRAXIS]
+Chose: User-configurable map of Praxis actions (`fix`, `task`, `plan`, …) → model id and/or runner; authoritative when Praxis **spawns** a CLI; best-effort / documented limits when work stays in **native chat** model picker
+Why: Founder wants IDE-available models and per-action model choice; CLI spawn is the reliable control point
+Revisit if: Hosts expose a stable API to force model per turn inside native chat for all target IDEs
+
+## D-055 — Project available models into Dashboard via CLI / LM bridge
+Date: 2026-08-08 · Phase: PHASE-010 · From: — · Affects: [SPEC-A-PRAXIS]
+Chose: Dashboard/Extension may list models for pickers by calling `praxis models list` (runner CLIs such as `agent models`) and, when in VS Code Extension Host, optionally `vscode.lm.selectChatModels()` — over scraping the native chat UI or assuming a Cursor Composer picker API
+Why: Founder wants model lists inside Praxis UI; webview cannot see IDE pickers without a host/CLI bridge
+Revisit if: A host ships a stable extension API that lists the same models as the chat picker for all targets
+
+## D-056 — Runner availability = PATH + auth probe
+Date: 2026-08-08 · Phase: PHASE-010 · From: — · Affects: [SPEC-A-PRAXIS]
+Chose: A runner is **available** when its CLI binary is discoverable on PATH (or configured path) and passes a health/auth check; expose via `praxis runners list` to Dashboard/Extension — over inferring runners from the IDE chat model picker
+Why: Runners are local processes; chat selection does not imply a spawnable CLI
+Revisit if: A host provides a single API that both lists models and guarantees a spawnable local agent runtime
+
+## D-040 — Hooks: optional bouncers, not the engine
+Date: 2026-08-08 · Phase: PHASE-010 · From: R-006 · Affects: [SPEC-A-PRAXIS, SPEC-F-PRAXIS-ACTIVE-FLUSH]
+Chose: Hooks as optional enforcement (Active-flush / S-008 lineage) over hooks-as-workflow-engine
+Why: Engine stays in praxis CLI; hooks can force gates without `@praxis` chat; half-deterministic / bypassable (Shell etc.)
+Revisit if: Hosts cannot surface required gate UX without embedding logic in hooks
+
+## D-041 — MVP UI: wrap existing dashboard assets
+Date: 2026-08-08 · Phase: PHASE-010 · From: R-006 · Affects: [SPEC-A-PRAXIS]
+Chose: MVP wraps current vanilla HTML/JS dashboard in the extension over a React webview rewrite
+Why: Ship wedge UX on proven assets; defer framework migration until product fit is real
+Revisit if: Extension packaging or UX iteration cost of vanilla exceeds a focused React rewrite
+
+## D-042 — Product wedge: proof/close + Work ledger (+ activity)
+Date: 2026-08-08 · Phase: PHASE-010 · From: R-006 · Affects: [SPEC-A-PRAXIS]
+Chose: Lead with proof/close + Work ledger (+ activity); cost gates secondary; shared Docs/permissions later
+Why: Closest to current Praxis strength and clearest buyer pain versus AIDLC/Zygen/Spec Kit gaps
+Revisit if: Early users block on cost controls or shared Docs before adopting proof/ledger
+
+## D-043 — Primary UX: in-IDE only
+Date: 2026-08-08 · Phase: PHASE-010 · From: R-006 · Affects: [SPEC-A-PRAXIS]
+Chose: User-facing UX in-IDE only; CLI may run under the extension invisibly — over CLI/TUI as primary UX
+Why: Operators live in the editor; CLI is implementation, not product surface
+Revisit if: Headless/CI operators become a primary persona requiring first-class CLI UX
+
+## D-044 — Runners: multi-runner pluggable (not Claude-only)
+Date: 2026-08-08 · Phase: PHASE-010 · From: R-006 · Affects: [SPEC-A-PRAXIS]
+Chose: Pluggable multi-runner model (ABI) over AIDLC-style Claude-only integration; MCOO: prove one runner before day-one matrix
+Why: Customers already mix Cursor/Claude/Codex; lock-in kills wedge adoption
+Revisit if: Supporting >1 runner blocks MVP proof/close for more than one milestone
+
+## D-045 — ACP and persistence posture
+Date: 2026-08-08 · Phase: PHASE-010 · From: R-006 · Affects: [SPEC-A-PRAXIS]
+Chose: ACP = optional later transport, not core ABI; local SQLite and/or remote DB later for team; FS may remain for repo artifacts
+Why: Keep ABI on praxis CLI + runners; store can evolve without rewriting the product spine
+Revisit if: Team sync requires remote SSOT before local SQLite proves insufficient, or ACP becomes the only viable agent transport
+
+## D-046 — Optional web UI: local and/or hosted control plane
+Date: 2026-08-08 · Phase: PHASE-010 · From: — · Affects: [SPEC-A-PRAXIS]
+Chose: Same Praxis panels may run as localhost dashboard and/or hosted web app; coding agent CLIs remain on the user machine (v1) — over web-only or extension-only exclusivity
+Why: Teams need browser access and auth-gated SaaS later; dogfood stays local; extension is a client of the control plane, not a second product
+Revisit if: Hosted plane forces agent execution into the cloud before local runners are proven
+
+## D-047 — Auth gates hosted UI/API; local dogfood may bypass
+Date: 2026-08-08 · Phase: PHASE-010 · From: — · Affects: [SPEC-A-PRAXIS]
+Chose: Hosted Praxis UI/API require identity auth (IdP TBD in PHASE-010 `/run`); extension uses SecretStorage; local-only MVP may use workspace-trust bypass — over shipping hosted anonymously
+Why: Multi-user ledger needs accounts; local extract/dogfood must not block on SaaS
+Revisit if: Local bypass becomes a security hole for shared machines, or IdP choice blocks MVP
+
+## D-048 — Praxis product repo: Praxis.v2 before further productization
+Date: 2026-08-08 · Phase: PHASE-011 · From: P-003 · Affects: [SPEC-A-PRAXIS]
+Chose: Extract Praxis System/docs/skills/hooks/work tooling into local git repo `Praxis.v2` (PHASE-011) before PHASE-010 design/build continues — over keeping Praxis SSOT inside AIdioma
+Why: Separate product surface from learner monorepo; PHASE-010 specs belong with Praxis
+Revisit if: Extract cost exceeds one phase without a working `work:dashboard` in Praxis.v2
+
+## D-049 — Distribution: Extension and/or CLI — not web-only for IDE
+Date: 2026-08-08 · Phase: PHASE-010 · From: — · Affects: [SPEC-A-PRAXIS]
+Chose: Get Praxis onto the machine via **Extension install** (primary; may bundle/fetch `praxis`) and/or **CLI install**; web UI (local or hosted) is optional and does not replace on-box install for IDE + local agent runners
+Why: Browsers cannot install IDE foremen or spawn `agent`/`claude`; extension is the low-friction channel, CLI covers CI/headless
+Revisit if: A host ships a sanctioned “web → local agent bridge” that removes the need for ext/CLI (unlikely near-term)
+

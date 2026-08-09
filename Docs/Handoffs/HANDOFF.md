@@ -1,28 +1,20 @@
 ---
-ref: PHASE-009
+ref: PHASE-011
 ---
 
-# Handoff — after PHASE-009 close
+# Handoff — after reduced /close (chip UI + phase seeds)
 
 **Date:** 2026-08-08
 
-**Merged:** PR #48 (Active-flush hooks) + PR #49 (Praxis meta) → `main` `1462504`
-
 ## State
 
-- No active phase
-- Docs home: `docs/ssot` @ `origin/main`
-- Hooks on main: `.cursor/hooks*`
-
-## Open (not this phase)
-
-- W-015 — Parallel active phases runtime (proposal)
-- PHASE-002 / PHASE-003 proposed on Roadmap
+- Published Docs-home meta: Praxis Settings/color mode, Kind/Status chip unify + palette,
+  `/task` same-vs-fresh rule, Active empty fixes, PHASE-010/011 seeds + R-006/decisions.
+- **Next:** `/run PHASE-011` — extract to `Praxis.v2`
+- Then `/run PHASE-010` **inside Praxis.v2** (depends_on PHASE-011)
 
 ## Next command
 
 ```text
-/plan
+/run PHASE-011
 ```
-
-or `/status` / `/run` when ready for PHASE-002.

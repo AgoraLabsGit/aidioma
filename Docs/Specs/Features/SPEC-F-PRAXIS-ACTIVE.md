@@ -41,7 +41,8 @@ only when it is attached to the selected tab; entered from the header Active bad
 - Rule: `HANDOFF.md` is one overwritten file with required YAML frontmatter `ref` set to exactly one `PHASE-nnn` (active/blocked) or `status: active` Work id (D-031)
 - Rule: Active shows the Handoff block **only** when the selected tab id equals `handoff.ref`; otherwise omit the section (no global footer under every tab)
 - Rule: Missing or invalid `ref` → unscoped — do not project the handoff on any Active tab (v1; no Signals required)
-- Rule: Empty state (no in-flight phase **and** no active Work) prompts the next ready phase / `/run` or `/plan`; no handoff section unless a lone matching tab would apply (normally none)
+- Rule: Empty state (no in-flight phase **and** no active Work) shows **Nothing active** plus a short next-step prompt (`/run` next ready id, or `/plan`) — never project a ready phase’s id/title/outcome as an Active phase header; no handoff section unless a lone matching tab would apply (normally none)
+
 - Rule: Phase detail keeps projecting `plan`/`build`/`close`/`check` and other phase-matched journal events
 - Rule: Does not enable hard parallel active-phase runtime (W-015) — multi-phase tabs remain a UI contract only
 - Rule: Handoff is **not** its own dashboard page

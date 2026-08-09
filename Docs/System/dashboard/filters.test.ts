@@ -113,13 +113,20 @@ function workBucket(status: string): "open" | "closed" {
   return status === "open" || status === "active" ? "open" : "closed";
 }
 
+/** Work Status chips: Open/Active exact; Closed = done|promoted|dropped. */
+function matchesWorkStatusFilter(rowStatus: string, filter: string): boolean {
+  if (!filter) return true;
+  if (filter === "closed") return workBucket(rowStatus) === "closed";
+  return rowStatus === filter;
+}
+
 function filterWork(
   rows: Work[],
   filters: { kind: string; status: string; feature?: string; area?: string; q: string },
 ): Work[] {
   return rows
     .filter((row) => !filters.kind || row.kind === filters.kind)
-    .filter((row) => !filters.status || workBucket(row.status) === filters.status)
+    .filter((row) => matchesWorkStatusFilter(row.status, filters.status))
     .filter((row) => matchesSpecFilter(row.feature, filters.feature ?? "") && matchesSpecFilter(row.area, filters.area ?? ""))
     .filter((row) =>
       matchesQuery(
@@ -454,16 +461,14 @@ describe("Signals filters", () => {
 });
 
 describe("Work filters", () => {
-  it("Open includes open+active; Closed includes done/promoted/dropped", () => {
+  it("Open/Active exact; Closed includes done/promoted/dropped", () => {
     expect(filterWork(work, { kind: "", status: "", q: "" }).map((w) => w.id)).toEqual([
       "W-001",
       "W-003",
       "W-004",
     ]);
-    expect(filterWork(work, { kind: "", status: "open", q: "" }).map((w) => w.id)).toEqual([
-      "W-003",
-      "W-004",
-    ]);
+    expect(filterWork(work, { kind: "", status: "open", q: "" }).map((w) => w.id)).toEqual(["W-003"]);
+    expect(filterWork(work, { kind: "", status: "active", q: "" }).map((w) => w.id)).toEqual(["W-004"]);
     expect(filterWork(work, { kind: "", status: "closed", q: "" }).map((w) => w.id)).toEqual(["W-001"]);
     expect(filterWork(work, { kind: "proposal", status: "", q: "" }).map((w) => w.id)).toEqual(["W-004"]);
   });

@@ -16,6 +16,10 @@ description: Do intentional small work that is not a defect and not phase-sized;
 2. Upsert `WORK.yaml` `kind: task`, `status: active` (ids: `T-nnn`; leave legacy `W-*`)
    with `opened: <UTC ISO now>` **before** other edits so Work Open shows the row immediately
    (Docs home + `/dashboard`). Never batch-write `done` without an earlier `active` flush.
+   **Same task vs fresh id:** stay on the current `status: active` task for follow-ups that
+   finish or polish *that* outcome (icon tweak, copy, small fix in the same change). Open a
+   new `T-nnn` only for a **new outcome** / different intent, or when the prior task is already
+   `done`. Do not log implementation steps as separate Work rows.
 3. **Path lease (Docs home):** set `context_paths` to paths you will touch. If another
    `status: active` Work row already lists an overlap → wait, `/handoff`, or `/log` — do not edit.
 4. Load path-owning specs before edits; never invent specs.

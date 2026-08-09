@@ -13,10 +13,12 @@
 | 5 | [PHASE-006 — Knowledge Page Overhaul](Phases/PHASE-006-knowledge-page-overhaul.md) | build | closed | Knowledge UX + mock fixtures; Feature vs Area. |
 | 6 | [PHASE-008 — Spec & Knowledge Artifact Research](Phases/PHASE-008-spec-artifact-research.md) | design | closed | Research panel on artifact molds; refine templates. |
 | 7 | [PHASE-009 — Praxis Features and Active chrome](Phases/PHASE-009-praxis-features-and-active-chrome.md) | build | closed | Praxis Area + page Features; Active→header badge; multi-active tabs contract; system.md kept. |
-| 8 | [PHASE-002 — Target Product Design](Phases/PHASE-002-target-product-design.md) | design | proposed | Approve PRODUCT.md map. |
+| 9 | [PHASE-011 — Extract Praxis to Praxis.v2 repo](Phases/PHASE-011-praxis-v2-extract.md) | build | ready | Praxis SSOT + tooling in new local repo Praxis.v2; AIdioma learner-only. |
+| 10 | [PHASE-010 — Praxis productization design](Phases/PHASE-010-praxis-productization-design.md) | design | ready | Product + Area + Feature specs for extension + CLI + auth/hosting (run in Praxis.v2). |
+| 8 | [PHASE-002 — Target Product Design](Phases/PHASE-002-target-product-design.md) | design | proposed | Approve PRODUCT.md map (learner — deferred). |
 | 9 | [PHASE-003 — Core Component Architecture](Phases/PHASE-003-core-component-architecture.md) | design | proposed | Minimum areas/components for the map. |
 
-**Active:** none · **Next:** `/plan` or `/run` PHASE-002 when ready
+**Active:** none · **Next:** `/run PHASE-011` (then PHASE-010 inside Praxis.v2)
 
 
 Unscheduled candidates: `Docs/WORK.yaml`. Commands: [`../System/COMMANDS.md`](../System/COMMANDS.md).

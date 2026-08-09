@@ -372,3 +372,66 @@
 {"ts":"2026-08-08T23:14:05Z","type":"check","ref":"C-019","phase":null,"summary":"journal desk work-lane validate","status":"active","cmd":"/check"}
 {"ts":"2026-08-08T23:14:10Z","type":"check","ref":"C-019","phase":null,"summary":"C-019 PASS work:validate","status":"complete","cmd":"/check"}
 {"ts":"2026-08-08T23:14:45Z","type":"close","ref":null,"phase":null,"summary":"Reduced close MERGED PR #51 journal; docs/ssot @ f4e9832; PHASE-009 already closed via #48+#49","status":"complete","cmd":"/close"}
+{"ts":"2026-08-08T23:20:05Z","type":"capture","ref":"P-002","phase":"PHASE-010","summary":"Active Work for /plan PHASE-010 Praxis productization","status":"active","cmd":"/plan"}
+{"ts":"2026-08-08T23:21:00Z","type":"research","ref":"R-006","phase":"PHASE-010","summary":"R-006 productize Praxis extension+CLI; ADV WARN","status":"complete","cmd":"/plan"}
+{"ts":"2026-08-08T23:21:10Z","type":"decide","ref":"D-032","phase":"PHASE-010","summary":"D-032–D-045 Praxis productization decisions from R-006","status":"complete","cmd":"/plan"}
+{"ts":"2026-08-08T23:21:20Z","type":"plan","ref":"PHASE-010","phase":"PHASE-010","summary":"PHASE-010 ready — Praxis productization design; from P-002","status":"complete","cmd":"/plan"}
+{"ts":"2026-08-08T23:22:05Z","type":"task","ref":"T-061","phase":"PHASE-010","summary":"Active for HANDOFF write after /plan","status":"active","cmd":"/plan"}
+{"ts":"2026-08-08T23:22:30Z","type":"task","ref":"T-061","phase":"PHASE-010","summary":"HANDOFF after /plan PHASE-010","status":"complete","cmd":"/plan"}
+{"ts":"2026-08-08T23:27:01Z","type":"task","ref":"T-062","phase":null,"summary":"Active — swap Roadmap blocked/canceled chip colors","status":"active","cmd":"/task"}
+{"ts":"2026-08-08T23:27:45Z","type":"task","ref":"T-062","phase":null,"summary":"Swapped Roadmap blocked/canceled chip colors","status":"complete","cmd":"/task"}
+{"ts":"2026-08-08T23:35:05Z","type":"capture","ref":"P-003","phase":"PHASE-011","summary":"Active Work /plan PHASE-011 extract Praxis.v2 + auth/web seed","status":"active","cmd":"/plan"}
+{"ts":"2026-08-08T23:32:01Z","type":"task","ref":"T-063","phase":null,"summary":"Active — add Active status filter on Work page","status":"active","cmd":"/task"}
+{"ts":"2026-08-08T23:33:00Z","type":"task","ref":"T-063","phase":null,"summary":"Added Active status filter chip on Work page","status":"complete","cmd":"/task"}
+{"ts":"2026-08-08T23:36:00Z","type":"decide","ref":"D-046","phase":"PHASE-010","summary":"D-046–D-048 web/auth + Praxis.v2 extract","status":"complete","cmd":"/plan"}
+{"ts":"2026-08-08T23:36:10Z","type":"plan","ref":"PHASE-011","phase":"PHASE-011","summary":"PHASE-011 ready extract Praxis.v2; PHASE-010 rewired depends_on","status":"complete","cmd":"/plan"}
+{"ts":"2026-08-08T23:40:05Z","type":"task","ref":"T-062","phase":"PHASE-010","summary":"Active — seed distribution + UI combo into PHASE-010","status":"active","cmd":"/task"}
+{"ts":"2026-08-08T23:41:00Z","type":"decide","ref":"D-049","phase":"PHASE-010","summary":"D-049 distribution Extension|CLI not web-only IDE","status":"complete","cmd":"/task"}
+{"ts":"2026-08-08T23:41:05Z","type":"task","ref":"T-062","phase":"PHASE-010","summary":"PHASE-010 distribution + UI combo seed","status":"complete","cmd":"/task"}
+{"ts":"2026-08-08T23:39:17Z","type":"task","ref":"T-064","phase":null,"summary":"Active — ready green / closed grey","status":"active","cmd":"/task"}
+{"ts":"2026-08-08T23:39:50Z","type":"task","ref":"T-064","phase":null,"summary":"ready green / closed grey on Roadmap + Work Closed chip","status":"complete","cmd":"/task"}
+{"ts":"2026-08-08T23:41:00Z","type":"audit","ref":"A-042","phase":null,"summary":"Active — Kind chips color design review","status":"active","cmd":"/audit"}
+{"ts":"2026-08-08T23:42:30Z","type":"audit","ref":"A-042","phase":null,"summary":"Kind chips color design review complete","status":"complete","cmd":"/audit"}
+{"ts":"2026-08-08T23:50:05Z","type":"task","ref":"T-063","phase":"PHASE-010","summary":"Active — correct PHASE-010 chat-primary UX seed","status":"active","cmd":"/task"}
+{"ts":"2026-08-08T23:51:00Z","type":"decide","ref":"D-050","phase":"PHASE-010","summary":"D-050 native chat trigger; panels projection; supersedes D-039","status":"complete","cmd":"/task"}
+{"ts":"2026-08-08T23:51:05Z","type":"task","ref":"T-063","phase":"PHASE-010","summary":"PHASE-010 UX seed corrected","status":"complete","cmd":"/task"}
+{"ts":"2026-08-08T23:55:05Z","type":"task","ref":"T-064","phase":"PHASE-010","summary":"Active — auto/manual routing + hooks install seed","status":"active","cmd":"/task"}
+{"ts":"2026-08-08T23:56:00Z","type":"decide","ref":"D-051","phase":"PHASE-010","summary":"D-051 Auto/Manual routing; D-052 hooks install path","status":"complete","cmd":"/task"}
+{"ts":"2026-08-08T23:56:05Z","type":"task","ref":"T-064","phase":"PHASE-010","summary":"PHASE-010 auto/manual + hooks install seeded","status":"complete","cmd":"/task"}
+{"ts":"2026-08-09T00:00:05Z","type":"task","ref":"T-065","phase":"PHASE-010","summary":"Active — host install format + model routing seed","status":"active","cmd":"/task"}
+{"ts":"2026-08-09T00:01:00Z","type":"decide","ref":"D-053","phase":"PHASE-010","summary":"D-053 host adapters; D-054 action→model routing","status":"complete","cmd":"/task"}
+{"ts":"2026-08-09T00:01:05Z","type":"task","ref":"T-065","phase":"PHASE-010","summary":"PHASE-010 model routing + host install seeded","status":"complete","cmd":"/task"}
+{"ts":"2026-08-09T00:05:05Z","type":"task","ref":"T-066","phase":"PHASE-010","summary":"Active — model list dashboard projection seed","status":"active","cmd":"/task"}
+{"ts":"2026-08-09T00:06:00Z","type":"decide","ref":"D-055","phase":"PHASE-010","summary":"D-055 project models into Dashboard via CLI/LM bridge","status":"complete","cmd":"/task"}
+{"ts":"2026-08-09T00:06:05Z","type":"task","ref":"T-066","phase":"PHASE-010","summary":"PHASE-010 models list + IDE detect seeded","status":"complete","cmd":"/task"}
+{"ts":"2026-08-09T00:04:29Z","type":"task","ref":"T-067","phase":null,"summary":"Active — neutral Kind pills","status":"active","cmd":"/task"}
+{"ts":"2026-08-09T00:05:20Z","type":"task","ref":"T-067","phase":null,"summary":"Neutral Kind pills shipped","status":"complete","cmd":"/task"}
+{"ts":"2026-08-09T00:06:25Z","type":"task","ref":"T-068","phase":null,"summary":"Active — Kind colors + Settings color mode","status":"active","cmd":"/task"}
+{"ts":"2026-08-09T00:11:32Z","type":"task","ref":"T-069","phase":null,"summary":"Active — /task same vs fresh Work id rule","status":"active","cmd":"/task"}
+{"ts":"2026-08-09T00:12:10Z","type":"task","ref":"T-069","phase":null,"summary":"/task same vs fresh Work id rule","status":"complete","cmd":"/task"}
+{"ts":"2026-08-09T00:13:50Z","type":"task","ref":"T-068","phase":null,"summary":"Kind colors + Settings color mode shipped","status":"complete","cmd":"/task"}
+{"ts":"2026-08-09T00:15:05Z","type":"task","ref":"T-067","phase":"PHASE-010","summary":"Active — runner availability probe seed","status":"active","cmd":"/task"}
+{"ts":"2026-08-09T00:16:00Z","type":"decide","ref":"D-056","phase":"PHASE-010","summary":"D-056 runner availability PATH+auth probe","status":"complete","cmd":"/task"}
+{"ts":"2026-08-09T00:16:05Z","type":"task","ref":"T-067","phase":"PHASE-010","summary":"PHASE-010 runner discovery clarified in seed","status":"complete","cmd":"/task"}
+{"ts":"2026-08-09T00:14:45Z","type":"fix","ref":"F-035","phase":null,"summary":"Active Work F-035 Active empty Nothing in flight","status":"active","cmd":"/fix"}
+{"ts":"2026-08-09T00:15:20Z","type":"fix","ref":"F-035","phase":null,"summary":"F-035 done: removed Nothing in flight; ready shows id","status":"done","cmd":"/fix"}
+{"ts":"2026-08-09T00:16:34Z","type":"fix","ref":"F-036","phase":null,"summary":"Active — unify Kind/Status chips, remove dot","status":"active","cmd":"/fix"}
+{"ts":"2026-08-09T00:17:40Z","type":"fix","ref":"F-036","phase":null,"summary":"Unified Kind/Status chips; removed status dot","status":"complete","cmd":"/fix"}
+{"ts":"2026-08-09T00:18:19Z","type":"fix","ref":"F-037","phase":null,"summary":"Active — Kind chip palette: no cyan; split close/ship","status":"active","cmd":"/fix"}
+{"ts":"2026-08-09T00:19:20Z","type":"fix","ref":"F-037","phase":null,"summary":"Kind chip palette: no cyan; close vs ship split","status":"complete","cmd":"/fix"}
+{"ts":"2026-08-09T00:19:30Z","type":"fix","ref":"F-037","phase":null,"summary":"Re-active — finish SHELL chip palette rule","status":"active","cmd":"/fix"}
+{"ts":"2026-08-09T00:19:45Z","type":"fix","ref":"F-037","phase":null,"summary":"Kind chip palette: no cyan; close vs ship split","status":"complete","cmd":"/fix"}
+{"ts":"2026-08-09T00:19:05Z","type":"fix","ref":"F-036","phase":null,"summary":"Active Work F-036 empty Active no ready-phase header","status":"active","cmd":"/fix"}
+{"ts":"2026-08-09T00:19:40Z","type":"fix","ref":"F-036","phase":null,"summary":"F-036 done: empty Active Nothing active + Next ready id only","status":"done","cmd":"/fix"}
+{"ts":"2026-08-09T00:19:43Z","type":"fix","ref":"F-038","phase":null,"summary":"Active — remove chip perimeter border","status":"active","cmd":"/fix"}
+{"ts":"2026-08-09T00:20:10Z","type":"fix","ref":"F-038","phase":null,"summary":"Removed chip perimeter border","status":"complete","cmd":"/fix"}
+{"ts":"2026-08-09T00:21:00Z","type":"check","ref":"C-020","phase":null,"summary":"C-020 work lane for reduced close","status":"running","cmd":"/check"}
+{"ts":"2026-08-09T00:21:30Z","type":"check","ref":"C-020","phase":null,"summary":"C-020 work lane PASS typecheck+test+validate (docs home)","status":"complete","cmd":"/check"}
+{"ts":"2026-08-09T00:20:50Z","type":"check","ref":"C-021","phase":null,"summary":"/close reduced — work lane starting","status":"active","cmd":"/check"}
+{"ts":"2026-08-09T00:21:20Z","type":"check","ref":"C-021","phase":null,"summary":"work lane green: typecheck + test 51/51 + validate","status":"complete","cmd":"/check"}
+{"ts":"2026-08-09T00:22:05Z","type":"task","ref":"T-070","phase":null,"summary":"Active Work T-070 reduced close publish","status":"active","cmd":"/close"}
+{"ts":"2026-08-09T00:22:06Z","type":"fix","ref":"F-039","phase":null,"summary":"Renumber Active-empty fix F-036→F-039 (chip F-036 collision)","status":"done","cmd":"/close"}
+{"ts":"2026-08-09T00:22:30Z","type":"close","ref":"T-070","phase":null,"summary":"Reduced close publish Docs-home F-039 Active empty + Praxis plan seed","status":"complete","cmd":"/close"}
+{"ts":"2026-08-09T00:21:44Z","type":"task","ref":"T-070","phase":null,"summary":"Active — close handoff","status":"active","cmd":"/close"}
+{"ts":"2026-08-09T00:21:44Z","type":"task","ref":"T-070","phase":null,"summary":"Close handoff written","status":"complete","cmd":"/close"}
+{"ts":"2026-08-09T00:22:30Z","type":"task","ref":"T-071","phase":null,"summary":"Deduped T-070→T-071 close handoff row","status":"complete","cmd":"/close"}
