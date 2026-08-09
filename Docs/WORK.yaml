@@ -2990,3 +2990,20 @@
   done_summary: "HANDOFF after reduced close → /run PHASE-011"
   opened: 2026-08-09T00:21:44Z
 
+- id: T-072
+  kind: task
+  summary: "Journal reduced /close PR #53"
+  status: done
+  feature: null
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: null
+  context_paths:
+    - .work/activity/
+    - Docs/WORK.yaml
+  open_questions: null
+  done_summary: "Close journal for PR #53 @ a385186"
+  opened: 2026-08-09T00:23:14Z
+
