@@ -3007,3 +3007,70 @@
   done_summary: "Close journal for PR #53 @ a385186"
   opened: 2026-08-09T00:23:14Z
 
+- id: S-011
+  kind: design
+  summary: "Dashboard tables: soft render cap / no classic pagination (deferred)"
+  status: open
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: |
+    Direction (not locked via /design+Adv yet): avoid page-1-of-N; when ~500+ visible rows
+    or filter/sort feels laggy, add soft render cap (show first 100–200 + Showing N of M).
+    Bigger later win: bound /api/index growth (archive old Work; keep Activity monthly).
+    Activity already month-scoped; Work tables currently render full filtered set.
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+    - Docs/System/specs/Dashboard-spec.md
+  open_questions: null
+  done_summary: null
+  opened: 2026-08-09T17:04:06Z
+
+- id: T-073
+  kind: task
+  summary: "Add soft render cap to Work/Activity tables when scale hurts"
+  status: open
+  feature: SPEC-F-PRAXIS-SHELL
+  area: SPEC-A-PRAXIS
+  phase: null
+  promoted_to: null
+  blocked_by: null
+  note: "Deferred. Trigger: ~500+ visible rows or laggy filter/sort. Prefer soft cap + filters over classic pagination. Pair with S-011."
+  context_paths:
+    - Docs/System/dashboard/public/app.js
+  open_questions: null
+  done_summary: null
+  opened: 2026-08-09T17:04:06Z
+
+- id: T-074
+  kind: task
+  summary: "Execute PHASE-011 — extract Praxis to Praxis.v2"
+  status: active
+  feature: null
+  area: SPEC-A-PRAXIS
+  phase: PHASE-011
+  promoted_to: null
+  blocked_by: null
+  note: null
+  context_paths:
+    - Docs/Roadmap/Phases/PHASE-011-praxis-v2-extract.md
+    - Docs/Roadmap/Roadmap.md
+    - Docs/System/
+    - Docs/Specs/
+    - Docs/WORK.yaml
+    - Docs/Handoffs/HANDOFF.md
+    - AGENTS.md
+    - CLAUDE.md
+    - .claude/skills/
+    - .cursor/hooks.json
+    - .cursor/hooks/
+    - tooling/run-dashboard.sh
+    - tooling/ensure-docs-home.sh
+    - package.json
+    - .github/workflows/work.yml
+    - .work/activity/
+  open_questions: null
+  done_summary: null
+  opened: 2026-08-09T17:05:30Z
