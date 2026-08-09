@@ -435,3 +435,5 @@
 {"ts":"2026-08-09T00:21:44Z","type":"task","ref":"T-070","phase":null,"summary":"Active — close handoff","status":"active","cmd":"/close"}
 {"ts":"2026-08-09T00:21:44Z","type":"task","ref":"T-070","phase":null,"summary":"Close handoff written","status":"complete","cmd":"/close"}
 {"ts":"2026-08-09T00:22:30Z","type":"task","ref":"T-071","phase":null,"summary":"Deduped T-070→T-071 close handoff row","status":"complete","cmd":"/close"}
+{"ts":"2026-08-09T00:23:14Z","type":"task","ref":"T-072","phase":null,"summary":"Active — journal close PR 53","status":"active","cmd":"/close"}
+{"ts":"2026-08-09T00:23:14Z","type":"close","ref":"T-072","phase":null,"summary":"Reduced close merged PR #53 a385186 — chip UI + Settings + phase seeds; next /run PHASE-011","status":"complete","cmd":"/close"}
