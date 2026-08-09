@@ -9,8 +9,7 @@ depends_on:
 decisions: []
 built_by: []
 last_amended: PHASE-008
-research:
-  - R-004
+research: []
 paths:
   - apps/web/src/components/practice-workspace.tsx
   - apps/web/app/**/practice/**

@@ -1,24 +1,11 @@
-<!-- Hand-maintained view. Phase files are SSOT. Display order = depends_on depth, then order, then id.
-     /plan must not renumber peer `order` fields — see sortPhasesForRoadmap. -->
+<!-- AIdioma project roadmap. Praxis-dev phases live in Praxis.v2. -->
 
 # AIdioma roadmap
 
 | Order | Phase | Type | State | Outcome |
 |---:|---|---|---|---|
-| 0 | [PHASE-000 — Development System V2](Phases/PHASE-000-development-system-v2.md) | design | closed | V2 process installed (superseded by V3). |
-| 1 | [PHASE-001 — Dev System Dashboard](Phases/PHASE-001-dev-system-dashboard.md) | build | closed | Local dashboard projects live Docs/. |
-| 2 | [PHASE-004 — Dashboard Projection Proof](Phases/PHASE-004-dashboard-projection-proof.md) | build | closed | Pure projection + Issues/Activity proof. |
-| 3 | [PHASE-005 — Work Ledger and Routing](Phases/PHASE-005-work-ledger-and-routing.md) | build | closed | Work ledger + routing + /audit + executing /triage. |
-| 4 | [PHASE-007 — Command & System Audit Matrix](Phases/PHASE-007-command-system-audit.md) | design | closed | Audit matrix + Active checks + Commands header panel. |
-| 5 | [PHASE-006 — Knowledge Page Overhaul](Phases/PHASE-006-knowledge-page-overhaul.md) | build | closed | Knowledge UX + mock fixtures; Feature vs Area. |
-| 6 | [PHASE-008 — Spec & Knowledge Artifact Research](Phases/PHASE-008-spec-artifact-research.md) | design | closed | Research panel on artifact molds; refine templates. |
-| 7 | [PHASE-009 — Praxis Features and Active chrome](Phases/PHASE-009-praxis-features-and-active-chrome.md) | build | closed | Praxis Area + page Features; Active→header badge; multi-active tabs contract; system.md kept. |
-| 9 | [PHASE-011 — Extract Praxis to Praxis.v2 repo](Phases/PHASE-011-praxis-v2-extract.md) | build | ready | Praxis SSOT + tooling in new local repo Praxis.v2; AIdioma learner-only. |
-| 10 | [PHASE-010 — Praxis productization design](Phases/PHASE-010-praxis-productization-design.md) | design | ready | Product + Area + Feature specs for extension + CLI + auth/hosting (run in Praxis.v2). |
-| 8 | [PHASE-002 — Target Product Design](Phases/PHASE-002-target-product-design.md) | design | proposed | Approve PRODUCT.md map (learner — deferred). |
+| — | [PHASE-011 — Dual Praxis project split](Phases/PHASE-011-praxis-v2-extract.md) | build | active | Separate AIdioma vs Praxis.v2 project data + working harnesses. |
+| 8 | [PHASE-002 — Target Product Design](Phases/PHASE-002-target-product-design.md) | design | proposed | Approve PRODUCT.md map (learner). |
 | 9 | [PHASE-003 — Core Component Architecture](Phases/PHASE-003-core-component-architecture.md) | design | proposed | Minimum areas/components for the map. |
 
-**Active:** none · **Next:** `/run PHASE-011` (then PHASE-010 inside Praxis.v2)
-
-
-Unscheduled candidates: `Docs/WORK.yaml`. Commands: [`../System/COMMANDS.md`](../System/COMMANDS.md).
+**Active:** PHASE-011 · **Next:** finish dual-instance proof, then `/close`

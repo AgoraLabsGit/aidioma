@@ -1,5 +1,5 @@
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
-import { request } from "node:http";
+import { createServer, request } from "node:http";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -11,6 +11,11 @@ import {
   createDashboardServer,
   isAllowedHost,
   listenOnLoopback,
+  listenOnLoopbackWithPortPolicy,
+  preferredDashboardPort,
+  dashboardPortCandidates,
+  DASHBOARD_PORT_BASE,
+  DASHBOARD_PORT_RANGE,
 } from "./server.js";
 
 const temporaryDirectories: string[] = [];
@@ -448,5 +453,57 @@ lessons: null
     const doc = await getJson(port, "/api/doc?id=HANDOFF");
     expect(doc.status).toBe(200);
     expect((doc.body as { body: string }).body).toContain("From overlay worktree");
+  });
+});
+
+describe("D-057 dashboard ports", () => {
+  it("preferredDashboardPort is stable and in range", () => {
+    const a = preferredDashboardPort("/tmp/repo-a");
+    const b = preferredDashboardPort("/tmp/repo-a");
+    const c = preferredDashboardPort("/tmp/repo-b");
+    expect(a).toBe(b);
+    expect(a).toBeGreaterThanOrEqual(DASHBOARD_PORT_BASE);
+    expect(a).toBeLessThan(DASHBOARD_PORT_BASE + DASHBOARD_PORT_RANGE);
+    expect(c).toBeGreaterThanOrEqual(DASHBOARD_PORT_BASE);
+    expect(c).toBeLessThan(DASHBOARD_PORT_BASE + DASHBOARD_PORT_RANGE);
+  });
+
+  it("dashboardPortCandidates wraps the range once from preferred", () => {
+    const preferred = DASHBOARD_PORT_BASE + 18;
+    const ports = dashboardPortCandidates(preferred);
+    expect(ports).toHaveLength(DASHBOARD_PORT_RANGE);
+    expect(ports[0]).toBe(preferred);
+    expect(new Set(ports).size).toBe(DASHBOARD_PORT_RANGE);
+  });
+
+  it("listenOnLoopbackWithPortPolicy bumps when preferred is taken", async () => {
+    const preferred = DASHBOARD_PORT_BASE + 3;
+    const blocker = createServer();
+    openServers.push(blocker);
+    await listenOnLoopback(blocker, preferred);
+
+    const server = createServer();
+    openServers.push(server);
+    const result = await listenOnLoopbackWithPortPolicy(server, {
+      preferred,
+      pinned: false,
+    });
+    expect(result.mode).toBe("bumped");
+    expect(result.port).not.toBe(preferred);
+    expect(result.port).toBeGreaterThanOrEqual(DASHBOARD_PORT_BASE);
+    expect(result.port).toBeLessThan(DASHBOARD_PORT_BASE + DASHBOARD_PORT_RANGE);
+  });
+
+  it("listenOnLoopbackWithPortPolicy pin fails when taken (no bump)", async () => {
+    const preferred = DASHBOARD_PORT_BASE + 5;
+    const blocker = createServer();
+    openServers.push(blocker);
+    await listenOnLoopback(blocker, preferred);
+
+    const server = createServer();
+    openServers.push(server);
+    await expect(
+      listenOnLoopbackWithPortPolicy(server, { preferred, pinned: true }),
+    ).rejects.toThrow(/pin port .* already in use/i);
   });
 });

@@ -444,3 +444,5 @@
 {"ts":"2026-08-09T17:05:30Z","type":"task","ref":"T-074","phase":"PHASE-011","summary":"Execute PHASE-011 — extract Praxis to Praxis.v2","status":"active","cmd":"/run"}
 {"ts":"2026-08-09T17:05:48Z","type":"check","ref":"C-022","phase":null,"summary":"C-022 work lane PASS","status":"complete","cmd":"/check"}
 {"ts":"2026-08-09T17:05:48Z","type":"close","ref":"T-074","phase":null,"summary":"Reduced close publish S-011 T-073 park","status":"complete","cmd":"/close"}
+{"ts":"2026-08-09T17:09:26Z","type":"run","ref":"PHASE-011","phase":"PHASE-011","summary":"Praxis.v2 extract proved (validate/test/dashboard); AIdioma consumer stubs; phase branch committed","status":"active","cmd":"/run"}
+{"ts":"2026-08-09T17:38:35Z","type":"run","ref":"PHASE-011","phase":"PHASE-011","summary":"Dual Praxis projects separated + D-057 ports; both validate 0 issues; concurrent dashboards proved","status":"active","cmd":"/run"}

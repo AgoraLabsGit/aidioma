@@ -104,20 +104,33 @@ export async function resolveGitWorktreesMetaDir(fromRoot: string): Promise<stri
   }
 }
 
+function isPathInside(parent: string, child: string): boolean {
+  const rel = path.relative(parent, child);
+  return rel === "" || (!rel.startsWith("..") && !path.isAbsolute(rel));
+}
+
 /**
- * D-020 Docs home: `.worktrees/docs` (branch `docs/ssot`) when present.
- * Env `AIDIOMA_DOCS_HOME` overrides. Returns null when absent (D-018 overlay interim).
+ * D-020 Docs home: `{primary}/.worktrees/docs` when present.
+ * Env `PRAXIS_DOCS_HOME` or legacy `AIDIOMA_DOCS_HOME` may override **only if** that path
+ * is inside this clone’s primary worktree (prevents cross-project bleed when two Praxis
+ * projects run on one machine). Returns null when absent (D-018 overlay interim).
  */
 export async function resolveDocsHomeRoot(fromRoot: string): Promise<string | null> {
-  const envHome = process.env.AIDIOMA_DOCS_HOME?.trim();
+  const primary = await resolvePrimaryWorktreeRoot(fromRoot);
+  const envHome =
+    process.env.PRAXIS_DOCS_HOME?.trim() || process.env.AIDIOMA_DOCS_HOME?.trim() || "";
   if (envHome) {
     try {
-      return await realpath(envHome);
+      const resolvedEnv = await realpath(envHome);
+      if (isPathInside(primary, resolvedEnv)) {
+        await readFile(path.join(resolvedEnv, "Docs", "START.md"), "utf8");
+        return resolvedEnv;
+      }
+      // Foreign clone path — ignore (dual Praxis projects).
     } catch {
-      return null;
+      // fall through to default candidate
     }
   }
-  const primary = await resolvePrimaryWorktreeRoot(fromRoot);
   const candidate = path.join(primary, ".worktrees", "docs");
   try {
     const resolved = await realpath(candidate);

@@ -3,14 +3,13 @@ id: PHASE-011
 title: Extract Praxis to Praxis.v2 repo
 type: build
 proof_kind: terminal
-state: ready
+state: active
 order: 9
-depends_on:
-  - PHASE-009
+depends_on: []
 from_backlog: P-003
 owner: founder
-outcome: "Praxis process + dashboard + agent substrate live in a new local git repo Praxis.v2; AIdioma retains learner product and thin pointers only."
-proof: "Directory Praxis.v2 exists as its own git repo (git status clean or documented); npm run work:validate and work:dashboard succeed from Praxis.v2; AIdioma root AGENTS.md points at Praxis or documents consumer mode; no learner apps/packages/content moved."
+outcome: "Two cleanly separated Praxis projects: Praxis.v2 (Praxis-dev bootstrap) and AIdioma (learner) each with their own System/dashboard and project-only Docs/Work data."
+proof: "Praxis.v2 and AIdioma each pass work:validate with project-only data; both can run work:dashboard concurrently (D-057); no cross-project Work/spec bleed; learner apps/packages/content stay in AIdioma."
 non_goals:
   - GitHub remote publish / org transfer (local repo only unless founder asks)
   - Implementing extension, auth SaaS, or hosted control plane
@@ -18,10 +17,9 @@ non_goals:
   - Moving AIdioma learner specs, apps/, packages/, content/
   - Deleting AIdioma Docs history without founder ack (prefer leave stubs / COPY then strip)
   - Perfect WORK.yaml scrub in one pass (seed + document residuals OK)
-amends_specs:
-  - SPEC-A-PRAXIS
+amends_specs: []
 feature: null
-area: SPEC-A-PRAXIS
+area: null
 context_paths:
   - Docs/Roadmap/Phases/PHASE-011-praxis-v2-extract.md
   - Docs/System/
@@ -103,17 +101,17 @@ Target path (default): sibling of AIdioma —
 
 ## Proof
 
-- [ ] `Praxis.v2` is a git repo with Praxis System/dashboard/skills/hooks/work scripts
-- [ ] `npm run work:validate` and `work:test` pass in Praxis.v2
-- [ ] `work:dashboard` serves Praxis UI from Praxis.v2
-- [ ] AIdioma no longer treats `Docs/System` as living Praxis SSOT (moved or clearly stubbed)
-- [ ] Inventory table residuals listed in Close record
+- [x] `Praxis.v2` is a git repo with Praxis System/dashboard/skills/hooks/work scripts
+- [x] `npm run work:validate` and `work:test` pass in Praxis.v2
+- [x] `work:dashboard` serves Praxis UI from Praxis.v2
+- [x] AIdioma no longer treats `Docs/System` as living Praxis SSOT (moved or clearly stubbed)
+- [x] Inventory table residuals listed in Close record
 
 ## Close record
 
-- Result:
-- Specs amended:
-- Journal line:
+- Result: Dual Praxis projects separated. Praxis.v2 = Praxis-dev (10 phases, ~186 Work, validate 0 issues, D-057 ports). AIdioma = learner project (3 phases, 15 Work, harness restored, validate 0 issues). Concurrent dashboards on distinct ports proved. Docs-home env scoped to clone family.
+- Specs amended: SPEC-F-PRAXIS-SHELL (D-057); AIdioma learner specs research scrubbed
+- Journal line: PHASE-011 dual-instance separation complete — ready /close
 
 ## Kickoff
 
