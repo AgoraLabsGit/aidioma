@@ -183,7 +183,7 @@
 - id: T-074
   kind: task
   summary: Execute PHASE-011 — extract Praxis to Praxis.v2
-  status: active
+  status: done
   feature: null
   area: null
   phase: PHASE-011
@@ -208,5 +208,5 @@
     - .github/workflows/work.yml
     - .work/activity/
   open_questions: null
-  done_summary: null
+  done_summary: Dual Praxis projects separated; Praxis.v2 + AIdioma validate 0; D-057 ports; C-023 PASS; Adv WARN ack; published via /close
   opened: 2026-08-09T17:05:30Z
