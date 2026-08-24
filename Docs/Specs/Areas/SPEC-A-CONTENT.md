@@ -1,34 +1,34 @@
 ---
 id: SPEC-A-CONTENT
 kind: area
-title: Content and curriculum
+title: "Learning content authority"
 status: active
 superseded_by: null
 vendor: null
-decisions: [D-014]
+decisions: []
 built_by: []
-last_amended: PHASE-005
-research: [R-001]
+last_amended: null
+research: []
 paths:
-  - content/**
+  - "content/**"
+  - "tooling/content/**"
+  - "packages/lesson-schema/**"
 ---
 
-# Content and curriculum
+# Learning content authority
 
 ## Purpose
 
-Authored lessons, lexicon material, and content pipelines that feed the learner app.
+Own versioned curriculum, practice material, dialect renderings, answer policy, and the promotion receipts that make content safe to serve.
 
 ## Behavior
 
-- Rule: Curriculum source of truth is under `content/`
-- Rule: Downloadable Spanish dictionary seed for Lexicon authoring is Kaikki Wiktextract (D-014)
-- Failure mode: Missing content → practice/features degrade or empty
+- Rule: The content authority stores reusable concepts and bilingual meaning units separately from lesson and collection placement. A unit can appear in many learning surfaces without duplication. Every learner-visible artifact is traceable to a pipeline version, supported dialect profile, validation results, and promotion decision.
+- Failure mode: Missing dialect coverage, ambiguous answers, failed adversarial review, or absent promotion evidence blocks publication instead of degrading silently.
 
 ## Boundaries
 
-App runtime rendering is SPEC-A-LEARNER. Generation tooling may touch both.
+- "Learner interaction and personal progress belong to SPEC-A-LEARNER"
+- "Runtime AI feedback cannot silently rewrite canonical answers"
+- "Provider APIs are replaceable inputs and never the system of record"
 
-## Vendor
-
-null

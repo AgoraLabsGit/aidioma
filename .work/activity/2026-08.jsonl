@@ -1,452 +1,50 @@
-{"ts": "2026-08-05T20:03:44Z", "type": "build", "actor": "agent", "cmd": "/run", "phase": "PHASE-001", "ref": "PHASE-001", "status": "complete", "duration_s": null, "summary": "Activated PHASE-001; derive()+dashboard Now/Roadmap against live Docs/"}
-{"ts": "2026-08-05T20:06:14Z", "type": "handoff", "actor": "agent", "cmd": "/handoff", "phase": "PHASE-001", "ref": "PHASE-001", "status": "complete", "duration_s": null, "summary": "UI polish next; do not close yet"}
-{"ts": "2026-08-05T22:05:00Z", "type": "plan", "actor": "agent", "cmd": "/plan", "phase": "PHASE-004", "ref": "PHASE-004", "status": "complete", "duration_s": null, "summary": "Proposed PHASE-004 Dashboard Projection Proof after PHASE-001; Issues open+closed, projection audit, naming"}
-{"ts": "2026-08-05T22:50:00Z", "type": "close", "actor": "agent", "cmd": "/close", "phase": "PHASE-001", "ref": "PHASE-001", "status": "complete", "duration_s": null, "summary": "Closed PHASE-001 Dev System Dashboard; next PHASE-004 proposed"}
-{"ts": "2026-08-06T01:01:42Z", "type": "build", "actor": "agent", "cmd": "/run", "phase": "PHASE-004", "ref": "PHASE-004", "status": "ok", "duration_s": null, "summary": "Activated PHASE-004; branch phase/004-dashboard-projection-proof + worktree; naming checkpoint next"}
-{"ts": "2026-08-06T01:08:33Z", "type": "build", "actor": "agent", "cmd": "/run", "phase": "PHASE-004", "ref": "PHASE-004", "status": "complete", "duration_s": null, "summary": "Naming D-007..009; Issues open+fixed; Activity Ref/Phase merge; projection proof"}
-{"ts": "2026-08-06T01:16:18Z", "type": "design", "actor": "agent", "cmd": "/run", "phase": "PHASE-004", "ref": "D-010", "status": "complete", "duration_s": null, "summary": "D-010 phase vocabulary: type build, state canceled; filter audit"}
-{"ts": "2026-08-06T01:19:02Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": "PHASE-004", "ref": "FIX-003", "status": "complete", "duration_s": null, "summary": "Restarted stale dashboard after build enum rename; Roadmap shows all phases"}
-{"ts": "2026-08-06T01:21:16Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": "PHASE-004", "ref": "FIX-004", "status": "complete", "duration_s": null, "summary": "Issues empty was Open filter; default All + clearer empty hint"}
-{"ts": "2026-08-06T01:27:56Z", "type": "close", "actor": "agent", "cmd": "/close", "phase": "PHASE-004", "ref": "PHASE-004", "status": "ok", "duration_s": null, "summary": "Close record: PHASE-004 closed; next PHASE-002 proposed"}
-{"ts":"2026-08-06T13:18:00Z","type":"plan","actor":"agent","cmd":"/plan","phase":"PHASE-005","ref":"PHASE-005","status":"complete","summary":"Onboarded Work Ledger and Routing (proposed); next before PHASE-002; WORK.yaml; Work≠Signals"}
-{"ts":"2026-08-06T16:25:00Z","type":"build","actor":"agent","cmd":"/run","phase":"PHASE-005","ref":"PHASE-005","status":"complete","summary":"Work ledger + Work/Signals pages + /log /triage /task + agent routing; tests green"}
-{"ts":"2026-08-06T16:25:10Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-016","status":"complete","summary":"Logged W-016 fix — Knowledge D-xxx /api/doc gap"}
-{"ts":"2026-08-06T16:45:00Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-017","status":"complete","summary":"Logged W-017 proposal — audit/test infra in phase workflows"}
-{"ts":"2026-08-06T16:45:01Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-018","status":"complete","summary":"Logged W-018 proposal — kind-prefixed work ids"}
-{"ts":"2026-08-06T16:45:02Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-019","status":"complete","summary":"Logged W-019 proposal — column-header sort"}
-{"ts":"2026-08-06T16:45:03Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-020","status":"complete","summary":"Logged W-020 question — feature/area before specs exist"}
-{"ts":"2026-08-06T16:45:04Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"W-022","status":"complete","summary":"Fixed W-022 — open-first Work sort"}
-{"ts":"2026-08-06T16:45:05Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"W-023","status":"complete","summary":"Fixed W-023 — Work status chip colors"}
-{"ts":"2026-08-06T16:50:00Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-024","status":"complete","summary":"Logged W-024 proposal — summary length caps for tables"}
-{"ts":"2026-08-06T16:50:01Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-005","ref":"W-025","status":"complete","summary":"Age columns show hours via formatOpenedAge"}
-{"ts":"2026-08-06T16:50:02Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-005","ref":"W-021","status":"complete","summary":"Assigned feature/area tags; D-013 thin SPEC stubs (choice C)"}
-{"ts":"2026-08-06T16:53:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"W-026","status":"complete","summary":"Short SPEC labels in tables"}
-{"ts":"2026-08-06T16:53:01Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"W-027","status":"complete","summary":"Phase feature/area tags including proposed"}
-{"ts":"2026-08-06T16:53:02Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"W-028","status":"complete","summary":"Standard column order across tables"}
-{"ts":"2026-08-06T17:02:49Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-005","ref":"W-015","status":"complete","summary":"Triage: leave W-015 (proposal+adversarial farm); explain do-ready W-016/019/024; /plan W-017 draft pending approve"}
-{"ts":"2026-08-06T17:04:00Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-029","status":"complete","summary":"/system blocked (phase active); logged W-029 proposal — id+summary surfacing rule"}
-{"ts":"2026-08-06T17:04:01Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-005","ref":"W-019","status":"complete","summary":"Reclassified W-019 proposal→task (column-header sort)"}
-{"ts":"2026-08-06T17:04:40Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-005","ref":"W-030","status":"complete","summary":"Work nav order: Active → Work → Roadmap; spec + test"}
-{"ts":"2026-08-06T17:16:00Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-031","status":"complete","summary":"Logged W-031 proposal — Work routing v2 (exec triage, open_questions, /audit, context size)"}
-{"ts":"2026-08-06T17:16:01Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-005","ref":"W-018","status":"complete","summary":"Reclassified W-018 W-024 W-029 proposal→task"}
-{"ts":"2026-08-06T17:34:30Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"W-016","status":"complete","summary":"Fixed W-016 — /api/doc serves D-xxx from DECISIONS.md sections"}
-{"ts":"2026-08-06T17:35:00Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-005","ref":"W-019","status":"complete","summary":"W-019 column-header sort on dashboard tables"}
-{"ts":"2026-08-06T17:36:00Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-005","ref":"SPEC-A-DEVSYSTEM","status":"complete","summary":"Triage Devsystem: did W-016 W-019 W-029; blocked W-018 W-024 (open_questions); left W-015 W-017; W-031 done; W-032 audit"}
-{"ts":"2026-08-06T17:36:01Z","type":"audit","actor":"agent","cmd":"/audit","phase":"PHASE-005","ref":"W-032","status":"complete","summary":"Agent-context size/fit audit — AGENTS/COMMANDS/skills within caps; residual close-skill naming"}
-{"ts":"2026-08-06T17:53:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"W-033","status":"complete","summary":"Work blank + audit enum: stale dashboard; restart + audit kind test"}
-{"ts":"2026-08-06T17:53:01Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-005","ref":"W-034","status":"complete","summary":"Activity filters row; drop actor/phase chips and actor sub-line"}
-{"ts":"2026-08-06T17:53:02Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-005","ref":"W-035","status":"complete","summary":"Removed Sort selects; headers own sort"}
-{"ts":"2026-08-06T17:53:03Z","type":"audit","actor":"agent","cmd":"/audit","phase":"PHASE-005","ref":"W-036","status":"complete","summary":"Summaries were uncapped; shipped 80-char truncateSummary (+ W-024)"}
-{"ts":"2026-08-06T17:53:04Z","type":"plan","actor":"agent","cmd":"/plan","phase":"PHASE-006","ref":"PHASE-006","status":"complete","summary":"Proposed Knowledge Page Overhaul (order 6, after PHASE-005)"}
-{"ts":"2026-08-06T17:53:05Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-037","status":"complete","summary":"Logged W-037 question — Signals purpose and nav placement"}
-{"ts":"2026-08-06T17:55:00Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-005","ref":"W-038","status":"complete","summary":"Phase-scoped /triage + close hygiene before audits; skills/docs updated"}
-{"ts":"2026-08-06T17:55:30Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-005","ref":"PHASE-005","status":"complete","summary":"Phase-scoped triage via sub-agent: 0 open/active with phase PHASE-005 (EMPTY)"}
-{"ts":"2026-08-07T13:39:00Z","type":"handoff","actor":"agent","cmd":"/handoff","phase":"PHASE-005","ref":"PHASE-005","status":"complete","summary":"Handoff: PHASE-005 dirty branch; routing v2 landed uncommitted; next /run then /close"}
-{"ts":"2026-08-07T13:46:00Z","type":"plan","actor":"agent","cmd":"/plan","phase":"PHASE-007","ref":"PHASE-007","status":"complete","summary":"Proposed Command & System Audit Matrix; promoted W-017"}
-{"ts":"2026-08-07T13:46:01Z","type":"plan","actor":"agent","cmd":"/plan","phase":"PHASE-006","ref":"PHASE-006","status":"complete","summary":"Revised Knowledge overhaul (order 5, mock fixtures, depends PHASE-007)"}
-{"ts":"2026-08-07T13:46:02Z","type":"plan","actor":"agent","cmd":"/plan","phase":"PHASE-008","ref":"PHASE-008","status":"complete","summary":"Proposed Spec & Knowledge Artifact Research; promoted W-040"}
-{"ts":"2026-08-07T13:46:03Z","type":"log","actor":"agent","cmd":"/log","phase":"PHASE-005","ref":"W-037","status":"complete","summary":"Answered W-037 Signals function; placement still open (pill/panel preferred)"}
-{"ts":"2026-08-07T13:48:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"W-041","status":"complete","summary":"Phase schedule: depends_on-first sort; /plan never renumbers peers"}
-{"ts":"2026-08-07T13:50:00Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-005","ref":"W-042","status":"complete","summary":"Reindex button icon-only; PHASE-007 adds Commands panel"}
-{"ts":"2026-08-07T13:50:01Z","type":"plan","actor":"agent","cmd":"/plan","phase":"PHASE-007","ref":"PHASE-007","status":"complete","summary":"PHASE-007 outcome+proof: Commands panel from header icon next to reindex"}
-{"ts":"2026-08-07T13:52:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"W-043","status":"complete","summary":"Larger reindex icon; Roadmap default schedule sort (depends_on)"}
-{"ts":"2026-08-07T13:54:00Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-005","ref":"W-018","status":"complete","summary":"Kind-prefixed work ids forward-only; legacy W-* kept; nextWorkId"}
-{"ts":"2026-08-07T13:59:00Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-005","ref":"T-001","status":"complete","summary":"Roadmap Order column = schedule step after ID"}
-{"ts":"2026-08-07T14:10:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"F-001","status":"complete","summary":"Reindex SVG centered; Work restored after T-001 parse; Signals via foot pill"}
-{"ts":"2026-08-07T14:10:00Z","type":"research","actor":"agent","cmd":"/research","phase":null,"ref":"R-001","status":"complete","summary":"Spanish dictionary source → Kaikki Wiktextract (eswiktionary); D-014"}
-{"ts":"2026-08-07T14:16:00Z","type":"research","actor":"agent","cmd":"/research","phase":null,"ref":"R-002","status":"complete","summary":"Kaikki editorial only; not Lexicon maps/phrases or DeepL; D-015"}
-{"ts":"2026-08-07T14:19:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-005","ref":"F-002","status":"complete","summary":"SPEC last_amended dates → null; 15 signals cleared"}
-{"ts":"2026-08-07T14:23:00Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-005","ref":"PHASE-005","status":"complete","summary":"Close PHASE-005: Work ledger+routing; Lexicon R-001/R-002 Scope WARN acked; next /run PHASE-007"}
-{"ts":"2026-08-07T14:33:00Z","type":"build","actor":"agent","cmd":"/run","phase":"PHASE-007","ref":"PHASE-007","status":"complete","summary":"Activated PHASE-007; branch phase/007-command-system-audit + worktree; design checkpoint next"}
-{"ts":"2026-08-07T14:45:00Z","type":"research","actor":"agent","cmd":"/research","phase":"PHASE-007","ref":"R-003","status":"complete","summary":"Panel: nest rich close lenses under Proof/Scope/Publish; Adv on research/design/close; path-aware /check"}
-{"ts":"2026-08-07T15:05:00Z","type":"build","actor":"agent","cmd":"/run","phase":"PHASE-007","ref":"D-016","status":"complete","summary":"D-016 primary-rooted dashboard + active worktree overlay; proof via derive from primary"}
-{"ts":"2026-08-07T15:20:00Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-007","ref":"C-001","status":"complete","summary":"lanes: work \u2014 pass (typecheck+test 25/25)"}
-{"ts":"2026-08-07T15:28:00Z","type":"design","actor":"agent","cmd":"/design","phase":"PHASE-007","ref":"D-020","status":"complete","summary":"D-020 Docs+System home worktree supersedes D-018 overlay; founder ack on skills boundary + ship path"}
-{"ts":"2026-08-07T15:39:00Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-007","ref":null,"status":"complete","summary":"Phase-scoped triage: 0 open/active phase:PHASE-007 rows — EMPTY"}
-{"ts":"2026-08-07T15:45:00Z","type":"audit","actor":"agent","cmd":"/audit","phase":"PHASE-007","ref":"A-001","status":"complete","summary":"Command audit: Adv+MCOO protocols; project-agnostic skills; residual P-001 Docs home"}
-{"ts":"2026-08-07T15:46:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-007","ref":"F-003","status":"complete","summary":"De-productized skills: operator/founder; no AIdioma/learner in skill text"}
-{"ts":"2026-08-07T15:55:00Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-007","ref":"C-002","status":"complete","summary":"work lane: typecheck+test(25)+validate issues=0"}
-{"ts":"2026-08-07T15:56:00Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-007","ref":null,"status":"active","summary":"Close hygiene: triage CLEAR; Adv WARN acked (static COMMAND_MAP V1; D-018 interim); MCOO WARN P-001; publishing"}
-{"ts":"2026-08-07T16:05:00Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-002","status":"complete","summary":"path-lens-map.md for /close Proof lenses"}
-{"ts":"2026-08-07T16:05:01Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-003","status":"complete","summary":"reduced-close.md for standalone /fix /task publish"}
-{"ts":"2026-08-07T16:05:02Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"P-001","status":"complete","summary":"D-020 Docs home pin + work:docs-home; overlay interim if absent"}
-{"ts":"2026-08-07T16:03:30Z","type":"dashboard","actor":"agent","cmd":"/dashboard","phase":null,"ref":null,"status":"complete","summary":"Docs home ensured; dashboard on 4317"}
-{"ts":"2026-08-07T16:06:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-004","status":"complete","summary":"Restored status pill+chip colors from stash onto post-007 branch"}
-{"ts":"2026-08-07T16:12:00Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-004","status":"complete","summary":"Dashboard filters/sorts/page persist in localStorage"}
-{"ts":"2026-08-07T16:12:01Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-005","status":"complete","summary":"System protocols/ + specs/ layout; updated refs"}
-{"ts":"2026-08-07T16:14:00Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-003","status":"complete","summary":"work lane: typecheck+test(50)+validate issues=0 \u00b7 work T-006"}
-{"ts":"2026-08-07T16:14:30Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-006","status":"complete","summary":"D-021 /close dispatches reduced close when no phase"}
-{"ts":"2026-08-07T16:17:49Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-21","status":"complete","summary":"Reduced close: merged PR #21 (P-001 Docs home, D-021 /close dispatch, T-004/5/6, F-004); CI green; docs/ssot @ db4f5c2"}
-{"ts":"2026-08-07T16:22:30Z","type":"audit","actor":"agent","cmd":"/audit","phase":null,"ref":"A-002","status":"complete","summary":"Stale dashboard = wrong tree/tab; Docs home agent-context was partial — closed by T-007"}
-{"ts":"2026-08-07T16:22:30Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-007","status":"complete","summary":"Docs home write rule in skills + ensure-docs-home refresh"}
-{"ts":"2026-08-07T16:31:05Z","type":"audit","actor":"agent","cmd":"/audit","phase":null,"ref":"A-003","status":"complete","summary":"Work immediacy: research Work row + write-active-first; D-020 write path WARN"}
-{"ts":"2026-08-07T16:31:05Z","type":"audit","actor":"agent","cmd":"/audit","phase":null,"ref":"A-004","status":"complete","summary":"Delegation FAIL→fixed via T-009 defaults in skills"}
-{"ts":"2026-08-07T16:31:05Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-008","status":"complete","summary":"Sortable columns except Summary; run-dashboard from Docs home"}
-{"ts":"2026-08-07T16:31:05Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-009","status":"complete","summary":"Sub-agent delegation defaults in command skills"}
-{"ts":"2026-08-07T16:35:00Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-010","status":"complete","summary":"Dashboard Filters panel (Feature/Area) + Reset on table pages"}
-{"ts":"2026-08-07T16:34:23Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-005","status":"active","summary":"Work Age broken (date-only→fake hours); active-first logging"}
-{"ts":"2026-08-07T16:35:06Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-005","status":"complete","summary":"Work Age: ISO opened + date-only calendar age; active-first flush required"}
-{"ts":"2026-08-07T16:38:00Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-004","status":"complete","summary":"work lane: typecheck+test(29)+validate issues=0 \u00b7 work T-010"}
-{"ts":"2026-08-07T16:41:30Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-23","status":"complete","summary":"Reduced close: merged PR #23 (T-010 Filters panel, T-007/8/9, F-005 Age, A-002/3/4); CI green; docs/ssot @ b2e5282"}
-{"ts":"2026-08-07T16:45:14Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-006","status":"active","summary":"Activity Status desynced from Work ledger for same ref"}
-{"ts":"2026-08-07T16:45:38Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-006","status":"complete","summary":"Activity Status column syncs to Work ledger for Work refs"}
-{"ts":"2026-08-07T16:49:27Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-007","status":"active","summary":"Column sort toggle direction (asc/desc)"}
-{"ts":"2026-08-07T16:50:55Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-007","status":"complete","summary":"Column sort toggles asc/desc on second click"}
-{"ts":"2026-08-07T16:51:53Z","type":"audit","actor":"agent","cmd":"/audit","phase":null,"ref":"A-005","status":"active","summary":"Design review Work vs Activity wiring"}
-{"ts":"2026-08-07T16:51:53Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-008","status":"active","summary":"Persisted search hides new Work rows"}
-{"ts":"2026-08-07T16:52:14Z","type":"audit","actor":"agent","cmd":"/audit","phase":null,"ref":"A-005","status":"complete","summary":"Work vs Activity: filter asymmetry not ledger desync; F-008"}
-{"ts":"2026-08-07T16:52:14Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-008","status":"complete","summary":"Do not persist table search q"}
-{"ts":"2026-08-07T16:54:32Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-011","status":"active","summary":"VISIBILITY TEST for Work Open + Activity after F-008"}
-{"ts":"2026-08-07T16:55:04Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-011","status":"complete","summary":"Visibility test passed — founder saw T-011 on Work + Activity"}
-{"ts":"2026-08-07T16:56:07Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-005","status":"complete","summary":"work lane: typecheck+test(29)+validate issues=0 \u00b7 work F-006"}
-{"ts":"2026-08-07T16:57:26Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-25","status":"complete","summary":"Reduced close: merged PR #25 (F-006/7/8, A-005, T-011); CI green; docs/ssot @ 79ae8fc"}
-{"ts":"2026-08-07T17:24:24Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-009","status":"start","summary":"Dashboard wrong-tree ENOENT from phase cwd"}
-{"ts":"2026-08-07T17:26:14Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-009","status":"complete","summary":"run-dashboard Docs home + quiet 404 for missing static"}
-{"ts":"2026-08-07T17:28:05Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-010","status":"start","summary":"Activity Feature/Area join Work refs"}
-{"ts":"2026-08-07T17:28:37Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-010","status":"complete","summary":"Activity Feature/Area join Work refs"}
-{"ts":"2026-08-07T17:30:29Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-012","status":"start","summary":"Remove bylines; shrink Filters badge"}
-{"ts":"2026-08-07T17:30:29Z","type":"audit","actor":"agent","cmd":"/audit","phase":null,"ref":"A-006","status":"start","summary":"UI consistency audit"}
-{"ts":"2026-08-07T17:31:22Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-012","status":"complete","summary":"Removed bylines; shrunk Filters badge"}
-{"ts":"2026-08-07T17:32:41Z","type":"audit","actor":"agent","cmd":"/audit","phase":null,"ref":"A-006","status":"complete","summary":"UI: shell/tokens solid; no page template; Knowledge/Signals spec drift"}
-{"ts":"2026-08-07T17:34:46Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-013","status":"start","summary":"Detail panel layout + collapse + border"}
-{"ts":"2026-08-07T17:36:51Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-013","status":"complete","summary":"Detail panels Phase layout; collapse top-left; no thick resize border"}
-{"ts": "2026-08-07T17:39:14Z", "type": "audit", "cmd": "/audit", "summary": "A-007 \u2014 Phase Files/Work detail + Activity panel wiring (start)", "ref": "A-007", "phase": null, "status": "active", "actor": "agent"}
-{"ts":"2026-08-07T17:39:36Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-014","status":"start","summary":"Remove detail path+id bylines"}
-{"ts":"2026-08-07T17:40:07Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-014","status":"complete","summary":"Remove detail path+id bylines"}
-{"ts": "2026-08-07T17:40:35Z", "type": "audit", "cmd": "/audit", "summary": "A-007 \u2014 Phase Files/Work/Activity detail intelligence (complete)", "ref": "A-007", "phase": null, "status": "complete", "actor": "agent"}
-{"ts":"2026-08-07T17:42:20Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-011","status":"start","summary":"Detail Close + chevron + collapsed rail layout"}
-{"ts":"2026-08-07T17:44:06Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-011","status":"complete","summary":"Detail Close + chevron + workspace offset"}
-{"ts":"2026-08-07T17:46:21Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-015","status":"start","summary":"Larger collapse chevron; hide ✕ when collapsed"}
-{"ts":"2026-08-07T17:46:53Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-015","status":"complete","summary":"Close top-right expanded; larger chevron; no ✕ collapsed"}
-{"ts":"2026-08-07T17:47:13Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-016","status":"start","summary":"Remove detail-offset workspace reflow"}
-{"ts":"2026-08-07T17:47:34Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-016","status":"complete","summary":"No workspace reflow on detail open/collapse"}
-{"ts":"2026-08-07T17:49:58Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-017","status":"start","summary":"Age columns default newest-first"}
-{"ts":"2026-08-07T17:50:37Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-017","status":"complete","summary":"Age columns default newest-first"}
-{"ts":"2026-08-07T17:53:37Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-012","status":"start","summary":"Fixed rail gutter without expand reflow"}
-{"ts":"2026-08-07T17:54:05Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-012","status":"complete","summary":"Fixed 48px rail gutter; no expand reflow"}
-{"ts":"2026-08-07T17:55:21Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-013","status":"start","summary":"Rail overlap + no auto-open on refresh"}
-{"ts":"2026-08-07T17:55:48Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-013","status":"complete","summary":"Fix hidden override; detail closed on load; 52px gutter"}
-{"ts": "2026-08-07T17:56:55Z", "type": "task", "cmd": "/task", "summary": "T-018 \u2014 /design activity active flush at start", "ref": "T-018", "phase": null, "status": "active", "actor": "agent"}
-{"ts": "2026-08-07T17:57:12Z", "type": "task", "cmd": "/task", "summary": "T-018 \u2014 /design activity active flush at start", "ref": "T-018", "phase": null, "status": "complete", "actor": "agent"}
-{"ts":"2026-08-07T17:57:59Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-006","status":"complete","summary":"lanes: work \u2014 typecheck+test+validate for reduced /close"}
-{"ts":"2026-08-07T17:59:41Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-27","status":"complete","summary":"Reduced close: merged PR #27 (dashboard UX session); CI green; docs/ssot @ 7dfedc5"}
-{"ts": "2026-08-07T18:01:36Z", "type": "task", "cmd": "/task", "summary": "T-019 \u2014 Work surfaces activity; restore S-nnn", "ref": "T-019", "phase": null, "status": "active", "actor": "agent"}
-{"ts": "2026-08-07T18:01:36Z", "type": "design", "cmd": "/design", "summary": "S-001 \u2014 Work primary visibility over Activity page", "ref": "S-001", "phase": null, "status": "active", "actor": "agent"}
-{"ts": "2026-08-07T18:03:31Z", "type": "decide", "cmd": "/design", "summary": "D-022 \u2014 Work primary visibility; activity journal projected", "ref": "D-022", "phase": null, "status": "complete", "actor": "agent"}
-{"ts": "2026-08-07T18:03:31Z", "type": "design", "cmd": "/design", "summary": "S-001 \u2014 Work primary visibility (complete)", "ref": "S-001", "phase": null, "status": "complete", "actor": "agent"}
-{"ts": "2026-08-07T18:03:31Z", "type": "task", "cmd": "/task", "summary": "T-019 \u2014 Work activity trails + design kind", "ref": "T-019", "phase": null, "status": "complete", "actor": "agent"}
-{"ts":"2026-08-07T18:04:36Z","type":"design","actor":"agent","cmd":"/design","phase":null,"ref":null,"status":"active","summary":"Design panel: Work page vs Activity page (keep both vs fold)"}
-{"ts":"2026-08-07T18:06:55Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-014","status":"active","summary":"Work detail Context+Files"}
-{"ts":"2026-08-07T18:06:55Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-015","status":"active","summary":"Restore Work kind design (S-nnn) in schema"}
-{"ts":"2026-08-07T18:07:28Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-014","status":"complete","summary":"Work detail Context+Files"}
-{"ts":"2026-08-07T18:07:28Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-015","status":"complete","summary":"Restore Work kind design S-nnn"}
-{"ts":"2026-08-07T18:17:46Z","type":"decide","actor":"agent","cmd":"/design","phase":null,"ref":"D-023","status":"complete","summary":"D-023 Work vs Activity page jobs (process spine); Adv WARN ack"}
-{"ts":"2026-08-07T18:17:46Z","type":"design","actor":"agent","cmd":"/design","phase":null,"ref":"S-002","status":"complete","summary":"Locked D-023; Activity page process allowlist implemented"}
-{"ts":"2026-08-07T18:19:25Z","type":"design","actor":"agent","cmd":"/design","phase":null,"ref":"S-003","status":"active","summary":"Brief vs Context; declared context_paths"}
-{"ts":"2026-08-07T18:20:54Z","type":"decide","actor":"agent","cmd":"/design","phase":null,"ref":"D-024","status":"complete","summary":"Brief vs Context; declared context_paths (Adv WARN)"}
-{"ts":"2026-08-07T18:20:54Z","type":"spec","actor":"agent","cmd":"/design","phase":null,"ref":"SPEC-F-DEV-DASHBOARD","status":"complete","summary":"D-024 Brief/Context/Files rules"}
-{"ts":"2026-08-07T18:21:54Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-007","status":"complete","summary":"work lane: typecheck+test 32/32+validate issues=0"}
-{"ts":"2026-08-07T18:23:12Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-29","status":"complete","summary":"Reduced close: D-022–D-024 Work/Activity separation + Brief/Context; merged 3991e17"}
-{"ts":"2026-08-07T18:32:53Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-020","status":"active","summary":"Implement D-024 context_paths + Brief/Context UI"}
-{"ts":"2026-08-07T18:33:44Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-020","status":"complete","summary":"Ship D-024 context_paths + Brief/Context/Files UI"}
-{"ts":"2026-08-07T18:35:22Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-021","status":"active","summary":"Work newest-first + Roadmap active-first defaults"}
-{"ts":"2026-08-07T18:36:36Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-021","status":"complete","summary":"Work Age newest-first; Roadmap schedule pins active then Order"}
-{"ts":"2026-08-07T18:38:29Z","type":"design","actor":"agent","cmd":"/design","phase":null,"ref":"S-003","status":"complete","summary":"Re-close S-003; Adv WARN acked (was lost before publish)"}
-{"ts":"2026-08-07T18:44:21Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-022","status":"active","summary":"Copy IDs + Design kind labels"}
-{"ts":"2026-08-07T18:44:37Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-022","status":"active","summary":"Copy IDs + Design kind labels"}
-{"ts":"2026-08-07T18:45:26Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-022","status":"complete","summary":"Copy IDs + humanize Work kind labels"}
-{"ts":"2026-08-07T18:46:00Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-008","status":"failed","summary":"work:typecheck FAIL \u2014 PhaseFrontmatter fixtures missing context_paths"}
-{"ts":"2026-08-07T18:46:20Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-009","status":"complete","summary":"work lane: typecheck+test 35/35+validate issues=0"}
-{"ts":"2026-08-07T18:47:29Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-31","status":"complete","summary":"Reduced close: T-020 D-024 context_paths + T-021 sort defaults; merged 2c57d8d"}
-{"ts":"2026-08-07T18:48:56Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-023","status":"active","summary":"Larger detail ID title + copy"}
-{"ts":"2026-08-07T18:49:07Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-023","status":"complete","summary":"Larger detail ID title + copy"}
-{"ts":"2026-08-07T18:57:16Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-024","status":"active","summary":"C-nnn checks + git sessions badge"}
-{"ts":"2026-08-07T18:59:29Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-024","status":"complete","summary":"C-nnn checks + git sessions badge"}
-{"ts":"2026-08-07T19:00:22Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-007","ref":"PHASE-007","status":"complete","summary":"PHASE-007 close complete (retro): phase state closed; P-001 Docs home shipped; residual 15:56 mid-close journal left intact"}
-{"ts":"2026-08-07T19:01:30Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-016","status":"active","summary":"Backfill check refs to C-nnn"}
-{"ts":"2026-08-07T19:01:40Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-016","status":"complete","summary":"Backfilled 9 checks to C-001..C-009"}
-{"ts":"2026-08-07T19:11:33Z","type":"check","ref":"C-010","status":"complete","summary":"work:typecheck + work:test (39) + work:validate — worktrees rename + project_name brand"}
-{"ts":"2026-08-07T19:13:11Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-33","status":"complete","summary":"Reduced /close: merged PR #33 (worktrees badge + project_name brand + Docs-home session); remotes pruned to origin/main"}
-{"ts":"2026-08-07T19:14:50Z","type":"task","actor":"agent","cmd":"/task","ref":"T-026","status":"active","summary":"Praxis brand + GitHub mark on worktrees badge"}
-{"ts":"2026-08-07T19:14:50Z","type":"task","actor":"agent","cmd":"/task","ref":"T-025","status":"complete","summary":"Late ledger PR #33 worktrees rename"}
-{"ts":"2026-08-07T19:15:14Z","type":"task","actor":"agent","cmd":"/task","ref":"T-026","status":"complete","summary":"Praxis brand + GitHub mark on worktrees badge"}
-{"ts":"2026-08-07T19:17:38Z","type":"fix","actor":"agent","cmd":"/fix","ref":"F-017","status":"active","summary":"Worktrees panel empty — sessions vs worktrees"}
-{"ts":"2026-08-07T19:17:38Z","type":"task","actor":"agent","cmd":"/task","ref":"T-027","status":"active","summary":"Praxis brand: drop mark, larger type"}
-{"ts":"2026-08-07T19:18:04Z","type":"fix","actor":"agent","cmd":"/fix","ref":"F-017","status":"complete","summary":"Worktrees panel empty — sessions vs worktrees"}
-{"ts":"2026-08-07T19:18:04Z","type":"task","actor":"agent","cmd":"/task","ref":"T-027","status":"complete","summary":"Praxis brand: drop mark, larger type"}
-{"ts":"2026-08-07T19:19:02Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-028","status":"complete","summary":"Detail heading matches title via --detail-title-size (retro log)"}
-{"ts":"2026-08-07T19:19:03Z","type":"task","actor":"agent","cmd":"/task","ref":"T-028","status":"active","summary":"Center Praxis; match page-title size"}
-{"ts":"2026-08-07T19:19:14Z","type":"task","actor":"agent","cmd":"/task","ref":"T-029","status":"complete","summary":"Center Praxis; match page-title size"}
-{"ts":"2026-08-07T19:20:12Z","type":"task","actor":"agent","cmd":"/task","ref":"T-030","status":"active","summary":"Praxis left-align + Outfit wordmark"}
-{"ts":"2026-08-07T19:20:23Z","type":"task","actor":"agent","cmd":"/task","ref":"T-030","status":"complete","summary":"Praxis left-align + Outfit wordmark"}
-{"ts":"2026-08-07T19:20:42Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-028","status":"complete","summary":"Re-applied --detail-title-size after styles.css clobber"}
-{"ts":"2026-08-07T19:22:43Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-011","status":"complete","summary":"lanes: work — typecheck+test(39)+validate issues=0 for reduced /close"}
-{"ts":"2026-08-07T19:24:13Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-35","status":"complete","summary":"Reduced close: merged PR #35 (T-027/28/29, F-017); C-011 green; docs/ssot @ 7a374b1"}
-{"ts":"2026-08-07T19:25:28Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-018","status":"active","summary":"Activity Status stale active on phase mid-close (ref null)"}
-{"ts":"2026-08-07T19:25:44Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-018","status":"complete","summary":"Activity Status joins closed phase — clears PHASE-007 15:56 stale active"}
-{"ts":"2026-08-07T19:27:19Z","type":"task","actor":"agent","cmd":"/task","ref":"T-031","status":"active","summary":"Align Praxis wordmark with sidebar nav buttons"}
-{"ts":"2026-08-07T19:27:29Z","type":"task","actor":"agent","cmd":"/task","ref":"T-031","status":"complete","summary":"Align Praxis wordmark with sidebar nav buttons"}
-{"ts":"2026-08-07T19:29:08Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-032","status":"active","summary":"Watch git worktrees metadata for auto-reindex"}
-{"ts":"2026-08-07T19:29:45Z","type":"task","actor":"agent","cmd":"/task","ref":"T-033","status":"active","summary":"Sidebar polish: wordmark align/size, gap, soft selected tab"}
-{"ts":"2026-08-07T19:29:51Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-032","status":"complete","summary":"Watch git worktrees metadata for auto-reindex"}
-{"ts":"2026-08-07T19:30:05Z","type":"task","actor":"agent","cmd":"/task","ref":"T-033","status":"complete","summary":"Sidebar polish: wordmark align/size, gap, soft selected tab"}
-{"ts":"2026-08-07T19:31:31Z","type":"task","actor":"agent","cmd":"/task","ref":"T-034","status":"active","summary":"Fix sidebar brand/nav optical alignment"}
-{"ts":"2026-08-07T19:31:43Z","type":"task","actor":"agent","cmd":"/task","ref":"T-034","status":"complete","summary":"Fix sidebar brand/nav optical alignment"}
-{"ts":"2026-08-07T19:32:48Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-035","status":"active","summary":"Minimal stroke sidebar page icons"}
-{"ts":"2026-08-07T19:33:10Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-035","status":"complete","summary":"Minimal stroke sidebar page icons"}
-{"ts":"2026-08-07T19:37:33Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-036","status":"active","summary":"Restore Praxis wordmark label-column align"}
-{"ts":"2026-08-07T19:38:06Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-036","status":"complete","summary":"Restore Praxis wordmark label-column align"}
-{"ts":"2026-08-07T19:40:30Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-019","status":"active","summary":"Align Signals/Theme foot font badge icons"}
-{"ts":"2026-08-07T19:41:30Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-019","status":"complete","summary":"Align Signals/Theme foot font badge icons"}
-{"ts":"2026-08-07T19:42:00Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-037","status":"active","summary":"Tone down light theme glare"}
-{"ts":"2026-08-07T19:43:00Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-037","status":"complete","summary":"Tone down light theme glare"}
-{"ts":"2026-08-07T19:43:30Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-038","status":"active","summary":"Nav/sidebars match page bg"}
-{"ts":"2026-08-07T19:44:30Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-038","status":"complete","summary":"Nav/sidebars match page bg"}
-{"ts":"2026-08-07T19:45:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-020","status":"active","summary":"Light theme cream shell no pure white"}
-{"ts":"2026-08-07T19:45:40Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-020","status":"complete","summary":"Light theme cream shell no pure white"}
-{"ts":"2026-08-07T19:46:20Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-021","status":"active","summary":"Align Praxis wordmark with nav icons"}
-{"ts":"2026-08-07T19:47:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-021","status":"complete","summary":"Align Praxis wordmark with nav icons"}
-{"ts":"2026-08-07T19:47:20Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-022","status":"active","summary":"Center detail collapse arrow in button"}
-{"ts":"2026-08-07T19:48:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-022","status":"complete","summary":"Center detail collapse arrow in button"}
-{"ts":"2026-08-07T19:48:20Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-023","status":"active","summary":"Warm light-theme table panels vs blue-grey"}
-{"ts":"2026-08-07T19:49:00Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-023","status":"complete","summary":"Warm light-theme table panels vs blue-grey"}
-{"ts":"2026-08-07T19:49:10Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-039","status":"active","summary":"Page+panel titles use mono like ID"}
-{"ts":"2026-08-07T19:50:00Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-039","status":"complete","summary":"Page+panel titles use mono like ID"}
-{"ts":"2026-08-07T19:52:20Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-040","status":"active","summary":"Steady-state product task/fix worktrees + Docs-home path leases"}
-{"ts":"2026-08-07T19:53:28Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-040","status":"complete","summary":"D-025 product task/fix worktrees + Docs-home path leases"}
-{"ts":"2026-08-07T19:53:30Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-041","status":"active","summary":"Apply sidebar design-review nits"}
-{"ts":"2026-08-07T19:54:30Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-041","status":"complete","summary":"Apply sidebar design-review nits"}
-{"ts":"2026-08-07T19:58:13Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-042","status":"active","summary":"Align /close with D-025 dual-desk publish"}
-{"ts":"2026-08-07T19:58:52Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-042","status":"complete","summary":"Align /close with D-025 dual-desk publish"}
-{"ts": "2026-08-07T20:03:33Z", "type": "design", "actor": "agent", "cmd": "/design", "phase": null, "ref": "S-004", "status": "active", "summary": "Praxis Docs page + compact sidebar-foot controls"}
-{"ts":"2026-08-07T20:05:49Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-024","status":"active","summary":"IDE Problems: work.yml + ghost deleted-path diagnostics"}
-{"ts": "2026-08-07T20:06:00Z", "type": "decide", "actor": "agent", "cmd": "/design", "phase": null, "ref": "D-026", "status": "complete", "summary": "Praxis Docs page + icon-only foot; Adv PASS"}
-{"ts": "2026-08-07T20:06:00Z", "type": "spec", "actor": "agent", "cmd": "/design", "phase": null, "ref": "SPEC-F-DEV-DASHBOARD", "status": "complete", "summary": "Docs page + foot chrome rules (D-026)"}
-{"ts": "2026-08-07T20:06:00Z", "type": "design", "actor": "agent", "cmd": "/design", "phase": null, "ref": "S-004", "status": "complete", "summary": "S-004 done \u2014 D-026 + specs; Adv PASS"}
-{"ts": "2026-08-07T20:06:00Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-043", "status": "active", "summary": "Docs page + icon-only sidebar-foot row"}
-{"ts":"2026-08-07T20:06:26Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-024","status":"complete","summary":"work.yml ignore-scripts; ghosts are deleted-path Sonar/TS"}
-{"ts": "2026-08-07T20:08:00Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-043", "status": "complete", "summary": "Docs page + icon-only sidebar-foot row"}
-{"ts":"2026-08-07T20:08:36Z","type":"fix","actor":"agent","cmd":"/fix","phase":null,"ref":"F-024","status":"complete","summary":"Cleared SonarLint H2+bindings cache; workspace excludes; reload triggered"}
-{"ts": "2026-08-07T20:09:18Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-044", "status": "active", "summary": "Narrow sidebar to 180px; smaller foot icons"}
-{"ts": "2026-08-07T20:10:00Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-044", "status": "complete", "summary": "Narrow sidebar to 180px; smaller foot icons"}
-{"ts":"2026-08-07T20:10:30Z","type":"status","actor":"agent","cmd":"/run","phase":null,"ref":"D-026","status":"blocked","summary":"/run refused: no active phase; D-026 already locked; impl T-043 done (unpublished on docs/ssot)"}
-{"ts": "2026-08-07T20:14:15Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": null, "ref": "F-025", "status": "active", "summary": "Docs page: load START/COMMANDS + layout fill"}
-{"ts": "2026-08-07T20:16:00Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": null, "ref": "F-025", "status": "complete", "summary": "Docs page: load START/COMMANDS + layout fill"}
-{"ts": "2026-08-07T20:16:57Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": null, "ref": "F-026", "status": "active", "summary": "Docs prose tables: no vertical CMD wrap"}
-{"ts": "2026-08-07T20:18:00Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": null, "ref": "F-026", "status": "complete", "summary": "Docs prose tables: no vertical CMD wrap"}
-{"ts": "2026-08-07T20:18:05Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-045", "status": "active", "summary": "Docs reader: full-width prose (drop 72ch)"}
-{"ts": "2026-08-07T20:18:40Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-045", "status": "complete", "summary": "Docs reader: full-width prose (drop 72ch)"}
-{"ts": "2026-08-07T20:19:58Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": null, "ref": "F-027", "status": "active", "summary": "Prose: space after md-tables (Docs + detail)"}
-{"ts": "2026-08-07T20:19:58Z", "type": "audit", "actor": "agent", "cmd": "/audit", "phase": null, "ref": "A-008", "status": "active", "summary": "CSS audit: prose/table/detail vertical rhythm"}
-{"ts": "2026-08-07T20:21:30Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": null, "ref": "F-027", "status": "complete", "summary": "Prose: space after md-tables (Docs + detail)"}
-{"ts": "2026-08-07T20:21:30Z", "type": "audit", "actor": "agent", "cmd": "/audit", "phase": null, "ref": "A-008", "status": "complete", "summary": "CSS audit: prose/table/detail vertical rhythm"}
-{"ts": "2026-08-07T20:22:42Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-046", "status": "active", "summary": "Docs TOC: drop secondary sub-lines"}
-{"ts": "2026-08-07T20:22:42Z", "type": "audit", "actor": "agent", "cmd": "/audit", "phase": null, "ref": "A-009", "status": "active", "summary": "Docs language: beginner / customer-facing Praxis guide"}
-{"ts": "2026-08-07T20:22:42Z", "type": "audit", "actor": "agent", "cmd": "/audit", "phase": null, "ref": "A-010", "status": "active", "summary": "Reconcile Praxis reality vs specs + System templates"}
-{"ts": "2026-08-07T20:24:00Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-046", "status": "complete", "summary": "Docs TOC: drop secondary sub-lines"}
-{"ts": "2026-08-07T20:28:00Z", "type": "audit", "actor": "agent", "cmd": "/audit", "phase": null, "ref": "A-009", "status": "complete", "summary": "Docs language: beginner / customer-facing Praxis guide"}
-{"ts": "2026-08-07T20:28:00Z", "type": "audit", "actor": "agent", "cmd": "/audit", "phase": null, "ref": "A-010", "status": "complete", "summary": "Reconcile Praxis reality vs specs + System templates"}
-{"ts": "2026-08-07T20:28:00Z", "type": "design", "actor": "agent", "cmd": "/design", "phase": null, "ref": "S-005", "status": "active", "summary": "Docs page = beginner Praxis guide (amend D-026)"}
-{"ts": "2026-08-07T20:32:00Z", "type": "decide", "actor": "agent", "cmd": "/design", "phase": null, "ref": "D-027", "status": "complete", "summary": "Docs beginner guide; Adv PASS"}
-{"ts": "2026-08-07T20:32:00Z", "type": "design", "actor": "agent", "cmd": "/design", "phase": null, "ref": "S-005", "status": "complete", "summary": "Docs page = beginner Praxis guide (amend D-026)"}
-{"ts": "2026-08-07T20:27:46Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-047", "status": "active", "summary": "Docs TOC: remove Guide and Praxis labels"}
-{"ts": "2026-08-07T20:28:20Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-047", "status": "complete", "summary": "Docs TOC: remove Guide and Praxis labels"}
-{"ts": "2026-08-07T20:39:51Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-048", "status": "active", "summary": "Docs: Commands overview page + handoff for multi-session phases"}
-{"ts": "2026-08-07T20:41:30Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-048", "status": "complete", "summary": "Docs: Commands overview page + handoff for multi-session phases"}
-{"ts":"2026-08-07T20:55:26Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-012","status":"complete","summary":"lanes: work — pass (typecheck+test+validate)"}
-{"ts":"2026-08-07T20:55:38Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":null,"status":"active","summary":"Reduced close: meta desk → close/* (C-012 green)"}
-{"ts":"2026-08-07T20:56:52Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-37","status":"complete","summary":"Reduced close merged PR #37 @8c88cfd; Docs home refreshed; C-012"}
-{"ts":"2026-08-07T20:56:52Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"PR-37","status":"complete","summary":"Reduced close merged PR #37 @8c88cfd; Docs home refreshed; C-012"}
-{"ts":"2026-08-08T16:26:51Z","type":"status","actor":"agent","cmd":"/status","phase":null,"ref":null,"status":"complete","summary":"No active phase; next /plan; main+docs/ssot clean @1bef091; dashboard :4317 up"}
-{"ts":"2026-08-08T16:30:52Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-006","ref":"PHASE-006","status":"complete","summary":"Phase-scoped triage via sub-agent: 0 open/active with phase PHASE-006 (EMPTY)"}
-{"ts":"2026-08-08T16:35:14Z","type":"run","actor":"agent","cmd":"/run","phase":"PHASE-006","ref":"PHASE-006","status":"active","summary":"Knowledge overhaul implemented: toolbar, Feature≠Area, phase-view detail, mock fixtures, /api/doc releases; work:test 43/43"}
-{"ts": "2026-08-07T20:41:30Z", "type": "task", "actor": "agent", "cmd": "/task", "phase": null, "ref": "T-048", "status": "complete", "summary": "Docs: Commands overview page + handoff for multi-session phases"}
-{"ts":"2026-08-08T16:40:57Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-006","ref":"T-049","status":"active","summary":"Knowledge chrome: tighter topbar, id under title, static TOC, fonts"}
-{"ts":"2026-08-08T16:44:04Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-006","ref":"T-049","status":"complete","summary":"T-049 done: compact topbar, id under title, static TOC, font hierarchy; fixed empty Knowledge detail"}
-{"ts":"2026-08-08T16:44:22Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-006","ref":"F-028","status":"active","summary":"Knowledge page leaked under other pages (.page-knowledge display:flex vs hidden)"}
-{"ts":"2026-08-08T16:46:30Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-006","ref":"F-028","status":"complete","summary":"F-028: .page[hidden] forces display:none; Knowledge no longer under Work/Active; work:test 43/43"}
-{"ts":"2026-08-08T16:48:43Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-006","ref":"T-050","status":"active","summary":"Knowledge TOC: remove Documents; PRODUCT secondary = PRODUCT · active"}
-{"ts":"2026-08-08T16:49:30Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-006","ref":"T-050","status":"complete","summary":"T-050: Documents TOC label removed; PRODUCT secondary = PRODUCT · active"}
-{"ts":"2026-08-08T16:53:23Z","type":"audit","actor":"agent","cmd":"/audit","phase":"PHASE-006","ref":"A-011","status":"active","summary":"Product Status glance vs Feature/Area (seams)"}
-{"ts":"2026-08-08T16:53:23Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-006","ref":"F-029","status":"active","summary":"Rename Last amended → Amended; Product glance parity"}
-{"ts":"2026-08-08T16:53:23Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-006","ref":"F-030","status":"active","summary":"Knowledge nested double-scroll"}
-{"ts":"2026-08-08T16:57:38Z","type":"audit","actor":"agent","cmd":"/audit","phase":"PHASE-006","ref":"A-011","status":"complete","summary":"A-011: Product glance misaligned vs Feature; slot parity + scroll notes"}
-{"ts":"2026-08-08T16:57:38Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-006","ref":"F-029","status":"complete","summary":"F-029: Amended label; Product glance slot parity; Version proxy tooltip"}
-{"ts":"2026-08-08T16:57:38Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-006","ref":"F-030","status":"complete","summary":"F-030: viewport-locked Knowledge scroll; single .knowledge-doc pane"}
-{"ts":"2026-08-08T17:01:15Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-006","ref":"T-051","status":"active","summary":"Knowledge document titles larger for readability"}
-{"ts":"2026-08-08T17:01:30Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-006","ref":"T-051","status":"complete","summary":"T-051: Knowledge detail titles 26px; TOC primary --fs-base; ?v=phase006-11"}
-{"ts":"2026-08-08T17:02:20Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-006","ref":"T-051","status":"complete","summary":"T-051 tweak: Knowledge detail titles 24px (?v=phase006-12)"}
-{"ts":"2026-08-08T17:17:54Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-006","ref":"PHASE-006","status":"complete","summary":"Phase-scoped triage via sub-agent: 0 open/active with phase PHASE-006 (EMPTY); 7 done rows left untouched"}
-{"ts":"2026-08-08T17:19:14Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-006","ref":"C-013","status":"active","summary":"close work-lane: typecheck → test → validate"}
-{"ts":"2026-08-08T17:19:21Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-006","ref":"C-013","status":"complete","summary":"C-013 PASS work: typecheck+test+validate"}
-{"ts":"2026-08-08T17:19:47Z","type":"audit","actor":"agent","cmd":"/close","phase":"PHASE-006","ref":"PHASE-006","status":"complete","summary":"Adv PASS after RELEASE-000 fixture; founder visual ack via session UI iteration; C-013 green"}
-{"ts":"2026-08-08T17:19:47Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-006","ref":"PHASE-006","status":"active","summary":"Publishing PHASE-006 Knowledge overhaul via close/*"}
-{"ts":"2026-08-08T17:21:29Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-006","ref":"PHASE-006","status":"complete","summary":"Merged PR #39 bc8e91f; docs home on docs/ssot; phase/006 worktree removed"}
-{"ts":"2026-08-08T17:30:36Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-052","status":"active","summary":"Knowledge detail: id+copy beside title (not below)"}
-{"ts":"2026-08-08T17:31:20Z","type":"task","actor":"agent","cmd":"/task","phase":null,"ref":"T-052","status":"complete","summary":"T-052: Knowledge title row = title + id/copy; outcome below (?v=t052-1)"}
-{"ts":"2026-08-08T17:34:54Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"T-052","status":"active","summary":"Reduced close: Knowledge title+id row (T-052)"}
-{"ts":"2026-08-08T17:34:54Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-014","status":"active","summary":"reduced close work-lane"}
-{"ts":"2026-08-08T17:35:01Z","type":"check","actor":"agent","cmd":"/check","phase":null,"ref":"C-014","status":"complete","summary":"C-014 PASS work: typecheck+test+validate"}
-{"ts":"2026-08-08T17:36:11Z","type":"close","actor":"agent","cmd":"/close","phase":null,"ref":"T-052","status":"complete","summary":"Merged PR #41 reduced close T-052; docs home refreshed"}
-{"ts":"2026-08-08T17:42:30Z","type":"run","actor":"agent","cmd":"/run","phase":"PHASE-008","ref":"PHASE-008","status":"active","summary":"Activated PHASE-008 (proposed→active via founder /run); branch phase/008-spec-artifact-research + worktree; phase triage then research panel"}
-{"ts":"2026-08-08T17:42:55Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-008","ref":"PHASE-008","status":"complete","summary":"Phase-scoped triage via sub-agent: 0 open/active/blocked with phase PHASE-008 (EMPTY)"}
-{"ts":"2026-08-08T17:45:00Z","type":"research","actor":"agent","cmd":"/research","phase":"PHASE-008","ref":"R-004","status":"active","summary":"Start artifact-mold research panel R-004"}
-{"ts":"2026-08-08T17:50:00Z","type":"research","actor":"agent","cmd":"/research","phase":"PHASE-008","ref":"R-004","status":"blocked","summary":"R-004 Adv PASS; paused for founder ack on verdict + decision wording"}
-{"ts":"2026-08-08T18:08:00Z","type":"design","actor":"agent","cmd":"/design","phase":"PHASE-008","ref":"S-006","status":"active","summary":"Start mold lock from R-004 (D-028/D-029/D-030)"}
-{"ts":"2026-08-08T18:18:00Z","type":"decide","actor":"agent","cmd":"/design","phase":"PHASE-008","ref":"D-028","status":"complete","summary":"D-028 Spec Rule grammar + stub bar"}
-{"ts":"2026-08-08T18:18:01Z","type":"decide","actor":"agent","cmd":"/design","phase":"PHASE-008","ref":"D-029","status":"complete","summary":"D-029 Product+Release template SSOT"}
-{"ts":"2026-08-08T18:18:02Z","type":"decide","actor":"agent","cmd":"/design","phase":"PHASE-008","ref":"D-030","status":"complete","summary":"D-030 Phase/Research/Decision molds unchanged"}
-{"ts":"2026-08-08T18:18:03Z","type":"design","actor":"agent","cmd":"/design","phase":"PHASE-008","ref":"S-006","status":"complete","summary":"Mold lock Adv PASS; templates+samples updated"}
-{"ts":"2026-08-08T18:18:04Z","type":"research","actor":"agent","cmd":"/research","phase":"PHASE-008","ref":"R-004","status":"complete","summary":"R-004 done; informed D-028/D-029/D-030"}
-{"ts":"2026-08-08T18:20:00Z","type":"research","actor":"agent","cmd":"/research","phase":"PHASE-008","ref":"R-005","status":"active","summary":"Start external peer-mold research for design review panel"}
-{"ts":"2026-08-08T18:20:01Z","type":"audit","actor":"agent","cmd":"/audit","phase":"PHASE-008","ref":"A-037","status":"active","summary":"Design review panel queued behind R-005"}
-{"ts":"2026-08-08T18:35:00Z","type":"research","actor":"agent","cmd":"/research","phase":"PHASE-008","ref":"R-005","status":"complete","summary":"R-005 peer molds Adv PASS; defer further field-sets (MCOO)"}
-{"ts":"2026-08-08T18:35:01Z","type":"audit","actor":"agent","cmd":"/audit","phase":"PHASE-008","ref":"A-037","status":"complete","summary":"Design review panel PASS; agree R-005 A; no mold changes now"}
-{"ts":"2026-08-08T18:15:22Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-008","ref":"C-015","status":"complete","summary":"work lane green: typecheck+test+validate (Docs/templates/research close)"}
-{"ts":"2026-08-08T18:15:31Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-008","ref":"PHASE-008","status":"complete","summary":"Phase-scoped close triage: 0 open/active/blocked with phase PHASE-008; all 4 phase rows already done (R-004,S-006,R-005,A-037); no execute; no Work blockers for close"}
-{"ts":"2026-08-08T18:17:37Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-008","ref":"PHASE-008","status":"active","summary":"Publishing PHASE-008 artifact molds via close/* (C-015 green; Adv WARN ack dispositioned; Scope WARN amends_specs fixed)"}
-{"ts":"2026-08-08T18:19:15Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-008","ref":"PHASE-008","status":"complete","summary":"Merged PR #43 824f2a0; phase/008 worktree removed; docs home on docs/ssot @ main; C-015 green"}
-{"ts":"2026-08-08T18:32:13Z","type":"audit","ref":"A-038","phase":null,"summary":"Knowledge filter/sort gap review vs table pages","status":"done"}
-{"ts":"2026-08-08T18:40:04Z","type":"design","ref":"S-007","phase":null,"summary":"Knowledge Filters panel + Status Current default","status":"active"}
-{"ts":"2026-08-08T18:40:04Z","type":"task","ref":"T-053","phase":null,"summary":"Implement Knowledge Filters panel + Status + Reset","status":"active"}
-{"ts":"2026-08-08T18:45:00Z","type":"design","ref":"S-007","phase":null,"summary":"Knowledge Filters panel + Status Current locked (Adv WARN)","status":"complete"}
-{"ts":"2026-08-08T18:45:00Z","type":"spec","ref":"SPEC-F-DEV-DASHBOARD","phase":null,"summary":"Knowledge toolbar Filters + Status rules","status":"complete"}
-{"ts":"2026-08-08T18:45:00Z","type":"task","ref":"T-053","phase":null,"summary":"Implement Knowledge Filters panel + Status + Reset","status":"complete"}
-{"ts":"2026-08-08T18:45:45Z","type":"task","ref":"T-054","phase":null,"summary":"Cap Knowledge TOC titles; shorten Research questions","status":"active"}
-{"ts":"2026-08-08T18:47:00Z","type":"task","ref":"T-054","phase":null,"summary":"Cap Knowledge TOC titles; shorten Research questions","status":"complete"}
-{"ts":"2026-08-08T18:50:46Z","type":"audit","ref":"A-039","phase":null,"summary":"Dev System docs thin/outdated inventory","status":"done"}
-{"ts":"2026-08-08T18:57:40Z","type":"task","ref":"T-055","phase":null,"summary":"Knowledge TOC 2-line clamp","status":"complete"}
-{"ts":"2026-08-08T21:56:56Z","type":"task","ref":"T-056","phase":null,"summary":"Knowledge TOC hairline dividers","status":"complete"}
-{"ts":"2026-08-08T21:56:56Z","type":"plan","ref":"PHASE-009","phase":"PHASE-009","summary":"Onboard Praxis Features + Active chrome as next phase","status":"complete"}
-{"ts":"2026-08-08T22:03:29Z","type":"design","ref":"S-008","phase":"PHASE-009","summary":"Spec Active Work write-gate hook","status":"active"}
-{"ts":"2026-08-08T22:05:00Z","type":"spec","ref":"SPEC-F-PRAXIS-ACTIVE-FLUSH","phase":"PHASE-009","summary":"Active Work write gate Spec locked (S-008 Adv PASS)","status":"complete"}
-{"ts":"2026-08-08T22:05:00Z","type":"design","ref":"S-008","phase":"PHASE-009","summary":"SPEC-F-PRAXIS-ACTIVE-FLUSH locked","status":"complete"}
-{"ts":"2026-08-08T22:05:00Z","type":"log","ref":"T-057","phase":"PHASE-009","summary":"Parked ship Active-flush hook + Adv","status":"complete"}
-{"ts":"2026-08-08T22:06:30Z","type":"check","ref":"C-016","phase":null,"summary":"reduced close work-lane: typecheck → test → validate","status":"active","cmd":"/check"}
-{"ts":"2026-08-08T22:06:50Z","type":"check","ref":"C-016","phase":null,"summary":"C-016 PASS work: typecheck+test+validate","status":"complete","cmd":"/check"}
-{"ts":"2026-08-08T22:06:50Z","type":"check","ref":"C-016","phase":null,"summary":"C-016 PASS work: typecheck+test+validate","status":"complete","cmd":"/check"}
-{"ts":"2026-08-08T22:07:00Z","type":"close","ref":null,"phase":null,"summary":"reduced close inventory: meta docs/ssot dirty; no product desk; C-016 PASS","status":"active","cmd":"/close"}
-{"ts":"2026-08-08T22:08:30Z","type":"close","ref":null,"phase":null,"summary":"reduced close MERGED PR #46 @390922f; C-016 PASS; next /run PHASE-009","status":"complete","cmd":"/close"}
-{"ts":"2026-08-08T22:08:30Z","type":"close","ref":null,"phase":null,"summary":"reduced close MERGED PR #46 @390922f; C-016 PASS; next /run PHASE-009","status":"complete","cmd":"/close"}
-{"ts":"2026-08-08T22:09:33Z","type":"task","ref":"T-057","phase":"PHASE-009","summary":"Re-flush active after Docs-home refresh wiped ledger; continue Active-flush hook","status":"active","cmd":"/task"}
-{"ts":"2026-08-08T22:10:46Z","type":"task","ref":"T-057","phase":"PHASE-009","summary":"Shipped Active-flush hook; Adv FAIL→PASS; desk task/t-057-active-flush-hook","status":"complete","cmd":"/task"}
-{"ts":"2026-08-08T22:13:19Z","type":"task","ref":"T-057","phase":"PHASE-009","summary":"Live proof: Cursor preToolUse denied Write with zero active; probe file absent","status":"complete","cmd":"/task"}
-{"ts":"2026-08-08T22:19:36Z","type":"run","ref":"PHASE-009","phase":"PHASE-009","summary":"Activate + /run PHASE-009 Praxis Features and Active chrome","status":"active","cmd":"/run"}
-{"ts":"2026-08-08T22:19:36Z","type":"task","ref":"T-058","phase":"PHASE-009","summary":"Execute PHASE-009 — unlock Active-flush + run outcome","status":"active","cmd":"/run"}
-{"ts":"2026-08-08T22:20:54Z","type":"triage","ref":"PHASE-009","phase":"PHASE-009","summary":"Phase-scoped triage: W-015 leave; T-058 leave; T-057 done (hooks untracked on phase+task desks — publish still needed); S-008 done skipped; no auto-exec","status":"complete","cmd":"/triage"}
-{"ts":"2026-08-08T22:24:06Z","type":"run","ref":"PHASE-009","phase":"PHASE-009","summary":"Praxis specs split + Active badge/tabs UI + system.md; validate ok","status":"active","cmd":"/run"}
-{"ts":"2026-08-08T22:37:33Z","type":"audit","ref":"A-040","phase":"PHASE-009","summary":"Adv audit Praxis specs — active","status":"active","cmd":"/audit"}
-{"ts":"2026-08-08T22:37:33Z","type":"audit","ref":"A-041","phase":"PHASE-009","summary":"Gap scan missing core Specs — active","status":"active","cmd":"/audit"}
-{"ts":"2026-08-08T22:38:17Z","type":"audit","ref":"A-040","phase":"PHASE-009","summary":"Adv WARN on Praxis specs — decision frontmatter + one-active vs tabs","status":"complete","cmd":"/audit"}
-{"ts":"2026-08-08T22:38:17Z","type":"audit","ref":"A-041","phase":"PHASE-009","summary":"Gap scan: Translation + content-pipeline Spec candidates; Praxis covered","status":"complete","cmd":"/audit"}
-{"ts":"2026-08-08T22:38:28Z","type":"audit","ref":"A-040","phase":"PHASE-009","summary":"Adv WARN on Praxis specs — decision frontmatter + one-active vs tabs","status":"complete","cmd":"/audit"}
-{"ts":"2026-08-08T22:38:28Z","type":"audit","ref":"A-041","phase":"PHASE-009","summary":"Gap scan: Translation + content-pipeline Spec candidates; Praxis covered","status":"complete","cmd":"/audit"}
-{"ts":"2026-08-08T22:39:13Z","type":"design","ref":"S-009","phase":"PHASE-009","summary":"Active page shows active Work with phase-style chrome","status":"active","cmd":"/design"}
-{"ts":"2026-08-08T22:39:53Z","type":"spec","ref":"SPEC-F-PRAXIS-ACTIVE","phase":"PHASE-009","summary":"Active page tabs include status:active Work (S-009)","status":"complete","cmd":"/design"}
-{"ts":"2026-08-08T22:44:57Z","type":"task","ref":"T-058","phase":"PHASE-009","summary":"Deleted mock PHASE-099 fixture from Roadmap","status":"complete","cmd":"/task"}
-{"ts":"2026-08-08T22:45:42Z","type":"close","ref":"PHASE-009","phase":"PHASE-009","summary":"Full close start — PHASE-009 active; inventory dual desks","status":"active","cmd":"/close"}
-{"ts":"2026-08-08T22:46:30Z","type":"triage","ref":"PHASE-009","phase":"PHASE-009","summary":"Phase triage: 7 rows leave; close blocked on T-058 + visual accept + dirty Docs-home","status":"complete","cmd":"/triage"}
-{"ts":"2026-08-08T22:46:35Z","type":"check","ref":"C-017","phase":"PHASE-009","summary":"close work-lane: typecheck → test → validate","status":"active","cmd":"/check"}
-{"ts":"2026-08-08T22:47:10Z","type":"check","ref":"C-017","phase":"PHASE-009","summary":"C-017 PASS work: typecheck+test(46)+validate","status":"complete","cmd":"/check"}
-{"ts":"2026-08-08T22:47:15Z","type":"close","ref":"PHASE-009","phase":"PHASE-009","summary":"Proof FAIL — founder visual accept pending; no merge","status":"failed","cmd":"/close"}
-{"ts":"2026-08-08T22:56:57Z","type":"design","ref":"S-010","phase":"PHASE-009","summary":"Scoped handoffs — active design","status":"active","cmd":"/design"}
-{"ts":"2026-08-08T22:58:34Z","type":"design","actor":"agent","cmd":"/design","phase":"PHASE-009","ref":"S-010","status":"complete","summary":"D-031 scoped handoffs: ref required; Active matches tab"}
-{"ts":"2026-08-08T22:59:28Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-009","ref":"F-031","status":"active","summary":"Phase Git glance uses docs/ssot not phase worktree"}
-{"ts":"2026-08-08T23:00:34Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-009","ref":"F-031","status":"complete","summary":"Phase Git glance uses phase worktree not docs/ssot"}
-{"ts": "2026-08-08T23:02:11Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": "PHASE-009", "ref": "F-032", "status": "active", "summary": "Plan section soft-wrap/row chrome broken on Active"}
-{"ts": "2026-08-08T23:04:14Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": "PHASE-009", "ref": "F-032", "status": "complete", "summary": "Plan section plain list + soft-wrap fix"}
-{"ts":"2026-08-08T23:04:24Z","type":"task","actor":"agent","cmd":"/task","phase":"PHASE-009","ref":"T-058","status":"complete","summary":"Remove Signals+Amends from phase Status glance"}
-{"ts": "2026-08-08T23:04:49Z", "type": "fix", "actor": "agent", "cmd": "/fix", "phase": "PHASE-009", "ref": "F-033", "status": "active", "summary": "Specs amended inline codes \u2192 Files-style list"}
-{"ts":"2026-08-08T23:04:53Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-009","ref":"F-033","status":"active","summary":"Active badge should count active Work tabs"}
-{"ts":"2026-08-08T23:05:13Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-009","ref":"F-033","status":"complete","summary":"Specs amended Files-style list (lease release)"}
-{"ts":"2026-08-08T23:05:13Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-009","ref":"F-034","status":"active","summary":"Active badge should count active Work tabs"}
-{"ts":"2026-08-08T23:05:30Z","type":"fix","actor":"agent","cmd":"/fix","phase":"PHASE-009","ref":"F-034","status":"complete","summary":"Active badge counts phases + active Work"}
-{"ts":"2026-08-08T23:08:30Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-009","ref":"PHASE-009","status":"complete","summary":"Phase triage: W-015 leave (proposal); T-058 done (outcome ready, /close in progress); no other open|active"}
-{"ts":"2026-08-08T23:08:52Z","type":"task","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"T-059","status":"active","summary":"Close PHASE-009 unlock + publish"}
-{"ts":"2026-08-08T23:08:57Z","type":"check","actor":"agent","cmd":"/check","phase":"PHASE-009","ref":"C-018","status":"complete","summary":"work:typecheck+test+validate PASS"}
-{"ts":"2026-08-08T23:10:34Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"PHASE-009","status":"active","summary":"Full close start — triage ok; C-018 PASS; Adv WARN fixed; publishing desks"}
-{"ts":"2026-08-08T23:10:50Z","type":"task","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"T-059","status":"active","summary":"Re-activate for close publish writes"}
-{"ts":"2026-08-08T23:13:08Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"PHASE-009","status":"complete","summary":"Merged #48+#49 → 1462504; desks cleaned; docs/ssot @ main"}
-{"ts":"2026-08-08T23:13:20Z","type":"close","actor":"agent","cmd":"/close","phase":"PHASE-009","ref":"PHASE-009","status":"complete","summary":"Final handoff after #48+#49 merge 1462504"}
-{"ts":"2026-08-08T23:14:00Z","type":"close","ref":null,"phase":null,"summary":"Reduced close — leftover close/009-journal handoff after PHASE-009","status":"active","cmd":"/close"}
-{"ts":"2026-08-08T23:14:05Z","type":"check","ref":"C-019","phase":null,"summary":"journal desk work-lane validate","status":"active","cmd":"/check"}
-{"ts":"2026-08-08T23:14:10Z","type":"check","ref":"C-019","phase":null,"summary":"C-019 PASS work:validate","status":"complete","cmd":"/check"}
-{"ts":"2026-08-08T23:14:45Z","type":"close","ref":null,"phase":null,"summary":"Reduced close MERGED PR #51 journal; docs/ssot @ f4e9832; PHASE-009 already closed via #48+#49","status":"complete","cmd":"/close"}
-{"ts":"2026-08-08T23:20:05Z","type":"capture","ref":"P-002","phase":"PHASE-010","summary":"Active Work for /plan PHASE-010 Praxis productization","status":"active","cmd":"/plan"}
-{"ts":"2026-08-08T23:21:00Z","type":"research","ref":"R-006","phase":"PHASE-010","summary":"R-006 productize Praxis extension+CLI; ADV WARN","status":"complete","cmd":"/plan"}
-{"ts":"2026-08-08T23:21:10Z","type":"decide","ref":"D-032","phase":"PHASE-010","summary":"D-032–D-045 Praxis productization decisions from R-006","status":"complete","cmd":"/plan"}
-{"ts":"2026-08-08T23:21:20Z","type":"plan","ref":"PHASE-010","phase":"PHASE-010","summary":"PHASE-010 ready — Praxis productization design; from P-002","status":"complete","cmd":"/plan"}
-{"ts":"2026-08-08T23:22:05Z","type":"task","ref":"T-061","phase":"PHASE-010","summary":"Active for HANDOFF write after /plan","status":"active","cmd":"/plan"}
-{"ts":"2026-08-08T23:22:30Z","type":"task","ref":"T-061","phase":"PHASE-010","summary":"HANDOFF after /plan PHASE-010","status":"complete","cmd":"/plan"}
-{"ts":"2026-08-08T23:27:01Z","type":"task","ref":"T-062","phase":null,"summary":"Active — swap Roadmap blocked/canceled chip colors","status":"active","cmd":"/task"}
-{"ts":"2026-08-08T23:27:45Z","type":"task","ref":"T-062","phase":null,"summary":"Swapped Roadmap blocked/canceled chip colors","status":"complete","cmd":"/task"}
-{"ts":"2026-08-08T23:35:05Z","type":"capture","ref":"P-003","phase":"PHASE-011","summary":"Active Work /plan PHASE-011 extract Praxis.v2 + auth/web seed","status":"active","cmd":"/plan"}
-{"ts":"2026-08-08T23:32:01Z","type":"task","ref":"T-063","phase":null,"summary":"Active — add Active status filter on Work page","status":"active","cmd":"/task"}
-{"ts":"2026-08-08T23:33:00Z","type":"task","ref":"T-063","phase":null,"summary":"Added Active status filter chip on Work page","status":"complete","cmd":"/task"}
-{"ts":"2026-08-08T23:36:00Z","type":"decide","ref":"D-046","phase":"PHASE-010","summary":"D-046–D-048 web/auth + Praxis.v2 extract","status":"complete","cmd":"/plan"}
-{"ts":"2026-08-08T23:36:10Z","type":"plan","ref":"PHASE-011","phase":"PHASE-011","summary":"PHASE-011 ready extract Praxis.v2; PHASE-010 rewired depends_on","status":"complete","cmd":"/plan"}
-{"ts":"2026-08-08T23:40:05Z","type":"task","ref":"T-062","phase":"PHASE-010","summary":"Active — seed distribution + UI combo into PHASE-010","status":"active","cmd":"/task"}
-{"ts":"2026-08-08T23:41:00Z","type":"decide","ref":"D-049","phase":"PHASE-010","summary":"D-049 distribution Extension|CLI not web-only IDE","status":"complete","cmd":"/task"}
-{"ts":"2026-08-08T23:41:05Z","type":"task","ref":"T-062","phase":"PHASE-010","summary":"PHASE-010 distribution + UI combo seed","status":"complete","cmd":"/task"}
-{"ts":"2026-08-08T23:39:17Z","type":"task","ref":"T-064","phase":null,"summary":"Active — ready green / closed grey","status":"active","cmd":"/task"}
-{"ts":"2026-08-08T23:39:50Z","type":"task","ref":"T-064","phase":null,"summary":"ready green / closed grey on Roadmap + Work Closed chip","status":"complete","cmd":"/task"}
-{"ts":"2026-08-08T23:41:00Z","type":"audit","ref":"A-042","phase":null,"summary":"Active — Kind chips color design review","status":"active","cmd":"/audit"}
-{"ts":"2026-08-08T23:42:30Z","type":"audit","ref":"A-042","phase":null,"summary":"Kind chips color design review complete","status":"complete","cmd":"/audit"}
-{"ts":"2026-08-08T23:50:05Z","type":"task","ref":"T-063","phase":"PHASE-010","summary":"Active — correct PHASE-010 chat-primary UX seed","status":"active","cmd":"/task"}
-{"ts":"2026-08-08T23:51:00Z","type":"decide","ref":"D-050","phase":"PHASE-010","summary":"D-050 native chat trigger; panels projection; supersedes D-039","status":"complete","cmd":"/task"}
-{"ts":"2026-08-08T23:51:05Z","type":"task","ref":"T-063","phase":"PHASE-010","summary":"PHASE-010 UX seed corrected","status":"complete","cmd":"/task"}
-{"ts":"2026-08-08T23:55:05Z","type":"task","ref":"T-064","phase":"PHASE-010","summary":"Active — auto/manual routing + hooks install seed","status":"active","cmd":"/task"}
-{"ts":"2026-08-08T23:56:00Z","type":"decide","ref":"D-051","phase":"PHASE-010","summary":"D-051 Auto/Manual routing; D-052 hooks install path","status":"complete","cmd":"/task"}
-{"ts":"2026-08-08T23:56:05Z","type":"task","ref":"T-064","phase":"PHASE-010","summary":"PHASE-010 auto/manual + hooks install seeded","status":"complete","cmd":"/task"}
-{"ts":"2026-08-09T00:00:05Z","type":"task","ref":"T-065","phase":"PHASE-010","summary":"Active — host install format + model routing seed","status":"active","cmd":"/task"}
-{"ts":"2026-08-09T00:01:00Z","type":"decide","ref":"D-053","phase":"PHASE-010","summary":"D-053 host adapters; D-054 action→model routing","status":"complete","cmd":"/task"}
-{"ts":"2026-08-09T00:01:05Z","type":"task","ref":"T-065","phase":"PHASE-010","summary":"PHASE-010 model routing + host install seeded","status":"complete","cmd":"/task"}
-{"ts":"2026-08-09T00:05:05Z","type":"task","ref":"T-066","phase":"PHASE-010","summary":"Active — model list dashboard projection seed","status":"active","cmd":"/task"}
-{"ts":"2026-08-09T00:06:00Z","type":"decide","ref":"D-055","phase":"PHASE-010","summary":"D-055 project models into Dashboard via CLI/LM bridge","status":"complete","cmd":"/task"}
-{"ts":"2026-08-09T00:06:05Z","type":"task","ref":"T-066","phase":"PHASE-010","summary":"PHASE-010 models list + IDE detect seeded","status":"complete","cmd":"/task"}
-{"ts":"2026-08-09T00:04:29Z","type":"task","ref":"T-067","phase":null,"summary":"Active — neutral Kind pills","status":"active","cmd":"/task"}
-{"ts":"2026-08-09T00:05:20Z","type":"task","ref":"T-067","phase":null,"summary":"Neutral Kind pills shipped","status":"complete","cmd":"/task"}
-{"ts":"2026-08-09T00:06:25Z","type":"task","ref":"T-068","phase":null,"summary":"Active — Kind colors + Settings color mode","status":"active","cmd":"/task"}
-{"ts":"2026-08-09T00:11:32Z","type":"task","ref":"T-069","phase":null,"summary":"Active — /task same vs fresh Work id rule","status":"active","cmd":"/task"}
-{"ts":"2026-08-09T00:12:10Z","type":"task","ref":"T-069","phase":null,"summary":"/task same vs fresh Work id rule","status":"complete","cmd":"/task"}
-{"ts":"2026-08-09T00:13:50Z","type":"task","ref":"T-068","phase":null,"summary":"Kind colors + Settings color mode shipped","status":"complete","cmd":"/task"}
-{"ts":"2026-08-09T00:15:05Z","type":"task","ref":"T-067","phase":"PHASE-010","summary":"Active — runner availability probe seed","status":"active","cmd":"/task"}
-{"ts":"2026-08-09T00:16:00Z","type":"decide","ref":"D-056","phase":"PHASE-010","summary":"D-056 runner availability PATH+auth probe","status":"complete","cmd":"/task"}
-{"ts":"2026-08-09T00:16:05Z","type":"task","ref":"T-067","phase":"PHASE-010","summary":"PHASE-010 runner discovery clarified in seed","status":"complete","cmd":"/task"}
-{"ts":"2026-08-09T00:14:45Z","type":"fix","ref":"F-035","phase":null,"summary":"Active Work F-035 Active empty Nothing in flight","status":"active","cmd":"/fix"}
-{"ts":"2026-08-09T00:15:20Z","type":"fix","ref":"F-035","phase":null,"summary":"F-035 done: removed Nothing in flight; ready shows id","status":"done","cmd":"/fix"}
-{"ts":"2026-08-09T00:16:34Z","type":"fix","ref":"F-036","phase":null,"summary":"Active — unify Kind/Status chips, remove dot","status":"active","cmd":"/fix"}
-{"ts":"2026-08-09T00:17:40Z","type":"fix","ref":"F-036","phase":null,"summary":"Unified Kind/Status chips; removed status dot","status":"complete","cmd":"/fix"}
-{"ts":"2026-08-09T00:18:19Z","type":"fix","ref":"F-037","phase":null,"summary":"Active — Kind chip palette: no cyan; split close/ship","status":"active","cmd":"/fix"}
-{"ts":"2026-08-09T00:19:20Z","type":"fix","ref":"F-037","phase":null,"summary":"Kind chip palette: no cyan; close vs ship split","status":"complete","cmd":"/fix"}
-{"ts":"2026-08-09T00:19:30Z","type":"fix","ref":"F-037","phase":null,"summary":"Re-active — finish SHELL chip palette rule","status":"active","cmd":"/fix"}
-{"ts":"2026-08-09T00:19:45Z","type":"fix","ref":"F-037","phase":null,"summary":"Kind chip palette: no cyan; close vs ship split","status":"complete","cmd":"/fix"}
-{"ts":"2026-08-09T00:19:05Z","type":"fix","ref":"F-036","phase":null,"summary":"Active Work F-036 empty Active no ready-phase header","status":"active","cmd":"/fix"}
-{"ts":"2026-08-09T00:19:40Z","type":"fix","ref":"F-036","phase":null,"summary":"F-036 done: empty Active Nothing active + Next ready id only","status":"done","cmd":"/fix"}
-{"ts":"2026-08-09T00:19:43Z","type":"fix","ref":"F-038","phase":null,"summary":"Active — remove chip perimeter border","status":"active","cmd":"/fix"}
-{"ts":"2026-08-09T00:20:10Z","type":"fix","ref":"F-038","phase":null,"summary":"Removed chip perimeter border","status":"complete","cmd":"/fix"}
-{"ts":"2026-08-09T00:21:00Z","type":"check","ref":"C-020","phase":null,"summary":"C-020 work lane for reduced close","status":"running","cmd":"/check"}
-{"ts":"2026-08-09T00:21:30Z","type":"check","ref":"C-020","phase":null,"summary":"C-020 work lane PASS typecheck+test+validate (docs home)","status":"complete","cmd":"/check"}
-{"ts":"2026-08-09T00:20:50Z","type":"check","ref":"C-021","phase":null,"summary":"/close reduced — work lane starting","status":"active","cmd":"/check"}
-{"ts":"2026-08-09T00:21:20Z","type":"check","ref":"C-021","phase":null,"summary":"work lane green: typecheck + test 51/51 + validate","status":"complete","cmd":"/check"}
-{"ts":"2026-08-09T00:22:05Z","type":"task","ref":"T-070","phase":null,"summary":"Active Work T-070 reduced close publish","status":"active","cmd":"/close"}
-{"ts":"2026-08-09T00:22:06Z","type":"fix","ref":"F-039","phase":null,"summary":"Renumber Active-empty fix F-036→F-039 (chip F-036 collision)","status":"done","cmd":"/close"}
-{"ts":"2026-08-09T00:22:30Z","type":"close","ref":"T-070","phase":null,"summary":"Reduced close publish Docs-home F-039 Active empty + Praxis plan seed","status":"complete","cmd":"/close"}
-{"ts":"2026-08-09T00:21:44Z","type":"task","ref":"T-070","phase":null,"summary":"Active — close handoff","status":"active","cmd":"/close"}
-{"ts":"2026-08-09T00:21:44Z","type":"task","ref":"T-070","phase":null,"summary":"Close handoff written","status":"complete","cmd":"/close"}
-{"ts":"2026-08-09T00:22:30Z","type":"task","ref":"T-071","phase":null,"summary":"Deduped T-070→T-071 close handoff row","status":"complete","cmd":"/close"}
-{"ts":"2026-08-09T00:23:14Z","type":"task","ref":"T-072","phase":null,"summary":"Active — journal close PR 53","status":"active","cmd":"/close"}
-{"ts":"2026-08-09T00:23:14Z","type":"close","ref":"T-072","phase":null,"summary":"Reduced close merged PR #53 a385186 — chip UI + Settings + phase seeds; next /run PHASE-011","status":"complete","cmd":"/close"}
-{"ts":"2026-08-09T17:04:06Z","type":"log","ref":"S-011","phase":null,"summary":"Park S-011 dashboard table soft-cap design","status":"open","cmd":"/log"}
-{"ts":"2026-08-09T17:04:06Z","type":"log","ref":"T-073","phase":null,"summary":"Park T-073 deferred soft render cap task","status":"open","cmd":"/log"}
-{"ts":"2026-08-09T17:05:33Z","type":"check","ref":"C-022","phase":null,"summary":"C-022 work lane reduced close S-011/T-073","status":"running","cmd":"/check"}
-{"ts":"2026-08-09T17:05:30Z","type":"run","ref":"PHASE-011","phase":"PHASE-011","summary":"Activate + /run PHASE-011 Extract Praxis to Praxis.v2","status":"active","cmd":"/run"}
-{"ts":"2026-08-09T17:05:30Z","type":"task","ref":"T-074","phase":"PHASE-011","summary":"Execute PHASE-011 — extract Praxis to Praxis.v2","status":"active","cmd":"/run"}
-{"ts":"2026-08-09T17:05:48Z","type":"check","ref":"C-022","phase":null,"summary":"C-022 work lane PASS","status":"complete","cmd":"/check"}
-{"ts":"2026-08-09T17:05:48Z","type":"close","ref":"T-074","phase":null,"summary":"Reduced close publish S-011 T-073 park","status":"complete","cmd":"/close"}
-{"ts":"2026-08-09T17:09:26Z","type":"run","ref":"PHASE-011","phase":"PHASE-011","summary":"Praxis.v2 extract proved (validate/test/dashboard); AIdioma consumer stubs; phase branch committed","status":"active","cmd":"/run"}
-{"ts":"2026-08-09T17:38:35Z","type":"run","ref":"PHASE-011","phase":"PHASE-011","summary":"Dual Praxis projects separated + D-057 ports; both validate 0 issues; concurrent dashboards proved","status":"active","cmd":"/run"}
-{"ts":"2026-08-09T17:55:00Z","type":"triage","actor":"agent","cmd":"/triage","phase":"PHASE-011","ref":"PHASE-011","status":"complete","summary":"Phase-scoped close triage: reviewed T-074 (active→leave until /close), P-003 (promoted→leave); no other open|active phase:PHASE-011; no auto /fix|/task; no Work blockers for close"}
-{"ts":"2026-08-09T17:56:17Z","type":"check","ref":"C-023","phase":"PHASE-011","summary":"C work lane PASS typecheck+test+validate","status":"complete","cmd":"/check"}
-{"ts":"2026-08-09T17:58:45Z","type":"audit","ref":"PHASE-011","phase":"PHASE-011","summary":"Required Adv WARN — dual System fork + residuals documented; founder ack via dual-instance completion bar","status":"complete","cmd":"/close"}
-{"ts":"2026-08-09T17:58:55Z","type":"close","ref":"PHASE-011","phase":"PHASE-011","summary":"Closing PHASE-011 — dual desk publish","status":"active","cmd":"/close"}
+{"ts":"2026-08-23T18:30:17.141Z","type":"init","ref":"praxis-d4768a5b8f306f6e","summary":"Initialized the local Praxis state authority.","actor":"human","cmd":"praxis init","phase":null,"status":"complete"}
+{"ts":"2026-08-24T15:13:19.630Z","type":"task","ref":"T-001","summary":"Created and claimed T-001 — Complete AIdioma Praxis V2 cutover","actor":"cli","cmd":"/task","phase":null,"status":"active"}
+{"ts":"2026-08-24T15:13:57.536Z","type":"hooks","ref":"cursor","summary":"Cursor adapter reached the shared Praxis gate in a live probe.","actor":"cli","cmd":"praxis hooks on","phase":null,"status":"complete"}
+{"ts":"2026-08-24T15:14:14.315Z","type":"hooks","ref":"codex","summary":"Codex adapter reached the shared gate directly; review and trust the exact hook, then produce a real Codex event.","actor":"cli","cmd":"praxis hooks on","phase":null,"status":"warn"}
+{"ts":"2026-08-24T15:14:17.932Z","type":"hooks","ref":"claude-code","summary":"Claude Code adapter reached the shared gate directly; produce a real Claude Code file-tool event before enforcement is claimed.","actor":"cli","cmd":"praxis hooks on","phase":null,"status":"warn"}
+{"ts":"2026-08-24T15:16:08.686Z","type":"gate","ref":"codex","summary":"Allowed by 1 active Work item.","actor":"codex","cmd":"praxis gate active-flush","phase":null,"status":"complete","evidence":{"allowed":true,"path":"AGENTS.md","revision":6}}
+{"ts":"2026-08-24T15:16:17.221Z","type":"check","ref":"C-001","summary":"Praxis V2 cutover verification passed","actor":"cli","cmd":"/check","phase":null,"status":"complete","evidence":{"kind":"check_receipt","result":"pass","detail":{"doctor":"pass","schemaVersion":6,"writerAuthority":"sqlite","cursorAdapter":"enforced","localCli":"0.1.0-alpha.2","rollbackBackup":".praxis/backups/state-r2.sqlite","staleCursorGateRemoved":true,"staleSkillsRemoved":10}}}
+{"ts":"2026-08-24T15:16:21.032Z","type":"close","ref":"T-001","summary":"Closed T-001 from a host session with live gate proof.","actor":"cli","cmd":"/close","phase":null,"status":"complete","evidence":{"hostSession":true,"proofCount":1}}
+{"ts":"2026-08-24T15:17:51.979Z","type":"task","ref":"T-002","summary":"Parked T-002 — Marketable MVP product contract","actor":"cli","cmd":"/plan","phase":null,"status":"open"}
+{"ts":"2026-08-24T15:17:51.979Z","type":"plan","ref":"PHASE-001","summary":"Created ready PHASE-001 — Marketable MVP product contract.","actor":"cli","cmd":"/plan","phase":"PHASE-001","status":"complete"}
+{"ts":"2026-08-24T15:18:24.700Z","type":"task","ref":"T-003","summary":"Created and claimed T-003 — Define dialect-aware content authority","actor":"cli","cmd":"/plan","phase":null,"status":"active"}
+{"ts":"2026-08-24T15:18:32.463Z","type":"gate","ref":"codex","summary":"Allowed by 1 active Work item.","actor":"codex","cmd":"praxis gate active-flush","phase":null,"status":"complete","evidence":{"allowed":true,"path":"Docs/Specs/Features/SPEC-F-CONTENT-PIPELINE.md","revision":11}}
+{"ts":"2026-08-24T15:18:33.400Z","type":"check","ref":"C-002","summary":"Dialect-aware content authority contract projected","actor":"cli","cmd":"/check","phase":null,"status":"complete","evidence":{"kind":"check_receipt","result":"pass","detail":{"feature":"SPEC-F-CONTENT-PIPELINE","area":"SPEC-A-CONTENT","dialects":["es-AR","es-419","es-ES"],"publicationFailsClosed":true}}}
+{"ts":"2026-08-24T15:18:34.458Z","type":"close","ref":"T-003","summary":"Closed T-003 from a host session with live gate proof.","actor":"cli","cmd":"/close","phase":null,"status":"complete","evidence":{"hostSession":true,"proofCount":1}}
+{"ts":"2026-08-24T15:18:39.411Z","type":"run","ref":"T-002","summary":"Accepted /run for PHASE-001.","actor":"cli","cmd":"/run","phase":"PHASE-001","status":"active"}
+{"ts":"2026-08-24T15:19:38.237Z","type":"gate","ref":"codex","summary":"Allowed by 1 active Work item.","actor":"codex","cmd":"praxis gate active-flush","phase":null,"status":"complete","evidence":{"allowed":true,"path":"Docs/PRODUCT.md","revision":15}}
+{"ts":"2026-08-24T15:19:38.692Z","type":"gate","ref":"codex","summary":"Allowed by 1 active Work item.","actor":"codex","cmd":"praxis gate active-flush","phase":null,"status":"complete","evidence":{"allowed":true,"path":"Docs/DECISIONS.md","revision":16}}
+{"ts":"2026-08-24T15:19:39.155Z","type":"gate","ref":"codex","summary":"Allowed by 1 active Work item.","actor":"codex","cmd":"praxis gate active-flush","phase":null,"status":"complete","evidence":{"allowed":true,"path":"Docs/Research/R-003-mvp-adversarial-audit.md","revision":17}}
+{"ts":"2026-08-24T15:19:39.599Z","type":"gate","ref":"codex","summary":"Allowed by 1 active Work item.","actor":"codex","cmd":"praxis gate active-flush","phase":null,"status":"complete","evidence":{"allowed":true,"path":"Docs/Roadmap/MVP-SEQUENCE.md","revision":18}}
+{"ts":"2026-08-24T15:23:48.476Z","type":"check","ref":"C-003","summary":"MCOO MVP contract adversarial review: proceed with conditions","actor":"cli","cmd":"/check","phase":null,"status":"warn","evidence":{"kind":"check_receipt","result":"warn","detail":{"productCoverage":"pass","mcoo":"pass","seams":"pass","dialectPipeline":"pass","directionModel":"single-production","practiceModalities":["typed-translation"],"adversarialVerdict":"proceed-with-conditions","highestRisk":"A1-C1 content volume and quality","founderApproval":"pending","roadmapDraft":"Docs/Roadmap/MVP-SEQUENCE.md","nextAction":"Approve D-016 through D-023, then publish PHASE-001 and seed implementation phases."}}}
+{"ts":"2026-08-24T15:24:23.923Z","type":"task","ref":"T-004","summary":"Parked T-004 — Harden production dependencies and Node runtime","actor":"cli","cmd":"/log","phase":null,"status":"open"}
+{"ts":"2026-08-24T15:42:41.419Z","type":"check","ref":"C-004","summary":"Founder approved MVP decisions D-016 through D-023","actor":"cli","cmd":"/check","phase":null,"status":"complete","evidence":{"kind":"check_receipt","result":"pass","detail":{"approvedBy":"Mike","approvedAt":"2026-08-24","decisions":["D-016","D-017","D-018","D-019","D-020","D-021","D-022","D-023"],"productContract":"Docs/PRODUCT.md","adversarialAudit":"Docs/Research/R-003-mvp-adversarial-audit.md","disposition":"approved"}}}
+{"ts":"2026-08-24T15:42:42.532Z","type":"close","ref":"T-002","summary":"Closed T-002 from a host session with live gate proof.","actor":"cli","cmd":"/close","phase":null,"status":"complete","evidence":{"hostSession":true,"proofCount":1}}
+{"ts":"2026-08-24T16:07:05.029Z","type":"fix","ref":"F-001","summary":"Created and claimed F-001 — Remove stale V1 dashboard routing","actor":"cli","cmd":"/fix","phase":null,"status":"active"}
+{"ts":"2026-08-24T16:07:43.568Z","type":"gate","ref":"codex","summary":"Allowed by 1 active Work item.","actor":"codex","cmd":"praxis gate active-flush","phase":null,"status":"complete","evidence":{"allowed":true,"path":"package.json","revision":24}}
+{"ts":"2026-08-24T16:07:44.042Z","type":"gate","ref":"codex","summary":"Allowed by 1 active Work item.","actor":"codex","cmd":"praxis gate active-flush","phase":null,"status":"complete","evidence":{"allowed":true,"path":".github/workflows/work.yml","revision":25}}
+{"ts":"2026-08-24T16:07:44.582Z","type":"gate","ref":"codex","summary":"Allowed by 1 active Work item.","actor":"codex","cmd":"praxis gate active-flush","phase":null,"status":"complete","evidence":{"allowed":true,"path":"tooling/run-dashboard.sh","revision":26}}
+{"ts":"2026-08-24T16:07:45.102Z","type":"gate","ref":"codex","summary":"Allowed by 1 active Work item.","actor":"codex","cmd":"praxis gate active-flush","phase":null,"status":"complete","evidence":{"allowed":true,"path":"tooling/ensure-docs-home.sh","revision":27}}
+{"ts":"2026-08-24T16:08:10.831Z","type":"check","ref":"C-005","summary":"Stale V1 worktree and dashboard launch routes removed","actor":"cli","cmd":"/check","phase":null,"status":"complete","evidence":{"kind":"check_receipt","result":"pass","detail":{"worktrees":["main"],"pruned":"docs/ssot","removedScripts":["work:dashboard","work:docs-home"],"doctor":"pass","projection":"pass"}}}
+{"ts":"2026-08-24T16:08:11.892Z","type":"close","ref":"F-001","summary":"Closed F-001 from a host session with live gate proof.","actor":"cli","cmd":"/close","phase":null,"status":"complete","evidence":{"hostSession":true,"proofCount":1}}
+{"ts":"2026-08-24T16:23:50.208Z","type":"fix","ref":"F-002","summary":"Created and claimed F-002 — Install verified Praxis dashboard repair","actor":"cli","cmd":"/fix","phase":null,"status":"active"}
+{"ts":"2026-08-24T16:24:22.640Z","type":"hooks","ref":"cursor","summary":"Cursor adapter reached the shared Praxis gate in a live probe.","actor":"cli","cmd":"praxis hooks repair","phase":null,"status":"complete"}
+{"ts":"2026-08-24T16:24:26.602Z","type":"hooks","ref":"claude-code","summary":"Claude Code adapter reached the shared gate directly; produce a real Claude Code file-tool event before enforcement is claimed.","actor":"cli","cmd":"praxis hooks repair","phase":null,"status":"warn"}
+{"ts":"2026-08-24T16:24:29.661Z","type":"hooks","ref":"codex","summary":"Codex adapter reached the shared Praxis gate in a live session.","actor":"cli","cmd":"praxis hooks repair","phase":null,"status":"complete"}
+{"ts":"2026-08-24T16:24:46.940Z","type":"phase-close","ref":"PHASE-001","summary":"Founder approved the marketable MVP contract, MCOO boundaries, dialect-first content pipeline, and sequenced implementation direction.","actor":"cli","cmd":"praxis phase close","phase":"PHASE-001","status":"complete","evidence":{"closed":"2026-08-24T16:24:46.940Z"}}
+{"ts":"2026-08-24T16:25:54.487Z","type":"task","ref":"T-005","summary":"Parked T-005 — Dialect-aware learning contract","actor":"cli","cmd":"/plan","phase":null,"status":"open"}
+{"ts":"2026-08-24T16:25:54.487Z","type":"plan","ref":"PHASE-002","summary":"Created ready PHASE-002 — Dialect-aware learning contract.","actor":"cli","cmd":"/plan","phase":"PHASE-002","status":"complete"}
+{"ts":"2026-08-24T16:27:00.320Z","type":"gate","ref":null,"summary":"Allowed by 1 active Work item.","actor":"cli","cmd":"praxis gate active-flush","phase":null,"status":"complete","evidence":{"allowed":true,"path":"README.md","revision":35}}
+{"ts":"2026-08-24T16:27:01.374Z","type":"check","ref":"C-006","summary":"Praxis registry-v6 dashboard repair verified in Playground and AIdioma","actor":"cli","cmd":"/check","phase":null,"status":"complete","evidence":{"kind":"check_receipt","result":"pass","detail":{"extensionHashMatch":true,"phaseDocumentRegression":"pass","phaseCloseRegression":"pass","playgroundDoctor":"pass","aidiomaDoctor":"pass","appTypecheck":"pass","appTests":"273/273","phase001":"closed","phase002":"ready","isolatedFlakyTimeoutRetry":"pass"}}}
+{"ts":"2026-08-24T16:27:02.558Z","type":"close","ref":"F-002","summary":"Closed F-002 from a host session with live gate proof.","actor":"cli","cmd":"/close","phase":null,"status":"complete","evidence":{"hostSession":true,"proofCount":1}}
+{"ts":"2026-08-24T17:54:58.532Z","type":"fix","ref":"F-003","summary":"Created and claimed F-003 — Align AIdioma Praxis CLI and Extension","actor":"cli","cmd":"/fix","phase":null,"status":"active"}
+{"ts":"2026-08-24T18:06:57.156Z","type":"check","ref":"C-007","summary":"Matched merged-main CLI and Extension report ready AIdioma authority","actor":"cli","cmd":"/check","phase":null,"status":"complete","evidence":{"kind":"check_receipt","result":"pass","detail":{"sourceHead":"d10bfff083e6653fd819c5cfa2baac3442507840","cliSha256":"42897d728311053c5bcdbad82af1cee5c51e3f7382c453c388e0a71dcc0fe664","health":"ready","projectionDivergent":false}}}
+{"ts":"2026-08-24T18:06:58.179Z","type":"close","ref":"F-003","summary":"Closed F-003 from a host session with live gate proof.","actor":"cli","cmd":"/close","phase":null,"status":"complete","evidence":{"hostSession":true,"proofCount":1}}
+{"ts":"2026-08-24T18:34:46.974Z","type":"task","ref":"T-006","summary":"Created and claimed T-006 — Clean repository branches before PHASE-002","actor":"cli","cmd":"/task","phase":null,"status":"active"}
+{"ts":"2026-08-24T18:35:48.062Z","type":"gate","ref":null,"summary":"Allowed by 1 active Work item.","actor":"cli","cmd":"praxis gate active-flush","phase":null,"status":"complete","evidence":{"allowed":true,"path":"Docs/WORK.yaml","revision":42}}
+{"ts":"2026-08-24T18:35:49.132Z","type":"check","ref":"C-008","summary":"GitHub branches reduced to main plus frozen V1 docs evidence","actor":"cli","cmd":"/check","phase":null,"status":"complete","evidence":{"kind":"check_receipt","result":"pass","detail":{"remoteBranches":["main","docs/ssot"],"openPullRequests":0,"docsSsotUse":"frozen-migration-evidence","operationalAuthority":"sqlite"}}}
+{"ts":"2026-08-24T18:35:50.225Z","type":"close","ref":"T-006","summary":"Closed T-006 from a host session with live gate proof.","actor":"cli","cmd":"/close","phase":null,"status":"complete","evidence":{"hostSession":true,"proofCount":1}}
+{"ts":"2026-08-24T18:39:28.453Z","type":"task","ref":"T-007","summary":"Created and claimed T-007 — Publish the retained AIdioma V2 cutover","actor":"cli","cmd":"/task","phase":null,"status":"active"}
+{"ts":"2026-08-24T18:44:06.478Z","type":"check","ref":"C-009","summary":"T-007 retained V2 cutover passes current app, content, browser, and Praxis health checks","actor":"cli","cmd":"/check","phase":null,"status":"complete","evidence":{"kind":"check_receipt","result":"pass","detail":{"app":"32 files / 273 tests; typecheck, lint, production build, and 16-state browser smoke pass","content":"validation passes with 0 errors and 5 pre-existing warnings; 21 fixtures pass; schema smoke and prototype freshness pass","praxis":"doctor passes database, identity, schema v6, projection, leases, candidates, gate, and runner","ci":"obsolete V1 Work Registry workflow removed; current package-level app and content lanes pass","environment":"local Node 22.18 emits engine warnings; GitHub uses required Node 22.22.2 and T-004 already tracks dependency/runtime hardening"}}}
+{"ts":"2026-08-24T18:44:53.022Z","type":"close","ref":"T-007","summary":"Closed T-007 from a host session with live gate proof.","actor":"cli","cmd":"/close","phase":null,"status":"complete","evidence":{"hostSession":true,"proofCount":1}}

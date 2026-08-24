@@ -1,34 +1,32 @@
 ---
 id: SPEC-A-LEARNER
 kind: area
-title: Learner application
+title: "Learner experience"
 status: active
 superseded_by: null
 vendor: null
 decisions: []
 built_by: []
-last_amended: PHASE-008
+last_amended: null
 research: []
 paths:
-  - apps/web/**
+  - "apps/web/**"
 ---
 
-# Learner application
+# Learner experience
 
 ## Purpose
 
-Runtime substrate for the learner-facing web app: UI, session, and client routes that features compose.
+Own the simple end-to-end learner journey, shared chat interaction pattern, account preferences, and durable personal learning state.
 
 ## Behavior
 
-- Rule: Learner product code that ships to end users lives under `apps/web/` (not under `Docs/System/dashboard`)
-- Failure mode: When the web app is down or cannot boot, Practice and other learner features are unavailable
+- Rule: Lessons, practice, saved material, and translation share one message-feed and typed-composer interaction. One account-level Spanish dialect profile controls teaching copy, expected answers, examples, and translation display. Learner state records concept and item evidence once, without duplicating knowledge by translation direction.
+- Failure mode: If personal state or a service is unavailable, the app fails honestly and never fabricates progress, saved material, or grading.
 
 ## Boundaries
 
-Authored curriculum content is SPEC-A-CONTENT. Praxis dashboard / process tooling is SPEC-A-PRAXIS.
-This stub demonstrates the Area mold (D-028).
+- "Curriculum artifacts and generation pipelines belong to SPEC-A-CONTENT"
+- "Process dashboards and Praxis state are not learner product surfaces"
+- "Navigation exposes only Lessons, Practice, Saved, Translate, and Settings for MVP"
 
-## Vendor
-
-null
