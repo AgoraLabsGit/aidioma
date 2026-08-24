@@ -25,18 +25,14 @@
     "content:seed": "npm run content:validate --silent && npm run db:migrate --silent && node --env-file-if-exists=apps/web/.env.local --import tsx apps/web/scripts/content-seed.ts",
     "prototype:export": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts",
     "prototype:check": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts --check",
-    "practice:candidates": "npm run practice:candidates --workspace @aidioma/web --",
-    "work:validate": "tsx Docs/System/derive/validate.ts",
-    "work:typecheck": "tsc -p Docs/System/derive/tsconfig.json",
-    "work:test": "vitest run Docs/System/derive Docs/System/dashboard",
-    "work:dashboard": "bash tooling/run-dashboard.sh",
-    "work:docs-home": "bash tooling/ensure-docs-home.sh"
+    "practice:candidates": "npm run practice:candidates --workspace @aidioma/web --"
   },
   "devDependencies": {
+    "@praxis/cli": "file:tools/praxis-cli-0.1.0-alpha.2-d10bfff083e6-0d28f05f6bcb.tgz",
     "@types/node": "^22.20.1",
+    "chokidar": "^4.0.3",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
-    "chokidar": "^4.0.3",
     "vitest": "4.1.10",
     "yaml": "2.8.2",
     "zod": "3.25.76"

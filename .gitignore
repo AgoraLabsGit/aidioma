@@ -27,3 +27,5 @@ coverage/
 *.log
 .vercel
 .env*.local
+.ast-graph/
+.praxis/

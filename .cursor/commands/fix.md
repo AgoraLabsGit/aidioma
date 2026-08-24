@@ -1,5 +1,4 @@
 ---
-name: fix
 description: Create and claim one governed Praxis fix.
 ---
 

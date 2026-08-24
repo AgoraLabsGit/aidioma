@@ -1,19 +1,15 @@
 ---
 name: handoff
-description: End a session inside an active phase by writing continuity for the next agent. Use when the operator says /handoff.
+description: Write the durable Praxis handoff.
 ---
 
 # /handoff
 
-0. **Docs home (D-020):** If `.worktrees/docs` exists, overwrite `HANDOFF.md` only there.
-1. Resolve **required `ref`:** exactly one of
-   - an in-flight phase (`state: active` or `blocked`), or
-   - a Work row with `status: active`.
-   Prefer the founder-named target; else the sole in-flight phase; else the sole active Work.
-   If ambiguous → ask once. Do not write an unscoped handoff.
-2. Overwrite `Docs/Handoffs/HANDOFF.md` with YAML frontmatter `ref: <id>` then the body
-   (branch/worktree, done, open, preserve, next command).
-3. Do **not** commit, PR, merge, or delete branches/worktrees.
-4. Activity `type: handoff` (low-noise); include `ref` matching the frontmatter.
+This is the native-chat adapter for canonical action `handoff.write` (registry version 6).
 
-**May invoke:** none.
+1. Gather the required action input.
+2. Invoke the canonical Praxis action `/handoff`.
+3. If this session is already Claude Code or Codex, do the work here. Do not start the Cursor agent runner. In Codex, type $task — never /task.
+4. Show the returned receipt and recovery action if denied.
+5. Never edit generated Work, Activity, or handoff projections directly.
+6. Write a Suggested skills section into HANDOFF.md naming the shipped verbs the successor should load.

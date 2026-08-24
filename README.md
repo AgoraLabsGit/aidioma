@@ -55,9 +55,10 @@ npm run content:fixtures
 
 ## Working in the repository
 
-Read `AGENTS.md`, then resolve the complete current documentation root described there. `WORK.yaml`
-owns the queue and `HANDOFF.md` owns current continuity. Confirm product claims in executable code
-and the running app before changing a spec.
+Read `AGENTS.md`, then run `npx praxis status --json` and follow its `nextAction`. The V2 Praxis
+ledger at `.praxis/state.sqlite` owns Work, phases, checks, and generated projections. `Docs/WORK.yaml`
+is generated evidence, not an authored queue. Confirm product claims in executable code and the
+running app before changing a spec.
 
 - `apps/web/` — responsive Next.js application and browser proofs.
 - `content/` — authored curriculum, lessons, reviews, and content evidence.
@@ -72,9 +73,13 @@ Work on a short-lived branch, preserve unrelated changes, validate the real user
 through a pull request. Protected `main` requires `app-validate` and `content-validate`. Delete a
 branch or worktree only after its exact tip is clean and contained in fetched `origin/main`.
 
-Agent commands are `/plan`, `/feat`, `/fix`, `/status`, and `/close`; their repository workflows live
-under `.claude/skills/`. The read-only work dashboard runs locally with:
+Use the Praxis Activity Bar workbench in Cursor for the dashboard, Work, Roadmap, Activity, and
+Knowledge views. Cursor and Claude Code expose the generated `/plan`, `/run`, `/task`, `/fix`,
+`/log`, `/check`, `/handoff`, `/close`, and `/publish` workflows. In Codex, load the matching generated
+skill (for example `$task`) or ask in plain English. The CLI remains the direct status and diagnostic
+surface:
 
 ```bash
-npm run work:dashboard
+npx praxis status --json
+npx praxis doctor --json
 ```

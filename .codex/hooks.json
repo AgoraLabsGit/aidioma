@@ -1,0 +1,18 @@
+{
+  "description": "Praxis shared mutation gate for covered Codex file edits.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/praxis-gate.mjs\"",
+            "timeout": 10,
+            "statusMessage": "Checking Praxis mutation gate"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,5 +1,4 @@
 ---
-name: plan
 description: Place governed work as a task, new phase, or into the active phase.
 ---
 
