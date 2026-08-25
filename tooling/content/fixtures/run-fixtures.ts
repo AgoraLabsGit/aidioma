@@ -30,8 +30,9 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolvePath(HERE, '..', '..', '..');
 const LESSONS = resolvePath(REPO, 'content', 'lessons', 'a1');
 const VALIDATE = resolvePath(REPO, 'tooling', 'content', 'validate.ts');
+const DIALECT_FIXTURES = resolvePath(REPO, 'tooling', 'content', 'fixtures', 'run-dialect-fixtures.ts');
 const TSX_CLI = createRequire(import.meta.url).resolve('tsx/cli');
-const TMP_ROOT = join(HERE, '.gen');
+const TMP_ROOT = join(HERE, `.gen-${process.pid}`);
 
 type Lesson = any;
 const loadBase = (slug: string): Lesson => JSON.parse(readFileSync(join(LESSONS, `${slug}.json`), 'utf8'));
@@ -313,6 +314,14 @@ function main() {
       (f) => f.code === 'VOCABREF_RESOLVE' && f.lessonId === a.id && /FUTURE/.test(f.message),
     );
     check('N5: innocent a1-01 gets NO misattributed FUTURE-lesson error', !misattributed);
+  }
+
+  /* ---- Phase 2: promoted dialect contract is part of the canonical fixture gate ---- */
+  try {
+    execFileSync(process.execPath, [TSX_CLI, DIALECT_FIXTURES], { stdio: 'inherit' });
+    check('PHASE-002: dialect promotion fixture suite passes', true);
+  } catch {
+    check('PHASE-002: dialect promotion fixture suite passes', false);
   }
 
   /* ---- Summary ---- */

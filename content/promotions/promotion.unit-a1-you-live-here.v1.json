@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "promotion.unit-a1-you-live-here.v1",
+  "status": "promoted",
+  "unitId": "unit.a1.you-live-here",
+  "contentVersion": 1,
+  "meaningId": "meaning.en.you-live-here",
+  "conceptIds": [
+    "concept.present.regular-ir.second-person",
+    "concept.place.here"
+  ],
+  "requiredProfiles": [
+    "es-AR",
+    "es-419",
+    "es-ES"
+  ],
+  "contentDigest": "sha256:ced27924b07023b7161ce84b54376c1c592f3f85b60b890f4200e033af42da1a",
+  "deterministicEvidence": {
+    "reportId": "report.unit-a1-you-live-here.v1",
+    "reportDigest": "sha256:f07ae379180e123ae8a11ebaba22c02fadce60c86816ea3493455698072153ac"
+  },
+  "adversarialEvidence": [
+    {
+      "reviewId": "review.unit-a1-you-live-here.v3",
+      "reviewDigest": "sha256:94c77a90bd6d62e5518648ed8d59916e8cf88c2fbf41695342de561968232249"
+    }
+  ],
+  "authority": {
+    "acceptanceId": "authority.phase-002-run",
+    "acceptanceDigest": "sha256:51b8babbb188ad04c922ec046fe998eda8c82ffb93486c2b72af1d3564036421"
+  },
+  "promotedAt": "2026-08-24T19:04:31Z"
+}

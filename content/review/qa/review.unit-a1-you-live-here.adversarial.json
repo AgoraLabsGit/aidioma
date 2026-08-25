@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "review.unit-a1-you-live-here.v3",
+  "unitId": "unit.a1.you-live-here",
+  "contentVersion": 1,
+  "contentDigest": "sha256:ced27924b07023b7161ce84b54376c1c592f3f85b60b890f4200e033af42da1a",
+  "reviewer": {
+    "independence": "independent",
+    "name": "Codex adversarial linguistic reviewer",
+    "provenance": {
+      "kind": "independent-agent-task",
+      "taskName": "/root/contract_review",
+      "authoringRole": "review-only",
+      "attempts": 3
+    }
+  },
+  "reviewedAt": "2026-08-24T19:03:59Z",
+  "result": "pass",
+  "lenses": {
+    "linguisticAccuracy": {
+      "result": "pass",
+      "note": "All canonical and accepted Spanish forms accurately express the English meaning for one informal addressee. Vos vivís and tú vives are correctly formed; subject omission is grammatical; and aquí/acá remain semantically appropriate in this location statement."
+    },
+    "ambiguity": {
+      "result": "pass",
+      "note": "The structured context fixes English you as one person addressed informally, excluding usted, ustedes, and vosotros interpretations. Canonical and accepted forms now cover the natural subject-present and subject-dropped realizations within each supported profile."
+    },
+    "pedagogyAndCefr": {
+      "result": "pass",
+      "note": "The unit is appropriate for A1: one short declarative sentence, a regular -ir present-tense verb, a basic location adverb, and a clearly bounded second-person singular contrast. The regional alternatives add no conceptual or syntactic overload."
+    },
+    "dialectConsistency": {
+      "result": "pass",
+      "note": "es-AR consistently teaches Rioplatense vos plus vivís with acá as the profile preference while accepting aquí. es-419 uses broadly intelligible tuteo as its default and retains complete country-sensitive voseo and aquí/acá combinations. es-ES uses standard informal singular tuteo with the usual Peninsular aquí form."
+    },
+    "culturalSafety": {
+      "result": "pass",
+      "note": "The home-and-location statement is culturally neutral and contains no stereotype, sensitive personal inference, unsafe instruction, or misleading cultural claim."
+    }
+  },
+  "findings": []
+}

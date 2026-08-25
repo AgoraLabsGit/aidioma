@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "unitId": "unit.a1.you-live-here",
+  "meaningId": "meaning.en.you-live-here",
+  "conceptIds": [
+    "concept.present.regular-ir.second-person",
+    "concept.place.here"
+  ],
+  "firstContentVersion": 1,
+  "retainedAt": "2026-08-24T19:03:00Z"
+}
