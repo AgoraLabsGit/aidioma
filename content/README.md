@@ -6,3 +6,7 @@ it: lesson JSON, curriculum, style rules, authoring prompts, QA results, and con
 It does not contain application infrastructure or executable validation tools. Content must conform
 to `@aidioma/lesson-schema`; run the root `npm run content:*` commands to check it.
 
+Reusable dialect-aware semantic units live under `units/`. Their learner-visible renderings are
+not publishable merely because the JSON parses: `review/qa/` retains deterministic and independent
+adversarial evidence, and `promotions/` binds the exact approved version. The dialect proof gate
+must accept that chain before a unit can render or grade.

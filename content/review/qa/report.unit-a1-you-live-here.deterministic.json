@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "reportId": "report.unit-a1-you-live-here.v1",
+  "unitId": "unit.a1.you-live-here",
+  "contentVersion": 1,
+  "contentDigest": "sha256:ced27924b07023b7161ce84b54376c1c592f3f85b60b890f4200e033af42da1a",
+  "identitySnapshotDigest": "sha256:8036e06b125d18c80077eede93c3614db1324da431f7f9de231cb650099d1ce1",
+  "validatorVersion": 1,
+  "result": "pass",
+  "checks": [
+    {
+      "id": "schema",
+      "result": "pass"
+    },
+    {
+      "id": "stable-identity",
+      "result": "pass"
+    },
+    {
+      "id": "cefr-placement",
+      "result": "pass"
+    },
+    {
+      "id": "dialect-coverage",
+      "result": "pass"
+    },
+    {
+      "id": "answer-policy",
+      "result": "pass"
+    },
+    {
+      "id": "content-digest",
+      "result": "pass"
+    }
+  ],
+  "renderProof": {
+    "es-AR": "Vos vivís acá.",
+    "es-419": "Tú vives aquí.",
+    "es-ES": "Tú vives aquí."
+  },
+  "gradeProof": [
+    {
+      "profile": "es-AR",
+      "answer": "Vos vivís acá.",
+      "expectedOutcome": "correct",
+      "expectedMatch": "canonical"
+    },
+    {
+      "profile": "es-AR",
+      "answer": "Vivís acá.",
+      "expectedOutcome": "correct",
+      "expectedMatch": "equivalent"
+    },
+    {
+      "profile": "es-AR",
+      "answer": "Vos vivís aquí.",
+      "expectedOutcome": "correct",
+      "expectedMatch": "regional-alternative"
+    },
+    {
+      "profile": "es-AR",
+      "answer": "Vivís aquí.",
+      "expectedOutcome": "correct",
+      "expectedMatch": "regional-alternative"
+    },
+    {
+      "profile": "es-AR",
+      "answer": "Tú vives aquí.",
+      "expectedOutcome": "dialect-mismatch"
+    },
+    {
+      "profile": "es-AR",
+      "answer": "Yo vivo aquí.",
+      "expectedOutcome": "incorrect"
+    },
+    {
+      "profile": "es-419",
+      "answer": "Tú vives aquí.",
+      "expectedOutcome": "correct",
+      "expectedMatch": "canonical"
+    },
+    {
+      "profile": "es-419",
+      "answer": "Vives aquí.",
+      "expectedOutcome": "correct",
+      "expectedMatch": "equivalent"
+    },
+    {
+      "profile": "es-419",
+      "answer": "Tú vives acá.",
+      "expectedOutcome": "correct",
+      "expectedMatch": "regional-alternative"
+    },
+    {
+      "profile": "es-419",
+      "answer": "Vos vivís acá.",
+      "expectedOutcome": "correct",
+      "expectedMatch": "regional-alternative"
+    },
+    {
+      "profile": "es-419",
+      "answer": "Vives acá.",
+      "expectedOutcome": "correct",
+      "expectedMatch": "regional-alternative"
+    },
+    {
+      "profile": "es-419",
+      "answer": "Vivís acá.",
+      "expectedOutcome": "correct",
+      "expectedMatch": "regional-alternative"
+    },
+    {
+      "profile": "es-419",
+      "answer": "Vos vivís aquí.",
+      "expectedOutcome": "correct",
+      "expectedMatch": "regional-alternative"
+    },
+    {
+      "profile": "es-419",
+      "answer": "Vivís aquí.",
+      "expectedOutcome": "correct",
+      "expectedMatch": "regional-alternative"
+    },
+    {
+      "profile": "es-419",
+      "answer": "Yo vivo aquí.",
+      "expectedOutcome": "incorrect"
+    },
+    {
+      "profile": "es-ES",
+      "answer": "Tú vives aquí.",
+      "expectedOutcome": "correct",
+      "expectedMatch": "canonical"
+    },
+    {
+      "profile": "es-ES",
+      "answer": "Vives aquí.",
+      "expectedOutcome": "correct",
+      "expectedMatch": "equivalent"
+    },
+    {
+      "profile": "es-ES",
+      "answer": "Vos vivís acá.",
+      "expectedOutcome": "dialect-mismatch"
+    },
+    {
+      "profile": "es-ES",
+      "answer": "Yo vivo aquí.",
+      "expectedOutcome": "incorrect"
+    }
+  ],
+  "command": "npm run contract:build --silent && npx tsx tooling/content/dialect-contract.ts check",
+  "checkedAt": "2026-08-24T19:03:19Z"
+}

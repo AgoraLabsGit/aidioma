@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "updatedAt": "2026-08-25T15:32:05.548Z",
+  "ids": {
+    "a1-01-hola-me-llamo": {
+      "contentVersion": 3
+    },
+    "a1-01.e.01": {
+      "contentVersion": 3
+    },
+    "a1-01.v.hola": {
+      "contentVersion": 3
+    },
+    "a1-01.v.adios": {
+      "contentVersion": 3
+    },
+    "a1-01.v.gracias": {
+      "contentVersion": 3
+    },
+    "a1-01.v.por-favor": {
+      "contentVersion": 3
+    },
+    "a1-01.v.perdon": {
+      "contentVersion": 3
+    },
+    "a1-01.v.buenos-dias": {
+      "contentVersion": 3
+    },
+    "a1-01.v.buenas-noches": {
+      "contentVersion": 3
+    },
+    "a1-01.v.senor": {
+      "contentVersion": 3
+    },
+    "a1-01.v.senora": {
+      "contentVersion": 3
+    },
+    "a1-01.v.me-llamo": {
+      "contentVersion": 3
+    },
+    "a1-01.v.te-llamas": {
+      "contentVersion": 3
+    },
+    "a1-01.v.se-llama": {
+      "contentVersion": 3
+    },
+    "a1-01.s.01": {
+      "contentVersion": 3
+    },
+    "a1-01.s.02": {
+      "contentVersion": 3
+    },
+    "a1-01.s.03": {
+      "contentVersion": 3
+    },
+    "a1-01.s.04": {
+      "contentVersion": 3
+    },
+    "a1-01.s.05": {
+      "contentVersion": 3
+    },
+    "a1-01.s.06": {
+      "contentVersion": 3
+    },
+    "a1-01.s.07": {
+      "contentVersion": 3
+    },
+    "a1-01.s.08": {
+      "contentVersion": 3
+    },
+    "a1-01.s.09": {
+      "contentVersion": 3
+    },
+    "a1-01.s.10": {
+      "contentVersion": 3
+    },
+    "a1-01.s.11": {
+      "contentVersion": 3
+    },
+    "a1-01.s.12": {
+      "contentVersion": 3
+    },
+    "a1-01.s.13": {
+      "contentVersion": 3
+    },
+    "a1-01.s.14": {
+      "contentVersion": 3
+    },
+    "a1-01.p.01": {
+      "contentVersion": 3
+    },
+    "a1-01.p.01.01": {
+      "contentVersion": 3
+    },
+    "a1-01.p.01.02": {
+      "contentVersion": 3
+    },
+    "a1-01.p.01.03": {
+      "contentVersion": 3
+    },
+    "a1-01.p.01.04": {
+      "contentVersion": 3
+    },
+    "a1-01.c.01": {
+      "contentVersion": 3
+    },
+    "a1-01.q.01": {
+      "contentVersion": 3
+    },
+    "a1-01.q.02": {
+      "contentVersion": 3
+    },
+    "a1-01.q.03": {
+      "contentVersion": 3
+    },
+    "a1-01.r.fixture": {
+      "contentVersion": 3
+    }
+  }
+}

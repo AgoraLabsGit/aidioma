@@ -366,3 +366,279 @@ export type Lesson = z.infer<typeof Lesson>;
  *  - Immutable-id snapshot check: no id ever removed (deprecate, never delete).
  *  - Cumulative-vocab discipline: every content word traces to this/prior lessons.
  */
+
+/* ==================================================================
+ * 5. Dialect-aware semantic units — additive Phase 2 contract
+ * ------------------------------------------------------------------
+ * Lessons remain on schemaVersion 1. These reusable units sit below lesson
+ * placement: identity and learner progress attach to the shared concept and
+ * meaning ids, while the selected profile controls Spanish display + grading.
+ * ================================================================== */
+
+export const DIALECT_PROFILES = ['es-AR', 'es-419', 'es-ES'] as const;
+export const DialectProfile = z.enum(DIALECT_PROFILES);
+export type DialectProfile = z.infer<typeof DialectProfile>;
+
+export const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1'] as const;
+export const CefrLevel = z.enum(CEFR_LEVELS);
+export type CefrLevel = z.infer<typeof CefrLevel>;
+
+const stableId = (prefix: string) =>
+  z.string().regex(new RegExp(`^${prefix}\\.[a-z0-9]+(?:[.-][a-z0-9]+)*$`));
+
+export const ConceptReference = z.object({
+  id: stableId('concept'),
+  label: z.string().min(1),
+});
+export type ConceptReference = z.infer<typeof ConceptReference>;
+
+export const MeaningUnit = z.object({
+  id: stableId('meaning'),
+  source: z.object({
+    language: z.literal('en'),
+    text: z.string().min(1),
+  }),
+  context: z.object({
+    addressee: z.literal('one-person'),
+    register: z.literal('informal'),
+  }),
+});
+export type MeaningUnit = z.infer<typeof MeaningUnit>;
+
+export const DialectAcceptedAnswer = z.object({
+  text: z.string().min(1),
+  kind: z.enum(['equivalent', 'regional-alternative']),
+});
+export type DialectAcceptedAnswer = z.infer<typeof DialectAcceptedAnswer>;
+
+export const DialectRendering = z.object({
+  text: z.string().min(1),
+  register: z.enum(['informal', 'neutral', 'formal']),
+  acceptedAnswers: z.array(DialectAcceptedAnswer).default([]),
+  note: z.string().min(1).optional(),
+});
+export type DialectRendering = z.infer<typeof DialectRendering>;
+
+export const DialectAnswerPolicy = z.object({
+  normalization: z.object({
+    unicode: z.literal('NFC'),
+    caseSensitive: z.literal(false),
+    punctuationSensitive: z.literal(false),
+    diacriticSensitive: z.literal(true),
+  }),
+  crossProfileAnswer: z.literal('dialect-mismatch'),
+});
+export type DialectAnswerPolicy = z.infer<typeof DialectAnswerPolicy>;
+
+/** The comparison used by deterministic grading. Accents remain meaningful. */
+function normalizeDialectAnswer(value: string): string {
+  return value
+    .normalize('NFC')
+    .toLocaleLowerCase('es')
+    .replace(/[\p{P}\p{S}]+/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+export const DialectContentUnit = z
+  .object({
+    schemaVersion: z.literal(1),
+    id: stableId('unit'),
+    contentVersion: z.number().int().positive(),
+    cefr: CefrLevel,
+    concepts: z.array(ConceptReference).min(1),
+    topicalTags: z.array(z.string().regex(/^[a-z0-9]+(?:[.-][a-z0-9]+)*$/)).min(1),
+    meaning: MeaningUnit,
+    targetLanguage: z.literal('es'),
+    supportedProfiles: z.tuple([
+      z.literal('es-AR'),
+      z.literal('es-419'),
+      z.literal('es-ES'),
+    ]),
+    renderings: z
+      .object({
+        'es-AR': DialectRendering,
+        'es-419': DialectRendering,
+        'es-ES': DialectRendering,
+      })
+      .strict(),
+    answerPolicy: DialectAnswerPolicy,
+  })
+  .strict()
+  .superRefine((unit, context) => {
+    const conceptIds = unit.concepts.map((concept) => concept.id);
+    if (new Set(conceptIds).size !== conceptIds.length) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['concepts'],
+        message: 'Concept ids must be unique within a content unit.',
+      });
+    }
+
+    for (const profile of DIALECT_PROFILES) {
+      const rendering = unit.renderings[profile];
+      const accepted = rendering.acceptedAnswers.map((answer) =>
+        normalizeDialectAnswer(answer.text),
+      );
+      if (accepted.includes(normalizeDialectAnswer(rendering.text))) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['renderings', profile, 'acceptedAnswers'],
+          message: 'Do not duplicate the canonical rendering in acceptedAnswers.',
+        });
+      }
+      if (new Set(accepted).size !== accepted.length) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['renderings', profile, 'acceptedAnswers'],
+          message: 'Accepted answers must be unique after normalization.',
+        });
+      }
+    }
+  });
+export type DialectContentUnit = z.infer<typeof DialectContentUnit>;
+
+export const AdversarialReviewLens = z.object({
+  result: z.enum(['pass', 'fail']),
+  note: z.string().min(1),
+});
+
+export const DialectAdversarialReview = z.object({
+  schemaVersion: z.literal(1),
+  reviewId: stableId('review'),
+  unitId: stableId('unit'),
+  contentVersion: z.number().int().positive(),
+  contentDigest: z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  reviewer: z.object({
+    independence: z.literal('independent'),
+    name: z.string().min(1),
+    provenance: z.object({
+      kind: z.literal('independent-agent-task'),
+      taskName: z.string().regex(/^\/root\/[a-z0-9_]+$/),
+      authoringRole: z.literal('review-only'),
+      attempts: z.number().int().positive(),
+    }),
+  }),
+  reviewedAt: z.string().datetime({ offset: true }),
+  result: z.enum(['pass', 'fail']),
+  lenses: z.object({
+    linguisticAccuracy: AdversarialReviewLens,
+    ambiguity: AdversarialReviewLens,
+    pedagogyAndCefr: AdversarialReviewLens,
+    dialectConsistency: AdversarialReviewLens,
+    culturalSafety: AdversarialReviewLens,
+  }),
+  findings: z.array(
+    z.object({
+      severity: z.enum(['critical', 'major', 'minor']),
+      profile: DialectProfile.optional(),
+      message: z.string().min(1),
+      disposition: z.string().min(1),
+    }),
+  ),
+}).strict();
+export type DialectAdversarialReview = z.infer<typeof DialectAdversarialReview>;
+
+export const DIALECT_DETERMINISTIC_CHECKS = [
+  'schema',
+  'stable-identity',
+  'cefr-placement',
+  'dialect-coverage',
+  'answer-policy',
+  'content-digest',
+] as const;
+export const DialectDeterministicCheck = z.enum(DIALECT_DETERMINISTIC_CHECKS);
+
+export const DialectIdentitySnapshot = z.object({
+  schemaVersion: z.literal(1),
+  unitId: stableId('unit'),
+  meaningId: stableId('meaning'),
+  conceptIds: z.array(stableId('concept')).min(1),
+  firstContentVersion: z.number().int().positive(),
+  retainedAt: z.string().datetime({ offset: true }),
+}).strict();
+export type DialectIdentitySnapshot = z.infer<typeof DialectIdentitySnapshot>;
+
+export const DialectDeterministicReport = z.object({
+  schemaVersion: z.literal(1),
+  reportId: stableId('report'),
+  unitId: stableId('unit'),
+  contentVersion: z.number().int().positive(),
+  contentDigest: z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  identitySnapshotDigest: z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  validatorVersion: z.literal(1),
+  result: z.literal('pass'),
+  checks: z.array(
+    z.object({
+      id: DialectDeterministicCheck,
+      result: z.literal('pass'),
+    }),
+  ),
+  renderProof: z.object({
+    'es-AR': z.string().min(1),
+    'es-419': z.string().min(1),
+    'es-ES': z.string().min(1),
+  }),
+  gradeProof: z.array(
+    z.object({
+      profile: DialectProfile,
+      answer: z.string().min(1),
+      expectedOutcome: z.enum(['correct', 'dialect-mismatch', 'incorrect']),
+      expectedMatch: z.enum(['canonical', 'equivalent', 'regional-alternative']).optional(),
+    }),
+  ).min(6),
+  command: z.string().min(1),
+  checkedAt: z.string().datetime({ offset: true }),
+}).strict();
+export type DialectDeterministicReport = z.infer<typeof DialectDeterministicReport>;
+
+export const GovernedPhaseRunAcceptance = z.object({
+  schemaVersion: z.literal(1),
+  authorityId: stableId('authority'),
+  projectId: z.string().regex(/^praxis-[a-f0-9]+$/),
+  operationId: z.string().uuid(),
+  actionId: z.literal('run.phase'),
+  state: z.literal('accepted'),
+  phaseId: z.string().regex(/^PHASE-\d{3}$/),
+  workId: z.string().regex(/^T-\d{3}$/),
+  acceptedRevision: z.number().int().positive(),
+  requestedBy: z.literal('human'),
+  activityEvidence: z.object({
+    path: z.string().regex(/^\.work\/activity\/\d{4}-\d{2}\.jsonl$/),
+    ts: z.string().datetime({ offset: true }),
+    summary: z.string().min(1),
+  }).strict(),
+}).strict();
+export type GovernedPhaseRunAcceptance = z.infer<typeof GovernedPhaseRunAcceptance>;
+
+export const DialectPromotionReceipt = z.object({
+  schemaVersion: z.literal(1),
+  receiptId: stableId('promotion'),
+  status: z.literal('promoted'),
+  unitId: stableId('unit'),
+  contentVersion: z.number().int().positive(),
+  meaningId: stableId('meaning'),
+  conceptIds: z.array(stableId('concept')).min(1),
+  requiredProfiles: z.tuple([
+    z.literal('es-AR'),
+    z.literal('es-419'),
+    z.literal('es-ES'),
+  ]),
+  contentDigest: z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  deterministicEvidence: z.object({
+    reportId: stableId('report'),
+    reportDigest: z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  }).strict(),
+  adversarialEvidence: z.tuple([
+    z.object({
+      reviewId: stableId('review'),
+      reviewDigest: z.string().regex(/^sha256:[a-f0-9]{64}$/),
+    }).strict(),
+  ]),
+  authority: z.object({
+    acceptanceId: stableId('authority'),
+    acceptanceDigest: z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  }).strict(),
+  promotedAt: z.string().datetime({ offset: true }),
+}).strict();
+export type DialectPromotionReceipt = z.infer<typeof DialectPromotionReceipt>;

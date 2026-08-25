@@ -8,6 +8,7 @@
 import {
   Lesson,
   MultipleChoiceItem,
+  DialectContentUnit,
   GRAMMAR_TAGS,
   GRAMMAR_TAG_VERSION,
 } from '../src/index.js';
@@ -129,6 +130,81 @@ const withRegion = {
 const regionParsed = Lesson.safeParse(withRegion);
 if (regionParsed.success) ok('P-004 AcceptedEntry object+region parses');
 else bad('P-004 AcceptedEntry rejected', regionParsed.error?.issues);
+
+/* ---- additive dialect-aware semantic unit ---- */
+const dialectUnit = {
+  schemaVersion: 1,
+  id: 'unit.a1.you-live-here',
+  contentVersion: 1,
+  cefr: 'A1',
+  concepts: [{ id: 'concept.present.second-person', label: 'Informal second person' }],
+  topicalTags: ['location'],
+  meaning: {
+    id: 'meaning.en.you-live-here',
+    source: { language: 'en', text: 'You live here.' },
+    context: { addressee: 'one-person', register: 'informal' },
+  },
+  targetLanguage: 'es',
+  supportedProfiles: ['es-AR', 'es-419', 'es-ES'],
+  renderings: {
+    'es-AR': {
+      text: 'Vos vivís acá.',
+      register: 'informal',
+      acceptedAnswers: [{ text: 'Vivís acá.', kind: 'equivalent' }],
+    },
+    'es-419': {
+      text: 'Tú vives aquí.',
+      register: 'informal',
+      acceptedAnswers: [
+        { text: 'Vives aquí.', kind: 'equivalent' },
+        { text: 'Vos vivís acá.', kind: 'regional-alternative' },
+      ],
+    },
+    'es-ES': {
+      text: 'Tú vives aquí.',
+      register: 'informal',
+      acceptedAnswers: [{ text: 'Vives aquí.', kind: 'equivalent' }],
+    },
+  },
+  answerPolicy: {
+    normalization: {
+      unicode: 'NFC',
+      caseSensitive: false,
+      punctuationSensitive: false,
+      diacriticSensitive: true,
+    },
+    crossProfileAnswer: 'dialect-mismatch',
+  },
+} as const;
+
+const dialectParsed = DialectContentUnit.safeParse(dialectUnit);
+if (dialectParsed.success) {
+  ok('dialect unit parses with exact MVP profile coverage');
+} else bad('valid dialect unit rejected', dialectParsed.error.issues);
+
+const missingDialect = {
+  ...dialectUnit,
+  renderings: {
+    'es-AR': dialectUnit.renderings['es-AR'],
+    'es-419': dialectUnit.renderings['es-419'],
+  },
+};
+if (!DialectContentUnit.safeParse(missingDialect).success) ok('rejects missing es-ES dialect coverage');
+else bad('accepted dialect unit without es-ES coverage');
+
+const sharedCanonicalDialect = {
+  ...dialectUnit,
+  renderings: {
+    ...dialectUnit.renderings,
+    'es-AR': {
+      ...dialectUnit.renderings['es-AR'],
+      text: dialectUnit.renderings['es-419'].text,
+    },
+  },
+};
+if (DialectContentUnit.safeParse(sharedCanonicalDialect).success)
+  ok('allows one shared canonical rendering across all profiles');
+else bad('rejected valid shared canonical dialect rendering');
 
 /* ---- INVALID fixtures must be rejected ---- */
 
