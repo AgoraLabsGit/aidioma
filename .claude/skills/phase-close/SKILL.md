@@ -22,8 +22,9 @@ description: Close an AIdioma roadmap phase after full candidate-pinned checks a
    fingerprint script, run the baseline `/check` in an isolated materialization of its retained commit, then
    deploy the named independent read-only agents in audit waves against that exact candidate.
 5. Append every audit and check result to the external `close-audits.md`, never the phase authority.
-   Preserve FAIL/WARN attempts and remediation pointers. Fix outside auditors, fingerprint again,
-   rerun affected lenses, and run a final formal check.
+   Preserve FAIL/WARN attempts and remediation pointers. Fix outside auditors as coordinator:
+   delegate large remediations by area of concern per `/run`, then fingerprint again, rerun
+   affected lenses, and run a final formal check.
 6. After every selected lens and the final check pass, change only phase frontmatter `state: closed`,
    real ISO calendar `closed`, and non-empty JSON double-quoted `lessons`. Retain each full response
    once under `audits/`; write `audit-results.json` selecting the hashed final responses,

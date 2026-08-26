@@ -22,7 +22,8 @@ for them.
 6. Select every gate as `yes` or `n/a — <concrete reason>`, then assign fresh read-only sub-agents
    exactly as the selected risk tier groups them in `Docs/CLOSE.md`.
 7. Record each PASS/WARN/FAIL before remediation. Never replace or delete an earlier result.
-8. Remediate outside the audit agents, use a new round-manifest path, and rerun affected lenses plus
+8. Remediate outside the audit agents. For a phase, delegate large remediations by area of concern
+   per `/run`. Use a new round-manifest path, and rerun affected lenses plus
    the final deterministic check. WARN blocks unless the founder explicitly accepts its retained
    risk and reason for that candidate.
 9. Close only when the final check is PASS and each latest selected-lens verdict on that candidate is

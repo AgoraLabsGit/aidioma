@@ -1,0 +1,15 @@
+---
+description: AIdioma ships from files; Praxis is parked
+alwaysApply: true
+---
+
+# Files first
+
+- Do not run `npx praxis`, mutation hooks, workbench, or sqlite Work commands.
+- Track target authority under `Docs/Evidence/<target>/`; use optional local `Docs/NOW.md` for status. Product truth is `Docs/PRODUCT.md` and specs.
+- Treat `Docs/System/` as frozen history except for `Docs/System/Templates/phase.md`; never execute
+  its old commands, protocols, derive/dashboard, close, or publish path.
+- Implement in `apps/web/`, `packages/`, and `content/`. Prove with tests or the app.
+- Follow `Docs/CLOSE.md` for candidate-pinned checks and independent audit sub-agents.
+- Stay in this session. For a phase, coordinate and delegate coding by area to in-session
+  sub-agents; do not start another agent runner to satisfy Praxis.
