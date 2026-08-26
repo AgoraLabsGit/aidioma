@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "id": "F-CLOSE-REPLAY-EFFICIENCY",
+  "kind": "fix",
+  "evidence_dir": "Docs/Evidence/f-close-replay-efficiency",
+  "risk_tier": 1,
+  "outcome": "Close receipts retain and authenticate every historical check attempt without re-executing superseded proofs, explicit receipt verification replays only the selected final PASS attempt in one isolated checkout with one dependency installation, and roadmap phase close completes the verified receipt through commit, PR, merge, production deployment, and smoke proof.",
+  "proof": [
+    "Regression tests prove bundle creation performs no command replay.",
+    "Regression tests prove explicit verification ignores historical commands and runs every final-attempt command in order after one dependency installation.",
+    "Existing receipt authentication, exhaustive proof hashing, command-contract validation, timeout, environment allowlisting, and final-PASS selection tests remain green.",
+    "The binding close contract and host commands make publish, merge, production deployment, exact-commit verification, and learner-route smoke checks terminal requirements of roadmap phase close."
+  ],
+  "non_goals": [
+    "Change the Phase 4 candidate, target, learner outcome, APIs, content, or final eight commands",
+    "Remove historical manifests, proofs, failures, digests, or report indexing from close receipts",
+    "Replay superseded or live-provider failure attempts whose exact outcomes are time-dependent",
+    "Start Praxis or change learner-product runtime behavior",
+    "Automatically publish ordinary task or fix closes"
+  ],
+  "required_lenses": [
+    "Claims / Proof evidence",
+    "Code quality / Standards",
+    "MCOO"
+  ],
+  "check_commands": [
+    [
+      "node",
+      "--test",
+      ".claude/skills/close/scripts/close-bundle.test.mjs"
+    ],
+    [
+      "git",
+      "diff",
+      "--check",
+      "HEAD^",
+      "HEAD"
+    ]
+  ],
+  "check_environment": [],
+  "check_timeout_ms": 900000,
+  "scopes": [
+    ".claude/skills/close/scripts/close-bundle.mjs",
+    ".claude/skills/close/scripts/close-bundle.test.mjs",
+    ".claude/skills/close/SKILL.md",
+    ".claude/skills/phase-close/SKILL.md",
+    ".cursor/commands/close.md",
+    ".cursor/commands/phase-close.md",
+    "AGENTS.md",
+    "Docs/AGENTS.md",
+    "Docs/CLOSE.md",
+    "Docs/Evidence/f-close-replay-efficiency/target.json"
+  ]
+}
