@@ -18,6 +18,10 @@ their old workflow metadata does not.
 Runtime providers live in `SPEC-A-PLATFORM` (D-024). Use `npx neonctl` and the
 Vercel CLI. Ask the founder only for secrets those tools cannot supply.
 
+Phase `/run` agents are coordinators. They preserve their context window and delegate coding by
+area of concern to in-session sub-agents. They do not implement the phase themselves or start a
+second runner. Follow `.claude/skills/run/SKILL.md`.
+
 Close behavior lives in `Docs/CLOSE.md`: pin one dirty-tree candidate, run deterministic proof,
 then use independent lens-specific audit sub-agents. Retain every result before remediation. An
 ordinary item close is local unless the founder requests `/publish`; an explicit roadmap phase close

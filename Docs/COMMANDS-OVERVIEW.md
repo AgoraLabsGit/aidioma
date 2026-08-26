@@ -1,5 +1,9 @@
 # Commands (AIdioma)
 
-Operator overview for this AIdioma Praxis project. Agent SSOT: `Docs/System/COMMANDS.md`.
+AIdioma uses the files-first commands in `AGENTS.md`; close behavior lives in `Docs/CLOSE.md`.
+Plain English works in every host, with the optional host-specific command forms documented there.
+`/run` on a roadmap phase is a coordinator: delegate coding by area of concern to in-session
+sub-agents and keep the parent context for integration, proof, and close.
 
-Praxis **product** commands and productization work: sibling repo `Praxis.v2`.
+Praxis is parked. `Docs/System/COMMANDS.md` is unchanged historical evidence, not agent authority.
+Praxis product development belongs in the sibling `Praxis.v2` repository.

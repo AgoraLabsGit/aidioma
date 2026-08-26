@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "id": "T-PHASE-COORDINATOR",
+  "kind": "task",
+  "evidence_dir": "Docs/Evidence/t-phase-coordinator",
+  "risk_tier": 1,
+  "outcome": "Every phase /run agent acts as coordinator, preserves its context window, and delegates coding by area of concern to in-session sub-agents instead of implementing the phase itself.",
+  "proof": [
+    "The /run skill states the coordinator role, keep/delegate split, area-of-concern dispatch, and brief/return contract.",
+    "Phase template kickoff tells the agent to coordinate and delegate.",
+    "Regression tests fail if the run skill, phase template, or AGENTS.md drop the coordinator contract."
+  ],
+  "non_goals": [
+    "No learner behavior, API, content, or runtime change.",
+    "Do not start Praxis or a second runner.",
+    "Do not change close-gate auditor independence or require publication."
+  ],
+  "required_lenses": [
+    "Claims / Proof evidence",
+    "Code quality / Standards",
+    "MCOO"
+  ],
+  "check_commands": [
+    [
+      "node",
+      "--test",
+      ".claude/skills/run/run-coordinator.test.mjs"
+    ],
+    [
+      "git",
+      "diff",
+      "--check",
+      "HEAD^",
+      "HEAD"
+    ]
+  ],
+  "check_environment": [],
+  "check_timeout_ms": 120000,
+  "scopes": [
+    ".claude/skills/close/SKILL.md",
+    ".claude/skills/phase-close/SKILL.md",
+    ".claude/skills/plan/SKILL.md",
+    ".claude/skills/run/SKILL.md",
+    ".claude/skills/run/run-coordinator.test.mjs",
+    ".cursor/commands/plan.md",
+    ".cursor/commands/run.md",
+    ".cursor/rules/aidoma-files-first.mdc",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "Docs/AGENTS.md",
+    "Docs/COMMANDS-OVERVIEW.md",
+    "Docs/Evidence/t-phase-coordinator/target.json",
+    "Docs/START.md",
+    "Docs/System/Templates/phase.md"
+  ]
+}

@@ -46,7 +46,7 @@ Plain English is enough. Optional verbs:
 - `/handoff` — update `Docs/NOW.md` for the next session
 - `/close` — candidate-pinned checks + independent adversarial audits; dispatches roadmap phases to the full release path
 - `/phase-close` — close, commit, publish, merge, deploy, and smoke-check the roadmap phase
-- `/plan` / `/run` — follow `Docs/Roadmap/Phases/` and implement; no Praxis phase machine
+- `/plan` / `/run` — follow `Docs/Roadmap/Phases/` as coordinator; delegate coding by area to in-session sub-agents; no Praxis phase machine
 
 Invocation is host-specific: plain English works everywhere; Cursor/Claude may use `/close`; Codex
 may use `$close` or plain English.

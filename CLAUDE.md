@@ -1,23 +1,14 @@
 # AIdioma agent entry point
 
-Read and follow `AGENTS.md`. This repo is the AIdioma Praxis project. Praxis product
-development is the sibling `Praxis.v2` project — separate Docs/Work/dashboard.
+Read and follow `AGENTS.md`. This repo is the AIdioma learner product.
 
-<!-- praxis:canonical-commands:start -->
-## Praxis canonical commands (registry v6)
+Praxis is parked. Do not run Praxis CLI, hooks, or sqlite governance.
+Praxis product development is the sibling `Praxis.v2` project.
+`Docs/System/` is frozen historical evidence except for `Docs/System/Templates/phase.md`; do not
+follow its old commands, protocols, dashboard, close, or publish lifecycle.
 
-Load Praxis skills from `.claude/skills/`. These files are generated from the typed Praxis command registry; do not copy or redefine their command semantics.
-Claude Code loads `/task` and the other verbs below from `.claude/skills/`.
-If you are already in this host session, do the work here after creating the Work item. Do not start the Cursor agent runner.
-Before a governed mutation, run `praxis status --json` and follow the returned next action. Mutation-hook health is authoritative only through `praxis hooks status --json`.
+Phase `/run` agents coordinate and delegate coding to in-session sub-agents; they do not implement
+the phase themselves. Follow `.claude/skills/run/SKILL.md`.
 
-- `/plan` → `/plan` — Work placed as a task, phase, or active-phase work
-- `/run` → `/run` — The one active phase is prepared for its governed runner
-- `/task` → `/task` — Work item created and claimed
-- `/fix` → `/fix` — Fix Work item created and claimed
-- `/log` → `/log` — Work item parked for later
-- `/check` → `/check` — Check receipt recorded
-- `/handoff` → `/handoff` — Handoff stored and projected
-- `/close` → `/close` — Local Work close recorded with proof
-- `/publish` → `praxis publish execute` — A confirmed exact-head publication enters the canonical receipt chain
-<!-- praxis:canonical-commands:end -->
+For close, follow `Docs/CLOSE.md` and the repository close skill. Independent audit sub-agents are
+part of this session; they do not authorize another runner or publication.
