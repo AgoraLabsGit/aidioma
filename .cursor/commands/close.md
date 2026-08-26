@@ -1,13 +1,10 @@
 ---
-description: Close one local governed Work item with retained proof.
+description: Close the current AIdioma item or phase through candidate-pinned multi-agent gates.
 ---
 
 # /close
 
-This is the native-chat adapter for canonical action `close.local` (registry version 6).
-
-1. Gather the required action input.
-2. Invoke the canonical Praxis action `/close`.
-3. If this session is already Claude Code or Codex, do the work here. Do not start the Cursor agent runner. In Codex, type $task — never /task.
-4. Show the returned receipt and recovery action if denied.
-5. Never edit generated Work, Activity, or handoff projections directly.
+Read and follow `.claude/skills/close/SKILL.md` and `Docs/CLOSE.md`. Dispatch to the full phase path
+when the current target is a roadmap phase. Ordinary item closes require a separate founder request
+to publish; an explicit roadmap phase close includes PR publication, merge, production deploy, and
+smoke verification. Internal candidate commits/refs are close evidence. Praxis is parked.
