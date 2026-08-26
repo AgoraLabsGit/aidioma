@@ -45,9 +45,10 @@ weak material. A recommendation always says why it was chosen and can be ignored
 
 ### 2. Complete lessons from beginner through advanced
 
-The curriculum covers A1 through C1. Each level is a sequence of finite lessons; each lesson
-has one practical outcome, a small set of concepts, concise teaching messages, examples in the
-active dialect, and typed checks in the same chat workspace used by Practice.
+The curriculum covers A1 through C1. Each level is a sequence of finite lessons from the
+promoted registry; each lesson has one practical outcome, a small set of concepts, concise
+teaching messages, examples in the active dialect, and several typed checks in the same chat
+workspace used by Practice. The authored A1 opener is greetings and introducing yourself.
 
 A lesson ends with a clear completion state and contributes its concepts and bilingual items
 to the learner's eligible review pool. Unlocking is guided, not punitive: learners can inspect
@@ -248,6 +249,8 @@ The MVP is marketable when:
 ## What AIdioma will never do
 
 - Present unreviewed model output as authoritative teaching material
+- Let a runtime tutor choose the next item, invent accepted answers, or ignore the learner's
+  chosen lesson, collection, or level
 - Inflate engagement by hiding the learner's goal behind game mechanics
 - Claim that a lookup, save, or easy recognition event proves productive knowledge
 - Let regional Spanish become an inconsistent set of prompt instructions or cosmetic labels
