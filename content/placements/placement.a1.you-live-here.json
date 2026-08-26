@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "placement.a1.you-live-here",
+  "contentVersion": 1,
+  "cefr": "A1",
+  "title": "Living here",
+  "objective": "Say that one person lives here in your Spanish profile.",
+  "source": {
+    "unitId": "unit.a1.you-live-here",
+    "contentVersion": 1,
+    "promotionReceiptId": "promotion.unit-a1-you-live-here.v1"
+  },
+  "teaching": {
+    "title": "Match the person and place",
+    "body": "Spanish changes the form of vivir to match the person you are speaking to. Your profile also chooses the usual word for ‘here’. The example below shows both choices together."
+  },
+  "check": {
+    "unitId": "unit.a1.you-live-here",
+    "hints": {
+      "es-AR": [
+        "Use the informal vos form for one person.",
+        "With vos, vivir ends in -ís; then use the nearby-place word acá.",
+        "Start with ‘Vos vivís…’ and finish with the word for ‘here’."
+      ],
+      "es-419": [
+        "Use the informal tú form for one person.",
+        "With tú, vivir becomes vives; then use the nearby-place word aquí.",
+        "Start with ‘Tú vives…’ and finish with the word for ‘here’."
+      ],
+      "es-ES": [
+        "Use the informal tú form for one person.",
+        "With tú, vivir becomes vives; then use the nearby-place word aquí.",
+        "Start with ‘Tú vives…’ and finish with the word for ‘here’."
+      ]
+    }
+  },
+  "collections": [
+    {
+      "id": "collection.a1.present-regular-ir",
+      "kind": "concept",
+      "referenceId": "concept.present.regular-ir.second-person",
+      "title": "Present -ir forms",
+      "description": "Review the present-tense form used when speaking to one person."
+    },
+    {
+      "id": "collection.a1.home-location",
+      "kind": "topic",
+      "referenceId": "home",
+      "title": "Home & location",
+      "description": "Review useful language for saying where someone lives."
+    }
+  ]
+}

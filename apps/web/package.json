@@ -20,6 +20,8 @@
     "test:watch": "vitest",
     "build": "next build",
     "prove:evaluate": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx scripts/prove-evaluate.ts",
+    "preprove:journey": "npm run contract:build",
+    "prove:journey": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx src/lib/learning-journey/prove-journey.ts",
     "practice:candidates": "node --env-file-if-exists=.env.local --import tsx scripts/practice-candidates.ts",
     "references": "node scripts/capture-prototype-references.mjs",
     "smoke": "node scripts/smoke.mjs",

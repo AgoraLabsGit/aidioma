@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "candidate": "f0896ecece5ffa6fbfe91fca3ea6f25de4852d2ac1023a47a0df7b4f8de72c1d",
+  "commit": "25dbdf95478b5ae20ff2d8ea4237c349455a5333",
+  "tree": "b3313e473f9584f492eea5d2819dad42ac41b769",
+  "command": [
+    "npm",
+    "run",
+    "content:validate"
+  ],
+  "started_at": "2026-08-26T15:19:02Z",
+  "finished_at": "2026-08-26T15:19:24Z",
+  "exit_code": 0,
+  "signal": null,
+  "stdout": "\n> aidioma@0.1.0 content:validate\n> npm run contract:build --silent && tsx tooling/content/validate.ts content/lessons\n\nFindings\n--------\n  [WARN] ACCEPTED_ES_COUNT  (a1-01-hola-me-llamo / a1-01.s.02)\n         acceptedEs has 0 alternate(s); the authored target is 3–6.\n  [WARN] ACCEPTED_ES_COUNT  (a1-01-hola-me-llamo / a1-01.s.04)\n         acceptedEs has 0 alternate(s); the authored target is 3–6.\n  [WARN] ACCEPTED_ES_COUNT  (a1-01-hola-me-llamo / a1-01.s.10)\n         acceptedEs has 2 alternate(s); the authored target is 3–6.\n  [WARN] ACCEPTED_ES_COUNT  (a1-01-hola-me-llamo / a1-01.s.11)\n         acceptedEs has 2 alternate(s); the authored target is 3–6.\n  [WARN] ACCEPTED_ES_COUNT  (a1-01-hola-me-llamo / a1-01.s.12)\n         acceptedEs has 2 alternate(s); the authored target is 3–6.\n  [INFO] ACCEPTED_EN_EMPTY  (a1-01-hola-me-llamo / a1-01.s.11)\n         acceptedEn is empty; confirm the canonical English has no useful contraction or paraphrase for Both-direction practice.\n\nSummary\n-------\n  LESSON                         ERR   WARN  STATUS\n  a1-01-hola-me-llamo            0     5     warn\n  a1-02-soy-asi                  0     0     ok\n  a1-03-que-haces                0     0     ok\n  a1-04-donde-esta               0     0     ok\n  a1-05-ser-y-estar              0     0     ok\n\n  0 error(s), 5 warning(s) across 5 lesson(s).\n  RESULT: PASS\n",
+  "stderr": ""
+}

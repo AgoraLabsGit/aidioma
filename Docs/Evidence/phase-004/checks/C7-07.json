@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "candidate": "135ca32cbfcc696cc67a81c0cc96b2705155a74424e980eae31701e46acd0984",
+  "commit": "d727fbea663c2fa7470e99f001ef3f79596e04ea",
+  "tree": "c05d5b3f3d0971e9b0cbc2326547c118fe258bc9",
+  "command": [
+    "npm",
+    "run",
+    "prove:journey",
+    "--workspace",
+    "@aidioma/web"
+  ],
+  "started_at": "2026-08-26T15:38:50Z",
+  "finished_at": "2026-08-26T15:39:21Z",
+  "exit_code": 0,
+  "signal": null,
+  "stdout": "\n> @aidioma/web@0.1.0 preprove:journey\n> npm run contract:build\n\n\n> @aidioma/web@0.1.0 contract:build\n> npm run build --workspace @aidioma/lesson-schema\n\n\n> @aidioma/lesson-schema@1.0.0 build\n> tsc -p tsconfig.build.json\n\n\n> @aidioma/web@0.1.0 prove:journey\n> node --conditions=react-server --env-file-if-exists=.env.local --import tsx src/lib/learning-journey/prove-journey.ts\n\nPASS journey-proof database=aidioma_[REDACTED] attempts=2 contextual_exchanges=1 collections=2 position_retained=true\n",
+  "stderr": ".env.local not found. Continuing without it.\n"
+}

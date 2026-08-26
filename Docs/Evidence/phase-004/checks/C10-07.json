@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "candidate": "edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7",
+  "commit": "1c035d790a80c8c04c41dc21df1fdb66e1901860",
+  "tree": "b940bd38bb18a5625e94dbb124c758c79ac132cd",
+  "command": [
+    "npm",
+    "run",
+    "prove:journey",
+    "--workspace",
+    "@aidioma/web"
+  ],
+  "started_at": "2026-08-26T16:23:34Z",
+  "finished_at": "2026-08-26T16:24:01Z",
+  "exit_code": 1,
+  "signal": null,
+  "stdout": "\n> @aidioma/web@0.1.0 preprove:journey\n> npm run contract:build\n\n\n> @aidioma/web@0.1.0 contract:build\n> npm run build --workspace @aidioma/lesson-schema\n\n\n> @aidioma/lesson-schema@1.0.0 build\n> tsc -p tsconfig.build.json\n\n\n> @aidioma/web@0.1.0 prove:journey\n> node --conditions=react-server --env-file-if-exists=.env.local --import tsx src/lib/learning-journey/prove-journey.ts\n\n",
+  "stderr": ".env.local not found. Continuing without it.\n/private/var/folders/d1/ynz5sp995p74z73khz5hzmc00000gn/T/aidioma-check-proof-HGPvXa/apps/web/src/lib/learning-journey/prove-journey.ts:21\n  throw new Error(`FAIL journey-proof ${message}`);\n        ^\n\n\nError: FAIL journey-proof contextual:contextual_help_unavailable\n    at fail (/private/var/folders/d1/ynz5sp995p74z73khz5hzmc00000gn/T/aidioma-check-proof-HGPvXa/apps/web/src/lib/learning-journey/prove-journey.ts:21:9)\n    at proveLessonJourney (/private/var/folders/d1/ynz5sp995p74z73khz5hzmc00000gn/T/aidioma-check-proof-HGPvXa/apps/web/src/lib/learning-journey/prove-journey.ts:135:18)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async <anonymous> (/private/var/folders/d1/ynz5sp995p74z73khz5hzmc00000gn/T/aidioma-check-proof-HGPvXa/apps/web/src/lib/learning-journey/prove-journey.ts:182:15)\n\nNode.js v22.18.0\nnpm error Lifecycle script `prove:journey` failed with error:\nnpm error code 1\nnpm error path /private/var/folders/d1/ynz5sp995p74z73khz5hzmc00000gn/T/aidioma-check-proof-HGPvXa/apps/web\nnpm error workspace @aidioma/web@0.1.0\nnpm error location /private/var/folders/d1/ynz5sp995p74z73khz5hzmc00000gn/T/aidioma-check-proof-HGPvXa/apps/web\nnpm error command failed\nnpm error command sh -c node --conditions=react-server --env-file-if-exists=.env.local --import tsx src/lib/learning-journey/prove-journey.ts\n"
+}

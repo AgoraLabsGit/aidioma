@@ -1,0 +1,8 @@
+TARGET: Docs/Evidence/phase-004/target.json
+LENS: Code quality / Standards
+RESULT: PASS
+CANDIDATE: edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7
+BLOCKERS: none
+FINDINGS:
+`apps/web/src/lib/practice-serving/session-service.ts:100-108` defines the surgical learner/profile/source-kind/source-ID identity guard; `apps/web/src/lib/practice-serving/session-service.ts:265-284` applies it immediately after both `createSession()` returns, returning `session_conflict` before validation or mutation for an unrelated winner while preserving validation, termination, and retry only for an identity-matching stale winner. `apps/web/src/lib/practice-serving/session-service.test.ts:286-328` retains proof of stale same-source replacement, while the sole added regression at `apps/web/src/lib/practice-serving/session-service.test.ts:330-367` makes an unrelated collection win, expects `session_conflict`, and proves that winner remains active, preventing the learner from receiving the wrong collection or losing the concurrent session. `apps/web/src/lib/practice-serving/database-session-repository.ts:49-71` confirms the production uniqueness race returns the concurrent resumable winner to this guard, and `apps/web/src/app/api/practice/session/route.ts:99-108,157-165` returns the conflict as an honest 409 without serializing the wrong session. Round 10 changed only the service and its one test; the frozen phase and target objects are unchanged from round 9. All eight candidate-bound C11 commands exited successfully, including 38 test files and 269 tests. Manifest digest, retention ref, commit, tree, parent, and scoped blob identities matched before and after inspection.
+REMEDIATION: none

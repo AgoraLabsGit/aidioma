@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "candidate": "65827b868127075dd7dac70d655b9fbf6175cb5d0a061404c439c43c04cd5d4e",
+  "commit": "7c51606746faf068cec9cffff9e443349776f6ae",
+  "tree": "7492bf04bf4f268660feea22ec6336dbd0d47032",
+  "command": [
+    "npm",
+    "run",
+    "contract:smoke"
+  ],
+  "started_at": "2026-08-26T15:02:15Z",
+  "finished_at": "2026-08-26T15:02:38Z",
+  "exit_code": 0,
+  "signal": null,
+  "stdout": "\n> aidioma@0.1.0 contract:smoke\n> npm run smoke --workspace @aidioma/lesson-schema\n\n\n> @aidioma/lesson-schema@1.0.0 smoke\n> tsx test/schema-smoke.ts\n\n  PASS  GrammarTag has no duplicates (54 tags)\n  PASS  A1 block = 31 tags (map §7 + P-003 formula.courtesy)\n  PASS  total 54 within 45–59 target\n  PASS  GRAMMAR_TAG_VERSION === 2\n  PASS  valid lesson fixture parses\n  PASS  deprecated defaults to false\n  PASS  acceptedEs defaults to []\n  PASS  P-004 AcceptedEntry object+region parses\n  PASS  dialect unit parses with exact MVP profile coverage\n  PASS  rejects missing es-ES dialect coverage\n  PASS  allows one shared canonical rendering across all profiles\n  PASS  rejects <8 vocab\n  PASS  rejects unknown GrammarTag\n  PASS  rejects sentence without exactly 3 hints\n  PASS  rejects MCQ correctIndex out of range (refine)\n  PASS  rejects >6 quickChecks\n\nSMOKE OK — all checks passed (54 grammar tags).\n",
+  "stderr": ""
+}

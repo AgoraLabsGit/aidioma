@@ -642,3 +642,77 @@ export const DialectPromotionReceipt = z.object({
   promotedAt: z.string().datetime({ offset: true }),
 }).strict();
 export type DialectPromotionReceipt = z.infer<typeof DialectPromotionReceipt>;
+
+/* ==================================================================
+ * 6. Finite lesson placement over promoted dialect content
+ * ------------------------------------------------------------------
+ * Placement describes where a promoted semantic unit appears in a
+ * lesson and in review collections. It references the unit rather than
+ * copying its meaning, canonical renderings, or accepted answers.
+ * ================================================================== */
+
+export const LessonCollectionMembership = z
+  .object({
+    id: stableId('collection'),
+    kind: z.enum(['concept', 'topic']),
+    referenceId: z.string().min(1),
+    title: z.string().min(1),
+    description: z.string().min(1),
+  })
+  .strict();
+export type LessonCollectionMembership = z.infer<typeof LessonCollectionMembership>;
+
+export const PromotedLessonPlacement = z
+  .object({
+    schemaVersion: z.literal(1),
+    id: stableId('placement'),
+    contentVersion: z.number().int().positive(),
+    cefr: CefrLevel,
+    title: z.string().min(1),
+    objective: z.string().min(1),
+    source: z
+      .object({
+        unitId: stableId('unit'),
+        contentVersion: z.number().int().positive(),
+        promotionReceiptId: stableId('promotion'),
+      })
+      .strict(),
+    teaching: z
+      .object({
+        title: z.string().min(1),
+        body: z.string().min(1),
+      })
+      .strict(),
+    check: z
+      .object({
+        unitId: stableId('unit'),
+        hints: z
+          .object({
+            'es-AR': z.tuple([z.string().min(1), z.string().min(1), z.string().min(1)]),
+            'es-419': z.tuple([z.string().min(1), z.string().min(1), z.string().min(1)]),
+            'es-ES': z.tuple([z.string().min(1), z.string().min(1), z.string().min(1)]),
+          })
+          .strict(),
+      })
+      .strict(),
+    collections: z.array(LessonCollectionMembership).min(1),
+  })
+  .strict()
+  .superRefine((placement, context) => {
+    if (placement.check.unitId !== placement.source.unitId) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['check', 'unitId'],
+        message: 'The finite check must use the promoted source unit.',
+      });
+    }
+    const collectionIds = placement.collections.map((collection) => collection.id);
+    if (new Set(collectionIds).size !== collectionIds.length) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['collections'],
+        message: 'Collection placement ids must be unique.',
+      });
+    }
+  });
+export type PromotedLessonPlacement = z.infer<typeof PromotedLessonPlacement>;

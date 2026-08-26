@@ -1,1808 +1,375 @@
 "use client";
 
-import {
-  Check,
-  CircleAlert,
-  LoaderCircle,
-  Pause,
-  RotateCcw,
-  Send,
-  SlidersHorizontal,
-  Sparkles,
-  Star,
-} from "lucide-react";
+import { Check, CircleAlert, LoaderCircle, Pause, Send, Sparkles, Star } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { z } from "zod";
 
-import type { CorrectionPresentation } from "@/lib/evaluation/contracts";
+import { adaptiveOfferExplanation } from "@/lib/practice-serving/adaptive-session";
+import { correctionSegments } from "@/lib/practice-serving/correction-segments";
 import {
-  PracticeEvaluationResponseSchema,
-  type PracticeGradedEvaluation,
-} from "@/lib/practice-sets/evaluation-contract";
-import {
-  describePracticeOverrides,
-  practiceDirectionLabels,
-  practiceSetFacets,
-  practiceSetFixtures,
-  promptsForConfiguration,
-  type PracticeDirection,
-  type PracticePrompt,
-  type PracticeSetConfiguration,
-  type PracticeSetFacet,
-  type PracticeSetFixture,
-} from "@/lib/practice-sets/prototype-fixtures";
-import {
-  practiceUnitsForSession,
-  randomSessionOrderSeed,
-} from "@/lib/practice-sets/session-order";
-import {
-  PRACTICE_SERVING_POLICY_VERSION,
-  PRACTICE_SERVING_STATE_SCHEMA_VERSION,
-  recoverPracticeServing,
-  resumePracticeServing,
-  startPracticeServing,
-  type ServingStartResult,
-  type ServingTransitionResult,
-} from "@/lib/practice-serving/serving-engine";
-import {
-  RESTAURANT_COLLECTION_ID,
-  resolveRestaurantPracticeSource,
-  resolveSavedRestaurantPracticeSource,
-  type PracticeSourceUnavailableReason,
-  type ResolvedPracticeSource,
-} from "@/lib/practice-serving/restaurant-source";
-import {
-  applyTypedEvaluationOutcome,
-  deferTypedEvaluationWithoutEvidence,
-} from "@/lib/practice-serving/typed-outcome-adapter";
-import {
-  checkpointPracticeVisit,
-  readPracticeVisitCheckpoint,
-} from "@/lib/practice-serving/visit-checkpoint";
-import {
-  addSavedPracticeReference,
-  hasSavedPracticeReference,
-  removeSavedPracticeReference,
-  savedPracticeReference,
-  savedPracticeReferenceKey,
-  type SavedPracticeReference,
-} from "@/lib/practice-sets/saved-practice-references";
+  PracticeSessionErrorSchema,
+  PracticeSessionResponseSchema,
+  type PracticeSessionAction,
+  type PracticeSessionResponse,
+  type PracticeSessionView,
+} from "@/lib/practice-serving/session-api-contract";
 
-import { PracticeSetOptionsPanel } from "./practice-set-options-panel";
 import { Button, Card, IconButton } from "./primitives";
 import { PrototypeContextHeader } from "./prototype-context-header";
 
-type PracticeView = "catalog" | "session" | "recap";
-type CatalogFilter = "All" | "Saved" | PracticeSetFacet;
-type Configurations = Record<string, PracticeSetConfiguration>;
-type PracticeTurn = {
-  answer: string;
-  collectionId: string;
-  direction: Exclude<PracticeDirection, "both">;
-  evaluation: PracticeGradedEvaluation;
-  prompt: PracticePrompt;
-};
-type CollectionSessionSummary = {
-  completedCards: number;
-  correctRate: number;
-};
-type PracticeEvaluationFailure = {
-  message: string;
-  retryable: boolean;
-};
-type SavedPromptRecord = {
-  collection: PracticeSetFixture;
-  prompt: PracticePrompt;
-  reference: SavedPracticeReference;
-};
-type SessionSnapshotBase = {
-  avoidFirstPromptId?: string;
-  configuration: PracticeSetConfiguration;
-  orderSeed: number;
-};
-type SessionSnapshot =
-  | (SessionSnapshotBase & {
-      kind: "collection";
-      setId: string;
-    })
-  | (SessionSnapshotBase & {
-      kind: "saved-material";
-      promptReferences: SavedPracticeReference[];
-    })
-  | (SessionSnapshotBase & {
-      kind: "saved-restaurant";
-      promptReferences: SavedPracticeReference[];
-    });
-type PausedVisitApplicationState = {
-  sessionSnapshot: SessionSnapshot;
-  turns: PracticeTurn[];
-  typedAnswer: string;
-};
-type PausedVisit = {
-  checkpoint: string;
-  completedCount: number;
-  failure?: "resume_incompatible";
-  title: string;
-};
-type RestaurantServingSession =
-  | {
-      kind: "engine";
-      decision: ServingStartResult | ServingTransitionResult;
-      source: ResolvedPracticeSource;
-    }
-  | {
-      kind: "source-unavailable";
-      reason: PracticeSourceUnavailableReason;
-    };
-const storageKey = "aidioma-intermediate-pilot-configurations:v2";
-const legacyStorageKey = "aidioma-intermediate-pilot-configurations:v1";
-const learnerStage = "intermediate" as const;
-const storedConfigurationShape = {
-  activity: z.enum(["type", "flashcards"]),
-  direction: z.enum(["en-es", "es-en", "both"]),
-  focus: z.enum([
-    "recommended",
-    "completed-past",
-    "time-phrases",
-    "spatial-language",
-    "haber",
-    "connectors",
-  ]),
-  shuffle: z.boolean(),
-} as const;
-const StoredConfigurationSchema = z.object(storedConfigurationShape).strict();
-const LegacyStoredConfigurationSchema = z
-  .object({
-    ...storedConfigurationShape,
-    difficulty: z.enum(["guided", "standard", "stretch"]),
-  })
-  .strict();
-const StoredConfigurationsSchema = z.record(z.unknown());
+const draftStorageKey = "aidioma:practice-draft:v1";
 
-function defaultConfigurations(): Configurations {
-  return Object.fromEntries(
-    practiceSetFixtures.map((set) => [set.id, { ...set.defaultConfiguration }]),
-  );
+export interface PracticeSessionClient {
+  load(signal?: AbortSignal): Promise<PracticeSessionResponse>;
+  command(action: PracticeSessionAction, signal?: AbortSignal): Promise<PracticeSessionResponse>;
 }
 
-function rememberedConfigurations(): Configurations {
-  const defaults = defaultConfigurations();
-  if (typeof window === "undefined") return defaults;
-
-  try {
-    const currentStored = window.localStorage.getItem(storageKey);
-    const stored = currentStored ?? window.localStorage.getItem(legacyStorageKey);
-    const allowLegacyDifficulty = currentStored === null;
-    if (!stored) return defaults;
-
-    const parsedStored = StoredConfigurationsSchema.safeParse(JSON.parse(stored) as unknown);
-    if (!parsedStored.success) return defaults;
-
-    return Object.fromEntries(
-      practiceSetFixtures.map((set) => {
-        const value = parsedStored.data[set.id];
-        const current = StoredConfigurationSchema.safeParse(value);
-        const legacy = current.success || !allowLegacyDifficulty
-          ? null
-          : LegacyStoredConfigurationSchema.safeParse(value);
-        const configuration = current.success
-          ? current.data
-          : legacy?.success
-            ? {
-                activity: legacy.data.activity,
-                direction: legacy.data.direction,
-                focus: legacy.data.focus,
-                shuffle: legacy.data.shuffle,
-              }
-            : null;
-        const activityAvailable = set.activities.some(
-          (activity) =>
-            activity.status === "available" && activity.id === configuration?.activity,
-        );
-        const focusAvailable = set.focuses.some(
-          (focus) => focus.id === configuration?.focus,
-        );
-
-        return [
-          set.id,
-          configuration && activityAvailable && focusAvailable
-            ? configuration
-            : { ...set.defaultConfiguration },
-        ];
-      }),
-    );
-  } catch {
-    return defaults;
+class PracticeSessionClientError extends Error {
+  constructor(message: string, readonly retryable = false) {
+    super(message);
+    this.name = "PracticeSessionClientError";
   }
 }
 
-function persistConfigurations(configurations: Configurations) {
-  try {
-    window.localStorage.setItem(storageKey, JSON.stringify(configurations));
-    window.localStorage.removeItem(legacyStorageKey);
-  } catch {
-    // Remembering these display preferences is optional.
-  }
-}
-
-function filterCollections(filter: CatalogFilter, savedSetIds: string[]) {
-  if (filter === "All") return practiceSetFixtures;
-  if (filter === "Saved") {
-    return practiceSetFixtures.filter((set) => savedSetIds.includes(set.id));
-  }
-  return practiceSetFixtures.filter((set) => set.facets.includes(filter));
-}
-
-const promptRecordByReferenceKey = new Map(
-  practiceSetFixtures.flatMap((collection) =>
-    collection.prompts.map((prompt) => [
-      savedPracticeReferenceKey(savedPracticeReference(collection.id, prompt.id)),
-      { collection, prompt },
-    ] as const),
-  ),
-);
-
-function resolveSavedPromptRecords(
-  references: readonly SavedPracticeReference[],
-): SavedPromptRecord[] {
-  return references.flatMap((reference) => {
-    const currentRecord = promptRecordByReferenceKey.get(savedPracticeReferenceKey(reference));
-    return currentRecord ? [{ ...currentRecord, reference }] : [];
-  });
-}
-
-function summarizeSession(turns: PracticeTurn[]): CollectionSessionSummary | null {
-  if (turns.length === 0) return null;
-
-  return {
-    completedCards: turns.length,
-    correctRate: Math.round(
-      (turns.filter((turn) => turn.evaluation.verdict === "correct").length / turns.length) * 100,
-    ),
-  };
-}
-
-function FilterButton({
-  active,
-  children,
-  onClick,
-}: {
-  active: boolean;
-  children: React.ReactNode;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      aria-pressed={active}
-      className={`filter-chip${active ? " is-selected" : ""}`}
-      onClick={onClick}
-      type="button"
-    >
-      {children}
-    </button>
-  );
-}
-
-function CollectionCard({
-  isSaved,
-  latestSession,
-  onOpenOptions,
-  onStart,
-  onToggleSaved,
-  set,
-}: {
-  isSaved: boolean;
-  latestSession: CollectionSessionSummary | null;
-  onOpenOptions: () => void;
-  onStart: () => void;
-  onToggleSaved: () => void;
-  set: PracticeSetFixture;
-}) {
-  return (
-    <article className="practice-set-card">
-      <button
-        aria-label={`Start ${set.title}`}
-        className="practice-set-start"
-        onClick={onStart}
-        type="button"
-      >
-        <span className="set-card-topline">
-          <span className="set-level">{set.level}</span>
-          {latestSession ? (
-            <span aria-label={`Latest session score: ${latestSession.correctRate}% correct`} className="set-session-score">
-              {latestSession.correctRate}% latest
-            </span>
-          ) : null}
-        </span>
-        <strong>{set.title}</strong>
-        <span className="set-description">{set.description}</span>
-      </button>
-      <div className="set-card-actions">
-        <button
-          aria-label={isSaved ? `Remove ${set.title} from saved` : `Save ${set.title}`}
-          aria-pressed={isSaved}
-          className={`set-card-action saved-toggle${isSaved ? " is-saved" : ""}`}
-          onClick={onToggleSaved}
-          title={isSaved ? "Remove from saved" : "Save"}
-          type="button"
-        >
-          <Star aria-hidden="true" />
-        </button>
-        <button
-          aria-label={`Adjust ${set.title} settings`}
-          className="set-card-action set-options-button"
-          onClick={onOpenOptions}
-          title="Practice settings"
-          type="button"
-        >
-          <SlidersHorizontal aria-hidden="true" />
-        </button>
-      </div>
-    </article>
-  );
-}
-
-function PersonalSavedPromptCard({
-  onRemove,
-  record,
-}: {
-  onRemove: () => void;
-  record: SavedPromptRecord;
-}) {
-  return (
-    <article className="personal-saved-prompt-card">
-      <div className="personal-saved-prompt-copy">
-        <span>{record.collection.title}</span>
-        <strong>{record.prompt.english}</strong>
-        <p lang="es">{record.prompt.spanish}</p>
-      </div>
-      <Button
-        aria-label={`Remove “${record.prompt.english}” from personal saved material`}
-        onClick={onRemove}
-        variant="quiet"
-      >
-        Remove
-      </Button>
-    </article>
-  );
-}
-
-function PromptMessage({
-  direction,
-  prompt,
-  showDirection,
-}: {
-  direction: Exclude<PracticeDirection, "both">;
-  prompt: PracticePrompt;
-  showDirection: boolean;
-}) {
-  const displayedPrompt = direction === "en-es" ? prompt.english : prompt.spanish;
-  const hasCue = direction === "en-es";
-  const hasContext = hasCue || showDirection;
-  return (
-    <article
-      className={`practice-message prompt-message${
-        showDirection && !hasCue ? " has-direction-only" : ""
-      }${hasContext ? "" : " has-no-context"}`}
-    >
-      {hasContext ? (
-        <div className="prompt-context-row">
-          {hasCue ? <p className="prompt-cue">{prompt.cue}</p> : null}
-          {showDirection ? (
-            <div className="activity-label">
-              <span>{practiceDirectionLabels[direction]}</span>
-            </div>
-          ) : null}
-        </div>
-      ) : null}
-      <h2>{displayedPrompt}</h2>
-    </article>
-  );
-}
-
-function AnswerMessage({ answer }: { answer: string }) {
-  return (
-    <div aria-label="Your answer" className="practice-message answer-message">
-      {answer}
-    </div>
-  );
-}
-
-function CorrectedSentence({ correction }: { correction: CorrectionPresentation }) {
-  const segments: Array<{
-    text: string;
-    kind?: CorrectionPresentation["highlights"][number]["kind"];
-  }> = [];
-  let cursor = 0;
-  for (const highlight of correction.highlights) {
-    if (highlight.start > cursor) {
-      segments.push({ text: correction.text.slice(cursor, highlight.start) });
-    }
-    segments.push({
-      text: correction.text.slice(highlight.start, highlight.end),
-      kind: highlight.kind,
-    });
-    cursor = highlight.end;
-  }
-  if (cursor < correction.text.length) {
-    segments.push({ text: correction.text.slice(cursor) });
-  }
-  return (
-    <div className="feedback-reference-block">
-      <span className="feedback-reference-label">A correct answer</span>
-      <div
-        aria-label={`A correct answer: ${correction.text}`}
-        className="feedback-reference-answer"
-        role="group"
-      >
-        <span aria-hidden="true">
-          {segments.map((segment, index) => (
-            <span
-              className={
-                segment.kind === "spelling"
-                  ? "correction-segment correction-close"
-                  : segment.kind === "different"
-                    ? "correction-segment correction-changed"
-                    : undefined
-              }
-              key={`${segment.text}-${index}`}
-            >
-              {segment.text}
-            </span>
-          ))}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function FeedbackMessage({
-  announce,
-  evaluation,
-  isPromptSaved,
-  onTogglePromptSaved,
-}: {
-  announce: boolean;
-  evaluation: PracticeGradedEvaluation;
-  isPromptSaved: boolean;
-  onTogglePromptSaved: () => void;
-}) {
-  const title =
-    evaluation.verdict === "correct"
-      ? "Correct"
-      : evaluation.verdict === "close"
-        ? "Almost"
-        : "Keep working";
-  const Icon = evaluation.verdict === "correct" ? Check : CircleAlert;
-  const showCoaching =
-    evaluation.verdict !== "correct" &&
-    evaluation.feedback.trim().toLocaleLowerCase() !== `${title.toLocaleLowerCase()}.`;
-
-  return (
-    <div
-      aria-label={`Feedback: ${title}`}
-      aria-live={announce ? "polite" : undefined}
-      className={`practice-message feedback-message feedback-${evaluation.verdict}${
-        evaluation.verdict === "correct" ? " is-compact" : ""
-      }`}
-      role={announce ? "status" : undefined}
-    >
-      <div className="feedback-heading">
-        <Icon aria-hidden="true" />
-        <strong>{title}</strong>
-      </div>
-      {showCoaching ? <p>{evaluation.feedback}</p> : null}
-      {evaluation.verdict !== "correct" ? (
-        <CorrectedSentence correction={evaluation.correction} />
-      ) : null}
-      <button
-        aria-label={
-          isPromptSaved
-            ? "Remove this prompt from personal saved material"
-            : "Save this prompt to personal saved material"
-        }
-        aria-pressed={isPromptSaved}
-        className={`feedback-save-action saved-toggle${isPromptSaved ? " is-saved" : ""}`}
-        onClick={onTogglePromptSaved}
-        type="button"
-      >
-        <Star aria-hidden="true" />
-        {isPromptSaved ? "Saved for this visit" : "Save this prompt"}
-      </button>
-    </div>
-  );
-}
-
-function servingUnavailableCopy(reason: string) {
-  switch (reason) {
-    case "no_eligible_reviewed_items":
-      return {
-        title: "No reviewed practice matches these settings",
-        detail: "AIdioma kept your exact scope instead of quietly broadening it.",
-      };
-    case "no_spaced_retry_available":
-      return {
-        title: "More spacing is not available in this scope",
-        detail: "You can repeat this reviewed prompt now, adjust the scope, or end this visit.",
-      };
-    case "all_active_items_parked":
-      return {
-        title: "The current prompts need a reset",
-        detail: "You can bring one reviewed prompt back now, adjust the scope, or end this visit.",
-      };
-    case "source_version_unavailable":
-      return {
-        title: "This reviewed source version is unavailable",
-        detail: "Start an updated visit or end this one. AIdioma will not substitute different material.",
-      };
-    case "resume_incompatible":
-      return {
-        title: "This visit needs an updated restart",
-        detail: "The saved serving policy cannot continue safely with the current application version.",
-      };
-    default:
-      return {
-        title: "Practice cannot continue safely",
-        detail: "The reviewed source or current turn changed. Start a new visit or end this one.",
-      };
-  }
-}
-
-async function gradeAnswer(
-  prompt: PracticePrompt,
-  direction: Exclude<PracticeDirection, "both">,
-  userInput: string,
-  signal: AbortSignal,
-) {
-  const retryableFailure = (status: number) =>
-    status === 408 || status === 429 || status >= 500;
-  const response = await fetch("/api/practice/evaluate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ itemRef: prompt.id, direction, userInput }),
-    signal,
-  });
+async function readResponse(response: Response): Promise<PracticeSessionResponse> {
   let body: unknown;
   try {
     body = (await response.json()) as unknown;
   } catch {
-    const retryable = retryableFailure(response.status);
-    throw new PracticeGradingError(
-      retryable
-        ? "I couldn’t grade that answer right now. Your response is still here—try again."
-        : "Automatic grading isn’t available for this answer. Your response is still here, but retrying won’t help right now.",
-      retryable,
+    throw new PracticeSessionClientError("Practice is temporarily unavailable.", true);
+  }
+  if (!response.ok) {
+    const parsedError = PracticeSessionErrorSchema.safeParse(body);
+    throw new PracticeSessionClientError(
+      parsedError.success ? parsedError.data.message : "Practice is temporarily unavailable.",
+      parsedError.success ? (parsedError.data.retryable ?? false) : response.status >= 500,
     );
   }
-  const parsed = PracticeEvaluationResponseSchema.safeParse(body);
+  const parsed = PracticeSessionResponseSchema.safeParse(body);
   if (!parsed.success) {
-    const retryable = retryableFailure(response.status);
-    throw new PracticeGradingError(
-      retryable
-        ? "I couldn’t grade that answer right now. Your response is still here—try again."
-        : "Automatic grading isn’t available for this answer. Your response is still here, but retrying won’t help right now.",
-      retryable,
-    );
+    throw new PracticeSessionClientError("Practice returned an unsafe response.", true);
   }
   return parsed.data;
 }
 
-class PracticeGradingError extends Error {
-  constructor(
-    message: string,
-    readonly retryable: boolean,
-  ) {
-    super(message);
-    this.name = "PracticeGradingError";
+export const browserPracticeSessionClient: PracticeSessionClient = {
+  async load(signal) {
+    return readResponse(
+      await fetch("/api/practice/session", {
+        cache: "no-store",
+        headers: { Accept: "application/json" },
+        signal,
+      }),
+    );
+  },
+  async command(action, signal) {
+    return readResponse(
+      await fetch("/api/practice/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(action),
+        signal,
+      }),
+    );
+  },
+};
+
+type PracticeView = "catalog" | "session" | "recap";
+
+function readDraft(sessionId: string): string {
+  try {
+    const raw = window.localStorage.getItem(draftStorageKey);
+    if (!raw) return "";
+    const value = JSON.parse(raw) as { sessionId?: unknown; answer?: unknown };
+    return value.sessionId === sessionId && typeof value.answer === "string" ? value.answer : "";
+  } catch {
+    return "";
   }
 }
 
-export function PracticeWorkspace({
-  createSessionSeed = randomSessionOrderSeed,
-  initialSavedPromptReferences = [],
-  resolveRestaurantSource = resolveRestaurantPracticeSource,
-  resolveSavedRestaurantSource = resolveSavedRestaurantPracticeSource,
-}: {
-  createSessionSeed?: () => number;
-  initialSavedPromptReferences?: readonly SavedPracticeReference[];
-  resolveRestaurantSource?: typeof resolveRestaurantPracticeSource;
-  resolveSavedRestaurantSource?: typeof resolveSavedRestaurantPracticeSource;
-} = {}) {
+function retainDraft(sessionId: string, answer: string): void {
+  try {
+    if (!answer) window.localStorage.removeItem(draftStorageKey);
+    else window.localStorage.setItem(draftStorageKey, JSON.stringify({ sessionId, answer }));
+  } catch {
+    // The account-backed session survives even when this optional unsent draft cannot persist.
+  }
+}
+
+function verdictTitle(verdict: "correct" | "close" | "wrong") {
+  return verdict === "correct" ? "Correct" : verdict === "close" ? "Almost" : "Keep working";
+}
+
+function AttemptFeedback({ attempt, isSaved, onSave }: {
+  attempt: PracticeSessionView["attempts"][number];
+  isSaved: boolean;
+  onSave: () => void;
+}) {
+  const title = verdictTitle(attempt.verdict);
+  const Icon = attempt.verdict === "correct" ? Check : CircleAlert;
+  return (
+    <section className="practice-turn">
+      <article className="practice-message prompt-message has-no-context">
+        <h2>{attempt.prompt}</h2>
+      </article>
+      <div aria-label="Your answer" className="practice-message answer-message">{attempt.answer}</div>
+      <div
+        aria-label={`Feedback: ${title}`}
+        className={`practice-message feedback-message feedback-${attempt.verdict}${attempt.verdict === "correct" ? " is-compact" : ""}`}
+      >
+        <div className="feedback-heading"><Icon aria-hidden="true" /><strong>{title}</strong></div>
+        {attempt.feedback.trim().toLocaleLowerCase() !== `${title.toLocaleLowerCase()}.` ? <p>{attempt.feedback}</p> : null}
+        {attempt.verdict !== "correct" ? (
+          <div className="feedback-reference-block">
+            <span className="feedback-reference-label">A correct answer</span>
+            <div aria-label={`A correct answer: ${attempt.target}`} className="feedback-reference-answer" lang="es">
+              {(attempt.correction ? correctionSegments(attempt.correction) : [{ key: "plain-0", value: attempt.target }]).map(
+                (segment) => (
+                  <span className={segment.className} key={segment.key}>{segment.value}</span>
+                ),
+              )}
+            </div>
+          </div>
+        ) : null}
+        <button
+          aria-label={isSaved ? "Remove this item from All saved" : "Save this item to All saved"}
+          aria-pressed={isSaved}
+          className={`feedback-save-action saved-toggle${isSaved ? " is-saved" : ""}`}
+          onClick={onSave}
+          type="button"
+        >
+          <Star aria-hidden="true" />{isSaved ? "Saved in All saved" : "Save to All saved"}
+        </button>
+      </div>
+    </section>
+  );
+}
+
+export function PracticeWorkspace({ client = browserPracticeSessionClient }: { client?: PracticeSessionClient } = {}) {
   const [view, setView] = useState<PracticeView>("catalog");
-  const [practiceOptionsOpen, setPracticeOptionsOpen] = useState(false);
-  const [catalogFilter, setCatalogFilter] = useState<CatalogFilter>("All");
-  const [selectedSetId, setSelectedSetId] = useState(practiceSetFixtures[0].id);
-  const [savedSetIds, setSavedSetIds] = useState<string[]>([]);
-  const [savedPromptReferences, setSavedPromptReferences] = useState<
-    SavedPracticeReference[]
-  >(() => [...initialSavedPromptReferences]);
-  const [latestCollectionSessions, setLatestCollectionSessions] = useState<
-    Record<string, CollectionSessionSummary>
-  >({});
-  const [configurations, setConfigurations] = useState<Configurations>(rememberedConfigurations);
-  const [draftConfiguration, setDraftConfiguration] =
-    useState<PracticeSetConfiguration | null>(null);
-  const [sessionSnapshot, setSessionSnapshot] = useState<SessionSnapshot | null>(null);
-  const [restaurantServingSession, setRestaurantServingSession] =
-    useState<RestaurantServingSession | null>(null);
-  const [pausedVisit, setPausedVisit] = useState<PausedVisit | null>(null);
-  const [promptIndex, setPromptIndex] = useState(0);
-  const [turns, setTurns] = useState<PracticeTurn[]>([]);
+  const [session, setSession] = useState<PracticeSessionView | null>(null);
+  const [recap, setRecap] = useState<PracticeSessionView | null>(null);
+  const [savedItemIds, setSavedItemIds] = useState<string[]>([]);
+  const [availableCollectionIds, setAvailableCollectionIds] = useState<string[]>([]);
   const [typedAnswer, setTypedAnswer] = useState("");
   const [pendingAnswer, setPendingAnswer] = useState<string | null>(null);
-  const [evaluationFailure, setEvaluationFailure] = useState<PracticeEvaluationFailure | null>(
-    null,
-  );
-  const [isEvaluating, setIsEvaluating] = useState(false);
-  const [flashcardRevealed, setFlashcardRevealed] = useState(false);
-  const answerInputRef = useRef<HTMLInputElement>(null);
-  const evaluationAttemptRef = useRef(0);
-  const evaluationControllerRef = useRef<AbortController | null>(null);
-  const feedEndRef = useRef<HTMLDivElement>(null);
-  const lastSessionFirstPromptIdsRef = useRef<Record<string, string>>({});
-
-  useEffect(
-    () => () => {
-      evaluationAttemptRef.current += 1;
-      evaluationControllerRef.current?.abort();
-    },
-    [],
-  );
+  const [busy, setBusy] = useState(true);
+  const [error, setError] = useState<{ message: string; retryable: boolean } | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const requestRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    if (view !== "session") return;
-    const frame = window.requestAnimationFrame(() => {
-      feedEndRef.current?.scrollIntoView?.({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "auto"
-          : "smooth",
-        block: "nearest",
-      });
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [evaluationFailure, isEvaluating, turns.length, view]);
-
-  const selectedSet =
-    practiceSetFixtures.find((set) => set.id === selectedSetId) ?? practiceSetFixtures[0];
-  const selectedConfiguration = configurations[selectedSet.id];
-  const filteredSets = filterCollections(catalogFilter, savedSetIds);
-  const savedPromptRecords = resolveSavedPromptRecords(savedPromptReferences);
-  const restaurantSavedReferences = savedPromptReferences.filter(
-    (reference) => reference.collectionId === RESTAURANT_COLLECTION_ID,
-  );
-  const otherSavedPromptRecords = savedPromptRecords.filter(
-    (record) => record.collection.id !== RESTAURANT_COLLECTION_ID,
-  );
-  const unavailableSavedReferenceCount =
-    savedPromptReferences.length - savedPromptRecords.length;
-
-  function updateDraftConfiguration(patch: Partial<PracticeSetConfiguration>) {
-    setDraftConfiguration((current) => (current ? { ...current, ...patch } : current));
-  }
-
-  function openOptions(
-    set: PracticeSetFixture,
-    configuration = configurations[set.id],
-  ) {
-    setSelectedSetId(set.id);
-    setDraftConfiguration({ ...configuration });
-    setPracticeOptionsOpen(true);
-  }
-
-  function closeOptions() {
-    setDraftConfiguration(null);
-    setPracticeOptionsOpen(false);
-  }
-
-  function commitConfiguration(setId: string, configuration: PracticeSetConfiguration) {
-    const nextConfigurations = {
-      ...configurations,
-      [setId]: { ...configuration },
-    };
-    setConfigurations(nextConfigurations);
-    persistConfigurations(nextConfigurations);
-  }
-
-  function invalidateEvaluation() {
-    evaluationAttemptRef.current += 1;
-    evaluationControllerRef.current?.abort();
-    evaluationControllerRef.current = null;
-    setIsEvaluating(false);
-  }
-
-  function startPractice(set: PracticeSetFixture, configuration: PracticeSetConfiguration) {
-    invalidateEvaluation();
-    const orderSeed = createSessionSeed() >>> 0;
-    const avoidFirstPromptId = lastSessionFirstPromptIdsRef.current[set.id];
-    let nextRestaurantServingSession: RestaurantServingSession | null = null;
-    let firstPromptId: string | undefined;
-
-    if (set.id === RESTAURANT_COLLECTION_ID && configuration.activity === "type") {
-      const sourceResult = resolveRestaurantSource({
-        activity: configuration.activity,
-        collectionId: set.id,
-        direction: configuration.direction,
-        focus: configuration.focus,
-        stage: learnerStage,
-      });
-      if (sourceResult.status === "ready") {
-        const decision = startPracticeServing({
-          candidates: sourceResult.source.candidates,
-          orderingMode: configuration.shuffle ? "seeded" : "authored",
-          policyVersion: PRACTICE_SERVING_POLICY_VERSION,
-          requestedDirection: configuration.direction,
-          scope: {
-            activity: configuration.activity,
-            collectionId: sourceResult.source.scope.collectionId,
-            collectionVersion: sourceResult.source.scope.collectionVersion,
-            focusIds: [configuration.focus],
-            learnerStage,
-            scopeId: [set.id, learnerStage, configuration.activity, configuration.focus].join(":"),
-            sourceKind: "collection",
-          },
-          seed: String(orderSeed),
-          stateSchemaVersion: PRACTICE_SERVING_STATE_SCHEMA_VERSION,
-        });
-        nextRestaurantServingSession = {
-          kind: "engine",
-          decision,
-          source: sourceResult.source,
-        };
-        if (decision.status === "ready") firstPromptId = decision.offer.source.itemId;
-      } else {
-        nextRestaurantServingSession = {
-          kind: "source-unavailable",
-          reason: sourceResult.reason,
-        };
+    const controller = new AbortController();
+    requestRef.current = controller;
+    void client.load(controller.signal).then((response) => {
+      setSavedItemIds(response.savedItemIds);
+      setAvailableCollectionIds(response.availableCollectionIds ?? []);
+      if (response.session) {
+        setSession(response.session);
+        setTypedAnswer(readDraft(response.session.sessionId));
+        setView(response.session.status === "paused" ? "catalog" : "session");
       }
-    } else {
-      const matchingPrompts = promptsForConfiguration(set, configuration, learnerStage);
-      firstPromptId = practiceUnitsForSession(
-        matchingPrompts,
-        configuration,
-        orderSeed,
-        avoidFirstPromptId,
-      )[0]?.prompt.id;
-    }
-
-    if (firstPromptId) lastSessionFirstPromptIdsRef.current[set.id] = firstPromptId;
-    setRestaurantServingSession(nextRestaurantServingSession);
-    setSelectedSetId(set.id);
-    setSessionSnapshot({
-      avoidFirstPromptId,
-      configuration: { ...configuration },
-      kind: "collection",
-      orderSeed,
-      setId: set.id,
+    }).catch((caught: unknown) => {
+      if (controller.signal.aborted) return;
+      setError({
+        message: caught instanceof Error ? caught.message : "Practice is temporarily unavailable.",
+        retryable: caught instanceof PracticeSessionClientError ? caught.retryable : true,
+      });
+    }).finally(() => {
+      if (!controller.signal.aborted) setBusy(false);
     });
-    setPromptIndex(0);
-    setTurns([]);
-    setTypedAnswer("");
-    setPendingAnswer(null);
-    setEvaluationFailure(null);
-    setFlashcardRevealed(false);
-    setDraftConfiguration(null);
-    setPracticeOptionsOpen(false);
-    setView("session");
+    return () => controller.abort();
+  }, [client]);
+
+  useEffect(() => {
+    if (session) retainDraft(session.sessionId, typedAnswer);
+  }, [session, typedAnswer]);
+
+  async function run(action: PracticeSessionAction): Promise<PracticeSessionResponse | null> {
+    requestRef.current?.abort();
+    const controller = new AbortController();
+    requestRef.current = controller;
+    setBusy(true);
+    setError(null);
+    try {
+      const response = await client.command(action, controller.signal);
+      setSavedItemIds(response.savedItemIds);
+      setAvailableCollectionIds(response.availableCollectionIds ?? []);
+      return response;
+    } catch (caught) {
+      if (controller.signal.aborted) return null;
+      setError({
+        message: caught instanceof Error ? caught.message : "Practice is temporarily unavailable.",
+        retryable: caught instanceof PracticeSessionClientError ? caught.retryable : true,
+      });
+      return null;
+    } finally {
+      if (!controller.signal.aborted) setBusy(false);
+    }
   }
 
-  function startOtherSavedMaterialPractice(
-    currentRecords = otherSavedPromptRecords,
-  ) {
-    if (currentRecords.length === 0) {
-      setCatalogFilter("Saved");
-      returnToCatalog();
+  async function start(sourceKind: "collection" | "saved", sourceId?: string) {
+    const response = await run({ action: "start", sourceKind, ...(sourceId ? { sourceId } : {}) });
+    if (!response?.session) return;
+    setSession(response.session);
+    setTypedAnswer(readDraft(response.session.sessionId));
+    setPendingAnswer(null);
+    setView(response.session.status === "paused" ? "catalog" : "session");
+  }
+
+  async function submitAnswer() {
+    const answer = typedAnswer.trim();
+    if (!answer || !session || busy) return;
+    setPendingAnswer(answer);
+    const response = await run({ action: "answer", answer, offerOrdinal: session.current.ordinal, sessionId: session.sessionId });
+    if (!response?.session) {
+      setPendingAnswer(null);
       return;
     }
-
-    invalidateEvaluation();
-    const orderSeed = createSessionSeed() >>> 0;
-    const configuration: PracticeSetConfiguration = {
-      activity: "type",
-      direction: "both",
-      focus: "recommended",
-      shuffle: true,
-    };
-    const promptReferences = currentRecords.map((record) => record.reference);
-    const firstPromptId = practiceUnitsForSession(
-      currentRecords.map((record) => record.prompt),
-      configuration,
-      orderSeed,
-      lastSessionFirstPromptIdsRef.current["personal-saved-material"],
-    )[0]?.prompt.id;
-    const avoidFirstPromptId = lastSessionFirstPromptIdsRef.current["personal-saved-material"];
-
-    if (firstPromptId) {
-      lastSessionFirstPromptIdsRef.current["personal-saved-material"] = firstPromptId;
-    }
-    setRestaurantServingSession(null);
-    setSessionSnapshot({
-      avoidFirstPromptId,
-      configuration,
-      kind: "saved-material",
-      orderSeed,
-      promptReferences,
-    });
-    setPromptIndex(0);
-    setTurns([]);
+    setSession(response.session);
     setTypedAnswer("");
     setPendingAnswer(null);
-    setEvaluationFailure(null);
-    setFlashcardRevealed(false);
-    setDraftConfiguration(null);
-    setPracticeOptionsOpen(false);
-    setView("session");
+    window.requestAnimationFrame(() => inputRef.current?.focus());
   }
 
-  function startSavedRestaurantPractice(
-    references: readonly SavedPracticeReference[] = restaurantSavedReferences,
-  ) {
-    if (references.length === 0) {
-      setCatalogFilter("Saved");
-      returnToCatalog();
+  async function changeStatus(action: "pause" | "resume" | "end") {
+    if (!session) return;
+    const completed = session;
+    const response = await run({ action, sessionId: session.sessionId });
+    if (action === "end" && response) {
+      retainDraft(session.sessionId, "");
+      setRecap(completed);
+      setSession(null);
+      setView("recap");
       return;
     }
-
-    invalidateEvaluation();
-    const orderSeed = createSessionSeed() >>> 0;
-    const configuration: PracticeSetConfiguration = {
-      activity: "type",
-      direction: "both",
-      focus: "recommended",
-      shuffle: true,
-    };
-    const promptReferences = references.map((reference) => ({ ...reference }));
-    const sourceResult = resolveSavedRestaurantSource({
-      activity: configuration.activity,
-      collectionId: RESTAURANT_COLLECTION_ID,
-      direction: configuration.direction,
-      focus: configuration.focus,
-      references: promptReferences,
-      stage: learnerStage,
-    });
-    let nextRestaurantServingSession: RestaurantServingSession;
-    if (sourceResult.status === "ready") {
-      const decision = startPracticeServing({
-        candidates: sourceResult.source.candidates,
-        orderingMode: "seeded",
-        policyVersion: PRACTICE_SERVING_POLICY_VERSION,
-        requestedDirection: configuration.direction,
-        scope: {
-          activity: configuration.activity,
-          collectionId: sourceResult.source.scope.collectionId,
-          collectionVersion: sourceResult.source.scope.collectionVersion,
-          focusIds: [],
-          learnerStage,
-          scopeId: `saved:${sourceResult.source.candidates.map((candidate) => candidate.itemId).join(",")}`,
-          sourceKind: "saved",
-        },
-        seed: String(orderSeed),
-        stateSchemaVersion: PRACTICE_SERVING_STATE_SCHEMA_VERSION,
-      });
-      nextRestaurantServingSession = {
-        kind: "engine",
-        decision,
-        source: sourceResult.source,
-      };
-    } else {
-      nextRestaurantServingSession = {
-        kind: "source-unavailable",
-        reason: sourceResult.reason,
-      };
-    }
-
-    setRestaurantServingSession(nextRestaurantServingSession);
-    setSelectedSetId(RESTAURANT_COLLECTION_ID);
-    setSessionSnapshot({
-      configuration,
-      kind: "saved-restaurant",
-      orderSeed,
-      promptReferences,
-    });
-    setPromptIndex(0);
-    setTurns([]);
-    setTypedAnswer("");
-    setPendingAnswer(null);
-    setEvaluationFailure(null);
-    setFlashcardRevealed(false);
-    setDraftConfiguration(null);
-    setPracticeOptionsOpen(false);
-    setView("session");
+    if (!response?.session) return;
+    setSession(response.session);
+    setView(response.session.status === "paused" ? "catalog" : "session");
+    if (action === "resume") window.requestAnimationFrame(() => inputRef.current?.focus());
   }
 
-  function pausePractice() {
-    if (
-      !sessionSnapshot ||
-      restaurantServingSession?.kind !== "engine" ||
-      !restaurantServingSession.decision.state
-    ) return;
-    invalidateEvaluation();
-    const title = sessionSnapshot.kind === "saved-restaurant"
-      ? "Saved Restaurant practice"
-      : "Restaurant Spanish";
-    setPausedVisit({
-      checkpoint: checkpointPracticeVisit<PausedVisitApplicationState>(
-        {
-          sessionSnapshot,
-          turns,
-          typedAnswer,
-        },
-        restaurantServingSession.decision.state,
-      ),
-      completedCount: turns.length,
-      title,
-    });
-    setSessionSnapshot(null);
-    setRestaurantServingSession(null);
-    setTurns([]);
-    setTypedAnswer("");
-    setPendingAnswer(null);
-    setEvaluationFailure(null);
-    setView("catalog");
+  async function toggleSaved(itemId: string) {
+    if (!session) return;
+    const response = await run({ action: "save", itemId, saved: !savedItemIds.includes(itemId), sessionId: session.sessionId });
+    if (response?.session) setSession(response.session);
   }
 
-  function resumePausedPractice() {
-    if (!pausedVisit) return;
-    invalidateEvaluation();
-    const decoded = readPracticeVisitCheckpoint<PausedVisitApplicationState>(
-      pausedVisit.checkpoint,
-    );
-    if (decoded.status === "unavailable") {
-      setPausedVisit((current) => current ? { ...current, failure: decoded.reason } : current);
-      return;
-    }
-    const snapshot = decoded.applicationState.sessionSnapshot;
-    const sourceResult = snapshot.kind === "saved-restaurant"
-      ? resolveSavedRestaurantSource({
-          activity: snapshot.configuration.activity,
-          collectionId: RESTAURANT_COLLECTION_ID,
-          direction: snapshot.configuration.direction,
-          focus: snapshot.configuration.focus,
-          references: snapshot.promptReferences,
-          stage: learnerStage,
-        })
-      : snapshot.kind === "collection" && snapshot.setId === RESTAURANT_COLLECTION_ID
-        ? resolveRestaurantSource({
-            activity: snapshot.configuration.activity,
-            collectionId: snapshot.setId,
-            direction: snapshot.configuration.direction,
-            focus: snapshot.configuration.focus,
-            stage: learnerStage,
-          })
-        : null;
-
-    setSessionSnapshot(snapshot);
-    setTurns(decoded.applicationState.turns);
-    setTypedAnswer(decoded.applicationState.typedAnswer);
-    setPendingAnswer(null);
-    setEvaluationFailure(null);
-    setPausedVisit(null);
-    if (!sourceResult || sourceResult.status === "unavailable") {
-      setRestaurantServingSession({
-        kind: "source-unavailable",
-        reason: sourceResult?.reason ?? "source_integrity_failed",
-      });
-    } else {
-      setRestaurantServingSession({
-        kind: "engine",
-        decision: resumePracticeServing(
-          decoded.servingState,
-          sourceResult.source.candidates,
-        ),
-        source: sourceResult.source,
-      });
-    }
-    setView("session");
-  }
-
-  function endPausedPractice() {
-    setPausedVisit(null);
-    setSessionSnapshot(null);
-    setRestaurantServingSession(null);
-    setTurns([]);
-    setTypedAnswer("");
-  }
-
-  function commitAndStartPractice(set: PracticeSetFixture) {
-    if (!draftConfiguration) return;
-    commitConfiguration(set.id, draftConfiguration);
-    startPractice(set, draftConfiguration);
-  }
-
-  function toggleSaved(setId: string) {
-    setSavedSetIds((current) =>
-      current.includes(setId) ? current.filter((id) => id !== setId) : [...current, setId],
+  if (busy && !session && !recap) {
+    return (
+      <div className="practice-workspace">
+        <PrototypeContextHeader title="Practice" titleStyle="screen" />
+        <div className="practice-feed prototype-feed">
+          <Card aria-live="polite" className="saved-section-empty" role="status"><LoaderCircle aria-hidden="true" /> Loading your practice…</Card>
+        </div>
+      </div>
     );
   }
 
-  function toggleSavedPrompt(reference: SavedPracticeReference) {
-    setSavedPromptReferences((current) =>
-      hasSavedPracticeReference(current, reference)
-        ? removeSavedPracticeReference(current, reference)
-        : addSavedPracticeReference(current, reference),
+  if (view === "recap" && recap) {
+    const correctCount = recap.attempts.filter((attempt) => attempt.verdict === "correct").length;
+    return (
+      <div className="practice-workspace">
+        <PrototypeContextHeader title="Practice recap" />
+        <div className="practice-feed recap-feed">
+          <Card className="recap-hero-card">
+            <span className="eyebrow">Session complete</span><h2>{recap.source.title}</h2>
+            <p>You completed {recap.attempts.length} {recap.attempts.length === 1 ? "answer" : "answers"}; {correctCount} {correctCount === 1 ? "was" : "were"} correct.</p>
+          </Card>
+          <Card className="evidence-preview-card">
+            <div className="feedback-heading"><Sparkles aria-hidden="true" /><strong>Your next visit will adapt</strong></div>
+            <p>Misses, confidence, and due timing were retained without a separate direction score.</p>
+          </Card>
+          <div className="recap-actions">
+            <Button onClick={() => void start("collection")}>Practice again</Button>
+            <Button onClick={() => { setRecap(null); setView("catalog"); }} variant="quiet">Browse practice</Button>
+          </div>
+        </div>
+      </div>
     );
   }
 
-  function returnToCatalog() {
-    invalidateEvaluation();
-    setDraftConfiguration(null);
-    setPracticeOptionsOpen(false);
-    setSessionSnapshot(null);
-    setRestaurantServingSession(null);
-    setView("catalog");
-  }
-
-  function endPractice() {
-    invalidateEvaluation();
-    setPendingAnswer(null);
-    setEvaluationFailure(null);
-    setView(turns.length > 0 ? "recap" : "catalog");
-  }
-
-  if (view === "catalog" && pausedVisit) {
+  if (session?.status === "paused") {
     return (
       <div className="practice-workspace">
         <PrototypeContextHeader title="Practice" titleStyle="screen" />
         <div className="practice-feed paused-practice-feed">
           <Card aria-live="polite" className="paused-practice-card" role="status">
             <Pause aria-hidden="true" />
-            <div>
-              <span className="eyebrow">Paused on this page</span>
-              <h2>{pausedVisit.title} is paused</h2>
-              <p>
-                {pausedVisit.failure
-                  ? "This visit cannot resume safely with the current application. End it to return to your collections."
-                  : `${pausedVisit.completedCount} completed ${pausedVisit.completedCount === 1 ? "prompt" : "prompts"} will return at the same place in this visit.`}
-              </p>
-              <p>This pause lasts only while this page stays open. Refreshing or closing it clears the visit.</p>
-            </div>
+            <div><span className="eyebrow">Saved to your account</span><h2>{session.source.title} is paused</h2><p>{session.attempts.length} completed {session.attempts.length === 1 ? "answer" : "answers"}, your next item, and your learning evidence are ready on return.</p></div>
             <div className="paused-practice-actions">
-              {pausedVisit.failure ? null : (
-                <Button onClick={resumePausedPractice}>Resume practice</Button>
-              )}
-              <Button onClick={endPausedPractice} variant="quiet">
-                End paused visit
-              </Button>
+              <Button disabled={busy} onClick={() => void changeStatus("resume")}>Resume practice</Button>
+              <Button disabled={busy} onClick={() => void changeStatus("end")} variant="quiet">End session</Button>
             </div>
           </Card>
+          {error ? <p role="alert">{error.message}</p> : null}
         </div>
       </div>
     );
   }
 
-  if (view === "catalog") {
+  if (view === "catalog" || !session) {
     return (
       <div className="practice-workspace">
         <PrototypeContextHeader title="Practice" titleStyle="screen" />
         <div className="practice-feed prototype-feed">
-          <div aria-label="Filter collections" className="filter-strip">
-            {(["All", "Saved", ...practiceSetFacets] as CatalogFilter[]).map((filter) => (
-              <FilterButton
-                active={catalogFilter === filter}
-                key={filter}
-                onClick={() => setCatalogFilter(filter)}
-              >
-                {filter}
-              </FilterButton>
-            ))}
-          </div>
-          <p aria-live="polite" className="filter-result-count">
-            {filteredSets.length === 1 ? "1 collection" : `${filteredSets.length} collections`}
-            {catalogFilter === "All" ? "" : ` · ${catalogFilter}`}
-          </p>
-          {catalogFilter === "Saved" ? (
-            <div className="saved-catalog-sections">
-              <section aria-labelledby="bookmarked-collections-heading" className="saved-catalog-section">
-                <div className="saved-section-heading">
-                  <div>
-                    <h2 id="bookmarked-collections-heading">Bookmarked collections</h2>
-                    <p>Collection shortcuts kept only for this visit.</p>
-                  </div>
-                </div>
-                {filteredSets.length === 0 ? (
-                  <Card className="saved-section-empty">
-                    <p>No bookmarked collections for this visit.</p>
-                  </Card>
-                ) : (
-                  <div className="practice-set-grid">
-                    {filteredSets.map((set) => (
-                      <CollectionCard
-                        isSaved
-                        key={set.id}
-                        latestSession={latestCollectionSessions[set.id] ?? null}
-                        onOpenOptions={() => openOptions(set)}
-                        onStart={() => startPractice(set, configurations[set.id])}
-                        onToggleSaved={() => toggleSaved(set.id)}
-                        set={set}
-                      />
-                    ))}
-                  </div>
-                )}
-              </section>
-              <section aria-labelledby="personal-saved-heading" className="saved-catalog-section">
-                <div className="saved-section-heading">
-                  <div>
-                    <h2 id="personal-saved-heading">Personal saved material</h2>
-                    <p>Individual prompts saved from feedback. They last only for this visit.</p>
-                  </div>
-                  <div className="saved-practice-actions">
-                    {restaurantSavedReferences.length > 0 ? (
-                      <Button onClick={() => startSavedRestaurantPractice()}>
-                        Practice saved Restaurant prompts
-                      </Button>
-                    ) : null}
-                    {otherSavedPromptRecords.length > 0 ? (
-                      <Button onClick={() => startOtherSavedMaterialPractice()} variant="quiet">
-                        Practice other saved material
-                      </Button>
-                    ) : null}
-                  </div>
-                </div>
-                {savedPromptReferences.length === 0 ? (
-                  <Card className="saved-section-empty">
-                    <p>
-                      No personal saved material yet. Save a prompt after receiving feedback in
-                      typed practice.
-                    </p>
-                  </Card>
-                ) : null}
-                {unavailableSavedReferenceCount > 0 ? (
-                  <Card aria-live="polite" className="saved-section-empty" role="status">
-                    <p>
-                      {unavailableSavedReferenceCount} saved {unavailableSavedReferenceCount === 1 ? "prompt is" : "prompts are"} no longer available. AIdioma will not replace {unavailableSavedReferenceCount === 1 ? "it" : "them"} with other material.
-                    </p>
-                    <Button
-                      onClick={() => setSavedPromptReferences((current) =>
-                        current.filter((reference) =>
-                          promptRecordByReferenceKey.has(savedPracticeReferenceKey(reference)),
-                        ),
-                      )}
-                      variant="quiet"
-                    >
-                      Remove unavailable saved material
-                    </Button>
-                  </Card>
-                ) : null}
-                {savedPromptRecords.length > 0 ? (
-                  <div className="personal-saved-prompt-list">
-                    {savedPromptRecords.map((record) => (
-                      <PersonalSavedPromptCard
-                        key={savedPracticeReferenceKey(record.reference)}
-                        onRemove={() =>
-                          setSavedPromptReferences((current) =>
-                            removeSavedPracticeReference(current, record.reference),
-                          )
-                        }
-                        record={record}
-                      />
-                    ))}
-                  </div>
-                ) : null}
-              </section>
-            </div>
-          ) : filteredSets.length === 0 ? (
-            <Card className="saved-empty-state">
-              <h2>No matching collections</h2>
-              <p>Change the filter to see more collections.</p>
-              <Button onClick={() => setCatalogFilter("All")} variant="quiet">
-                Browse collections
-              </Button>
-            </Card>
-          ) : (
-            <div className="practice-set-grid">
-              {filteredSets.map((set) => (
-                <CollectionCard
-                  isSaved={savedSetIds.includes(set.id)}
-                  key={set.id}
-                  latestSession={latestCollectionSessions[set.id] ?? null}
-                  onOpenOptions={() => openOptions(set)}
-                  onStart={() => startPractice(set, configurations[set.id])}
-                  onToggleSaved={() => toggleSaved(set.id)}
-                  set={set}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-        {practiceOptionsOpen ? (
-          <PracticeSetOptionsPanel
-            configuration={draftConfiguration ?? selectedConfiguration}
-            learnerStage={learnerStage}
-            onClose={closeOptions}
-            onStart={() => commitAndStartPractice(selectedSet)}
-            onUpdate={updateDraftConfiguration}
-            set={selectedSet}
-            startLabel="Start practice"
-          />
-        ) : null}
-      </div>
-    );
-  }
-
-  const snapshot = sessionSnapshot ?? {
-    configuration: selectedConfiguration,
-    kind: "collection" as const,
-    orderSeed: 0,
-    setId: selectedSet.id,
-  };
-  const isSavedMaterialSession =
-    snapshot.kind === "saved-material" || snapshot.kind === "saved-restaurant";
-  const isSavedRestaurantSession = snapshot.kind === "saved-restaurant";
-  const sessionSet =
-    practiceSetFixtures.find(
-      (set) => set.id === (
-        snapshot.kind === "collection"
-          ? snapshot.setId
-          : snapshot.kind === "saved-restaurant"
-            ? RESTAURANT_COLLECTION_ID
-            : selectedSet.id
-      ),
-    ) ?? selectedSet;
-  const sessionConfiguration = snapshot.configuration;
-  const practiceOverrides = isSavedMaterialSession
-    ? null
-    : describePracticeOverrides(sessionConfiguration, sessionSet);
-  const sessionSummary = summarizeSession(turns);
-  const savedSessionRecords = isSavedMaterialSession
-    ? resolveSavedPromptRecords(snapshot.promptReferences)
-    : [];
-  const servingReadyDecision =
-    restaurantServingSession?.kind === "engine" &&
-    restaurantServingSession.decision.status === "ready"
-      ? restaurantServingSession.decision
-      : null;
-  const matchingPrompts = restaurantServingSession?.kind === "engine"
-    ? restaurantServingSession.source.prompts
-    : isSavedMaterialSession
-      ? savedSessionRecords.map((record) => record.prompt)
-      : promptsForConfiguration(sessionSet, sessionConfiguration, learnerStage);
-  const legacyPracticeUnits = restaurantServingSession
-    ? []
-    : practiceUnitsForSession(
-        matchingPrompts,
-        sessionConfiguration,
-        snapshot.orderSeed,
-        snapshot.avoidFirstPromptId,
-      );
-  const legacyPracticeUnit = legacyPracticeUnits.length > 0
-    ? legacyPracticeUnits[promptIndex % legacyPracticeUnits.length]
-    : undefined;
-  const prompt = servingReadyDecision
-    ? matchingPrompts.find(
-        (candidate) => candidate.id === servingReadyDecision.offer.source.itemId,
-      )
-    : legacyPracticeUnit?.prompt;
-  const resolvedDirection = servingReadyDecision?.offer.direction ?? legacyPracticeUnit?.direction;
-  const activePracticeUnit = prompt && resolvedDirection
-    ? { prompt, direction: resolvedDirection }
-    : null;
-  const promptCollectionId = prompt && isSavedMaterialSession
-    ? savedSessionRecords.find((record) => record.prompt === prompt)?.collection.id ?? sessionSet.id
-    : sessionSet.id;
-  const sessionTitle = isSavedRestaurantSession
-    ? "Saved Restaurant prompts"
-    : isSavedMaterialSession
-      ? "Saved material"
-      : sessionSet.title;
-  const strengthenedCapabilities = [
-    ...new Set(
-      turns
-        .filter((turn) => turn.evaluation.verdict === "correct")
-        .map((turn) => turn.prompt.capability),
-    ),
-  ];
-
-  if (view === "recap") {
-    return (
-      <div className="practice-workspace">
-        <PrototypeContextHeader
-          backLabel="Return to collections"
-          onBack={returnToCatalog}
-          title="Practice recap"
-        />
-        <div className="practice-feed recap-feed">
-          <Card className="recap-hero-card">
-            <span className="eyebrow">Session complete</span>
-            <h2>{sessionTitle}</h2>
-            <p>
-              You answered {turns.length} {turns.length === 1 ? "prompt" : "prompts"}.
-            </p>
-          </Card>
-          <Card className="evidence-preview-card">
-            <div className="feedback-heading">
-              <Sparkles aria-hidden="true" />
-              <strong>What went well</strong>
-            </div>
-            {strengthenedCapabilities.length > 0 ? (
-              <ul>
-                {strengthenedCapabilities.map((capability) => (
-                  <li key={capability}>{capability}</li>
-                ))}
-              </ul>
-            ) : (
-              <p>Keep practicing this collection to strengthen the current skills.</p>
-            )}
-          </Card>
-          <div className="recap-actions">
-            <Button
-              disabled={
-                isSavedRestaurantSession
-                  ? restaurantSavedReferences.length === 0
-                  : isSavedMaterialSession && otherSavedPromptRecords.length === 0
-              }
-              onClick={() =>
-                isSavedMaterialSession
-                  ? isSavedRestaurantSession
-                    ? startSavedRestaurantPractice()
-                    : startOtherSavedMaterialPractice()
-                  : startPractice(sessionSet, sessionConfiguration)
-              }
-            >
-              {isSavedRestaurantSession
-                ? "Practice saved Restaurant prompts again"
-                : isSavedMaterialSession
-                  ? "Practice saved material again"
-                  : "Practice again"}
-            </Button>
-            <Button onClick={returnToCatalog} variant="quiet">
-              Browse collections
-            </Button>
+          {error ? <Card aria-live="polite" className="serving-unavailable-card" role="alert"><CircleAlert aria-hidden="true" /><div><h2>Practice is unavailable</h2><p>{error.message}</p></div></Card> : null}
+          <p className="filter-result-count">{1 + availableCollectionIds.length} reviewed {1 + availableCollectionIds.length === 1 ? "collection" : "collections"}</p>
+          <div className="practice-set-grid">
+            <article className="practice-set-card">
+              <button aria-label="Start Everyday location" className="practice-set-start" disabled={busy} onClick={() => void start("collection")} type="button">
+                <span className="set-card-topline"><span className="set-level">A1</span></span><strong>Everyday location</strong><span className="set-description">A promoted, dialect-aware collection for saying where someone lives.</span>
+              </button>
+            </article>
+            {availableCollectionIds.includes("collection.a1.present-regular-ir") ? (
+              <article className="practice-set-card">
+                <button aria-label="Start Present -ir forms" className="practice-set-start" disabled={busy} onClick={() => void start("collection", "collection.a1.present-regular-ir")} type="button">
+                  <span className="set-card-topline"><span className="set-level">A1 · Concept</span></span><strong>Present -ir forms</strong><span className="set-description">Recommended review for the form introduced in Living here.</span>
+                </button>
+              </article>
+            ) : null}
+            {availableCollectionIds.includes("collection.a1.home-location") ? (
+              <article className="practice-set-card">
+                <button aria-label="Start Home & location" className="practice-set-start" disabled={busy} onClick={() => void start("collection", "collection.a1.home-location")} type="button">
+                  <span className="set-card-topline"><span className="set-level">A1 · Topic</span></span><strong>Home &amp; location</strong><span className="set-description">Review useful language for saying where someone lives.</span>
+                </button>
+              </article>
+            ) : null}
+            <article className="practice-set-card">
+              <button aria-label="Start All saved" className="practice-set-start" disabled={busy || savedItemIds.length === 0} onClick={() => void start("saved")} type="button">
+                <span className="set-card-topline"><span className="set-level">Saved</span></span><strong>All saved</strong><span className="set-description">{savedItemIds.length === 0 ? "Save an item from feedback to practice it here." : `${savedItemIds.length} saved ${savedItemIds.length === 1 ? "item" : "items"}.`}</span>
+              </button>
+            </article>
           </div>
         </div>
       </div>
     );
-  }
-
-  const promptIsSpanish = resolvedDirection === "es-en";
-  const flashcardFront = prompt
-    ? promptIsSpanish
-      ? prompt.spanish
-      : prompt.english
-    : "";
-  const flashcardBack = prompt
-    ? promptIsSpanish
-      ? prompt.english
-      : prompt.spanish
-    : "";
-  const servingUnavailableReason = servingReadyDecision && !prompt
-    ? "source_version_unavailable"
-    : restaurantServingSession?.kind === "source-unavailable"
-      ? restaurantServingSession.reason
-      : restaurantServingSession?.kind === "engine" &&
-          restaurantServingSession.decision.status !== "ready"
-        ? restaurantServingSession.decision.reason
-        : null;
-  const servingUnavailableContent =
-    servingUnavailableReason === "no_eligible_reviewed_items" && isSavedRestaurantSession
-      ? {
-          title: "No saved Restaurant prompts are available",
-          detail: "These saved references are empty or no longer match the reviewed Restaurant source. AIdioma did not replace them with other prompts.",
-        }
-      : servingUnavailableReason
-        ? servingUnavailableCopy(servingUnavailableReason)
-        : null;
-  const savedUnavailableCount = restaurantServingSession?.kind === "engine"
-    ? restaurantServingSession.source.savedScope?.unavailableReferenceCount ?? 0
-    : 0;
-  const servingAvailabilityMessage = savedUnavailableCount > 0
-    ? `${savedUnavailableCount} saved ${savedUnavailableCount === 1 ? "prompt is" : "prompts are"} no longer available. This visit uses only the remaining reviewed Saved Restaurant prompts and does not add replacements.`
-    : servingReadyDecision?.offer.reason === "reviewed_repeat"
-    ? "You’ve seen the reviewed material in this scope. Practice is continuing with reviewed repetition."
-    : servingReadyDecision?.availability.shortfalls.includes("working_set_shortfall")
-      ? isSavedRestaurantSession
-        ? "Your Saved Restaurant practice has fewer than five reviewed prompts. AIdioma is using only those saved prompts and will not add others."
-        : "Reviewed material is limited in this exact scope. AIdioma will not broaden it automatically."
-      : null;
-  const servingRecovery =
-    restaurantServingSession?.kind === "engine" &&
-    restaurantServingSession.decision.status === "unavailable" &&
-    restaurantServingSession.decision.state &&
-    restaurantServingSession.decision.recoveryToken
-      ? {
-          state: restaurantServingSession.decision.state,
-          token: restaurantServingSession.decision.recoveryToken,
-        }
-      : null;
-
-  function recoverServingPrompt() {
-    if (!servingRecovery) return;
-    const decision = recoverPracticeServing(
-      servingRecovery.state,
-      servingRecovery.token,
-      "repeat_now",
-    );
-    setRestaurantServingSession((current) =>
-      current?.kind === "engine" ? { ...current, decision } : current,
-    );
-    window.requestAnimationFrame(() => answerInputRef.current?.focus());
-  }
-
-  function restartCurrentServingVisit() {
-    if (snapshot.kind === "saved-restaurant") {
-      startSavedRestaurantPractice(snapshot.promptReferences);
-      return;
-    }
-    if (snapshot.kind === "collection") {
-      startPractice(sessionSet, snapshot.configuration);
-    }
-  }
-
-  function deferCurrentAnswerWithoutEvidence() {
-    if (!servingReadyDecision) return;
-    const decision = deferTypedEvaluationWithoutEvidence(
-      servingReadyDecision.state,
-      servingReadyDecision.offer.ordinal,
-    );
-    setRestaurantServingSession((current) =>
-      current?.kind === "engine" ? { ...current, decision } : current,
-    );
-    setTypedAnswer("");
-    setPendingAnswer(null);
-    setEvaluationFailure(null);
-    if (decision.status === "ready") {
-      window.requestAnimationFrame(() => answerInputRef.current?.focus());
-    }
-  }
-
-  async function submitAnswer() {
-    const answer = typedAnswer.trim();
-    const submittedPrompt = prompt;
-    const submittedDirection = resolvedDirection;
-    const submittedServingDecision = servingReadyDecision;
-    if (!answer || isEvaluating || !submittedPrompt || !submittedDirection) return;
-
-    setPendingAnswer(answer);
-    setEvaluationFailure(null);
-    setIsEvaluating(true);
-    const attempt = evaluationAttemptRef.current + 1;
-    evaluationAttemptRef.current = attempt;
-    evaluationControllerRef.current?.abort();
-    const controller = new AbortController();
-    evaluationControllerRef.current = controller;
-    let shouldRestoreComposerFocus = true;
-    try {
-      const evaluation = await gradeAnswer(
-        submittedPrompt,
-        submittedDirection,
-        answer,
-        controller.signal,
-      );
-      if (evaluationAttemptRef.current !== attempt) return;
-      if (evaluation.status === "ungraded") {
-        setEvaluationFailure({
-          message: evaluation.message,
-          retryable: evaluation.retryable,
-        });
-        return;
-      }
-
-      if (submittedServingDecision) {
-        const nextServingDecision = applyTypedEvaluationOutcome(
-          submittedServingDecision.state,
-          submittedServingDecision.offer.ordinal,
-          evaluation.verdict,
-        );
-        if (nextServingDecision.status === "rejected") {
-          setEvaluationFailure({
-            message: "This practice turn changed before the result arrived. Your response was not applied.",
-            retryable: false,
-          });
-          return;
-        }
-        shouldRestoreComposerFocus = nextServingDecision.status === "ready";
-        setRestaurantServingSession((current) =>
-          current?.kind === "engine"
-            ? { ...current, decision: nextServingDecision }
-            : current,
-        );
-      }
-
-      setTurns((current) => {
-        const nextTurns = [
-          ...current,
-          {
-            answer,
-            collectionId: promptCollectionId,
-            direction: submittedDirection,
-            evaluation,
-            prompt: submittedPrompt,
-          },
-        ];
-        const nextSummary = summarizeSession(nextTurns);
-        if (nextSummary && !isSavedMaterialSession) {
-          setLatestCollectionSessions((sessions) => ({
-            ...sessions,
-            [sessionSet.id]: nextSummary,
-          }));
-        }
-        return nextTurns;
-      });
-      if (!submittedServingDecision) setPromptIndex((current) => current + 1);
-      setTypedAnswer("");
-      setPendingAnswer(null);
-    } catch (error) {
-      if (evaluationAttemptRef.current !== attempt) return;
-      setEvaluationFailure({
-        message:
-          error instanceof Error
-            ? error.message
-            : "I couldn’t grade that answer right now. Your response is still here—try again.",
-        retryable: error instanceof PracticeGradingError ? error.retryable : true,
-      });
-    } finally {
-      if (evaluationAttemptRef.current === attempt) {
-        evaluationControllerRef.current = null;
-        setIsEvaluating(false);
-        if (shouldRestoreComposerFocus) {
-          window.requestAnimationFrame(() => answerInputRef.current?.focus());
-        }
-      }
-    }
   }
 
   return (
     <div className="practice-workspace">
       <PrototypeContextHeader
         backLabel="End practice and review this session"
-        onBack={endPractice}
-        title={sessionTitle}
-        trailing={
-          <>
-            {sessionSummary ? (
-              <span
-                aria-label={`Session score: ${sessionSummary.correctRate}% correct`}
-                className="session-score-chip"
-              title="Uses the feedback verdict for each completed practice card."
-            >
-                <strong>
-                  <span>{sessionSummary.correctRate}%</span>
-                  <span className="session-score-label"> correct</span>
-                </strong>
-              </span>
-            ) : null}
-            <span
-              aria-label={`Completed practice cards: ${turns.length}`}
-              className="session-count-chip"
-              title="Completed practice cards"
-            >
-              {turns.length}
-            </span>
-            {isSavedMaterialSession ? null : (
-              <>
-                <IconButton
-                  aria-label={
-                    savedSetIds.includes(sessionSet.id)
-                      ? `Remove ${sessionSet.title} from saved`
-                      : `Save ${sessionSet.title}`
-                  }
-                  aria-pressed={savedSetIds.includes(sessionSet.id)}
-                  className={`saved-toggle${savedSetIds.includes(sessionSet.id) ? " is-saved" : ""}`}
-                  onClick={() => toggleSaved(sessionSet.id)}
-                >
-                  <Star aria-hidden="true" />
-                </IconButton>
-                <IconButton
-                  aria-label="Adjust practice settings"
-                  onClick={() => openOptions(sessionSet, sessionConfiguration)}
-                >
-                  <SlidersHorizontal aria-hidden="true" />
-                </IconButton>
-              </>
-            )}
-            {restaurantServingSession?.kind === "engine" ? (
-              <IconButton aria-label="Pause practice on this page" onClick={pausePractice}>
-                <Pause aria-hidden="true" />
-              </IconButton>
-            ) : null}
-          </>
-        }
+        onBack={() => void changeStatus("end")}
+        title={session.source.title}
+        trailing={<><span aria-label={`Completed answers: ${session.attempts.length}`} className="session-count-chip">{session.attempts.length}</span><IconButton aria-label="Pause practice" disabled={busy} onClick={() => void changeStatus("pause")}><Pause aria-hidden="true" /></IconButton></>}
       />
-
       <div aria-label="Practice conversation" className="practice-feed chat-practice-feed" role="log">
-        {practiceOverrides ? (
-          <div aria-label="Active practice settings" className="session-customization-note">
-            <SlidersHorizontal aria-hidden="true" />
-            <span>{practiceOverrides}</span>
-          </div>
-        ) : null}
-        {servingAvailabilityMessage ? (
-          <div aria-live="polite" className="session-customization-note" role="status">
-            <CircleAlert aria-hidden="true" />
-            <span>{servingAvailabilityMessage}</span>
-          </div>
-        ) : null}
-
-        {sessionConfiguration.activity === "type" ? (
-          <>
-            {turns.map((turn, index) => (
-              <section className="practice-turn" key={`${turn.prompt.id}-${index}`}>
-                <PromptMessage
-                  direction={turn.direction}
-                  prompt={turn.prompt}
-                  showDirection={sessionConfiguration.direction === "both"}
-                />
-                <AnswerMessage answer={turn.answer} />
-                <FeedbackMessage
-                  announce={index === turns.length - 1}
-                  evaluation={turn.evaluation}
-                  isPromptSaved={hasSavedPracticeReference(
-                    savedPromptReferences,
-                    savedPracticeReference(turn.collectionId, turn.prompt.id),
-                  )}
-                  onTogglePromptSaved={() =>
-                    toggleSavedPrompt(
-                      savedPracticeReference(turn.collectionId, turn.prompt.id),
-                    )
-                  }
-                />
-              </section>
-            ))}
-            {activePracticeUnit ? (
-              <section className="practice-turn active-practice-turn">
-                <PromptMessage
-                  direction={activePracticeUnit.direction}
-                  prompt={activePracticeUnit.prompt}
-                  showDirection={sessionConfiguration.direction === "both"}
-                />
-                {pendingAnswer ? <AnswerMessage answer={pendingAnswer} /> : null}
-                {isEvaluating ? (
-                  <div aria-live="polite" className="practice-message grading-message" role="status">
-                    <LoaderCircle aria-hidden="true" /> Checking your answer…
-                  </div>
-                ) : null}
-                {evaluationFailure ? (
-                  <div aria-live="polite" className="practice-message grading-error" role="alert">
-                    <CircleAlert aria-hidden="true" />
-                    <span>{evaluationFailure.message}</span>
-                    {evaluationFailure.retryable ? (
-                      <Button
-                        className="grading-retry-button"
-                        onClick={() => void submitAnswer()}
-                        variant="quiet"
-                      >
-                        Try grading again
-                      </Button>
-                    ) : servingReadyDecision ? (
-                      <Button
-                        className="grading-retry-button"
-                        onClick={deferCurrentAnswerWithoutEvidence}
-                        variant="quiet"
-                      >
-                        Continue without grading
-                      </Button>
-                    ) : null}
-                  </div>
-                ) : null}
-              </section>
-            ) : servingUnavailableReason ? (
-              <Card
-                aria-live="polite"
-                className="serving-unavailable-card"
-                role="status"
-              >
-                <CircleAlert aria-hidden="true" />
-                <div>
-                  <h2>{servingUnavailableContent?.title}</h2>
-                  <p>{servingUnavailableContent?.detail}</p>
-                </div>
-                <div className="serving-recovery-actions">
-                  {servingRecovery ? (
-                    <Button onClick={recoverServingPrompt}>Repeat now</Button>
-                  ) : null}
-                  {servingUnavailableReason === "source_version_unavailable" ||
-                  servingUnavailableReason === "resume_incompatible" ? (
-                    <Button onClick={restartCurrentServingVisit}>Start an updated visit</Button>
-                  ) : null}
-                  {servingUnavailableReason === "no_eligible_reviewed_items" &&
-                  isSavedRestaurantSession ? (
-                    <Button
-                      onClick={() => {
-                        setCatalogFilter("Saved");
-                        returnToCatalog();
-                      }}
-                      variant="quiet"
-                    >
-                      Review saved material
-                    </Button>
-                  ) : null}
-                  {!isSavedMaterialSession ? (
-                    <Button
-                      onClick={() => openOptions(sessionSet, sessionConfiguration)}
-                      variant="quiet"
-                    >
-                      Adjust settings
-                    </Button>
-                  ) : null}
-                  <Button onClick={endPractice} variant="quiet">
-                    End practice
-                  </Button>
-                </div>
-              </Card>
-            ) : null}
-          </>
-        ) : (
-          <Card className="activity-card flashcard-preview-card">
-            <div className="activity-label">
-              <span>{flashcardRevealed ? "Answer" : "Prompt"}</span>
-            </div>
-            <button
-              aria-label={flashcardRevealed ? "Hide flashcard answer" : "Reveal flashcard answer"}
-              aria-pressed={flashcardRevealed}
-              className="flashcard-face"
-              onClick={() => setFlashcardRevealed((revealed) => !revealed)}
-              type="button"
-            >
-              <span>{flashcardRevealed ? flashcardBack : flashcardFront}</span>
-              <small>{flashcardRevealed ? "Tap to show the prompt" : "Tap to reveal"}</small>
-            </button>
-          </Card>
-        )}
-        <div aria-hidden="true" ref={feedEndRef} />
+        <div aria-live="polite" className="session-customization-note" role="status"><Sparkles aria-hidden="true" /><span>{adaptiveOfferExplanation(session.current.reason)}</span></div>
+        {session.attempts.map((attempt, index) => <AttemptFeedback attempt={attempt} isSaved={savedItemIds.includes(attempt.itemId)} key={`${attempt.itemId}-${attempt.attemptedAt}-${index}`} onSave={() => void toggleSaved(attempt.itemId)} />)}
+        <section className="practice-turn active-practice-turn">
+          <article className="practice-message prompt-message">
+            <div className="prompt-context-row"><p className="prompt-cue">{session.current.cue}</p><div className="activity-label"><span>English → Spanish</span></div></div><h2>{session.current.prompt}</h2>
+          </article>
+          {pendingAnswer ? <div aria-label="Your answer" className="practice-message answer-message">{pendingAnswer}</div> : null}
+          {busy && pendingAnswer ? <div aria-live="polite" className="practice-message grading-message" role="status"><LoaderCircle aria-hidden="true" /> Checking and retaining your answer…</div> : null}
+          {error ? <div aria-live="polite" className="practice-message grading-error" role="alert"><CircleAlert aria-hidden="true" /><span>{error.message}</span>{error.retryable ? <span>Your answer is still in the composer.</span> : null}</div> : null}
+        </section>
       </div>
-
-      {sessionConfiguration.activity === "type" ? (
-        activePracticeUnit ? <form
-          className="practice-composer prototype-composer"
-          onSubmit={(event) => {
-            event.preventDefault();
-            void submitAnswer();
-          }}
-        >
-          <label className="visually-hidden" htmlFor="practice-set-answer">
-            Type your answer
-          </label>
-          <input
-            aria-describedby={evaluationFailure ? "practice-evaluation-error" : undefined}
-            disabled={isEvaluating}
-            id="practice-set-answer"
-            onChange={(event) => {
-              setTypedAnswer(event.target.value);
-              if (evaluationFailure) {
-                setEvaluationFailure(null);
-                setPendingAnswer(null);
-              }
-            }}
-            placeholder={isEvaluating ? "Checking answer…" : "Type your answer"}
-            spellCheck="false"
-            type="text"
-            value={typedAnswer}
-            ref={answerInputRef}
-          />
-          {evaluationFailure ? (
-            <span className="visually-hidden" id="practice-evaluation-error">
-              {evaluationFailure.message}
-            </span>
-          ) : null}
-          <IconButton aria-label="Send answer" disabled={!typedAnswer.trim() || isEvaluating} type="submit">
-            <Send aria-hidden="true" />
-          </IconButton>
-        </form> : null
-      ) : (
-        <div className="practice-composer flashcard-controls">
-          <Button onClick={() => setFlashcardRevealed(false)} variant="quiet">
-            <RotateCcw aria-hidden="true" /> Reset card
-          </Button>
-          <Button
-            onClick={() => {
-              setPromptIndex((current) => current + 1);
-              setFlashcardRevealed(false);
-            }}
-          >
-            Next card
-          </Button>
-        </div>
-      )}
-      {practiceOptionsOpen && !isSavedMaterialSession ? (
-        <PracticeSetOptionsPanel
-          configuration={draftConfiguration ?? sessionConfiguration}
-          learnerStage={learnerStage}
-          onClose={closeOptions}
-          onStart={() => commitAndStartPractice(sessionSet)}
-          onUpdate={updateDraftConfiguration}
-          set={sessionSet}
-          startLabel="Start new session"
-        />
-      ) : null}
+      <form className="practice-composer prototype-composer" onSubmit={(event) => { event.preventDefault(); void submitAnswer(); }}>
+        <label className="visually-hidden" htmlFor="practice-answer">Type your Spanish answer</label>
+        <input disabled={busy} id="practice-answer" onChange={(event) => { setTypedAnswer(event.target.value); setError(null); }} placeholder={busy ? "Checking answer…" : "Type your Spanish answer"} ref={inputRef} spellCheck="false" type="text" value={typedAnswer} />
+        <IconButton aria-label="Send answer" disabled={busy || !typedAnswer.trim()} type="submit"><Send aria-hidden="true" /></IconButton>
+      </form>
     </div>
   );
 }

@@ -1,0 +1,8 @@
+TARGET: Docs/Evidence/phase-004/target.json
+LENS: Seams / Integration
+RESULT: PASS
+CANDIDATE: edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7
+BLOCKERS: none
+FINDINGS:
+Manifest digest, retention ref, commit, parent, tree, scopes, and file objects verified unchanged before and after; Phase authority and target bytes match round 9. `apps/web/src/lib/practice-serving/database-session-repository.ts:49` returns the resumable creation-race winner; `apps/web/src/lib/practice-serving/session-service.ts:100` compares learner, profile, source kind, and resolved collection ID, while `apps/web/src/lib/practice-serving/session-service.ts:265` rejects an unrelated winner before validation or termination and preserves stale same-source replacement. `apps/web/src/lib/practice-serving/session-service.test.ts:286` preserves stale same-source replacement, and the single regression at `apps/web/src/lib/practice-serving/session-service.test.ts:330` proves an unrelated collection winner yields `session_conflict` and remains active. `apps/web/src/app/api/practice/session/route.ts:99` propagates that conflict as HTTP 409 without serving a session. The existing handoff remains intact: `apps/web/src/lib/learning-journey/lesson-repository.ts:65` derives unlocked collections from valid completed progress, `apps/web/src/lib/learning-journey/lesson-session.ts:154` selects the recommendation, and `apps/web/src/components/learning-workspace.tsx:236` starts that exact collection and navigates only after success, so learners cannot be sent into the wrong review.
+REMEDIATION: none

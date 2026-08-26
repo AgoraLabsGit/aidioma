@@ -2495,6 +2495,99 @@ input {
   flex: 1;
 }
 
+/* Finite lesson additions reuse the shared Practice feed, cards, and composer. */
+.lesson-start-feed {
+  justify-content: center;
+}
+
+.lesson-start-feed .lesson-complete-card .button {
+  margin-top: 0.9rem;
+}
+
+.lesson-teaching-card > p {
+  margin: 0.65rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.lesson-example {
+  margin-top: 0.85rem;
+  padding: 0.7rem 0.85rem;
+  border-left: 3px solid var(--accent);
+  color: var(--text);
+  background: var(--accent-soft);
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+
+.lesson-teaching-card > small,
+.ai-explanation-message > small,
+.lesson-assistance-note {
+  display: block;
+  margin-top: 0.55rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.lesson-hint-action {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+  padding: 0;
+  border: 0;
+  color: var(--accent-text);
+  background: transparent;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lesson-hint-action svg {
+  width: 16px;
+  height: 16px;
+}
+
+.lesson-hint-action:disabled {
+  color: var(--faint);
+  cursor: default;
+}
+
+.lesson-hints {
+  margin: 0.25rem 0 0;
+  padding-left: 1.25rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.ai-explanation-message {
+  border-color: var(--accent);
+}
+
+.ai-explanation-message .feedback-heading {
+  color: var(--accent-text);
+}
+
+.lesson-collection-card li strong {
+  color: var(--text);
+}
+
+.recommendation-card h2 {
+  margin: 0.4rem 0 0;
+  font-size: 1rem;
+}
+
+.practice-composer .composer-mode-action {
+  flex: none;
+  padding-inline: 0.8rem;
+}
+
+.practice-composer.is-question-mode input {
+  border-color: var(--accent);
+}
+
 .flashcard-controls {
   justify-content: flex-end;
 }

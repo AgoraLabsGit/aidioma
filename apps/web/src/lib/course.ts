@@ -10,8 +10,8 @@ export type CourseLesson = {
 export const a1Lessons: CourseLesson[] = [
   {
     number: 1,
-    title: "Hola: greetings and introducing yourself",
-    objective: "Greet someone and introduce yourself.",
+    title: "Living here",
+    objective: "Say that one person lives here in your Spanish profile.",
     status: "current",
   },
   {

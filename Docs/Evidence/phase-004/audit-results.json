@@ -1,0 +1,254 @@
+{
+  "version": 1,
+  "target": "PHASE-004",
+  "candidate": "edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7",
+  "report": "Docs/Evidence/phase-004/close-audits.md",
+  "attempts": [
+    {
+      "id": "A1",
+      "at": "2026-08-26T15:28:42Z",
+      "lens": "Claims / Proof evidence",
+      "auditor": "phase4_claims",
+      "verdict": "PASS",
+      "candidate": "f0896ecece5ffa6fbfe91fca3ea6f25de4852d2ac1023a47a0df7b4f8de72c1d",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-6.json",
+      "manifest_sha256": "56cd87379a1e45575d5f35853f29571fd159d3668175272b80e00e1cbc218157",
+      "response": "Docs/Evidence/phase-004/audits/A1-claims.txt",
+      "response_sha256": "7af527db615a6ee6a232b17511dea715511b743e2a85b5261792aa75dc66a74f"
+    },
+    {
+      "id": "A2",
+      "at": "2026-08-26T15:28:42Z",
+      "lens": "Code quality / Standards",
+      "auditor": "phase4_standards",
+      "verdict": "FAIL",
+      "candidate": "f0896ecece5ffa6fbfe91fca3ea6f25de4852d2ac1023a47a0df7b4f8de72c1d",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-6.json",
+      "manifest_sha256": "56cd87379a1e45575d5f35853f29571fd159d3668175272b80e00e1cbc218157",
+      "response": "Docs/Evidence/phase-004/audits/A2-standards.txt",
+      "response_sha256": "9adee8f1bf96744cb14d534767b17e3d69811d0918f6c47a658415eef3031a9d"
+    },
+    {
+      "id": "A3",
+      "at": "2026-08-26T15:28:42Z",
+      "lens": "MCOO",
+      "auditor": "phase4_mcoo",
+      "verdict": "FAIL",
+      "candidate": "f0896ecece5ffa6fbfe91fca3ea6f25de4852d2ac1023a47a0df7b4f8de72c1d",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-6.json",
+      "manifest_sha256": "56cd87379a1e45575d5f35853f29571fd159d3668175272b80e00e1cbc218157",
+      "response": "Docs/Evidence/phase-004/audits/A3-mcoo.txt",
+      "response_sha256": "99d5aefea97c664f7bcd773d31e1664565661128cbeca176b26db02512d8a421"
+    },
+    {
+      "id": "A4",
+      "at": "2026-08-26T15:45:14Z",
+      "lens": "Code quality / Standards",
+      "auditor": "phase4_standards_r2",
+      "verdict": "PASS",
+      "candidate": "135ca32cbfcc696cc67a81c0cc96b2705155a74424e980eae31701e46acd0984",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-7.json",
+      "manifest_sha256": "1af3627a710028cbd26018c410f2126d1aeba88a527fec463da64fc923de902e",
+      "response": "Docs/Evidence/phase-004/audits/A4-standards.txt",
+      "response_sha256": "96766cea27e3b7fe5035bb9acc12eb7c45f9a4371cc72a1688bc4ccd259b9e83"
+    },
+    {
+      "id": "A5",
+      "at": "2026-08-26T15:45:14Z",
+      "lens": "MCOO",
+      "auditor": "phase4_mcoo_r2",
+      "verdict": "PASS",
+      "candidate": "135ca32cbfcc696cc67a81c0cc96b2705155a74424e980eae31701e46acd0984",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-7.json",
+      "manifest_sha256": "1af3627a710028cbd26018c410f2126d1aeba88a527fec463da64fc923de902e",
+      "response": "Docs/Evidence/phase-004/audits/A5-mcoo.txt",
+      "response_sha256": "c4dea3da0922cdd95c6238b7c8b3e6f9ad2788a49ddd958715e1780e7eac9ebb"
+    },
+    {
+      "id": "A6",
+      "at": "2026-08-26T15:45:14Z",
+      "lens": "Seams / Integration",
+      "auditor": "phase4_seams",
+      "verdict": "FAIL",
+      "candidate": "135ca32cbfcc696cc67a81c0cc96b2705155a74424e980eae31701e46acd0984",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-7.json",
+      "manifest_sha256": "1af3627a710028cbd26018c410f2126d1aeba88a527fec463da64fc923de902e",
+      "response": "Docs/Evidence/phase-004/audits/A6-seams.txt",
+      "response_sha256": "1cfec21800c9d6dda21785e47779d340e48e3b220edfe8e08250b056e832b65e"
+    },
+    {
+      "id": "A7",
+      "at": "2026-08-26T15:57:01Z",
+      "lens": "Claims / Proof evidence",
+      "auditor": "phase4_final_claims",
+      "verdict": "PASS",
+      "candidate": "35c96876367b9cd26724c973f21fbc8bea53ab4702567c5aee6eb3975f074a80",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-8.json",
+      "manifest_sha256": "bc8749c60a1ce79627c8833de7551a08a5ef3fca94d2471d7919724b36b5ab8c",
+      "response": "Docs/Evidence/phase-004/audits/A7-claims.txt",
+      "response_sha256": "5041569f5a0c3169aa5c96d57f5c9b12dc7be82eea4d6ed3717230f2d3e4b00f"
+    },
+    {
+      "id": "A8",
+      "at": "2026-08-26T15:58:35Z",
+      "lens": "Seams / Integration",
+      "auditor": "phase4_final_seams",
+      "verdict": "FAIL",
+      "candidate": "35c96876367b9cd26724c973f21fbc8bea53ab4702567c5aee6eb3975f074a80",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-8.json",
+      "manifest_sha256": "bc8749c60a1ce79627c8833de7551a08a5ef3fca94d2471d7919724b36b5ab8c",
+      "response": "Docs/Evidence/phase-004/audits/A8-seams.txt",
+      "response_sha256": "8979a1374c74813597ed6e55bd8098e9579ca8a5d2f622c95d8aa5eff5e33827"
+    },
+    {
+      "id": "A9",
+      "at": "2026-08-26T15:59:41Z",
+      "lens": "Code quality / Standards",
+      "auditor": "phase4_final_standards",
+      "verdict": "FAIL",
+      "candidate": "35c96876367b9cd26724c973f21fbc8bea53ab4702567c5aee6eb3975f074a80",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-8.json",
+      "manifest_sha256": "bc8749c60a1ce79627c8833de7551a08a5ef3fca94d2471d7919724b36b5ab8c",
+      "response": "Docs/Evidence/phase-004/audits/A9-standards.txt",
+      "response_sha256": "c03a9da41b836d449be60db6a246096bf39161f66b9e7fb3c61c27293662204b"
+    },
+    {
+      "id": "A10",
+      "at": "2026-08-26T16:01:58Z",
+      "lens": "MCOO",
+      "auditor": "phase4_final_mcoo",
+      "verdict": "FAIL",
+      "candidate": "35c96876367b9cd26724c973f21fbc8bea53ab4702567c5aee6eb3975f074a80",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-8.json",
+      "manifest_sha256": "bc8749c60a1ce79627c8833de7551a08a5ef3fca94d2471d7919724b36b5ab8c",
+      "response": "Docs/Evidence/phase-004/audits/A10-mcoo.txt",
+      "response_sha256": "ee3aac20d6a130a4baaf2bfe50fe8387fdf544b01118ccf6aaabc10ec7a3cbb6"
+    },
+    {
+      "id": "A11",
+      "at": "2026-08-26T16:12:24Z",
+      "lens": "Code quality / Standards",
+      "auditor": "phase4_standards_r3",
+      "verdict": "FAIL",
+      "candidate": "1db6e520f8d32adb4f4f95273f86f030c77da4d56f0602b7c332bb587195ea01",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-9.json",
+      "manifest_sha256": "7921cabfc1d82859581c7ad5751536ef75a6fdab5d3b5f48a948c952f0ac7ce5",
+      "response": "Docs/Evidence/phase-004/audits/A11-standards.txt",
+      "response_sha256": "adb1f4a64327db7977557c839fcce9adebe4ca000ee6b947362614c8b695025c"
+    },
+    {
+      "id": "A12",
+      "at": "2026-08-26T16:40:38Z",
+      "lens": "Claims / Proof evidence",
+      "auditor": "phase4_terminal_claims",
+      "verdict": "PASS",
+      "candidate": "edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-10.json",
+      "manifest_sha256": "1922c951c60a8399e0879f40cb4ca7dbc0cb25bfed94362e1ab432a119f5048c",
+      "response": "Docs/Evidence/phase-004/audits/A12-claims.txt",
+      "response_sha256": "67e6f2028e7496cc49a51c7f819692aeb391017aa2dd9298344431698f844f29"
+    },
+    {
+      "id": "A13",
+      "at": "2026-08-26T16:40:38Z",
+      "lens": "Code quality / Standards",
+      "auditor": "phase4_terminal_standards",
+      "verdict": "PASS",
+      "candidate": "edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-10.json",
+      "manifest_sha256": "1922c951c60a8399e0879f40cb4ca7dbc0cb25bfed94362e1ab432a119f5048c",
+      "response": "Docs/Evidence/phase-004/audits/A13-standards.txt",
+      "response_sha256": "e2c337df792f0f183c6789eb2166ead8da388d3b3a557cddaffa6013f2b96bb6"
+    },
+    {
+      "id": "A14",
+      "at": "2026-08-26T16:40:38Z",
+      "lens": "MCOO",
+      "auditor": "phase4_terminal_mcoo",
+      "verdict": "PASS",
+      "candidate": "edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-10.json",
+      "manifest_sha256": "1922c951c60a8399e0879f40cb4ca7dbc0cb25bfed94362e1ab432a119f5048c",
+      "response": "Docs/Evidence/phase-004/audits/A14-mcoo.txt",
+      "response_sha256": "fc6c93e2543f69c759b9d8af943ebdcbe3b2ed1e721777080331805f71eae3e8"
+    },
+    {
+      "id": "A15",
+      "at": "2026-08-26T16:40:38Z",
+      "lens": "Seams / Integration",
+      "auditor": "phase4_terminal_seams",
+      "verdict": "PASS",
+      "candidate": "edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-10.json",
+      "manifest_sha256": "1922c951c60a8399e0879f40cb4ca7dbc0cb25bfed94362e1ab432a119f5048c",
+      "response": "Docs/Evidence/phase-004/audits/A15-seams.txt",
+      "response_sha256": "68ef59482d65c7ec5c709db83dc96bd6b5cdb71630b382d47b03e97e3aa63714"
+    },
+    {
+      "id": "A16",
+      "at": "2026-08-26T16:40:38Z",
+      "lens": "Security / Privacy",
+      "auditor": "phase4_terminal_security",
+      "verdict": "PASS",
+      "candidate": "edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-10.json",
+      "manifest_sha256": "1922c951c60a8399e0879f40cb4ca7dbc0cb25bfed94362e1ab432a119f5048c",
+      "response": "Docs/Evidence/phase-004/audits/A16-security.txt",
+      "response_sha256": "ffb9c19e163c640c6cf4e4d8f103d7ed6cce64f3ce3e059f90b528d29854369a"
+    },
+    {
+      "id": "A17",
+      "at": "2026-08-26T16:40:38Z",
+      "lens": "API / Provider usage",
+      "auditor": "phase4_terminal_provider",
+      "verdict": "PASS",
+      "candidate": "edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-10.json",
+      "manifest_sha256": "1922c951c60a8399e0879f40cb4ca7dbc0cb25bfed94362e1ab432a119f5048c",
+      "response": "Docs/Evidence/phase-004/audits/A17-provider.txt",
+      "response_sha256": "f4b6192d6802fe4d5792502f81d842f18fab4dd8fe224f9a511c833bebc0bf17"
+    },
+    {
+      "id": "A18",
+      "at": "2026-08-26T16:40:38Z",
+      "lens": "Product / Learner journey",
+      "auditor": "phase4_terminal_product",
+      "verdict": "PASS",
+      "candidate": "edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7",
+      "manifest": "Docs/Evidence/phase-004/candidate-round-10.json",
+      "manifest_sha256": "1922c951c60a8399e0879f40cb4ca7dbc0cb25bfed94362e1ab432a119f5048c",
+      "response": "Docs/Evidence/phase-004/audits/A18-product.txt",
+      "response_sha256": "82eb43bfe7f0d96ed9a95b07413899de45334f029c34b20321cbb5667214c12d"
+    }
+  ],
+  "results": [
+    {
+      "lens": "Claims / Proof evidence",
+      "attempt": "A12"
+    },
+    {
+      "lens": "Code quality / Standards",
+      "attempt": "A13"
+    },
+    {
+      "lens": "MCOO",
+      "attempt": "A14"
+    },
+    {
+      "lens": "Seams / Integration",
+      "attempt": "A15"
+    },
+    {
+      "lens": "Security / Privacy",
+      "attempt": "A16"
+    },
+    {
+      "lens": "API / Provider usage",
+      "attempt": "A17"
+    },
+    {
+      "lens": "Product / Learner journey",
+      "attempt": "A18"
+    }
+  ]
+}

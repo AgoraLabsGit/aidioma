@@ -47,6 +47,16 @@ describe("isClerkConfigured", () => {
     ).toBe(false);
   });
 
+  it("can isolate local development from stale Clerk keys without weakening production", () => {
+    const environment = {
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_example",
+      CLERK_SECRET_KEY: "sk_test_example",
+      AIDIOMA_FORCE_LOCAL_KEYLESS_AUTH: "true",
+    };
+    expect(shouldUseClerk(environment, "development")).toBe(false);
+    expect(shouldUseClerk(environment, "production")).toBe(true);
+  });
+
   it("keeps the Next.js 16 proxy beside the src app directory", () => {
     const sourceProxy = path.resolve(process.cwd(), "src/proxy.ts");
     const misplacedRootProxy = path.resolve(process.cwd(), "proxy.ts");

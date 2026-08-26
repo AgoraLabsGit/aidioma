@@ -1,0 +1,12 @@
+TARGET: Docs/Evidence/phase-004/target.json
+LENS: MCOO
+RESULT: PASS
+CANDIDATE: edb6ca0e42eee87bafaaf0683be8640d08398639ca01c5c66da61eefe316b8b7
+BLOCKERS: none
+FINDINGS:
+- `Docs/Evidence/phase-004/candidate-round-10.json:553`–`555` authenticates the candidate/ref/commit; recomputation and before/after checks confirmed commit `1c035d790a80c8c04c41dc21df1fdb66e1901860`, tree `b940bd38bb18a5625e94dbb124c758c79ac132cd`, parent HEAD, manifest paths, and target scopes remained identical.
+- `apps/web/src/lib/practice-serving/session-service.ts:100`–`108`, `265`–`284` adds one consumed identity guard covering learner, profile, source kind, and source ID at both `createSession()` return points. It returns the existing `session_conflict` outcome before validation or termination for an unrelated winner, while retaining stale same-source replacement.
+- `apps/web/src/lib/practice-serving/session-service.test.ts:330`–`367` is the single added regression test and proves the unrelated collection remains active while the requester receives `session_conflict`. Round 9→10 changes only this test and the 16-line service guard, so the repair adds no outcome, API, content, or generalized infrastructure.
+- `apps/web/src/app/api/practice/session/lesson/route.ts:46`–`51` and `apps/web/src/lib/learning-journey/lesson-service.ts:69`–`74`, `301`–`319` consume the existing Phase 3 evaluator contract rather than creating a duplicate grading authority.
+- BACKLOG: The immutable candidate retains the pre-existing intermediate prototype entry and player at `apps/web/src/components/lesson-catalog.tsx:19`–`50` and `apps/web/src/app/lessons/intermediate/[lesson]/page.tsx:4`–`16`. Consolidating that older learner path is future cleanup, not a Phase 4 blocker: it was not introduced by this candidate, and `Docs/Roadmap/Phases/PHASE-004.md:63` expressly leaves existing prototype removal optional.
+REMEDIATION: none

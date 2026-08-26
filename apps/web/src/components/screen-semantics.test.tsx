@@ -4,7 +4,16 @@ import { describe, expect, it } from "vitest";
 
 import { LessonCatalog } from "./lesson-catalog";
 import { LessonPracticePreview } from "./lesson-practice-preview";
-import { PracticeWorkspace } from "./practice-workspace";
+import { PracticeWorkspace, type PracticeSessionClient } from "./practice-workspace";
+
+const idlePracticeClient: PracticeSessionClient = {
+  async load() {
+    return { savedItemIds: [], session: null };
+  },
+  async command() {
+    return { savedItemIds: [], session: null };
+  },
+};
 
 expect.extend(toHaveNoViolations);
 
@@ -15,7 +24,7 @@ describe("prototype-aligned screen semantics", () => {
       screen.getByRole("link", { name: /Start lesson/i }),
     ).toHaveAttribute("href", "/lessons/intermediate/tell-what-happened");
     expect(
-      screen.getByRole("link", { name: /Hola: greetings and introducing yourself/i }),
+      screen.getByRole("link", { name: /Living here/i }),
     ).toHaveAttribute("href", "/lessons/1");
     expect(await axe(container)).toHaveNoViolations();
   });
@@ -26,7 +35,7 @@ describe("prototype-aligned screen semantics", () => {
   });
 
   it("keeps the practice workspace accessible", async () => {
-    const { container } = render(<PracticeWorkspace />);
+    const { container } = render(<PracticeWorkspace client={idlePracticeClient} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 });
