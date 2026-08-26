@@ -1,5 +1,9 @@
 <!-- AIdioma project roadmap. Praxis-dev phases live in Praxis.v2. -->
 
+Learner-product sequence, tutor contract, and active phases live in
+[`MVP-SEQUENCE.md`](MVP-SEQUENCE.md) and `Docs/Roadmap/Phases/`. This table is leftover
+design-phase indexing; do not plan from it.
+
 # AIdioma roadmap
 
 | Order | Phase | Type | State | Outcome |

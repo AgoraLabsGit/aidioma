@@ -8,7 +8,7 @@ vendor: null
 decisions:
   - "D-025"
 built_by: []
-last_amended: 2026-08-25
+last_amended: 2026-08-26
 research: []
 paths:
   - "content/**"
@@ -24,7 +24,7 @@ Own versioned curriculum, practice material, dialect renderings, answer policy, 
 
 ## Behavior
 
-- Rule: The content authority stores reusable concepts and bilingual meaning units separately from lesson and collection placement. A unit can appear in many learning surfaces without duplication. Every learner-visible artifact is traceable to a pipeline version, supported dialect profile, validation results, and promotion decision. Each dialect rendering has one canonical text plus distinct `equivalent` and `regional-alternative` accepted answers. Lesson sentence items include exactly three authored hints. Dialect practice units expose a hint control only when the promoted artifact carries authored hints. Runtime must not invent extra answers or hints.
+- Rule: The content authority stores reusable concepts and bilingual meaning units separately from lesson and collection placement. A unit can appear in many learning surfaces without duplication. A promoted lesson placement selects and orders items from one versioned rich lesson; it is not a second copy of canonical text. Every learner-visible artifact is traceable to a pipeline version, supported dialect profile, validation results, and promotion decision. Each dialect rendering has one canonical text plus distinct `equivalent` and `regional-alternative` accepted answers. Lesson sentence items include exactly three authored hints. Dialect practice units expose a hint control only when the promoted artifact carries authored hints. Runtime must not invent extra answers or hints. The learner catalog title, objective, exact CEFR, availability, and route come from the promoted lesson registry.
 - Failure mode: Missing dialect coverage, ambiguous answers, failed adversarial review, or absent promotion evidence blocks publication instead of degrading silently.
 
 ## Boundaries

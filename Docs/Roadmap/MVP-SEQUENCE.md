@@ -112,12 +112,28 @@ Home: `SPEC-A-PLATFORM` and D-024. Do not open a separate infra phase.
 
 | When | Must be real | Still later |
 |---|---|---|
-| Phase 3 (now) | Clerk identity, Neon development DB, AI Gateway | Least-privilege roles, CSP, onboarding telemetry |
+| Phase 3 (done) | Clerk identity, Neon development DB, AI Gateway | Least-privilege roles, CSP, onboarding telemetry |
+| Phase 5 (active) | Same providers on the reusable lesson path | Collection catalog generalization (Phase 6) |
 | Phase 7 | DeepL | Multi-list tagging |
 | Phase 9 | Production credentials, isolated Preview/Production DBs, launch privacy | Payments, native, offline |
 
 Agents use `npx neonctl` and the Vercel CLI. Ask the founder only for secrets those tools cannot
 supply. Never commit or print secret values.
+
+## Tutor contract (do not regress)
+
+Keep one production loop. Do not grow a LanguaTalk-style free tutor.
+
+| Required | Out |
+|---|---|
+| Feedback card: verdict, one English issue, canonical Spanish, Save | Next cue packed into feedback |
+| Authored hints only; first hint is not the full answer | Generated hints or suggested replies |
+| Ask AIdioma stays in the current promoted context | Unrestricted chat or a standalone tutor |
+| Direct-answer requests get the next authored hint | Canonical answer revealed before an attempt |
+| Equivalent / regional-alternative still grades correct | Invented accepted answers |
+| Serving stays in the chosen source; retry after miss | Model chooses the next item or skips the collection |
+
+Phase 5 proves this card and hints on full lessons. Phase 6 brings the same turns to collections.
 
 ## Sequence rule
 
