@@ -1,0 +1,11 @@
+TARGET: Docs/Evidence/f-native-development-workflow/target.json
+LENS: Code quality / Standards
+RESULT: PASS
+CANDIDATE: 6e91371344cb5e469089c993cb2264b06ddb44e7d0257cd600cf40910c59eb0f
+BLOCKERS: none
+FINDINGS:
+- `tooling/docs/workflow.mjs:197-235` now consumes the canonical phase template, retains `workflow_version: 2`, and generates the matching target contract; `workflow.test.mjs` verifies the version, coordinator kickoff, risk lenses, and authority.
+- Unsafe `start` and `done` shortcuts were removed from `workflow.mjs:246-252`; the regression test confirms they cannot mutate the register.
+- `package.json:31` adds the binding close-tool suite. Retained `C2-02.json` shows all 27 candidate-pinning, proof-capture, audit-allocation, receipt, timeout, redaction, and replay tests passed.
+- Retained C2 checks also show `docs:check`, lesson-schema typecheck, dialect fixtures, and fixed-base diff hygiene passed on commit `9e04b2f…` and tree `e0b60f6…`.
+REMEDIATION: none

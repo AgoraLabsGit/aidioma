@@ -26,8 +26,8 @@
     }
   ],
   "authority": {
-    "acceptanceId": "authority.phase-002-run",
-    "acceptanceDigest": "sha256:51b8babbb188ad04c922ec046fe998eda8c82ffb93486c2b72af1d3564036421"
+    "acceptanceId": "authority.phase-002",
+    "acceptanceDigest": "sha256:f31876860771bde2dca01e80f411150e89f29e3229a2e000a17ba4ac9ac362ce"
   },
   "promotedAt": "2026-08-24T19:04:31Z"
 }

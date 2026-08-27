@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "target": "F-006",
+  "candidate": "6e91371344cb5e469089c993cb2264b06ddb44e7d0257cd600cf40910c59eb0f",
+  "report": "Docs/Evidence/f-native-development-workflow/close-audits.md",
+  "attempts": [
+    {
+      "id": "C1",
+      "at": "2026-08-27T15:39:24Z",
+      "candidate": "8d59dff50cc97c400a738488190197a0989e03268a3e50ac4066bb917f88890e",
+      "manifest": "Docs/Evidence/f-native-development-workflow/candidate-round-1.json",
+      "manifest_sha256": "0e71d132fd1365e89a2b37362f6bc774450c354a3f040498061ad8c3712666bb",
+      "verdict": "PASS",
+      "proofs": [
+        { "path": "Docs/Evidence/f-native-development-workflow/checks/C1-01.json", "sha256": "933817b5740c37f01e93a70ffb627cf8b3ee4167f769f8b9cc1d82eb3e4de1db" },
+        { "path": "Docs/Evidence/f-native-development-workflow/checks/C1-02.json", "sha256": "4ec8c6c3b2c6dc647e13970a2ce35ba654b57b34a4437b18729c8ca3d5b9d2df" },
+        { "path": "Docs/Evidence/f-native-development-workflow/checks/C1-03.json", "sha256": "bfc3228f4fe0ba0e17a3088e8ec4b31a6c254c46338bf11d680a816e7e592638" },
+        { "path": "Docs/Evidence/f-native-development-workflow/checks/C1-04.json", "sha256": "794e68d6470f815a2ed2f7e4eab10989f3faba33323f6061185a71e7d9adecdf" }
+      ],
+      "disposition": "Superseded after the first audit exposed blockers requiring the bounded repair pass."
+    },
+    {
+      "id": "C2",
+      "at": "2026-08-27T15:52:42Z",
+      "candidate": "6e91371344cb5e469089c993cb2264b06ddb44e7d0257cd600cf40910c59eb0f",
+      "manifest": "Docs/Evidence/f-native-development-workflow/candidate-round-2.json",
+      "manifest_sha256": "771d49fa56fece1ce1670e6babada3aebd87cc109d577ab1a4c68b96469bb99f",
+      "verdict": "PASS",
+      "proofs": [
+        { "path": "Docs/Evidence/f-native-development-workflow/checks/C2-01.json", "sha256": "ce4627c7c4ae1dbdd02968ba6cb33f9433c6f1ec632d4eff926b9ff8087dba06" },
+        { "path": "Docs/Evidence/f-native-development-workflow/checks/C2-02.json", "sha256": "f8ebfad706bb7a4b3944d867215e81da264d06a2242286480519ae2a259b0317" },
+        { "path": "Docs/Evidence/f-native-development-workflow/checks/C2-03.json", "sha256": "de9440da99c89270c5041913b13bd9649379c5672c9023b63fda07082dc050c6" },
+        { "path": "Docs/Evidence/f-native-development-workflow/checks/C2-04.json", "sha256": "81c15db0a2ead8ab5a22d42227db55253caeab959b1244a499a3e5f0d7059ce8" },
+        { "path": "Docs/Evidence/f-native-development-workflow/checks/C2-05.json", "sha256": "919666e4831d75e2a9ea5592b5941798f4dc569eb72d632b5a05c839ce85d5d1" }
+      ],
+      "disposition": "Acceptance check for the repaired candidate before the second audit; superseded by the final check."
+    },
+    {
+      "id": "C3",
+      "at": "2026-08-27T15:58:06Z",
+      "candidate": "6e91371344cb5e469089c993cb2264b06ddb44e7d0257cd600cf40910c59eb0f",
+      "manifest": "Docs/Evidence/f-native-development-workflow/candidate-round-2.json",
+      "manifest_sha256": "771d49fa56fece1ce1670e6babada3aebd87cc109d577ab1a4c68b96469bb99f",
+      "verdict": "PASS",
+      "proofs": [
+        { "path": "Docs/Evidence/f-native-development-workflow/checks/C3-01.json", "sha256": "25585a52973e691d09983762177516049a19f115667f1d43e3942a8fc1bd4006" },
+        { "path": "Docs/Evidence/f-native-development-workflow/checks/C3-02.json", "sha256": "db7640b324b80a6c5da095d97b7f23f159f8534fd39c85db9c8a4255a58c1134" },
+        { "path": "Docs/Evidence/f-native-development-workflow/checks/C3-03.json", "sha256": "509c03bd4773404f0dcdf37dfe7f508ed0bb8296d192db5dcd963e15344d1f68" },
+        { "path": "Docs/Evidence/f-native-development-workflow/checks/C3-04.json", "sha256": "06f3502b72e353e1ad52ecd24034686ff3cb36039f2010d7dfbbd4cdff18efc2" },
+        { "path": "Docs/Evidence/f-native-development-workflow/checks/C3-05.json", "sha256": "fcaf871673b8b8a224533d265bee813a3567d38d15079cf1fda8d02500c4e4ab" }
+      ],
+      "disposition": "Binding final check after the repaired candidate passed every required audit lens."
+    }
+  ],
+  "final_attempt": "C3"
+}

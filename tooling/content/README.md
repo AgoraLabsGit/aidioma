@@ -32,7 +32,7 @@ npx tsx tooling/content/fixtures/run-dialect-fixtures.ts
 `verify`, `render`, and
 `grade` require the full evidence chain and refuse to return learner content if any evidence is
 missing, failed, or stale. Use `--profile es-AR|es-419|es-ES`; grading also requires `--answer`.
-Governed promotion authority is retained as portable JSON and matched to the tracked Praxis
-activity projection, so CI does not depend on an untracked local SQLite ledger.
+Promotion authority is retained as portable JSON and matched to the canonical closed phase file,
+so CI depends only on authored repository evidence.
 The existing root `npm run content:fixtures` command invokes the dialect counter-examples, keeping
 the promotion gate inside the repository's canonical Content CI path.

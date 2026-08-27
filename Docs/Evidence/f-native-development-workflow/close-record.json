@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "target": "F-006",
+  "candidate": "6e91371344cb5e469089c993cb2264b06ddb44e7d0257cd600cf40910c59eb0f",
+  "final_check": "PASS",
+  "gates": {
+    "Claims / Proof evidence": "PASS",
+    "Code quality / Standards": "PASS",
+    "MCOO": "PASS",
+    "Seams / Integration": "n/a — metadata-only workflow change introduces no runtime integration boundary",
+    "Security / Privacy": "n/a — no learner data, secrets, authentication, or trust boundary changed",
+    "API / Provider usage": "n/a — no external provider or API behavior changed",
+    "Product / Learner journey": "n/a — no learner-visible product behavior changed"
+  },
+  "accepted_warnings": [],
+  "authority_comparison": "PASS",
+  "report": "Docs/Evidence/f-native-development-workflow/close-audits.md",
+  "bundle": "Docs/Evidence/f-native-development-workflow/close-bundle.json",
+  "publication_at_close": "not_requested"
+}

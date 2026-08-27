@@ -595,18 +595,16 @@ export type DialectDeterministicReport = z.infer<typeof DialectDeterministicRepo
 export const GovernedPhaseRunAcceptance = z.object({
   schemaVersion: z.literal(1),
   authorityId: stableId('authority'),
-  projectId: z.string().regex(/^praxis-[a-f0-9]+$/),
+  projectId: z.literal('aidioma'),
   operationId: z.string().uuid(),
-  actionId: z.literal('run.phase'),
+  actionId: z.literal('phase.approved'),
   state: z.literal('accepted'),
   phaseId: z.string().regex(/^PHASE-\d{3}$/),
   workId: z.string().regex(/^T-\d{3}$/),
-  acceptedRevision: z.number().int().positive(),
-  requestedBy: z.literal('human'),
-  activityEvidence: z.object({
-    path: z.string().regex(/^\.work\/activity\/\d{4}-\d{2}\.jsonl$/),
-    ts: z.string().datetime({ offset: true }),
-    summary: z.string().min(1),
+  requestedBy: z.literal('founder'),
+  approvalEvidence: z.object({
+    path: z.string().regex(/^Docs\/Roadmap\/Phases\/PHASE-\d{3}\.md$/),
+    state: z.literal('closed'),
   }).strict(),
 }).strict();
 export type GovernedPhaseRunAcceptance = z.infer<typeof GovernedPhaseRunAcceptance>;

@@ -5,9 +5,8 @@ description: Close the current Docs/NOW.md item or active roadmap phase only aft
 
 # /close
 
-Close is a files-first product gate. Never run Praxis, sqlite, hooks, workbench, or a second agent
-runner. Multi-agent audit sub-agents in this session are required when the selected risk tier calls
-for them.
+Close is a files-first product gate. Multi-agent audit sub-agents in this session are required when
+the selected risk tier calls for them.
 
 1. Read `AGENTS.md`, `Docs/AGENTS.md`, local `Docs/NOW.md` when present, and the active phase when present.
 2. Read `Docs/CLOSE.md` completely.
@@ -20,12 +19,13 @@ for them.
    All checks and auditors in a round must verify and name that manifest.
 5. Run the relevant deterministic `/check` proof before audits. FAIL blocks close.
 6. Select every gate as `yes` or `n/a — <concrete reason>`, then assign fresh read-only sub-agents
-   exactly as the selected risk tier groups them in `Docs/CLOSE.md`.
+   in the proportional reviewer groups defined by `Docs/CLOSE.md`. One reviewer may return separate
+   verdict blocks for the lenses in that group.
 7. Record each PASS/WARN/FAIL before remediation. Never replace or delete an earlier result.
-8. Remediate outside the audit agents. For a phase, delegate large remediations by area of concern
-   per `/run`. Use a new round-manifest path, and rerun affected lenses plus
-   the final deterministic check. WARN blocks unless the founder explicitly accepts its retained
-   risk and reason for that candidate.
+8. Log non-blocking improvements with a named owner. One bounded blocker-repair pass is allowed
+   outside the audit agents; rerun only affected checks and lenses on one new candidate. If another
+   fundamental blocker appears, stop close, return the target to active, and re-plan. WARN blocks
+   unless the founder explicitly accepts its retained risk and reason for that candidate.
 9. Close only when the final check is PASS and each latest selected-lens verdict on that candidate is
    PASS or an explicitly founder-accepted WARN. After the complete report and authority are final,
    retain each unedited full response once under `audits/`, link it from the compact report, and

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "candidate": "6e91371344cb5e469089c993cb2264b06ddb44e7d0257cd600cf40910c59eb0f",
+  "commit": "9e04b2fbd6fa5758e74d00e112730aac402db4cf",
+  "tree": "e0b60f615090b2798101d5285078a1d914072161",
+  "command": [
+    "git",
+    "diff",
+    "--check",
+    "54370cc3a6bf20b1e2996000129fd3de8cad6d4e",
+    "HEAD"
+  ],
+  "started_at": "2026-08-27T15:52:26Z",
+  "finished_at": "2026-08-27T15:52:42Z",
+  "exit_code": 0,
+  "signal": null,
+  "stdout": "",
+  "stderr": ""
+}

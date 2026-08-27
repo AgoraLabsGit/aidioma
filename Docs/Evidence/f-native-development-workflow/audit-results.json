@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "target": "F-006",
+  "candidate": "6e91371344cb5e469089c993cb2264b06ddb44e7d0257cd600cf40910c59eb0f",
+  "report": "Docs/Evidence/f-native-development-workflow/close-audits.md",
+  "attempts": [
+    {
+      "id": "A1",
+      "at": "2026-08-27T15:49:30Z",
+      "lens": "Claims / Proof evidence",
+      "auditor": "/root/f006_tier1_audit",
+      "verdict": "FAIL",
+      "candidate": "8d59dff50cc97c400a738488190197a0989e03268a3e50ac4066bb917f88890e",
+      "manifest": "Docs/Evidence/f-native-development-workflow/candidate-round-1.json",
+      "manifest_sha256": "0e71d132fd1365e89a2b37362f6bc774450c354a3f040498061ad8c3712666bb",
+      "response": "Docs/Evidence/f-native-development-workflow/audits/A1-claims.txt",
+      "response_sha256": "aef72040767cb107913f5353373c6199c6e41c0033f37e1dd9993fca3ac5fb98"
+    },
+    {
+      "id": "A2",
+      "at": "2026-08-27T15:49:31Z",
+      "lens": "Code quality / Standards",
+      "auditor": "/root/f006_tier1_audit",
+      "verdict": "FAIL",
+      "candidate": "8d59dff50cc97c400a738488190197a0989e03268a3e50ac4066bb917f88890e",
+      "manifest": "Docs/Evidence/f-native-development-workflow/candidate-round-1.json",
+      "manifest_sha256": "0e71d132fd1365e89a2b37362f6bc774450c354a3f040498061ad8c3712666bb",
+      "response": "Docs/Evidence/f-native-development-workflow/audits/A2-standards.txt",
+      "response_sha256": "9ae845efc6159d5d6901020464cfbdaead78aa5c3dc8c869ef87430431ffa634"
+    },
+    {
+      "id": "A3",
+      "at": "2026-08-27T15:49:32Z",
+      "lens": "MCOO",
+      "auditor": "/root/f006_tier1_audit",
+      "verdict": "FAIL",
+      "candidate": "8d59dff50cc97c400a738488190197a0989e03268a3e50ac4066bb917f88890e",
+      "manifest": "Docs/Evidence/f-native-development-workflow/candidate-round-1.json",
+      "manifest_sha256": "0e71d132fd1365e89a2b37362f6bc774450c354a3f040498061ad8c3712666bb",
+      "response": "Docs/Evidence/f-native-development-workflow/audits/A3-mcoo.txt",
+      "response_sha256": "d2b84eb504882abf8b1d1e430d15d7ca6080015cb1b0fc2a8ea6ff11001cfee1"
+    },
+    {
+      "id": "A4",
+      "at": "2026-08-27T15:54:51Z",
+      "lens": "Claims / Proof evidence",
+      "auditor": "/root/f006_tier1_audit",
+      "verdict": "PASS",
+      "candidate": "6e91371344cb5e469089c993cb2264b06ddb44e7d0257cd600cf40910c59eb0f",
+      "manifest": "Docs/Evidence/f-native-development-workflow/candidate-round-2.json",
+      "manifest_sha256": "771d49fa56fece1ce1670e6babada3aebd87cc109d577ab1a4c68b96469bb99f",
+      "response": "Docs/Evidence/f-native-development-workflow/audits/A4-claims.txt",
+      "response_sha256": "1794e31a752ed003414249a1493c5f86df1f3cd214c1bbbfd079d4d38be31bb0"
+    },
+    {
+      "id": "A5",
+      "at": "2026-08-27T15:54:52Z",
+      "lens": "Code quality / Standards",
+      "auditor": "/root/f006_tier1_audit",
+      "verdict": "PASS",
+      "candidate": "6e91371344cb5e469089c993cb2264b06ddb44e7d0257cd600cf40910c59eb0f",
+      "manifest": "Docs/Evidence/f-native-development-workflow/candidate-round-2.json",
+      "manifest_sha256": "771d49fa56fece1ce1670e6babada3aebd87cc109d577ab1a4c68b96469bb99f",
+      "response": "Docs/Evidence/f-native-development-workflow/audits/A5-standards.txt",
+      "response_sha256": "7fbbb5c6b9e56a31a6b37d97b11621d1dcf95268ffae881c3b668d4bbff90d4b"
+    },
+    {
+      "id": "A6",
+      "at": "2026-08-27T15:54:53Z",
+      "lens": "MCOO",
+      "auditor": "/root/f006_tier1_audit",
+      "verdict": "PASS",
+      "candidate": "6e91371344cb5e469089c993cb2264b06ddb44e7d0257cd600cf40910c59eb0f",
+      "manifest": "Docs/Evidence/f-native-development-workflow/candidate-round-2.json",
+      "manifest_sha256": "771d49fa56fece1ce1670e6babada3aebd87cc109d577ab1a4c68b96469bb99f",
+      "response": "Docs/Evidence/f-native-development-workflow/audits/A6-mcoo.txt",
+      "response_sha256": "642b9071057eaf2c0e19bd13f4fd7cfe47b85c15ee84ac89226294d41668c71e"
+    }
+  ],
+  "results": [
+    { "lens": "Claims / Proof evidence", "attempt": "A4" },
+    { "lens": "Code quality / Standards", "attempt": "A5" },
+    { "lens": "MCOO", "attempt": "A6" }
+  ]
+}

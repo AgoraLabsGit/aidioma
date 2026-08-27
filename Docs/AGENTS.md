@@ -2,25 +2,24 @@
 
 Read `../AGENTS.md` first. Day-to-day authority is authored files: per-target records under
 `Docs/Evidence/`, `Docs/PRODUCT.md`, `Docs/DECISIONS.md`, specs, and roadmap phases. `Docs/NOW.md`
-is an optional local status/handoff index, not target authority.
+is an optional local status/handoff index, not target authority. Founder chat is not a
+contract until those files and, when enforceable, a validator or test say so (D-029).
 
-Do not boot Praxis. Do not treat `.praxis/state.sqlite` or `Docs/WORK.yaml` as
-live writers.
+`Docs/WORK.yaml` is the live manually authored backlog. `Docs/NOW.md` is a short session handoff,
+not a second backlog. Templates live in `Docs/Development/`; `npm run docs:check` validates the
+register, specs, phases, target contracts, command mirrors, and empty mutation hooks.
 
-`Docs/System/` is unchanged historical evidence except for `Templates/phase.md`. Never edit or
-follow its command, close, publish, CI, protocol, derive, or dashboard files; current higher-level
-authority in `AGENTS.md` and `Docs/CLOSE.md` supersedes their historical metadata.
-
-The root contract also supersedes stale Praxis/sqlite/WORK workflow or old phase-state passages in
-the three living roadmap indexes it names. Their learner-sequence/backlog content remains usable;
-their old workflow metadata does not.
+`Docs/Development/DELIVERY.md` is the implementation operating contract. A phase owns one primary
+learner journey, proves it before close, and routes adjacent improvements to named future work.
+Close may verify or reject that journey; it may not grow it into a broader feature program.
 
 Runtime providers live in `SPEC-A-PLATFORM` (D-024). Use `npx neonctl` and the
 Vercel CLI. Ask the founder only for secrets those tools cannot supply.
 
 Phase `/run` agents are coordinators. They preserve their context window and delegate coding by
-area of concern to in-session sub-agents. They do not implement the phase themselves or start a
-second runner. Follow `.claude/skills/run/SKILL.md`.
+area of concern to in-session sub-agents. Before decomposition, they triage every relevant open
+`Docs/WORK.yaml` entry and claim it into the phase or retain a concrete future-phase reason. Follow
+`.claude/skills/run/SKILL.md`.
 
 Close behavior lives in `Docs/CLOSE.md`: pin one dirty-tree candidate, run deterministic proof,
 then use independent lens-specific audit sub-agents. Retain every result before remediation. An

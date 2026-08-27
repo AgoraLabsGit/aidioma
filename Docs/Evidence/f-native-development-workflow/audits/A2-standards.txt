@@ -1,0 +1,12 @@
+TARGET: Docs/Evidence/f-native-development-workflow/target.json
+LENS: Code quality / Standards
+RESULT: FAIL
+CANDIDATE: 8d59dff50cc97c400a738488190197a0989e03268a3e50ac4066bb917f88890e
+BLOCKERS: The native task and phase workflows can create metadata that violates or bypasses their own validator, and changed close tooling lacks binding test execution.
+FINDINGS:
+- `tooling/docs/workflow.mjs:229` generates phases without `workflow_version: 2`, although the canonical template requires it at `Docs/Development/Templates/phase-spec.md:3`. Lifecycle, target, and roadmap enforcement only apply to version 2 at `validate.mjs:83-120,262-274`, so terminal-created phases silently bypass the native safeguards.
+- `workflow.mjs:104-113` exposes `start`, which sets `status: active` without creating or requiring a target, while `validate.mjs:73-75` rejects every active row without one. The native task/fix helper therefore immediately creates invalid state.
+- `workflow.mjs:116-127` exposes `done` without requiring prior activation, a target, or retained proof, allowing work to be marked complete outside the documented task/fix contract.
+- F-006 adds and materially changes candidate pinning, check capture, receipt verification, and auditor-allocation code, but `package.json:30-31` excludes `.claude/skills/close/scripts/*.test.mjs` from `docs:check`. The binding check does not execute the new candidate-fingerprint tests or modified close-bundle tests.
+- `tooling/docs/workflow.test.mjs:34-43` labels phase creation canonical but never asserts `workflow_version: 2` or validates the generated repository, allowing the defect to pass.
+REMEDIATION: Make phase scaffolding emit and validate the canonical version-2 contract, remove or make start/done authority-safe, add end-to-end generated-state tests, and execute the changed close-tool tests in the target’s binding checks.

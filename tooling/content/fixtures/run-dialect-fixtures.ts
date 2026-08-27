@@ -195,7 +195,7 @@ function main() {
   }
   {
     const data = clone(base);
-    data.authority.acceptedRevision = 1;
+    data.authority.operationId = '00000000-0000-4000-8000-000000000000';
     check('forged governed run receipt breaks authority binding', hasCode(writePackage('forged-authority', data), 'RECEIPT_AUTHORITY_LINK'));
   }
   {

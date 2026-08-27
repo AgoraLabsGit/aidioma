@@ -1,0 +1,11 @@
+TARGET: Docs/Evidence/f-native-development-workflow/target.json
+LENS: Claims / Proof evidence
+RESULT: PASS
+CANDIDATE: 6e91371344cb5e469089c993cb2264b06ddb44e7d0257cd600cf40910c59eb0f
+BLOCKERS: none
+FINDINGS:
+- `Docs/NOW.md:11-26` now gives one consistent phase state and correctly distinguishes ordinary `/close` from the publishing `/phase-close` path.
+- `implementation.md:21-31` matches retained C2 proof: 15 docs tests, 27 close tests, typecheck, content fixtures, and full-change hygiene all passed.
+- `target.json:23-50` now runs close-tool tests and checks the complete F-006 change from fixed ancestor `54370cc3…`; that ancestor is verified in candidate history and the diff covers 150 changed paths.
+- `tooling/docs/validate.mjs:300-323` verifies skill identity, Cursor routing, and exact Codex symlink targets rather than checking presence alone.
+REMEDIATION: none

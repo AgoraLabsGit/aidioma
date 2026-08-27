@@ -38,10 +38,9 @@ npm run app:lint
 npm run app:test
 npm run app:build
 npm run app:smoke
-npm run smoke:practice-sets --workspace @aidioma/web
 ```
 
-Both browser smokes write screenshots under the ignored `apps/web/artifacts/` directory.
+The browser smoke writes screenshots under the ignored `apps/web/artifacts/` directory.
 
 For lesson content or its executable contract:
 
@@ -55,16 +54,16 @@ npm run content:fixtures
 
 ## Working in the repository
 
-Read `AGENTS.md`, then run `npx praxis status --json` and follow its `nextAction`. The V2 Praxis
-ledger at `.praxis/state.sqlite` owns Work, phases, checks, and generated projections. `Docs/WORK.yaml`
-is generated evidence, not an authored queue. Confirm product claims in executable code and the
-running app before changing a spec.
+Read `AGENTS.md`, then `Docs/NOW.md` and the live `Docs/WORK.yaml`. Canonical phase files under
+`Docs/Roadmap/Phases/` own roadmap outcomes; specs own durable behavior; per-target contracts own
+scope and proof. Use `Docs/COMMANDS-OVERVIEW.md` and `Docs/Development/` for the native workflow.
+Confirm product claims in executable code and the running app before changing a spec.
 
 - `apps/web/` — responsive Next.js application and browser proofs.
 - `content/` — authored curriculum, lessons, reviews, and content evidence.
 - `packages/lesson-schema/` — executable lesson contract.
 - `tooling/` — content validation and supporting scripts.
-- `Docs/` — current product, work, specification, fix, and handoff sources.
+- `Docs/` — current product, work, specification, roadmap, evidence, and handoff sources.
 
 Keep application work, authored content, and schema changes as deliberate scopes. Do not treat
 research as publishable lesson material or change the lesson contract incidentally.
@@ -73,13 +72,8 @@ Work on a short-lived branch, preserve unrelated changes, validate the real user
 through a pull request. Protected `main` requires `app-validate` and `content-validate`. Delete a
 branch or worktree only after its exact tip is clean and contained in fetched `origin/main`.
 
-Use the Praxis Activity Bar workbench in Cursor for the dashboard, Work, Roadmap, Activity, and
-Knowledge views. Cursor and Claude Code expose the generated `/plan`, `/run`, `/task`, `/fix`,
-`/log`, `/check`, `/handoff`, `/close`, and `/publish` workflows. In Codex, load the matching generated
-skill (for example `$task`) or ask in plain English. The CLI remains the direct status and diagnostic
-surface:
-
-```bash
-npx praxis status --json
-npx praxis doctor --json
-```
+All hosts use the repository's files-first workflows. Plain English works everywhere; Cursor and
+Claude may use `/close`, while Codex may use `$close` or plain English. Before close, read
+`Docs/CLOSE.md`: deterministic proof and independent audit sub-agents must inspect the same immutable
+candidate, and every finding is retained. `/publish` remains a separate founder-authorized action.
+Run `npm run docs:check` after changing the development workflow or its authored metadata.

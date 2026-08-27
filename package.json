@@ -25,10 +25,13 @@
     "content:seed": "npm run content:validate --silent && npm run db:migrate --silent && node --env-file-if-exists=apps/web/.env.local --import tsx apps/web/scripts/content-seed.ts",
     "prototype:export": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts",
     "prototype:check": "npm run contract:build --silent && tsx tooling/prototype/export-lessons.ts --check",
-    "practice:candidates": "npm run practice:candidates --workspace @aidioma/web --"
+    "practice:candidates": "npm run practice:candidates --workspace @aidioma/web --",
+    "docs:work": "node tooling/docs/workflow.mjs",
+    "docs:test": "node --test tooling/docs/*.test.mjs .claude/skills/run/run-coordinator.test.mjs",
+    "close:test": "node --test .claude/skills/close/scripts/candidate-fingerprint.test.mjs .claude/skills/close/scripts/close-bundle.test.mjs",
+    "docs:check": "npm run docs:test --silent && node tooling/docs/validate.mjs"
   },
   "devDependencies": {
-    "@praxis/cli": "file:tools/praxis-cli-0.1.0-alpha.2-d10bfff083e6-0d28f05f6bcb.tgz",
     "@types/node": "^22.20.1",
     "chokidar": "^4.0.3",
     "tsx": "^4.19.2",

@@ -5,7 +5,8 @@ type: design
 proof_kind: spec
 state: closed
 order: 1
-depends_on: []
+depends_on:
+  []
 from_backlog: null
 owner: founder
 outcome: "Produce one actionable MCOO marketable-MVP contract, its minimal component boundaries, and an adversarial verdict ready for founder approval."
@@ -59,26 +60,27 @@ Execute the governed phase outcome through the shared `/plan` and `/run` authori
 
 | Lens | Run? | Why / N/A | Sub-agent |
 |---|---|---|---|
-| Adv (phase claims) | yes | always | Adv |
-| MCOO | yes | always | MCOO |
-| Seams | yes | phase, spec, and runner boundaries | seams |
-| Security | n/a | no security-sensitive surface declared | — |
-| UI/UX | yes | `/plan` and `/run` are user-facing actions | UI/UX |
-| Agent-context | yes | native-chat skills and runner context change | agent-context |
+| Adv (phase claims) | yes | selected at /plan | Adv |
+| MCOO | yes | selected at /plan | MCOO |
 
 ### Audit history
 
 | Attempt | At (UTC) | Lens | Result | Candidate | Brief | Remediation |
 |---|---|---|---|---|---|---|
 
+
 ### Check history
 
 | Check | At (UTC) | Result | Candidate | Proof | Disposition |
 |---|---|---|---|---|---|
 
+
 ## Close record
 
 - Result: Founder approved the marketable MVP contract, MCOO boundaries, dialect-first content pipeline, and sequenced implementation direction.
+- Lifecycle receipt:
+- Publication:
+- Exact head:
 - Specs amended:
 - Journal line:
 
@@ -87,5 +89,5 @@ Execute the governed phase outcome through the shared `/plan` and `/run` authori
 ```text
 /run PHASE-001
 
-Read .work/context.json. Continue PHASE-001 from its durable phase plan.
+PHASE-001 is closed. Read this canonical phase file and its retained evidence for history.
 ```

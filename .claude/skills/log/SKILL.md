@@ -1,14 +1,17 @@
 ---
 name: log
-description: Park one governed Praxis task for later.
+description: Add unscheduled work to the live AIdioma work register.
 ---
 
 # /log
 
-This is the native-chat adapter for canonical action `log.create` (registry version 6).
+Add one `open` entry to `Docs/WORK.yaml`. Choose the correct kind and next kind-specific ID; do not
+put backlog prose in `Docs/NOW.md`.
 
-1. Gather the required action input.
-2. Invoke the canonical Praxis action `/log`.
-3. If this session is already Claude Code or Codex, do the work here. Do not start the Cursor agent runner. In Codex, type $task — never /task.
-4. Show the returned receipt and recovery action if denied.
-5. Never edit generated Work, Activity, or handoff projections directly.
+Preferred terminal form:
+
+```bash
+npm run docs:work -- log <task|fix|proposal|research|question|audit|design> "<summary>"
+```
+
+Add `feature`, `area`, `phase`, `note`, or blockers when known. Run `npm run docs:check`.

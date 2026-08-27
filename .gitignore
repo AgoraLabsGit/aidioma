@@ -12,11 +12,6 @@ coverage/
 .turbo/
 .worktrees/
 
-# Generated work state (activity JSONL is committed)
-.work/context.json
-.work/index.json
-.work/state.json
-
 # Env / secrets
 .env
 .env.*
@@ -28,4 +23,3 @@ coverage/
 .vercel
 .env*.local
 .ast-graph/
-.praxis/

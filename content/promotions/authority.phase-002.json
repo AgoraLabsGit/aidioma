@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "authorityId": "authority.phase-002",
+  "projectId": "aidioma",
+  "operationId": "03b3b485-2df5-4f32-beb7-56919f6f27e7",
+  "actionId": "phase.approved",
+  "state": "accepted",
+  "phaseId": "PHASE-002",
+  "workId": "T-005",
+  "requestedBy": "founder",
+  "approvalEvidence": {
+    "path": "Docs/Roadmap/Phases/PHASE-002.md",
+    "state": "closed"
+  }
+}
