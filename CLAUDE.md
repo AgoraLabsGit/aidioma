@@ -2,10 +2,9 @@
 
 Read and follow `AGENTS.md`. This repo is the AIdioma learner product.
 
-Praxis is parked. Do not run Praxis CLI, hooks, or sqlite governance.
-Praxis product development is the sibling `Praxis.v2` project.
-`Docs/System/` is frozen historical evidence except for `Docs/System/Templates/phase.md`; do not
-follow its old commands, protocols, dashboard, close, or publish lifecycle.
+The development workflow is repository-native. Read `Docs/COMMANDS-OVERVIEW.md`, use
+`Docs/Development/` templates, keep `Docs/WORK.yaml` live, and run `npm run docs:check` after
+metadata changes. Repository mutation hooks remain empty.
 
 Phase `/run` agents coordinate and delegate coding to in-session sub-agents; they do not implement
 the phase themselves. Follow `.claude/skills/run/SKILL.md`.

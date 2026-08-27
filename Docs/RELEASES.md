@@ -1,6 +1,6 @@
 # Releases
 
-<!-- Entry mold: Docs/System/Templates/release-entry.md (D-029). Append only. -->
+<!-- Entry mold: Docs/Development/Templates/release-entry.md. Append only. -->
 
 ## RELEASE-000 — MOCK Knowledge Releases connection fixture
 Date: 2026-08-08

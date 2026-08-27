@@ -1,7 +1,6 @@
 # Close gates — AIdioma
 
-This is the shared files-first contract for `/close` and `/phase-close`. It keeps the useful Praxis
-audit discipline while Praxis itself remains parked. An ordinary item `/close` stops at an
+This is the shared files-first contract for `/close` and `/phase-close`. An ordinary item `/close` stops at an
 immutable local receipt unless the founder requests publication. A roadmap `/phase-close` is a
 release command: after the receipt verifies, it publishes that exact receipt through a PR, merges
 it, deploys the merged `main` revision to production, and smoke-checks the production alias. Neither
@@ -14,6 +13,9 @@ do not downgrade those failures to warnings.
 
 ## Binding sequence
 
+0. Confirm the target's declared acceptance already passed in the active development session. Close
+   does not begin with missing implementation, a failing required check, an unresolved product
+   choice, or an unrun learner browser journey. Return those targets to `/run`.
 1. Resolve the one `Docs/Evidence/<target>/target.json` created with the work. For a task/fix it owns
    outcome, proof, non-goals, risk tier, required lenses, and exact scopes. For a phase it owns the
    phase-authority path, risk tier, required lenses, and exact scopes while the phase file owns product intent. Both kinds include the target JSON in
@@ -36,7 +38,13 @@ do not downgrade those failures to warnings.
    linked row to `close-audits.md` before making edits. The response file is canonical; the report is
    its human history/index. Phase files keep the preselected gate matrix but do not duplicate
    post-candidate result history.
-6. Remediate findings, create a new candidate, and rerun every affected lens.
+6. Classify findings before editing. A blocker contradicts the promised outcome/proof, fails a
+   required check, creates material security/data-integrity risk, or violates an enforceable
+   ownership rule. Log other improvements immediately with a named owner; they do not expand this
+   close. One bounded blocker-repair pass is allowed. Create one new candidate and rerun only the
+   affected checks and lens verdicts. If that repaired candidate exposes another fundamental
+   blocker, stop close, return the target to `active`, and re-plan it instead of starting another
+   audit/repair loop.
 7. Run a final deterministic check on the final candidate and append it to the complete report.
    A phase may now change only frontmatter `state`, `closed`, and `lessons`. Write the versioned
    one full response file per required lens under `audits/`, and `audit-results.json` binding
@@ -210,9 +218,9 @@ follow the canonical gate order; the bundle rejects N/A for any of them.
 | Tier | Work | Minimum independent review |
 |---|---|---|
 | 0 | Non-phase task only: semantic-neutral typo/link/format; no policy, spec, behavior, config, or executable change | Coordinator check; every audit row explicitly `n/a` |
-| 1 | Tests, internal refactor, substantive docs/spec/process | Two agents: Code quality/Standards; Claims/Proof evidence + MCOO. Add triggered lenses; Security and Provider each use a separate agent from every other lens. |
-| 2 | Learner UI, content behavior, serving, evaluation, persistence | At least three agents: Code quality/Standards; MCOO + Seams/Integration; Claims/Proof evidence + Product/Learner journey. These are permitted bundles, not required identity reuse. Security/Privacy and API/Provider each use a separate agent from every other lens when triggered. |
-| 3 | Auth, learner data, migration, grading, prompts/logging, external providers | One fresh agent per applicable lens, in waves; never combine Security with Provider or Product with Proof. |
+| 1 | Tests, internal refactor, substantive docs/spec/process | One independent reviewer may cover Claims, Standards, and MCOO; add a separate safety reviewer only when sensitive paths trigger it. |
+| 2 | Learner UI, content behavior, serving, evaluation, persistence | At least two independent reviewers: Product/Claims and Code/Standards/Integration. A triggered safety/provider review stays separate from both. |
+| 3 | Auth, learner data, migration, grading, prompts/logging, external providers | Three independent reviewers: Product/Claims, Code/Data/Integration, and Security/Provider. Each selected lens still receives its own verdict block. |
 
 Substantive changes to `AGENTS.md`, skills, command routing, decisions, specs, or close gates are
 never Tier 0. A provably semantic-neutral typo in those files may remain Tier 0.
@@ -244,16 +252,15 @@ Any lens explicitly requested by the founder is mandatory and cannot be marked `
   assignment. Do not include other auditors' conclusions.
 - Bundling is an agent allocation, never a merged verdict. A bundled auditor returns one complete
   response block for each assigned gate-matrix lens.
-- Tier 1 keeps Standards separate from both Claims and MCOO; Claims and MCOO may share one agent or
-  use two. Tier 2 uses three distinct assignment
-  groups (a group may use more agents) and a
-  separate agent for each triggered Security/Privacy or API/Provider lens. Tier 3 uses one agent per
-  applicable gate-matrix lens. Claims/Proof and Code quality/Standards are always assigned to
-  different agents for code changes.
+- Tier 1 uses at least one independent reviewer. Tier 2 uses at least two: Product/Claims and
+  Code/Standards/Integration. Tier 3 uses at least three: Product/Claims,
+  Code/Data/Integration, and Security/Provider. Security and Provider may share the safety reviewer
+  but never share an auditor with a non-sensitive lens. Claims and Standards use different
+  reviewers for Tier 2–3 work. Bundled assignments still return one verdict block per lens.
 - These allocation rules are checked against candidate-bound declared agent identifiers during
   bundle create and verify. The coordinator remains responsible for real dispatch and provenance.
 - Ask what can fail, not whether the work “looks good.” Auditors cannot edit.
-- Tier 3 Security/Privacy or Provider blockers require a second independent verification after repair.
+- After the one permitted blocker repair, only affected lenses rerun against the new candidate.
 
 Required response:
 
@@ -277,9 +284,10 @@ inspection evidence before `REMEDIATION:`. Final PASS/WARN files cannot contain 
 - **WARN:** blocks until the founder explicitly accepts the retained risk and reason. The close
   record must name the lens, candidate, risk, reason, acceptance statement, and UTC time.
 - **PASS:** no material blocker for that lens on that candidate.
-- Required in-scope work cannot be parked to evade a gate. Out-of-scope improvements may go to the
-  local `Docs/NOW.md` when present, clearly separated from accepted risk.
-- Append all attempts. A repair gets a new candidate and later result; never rewrite history.
+- Required in-scope work cannot be parked to evade a gate. Out-of-scope improvements go to
+  `Docs/WORK.yaml` with a named owner, not `Docs/NOW.md`.
+- Append the initial verdict and the one permitted repair verdict. A second fundamental failure
+  exits close and returns the target to active planning.
 
 ## Retained evidence
 

@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "id": "F-006",
+  "kind": "fix",
+  "evidence_dir": "Docs/Evidence/f-native-development-workflow",
+  "risk_tier": 1,
+  "outcome": "AIdioma has one repository-native development workflow in which tasks, fixes, specs, phase specs, decisions, research, status, proof, handoff, close, publication, and release resolve to authored files with no conflicting frozen-register rule or obsolete extension dependency.",
+  "proof": [
+    "The docs workflow unit tests prove kind-specific logging, spec scaffolding, overwrite refusal, canonical phase/target creation, and native command routing.",
+    "The repository metadata validator passes across WORK.yaml, specs, phases, targets, command mirrors, empty hooks, and removed obsolete support paths.",
+    "The lesson-schema typecheck and dialect fixtures pass with promotion approval bound to the canonical closed phase file rather than generated work state."
+  ],
+  "non_goals": [
+    "Change learner-facing behavior or include the active PHASE-005 implementation.",
+    "Close or deploy PHASE-005.",
+    "Rewrite retained product audit evidence."
+  ],
+  "required_lenses": [
+    "Claims / Proof evidence",
+    "Code quality / Standards",
+    "MCOO"
+  ],
+  "check_commands": [
+    [
+      "npm",
+      "run",
+      "docs:check"
+    ],
+    [
+      "npm",
+      "run",
+      "close:test"
+    ],
+    [
+      "npm",
+      "run",
+      "contract:typecheck"
+    ],
+    [
+      "npm",
+      "run",
+      "content:fixtures"
+    ],
+    [
+      "git",
+      "diff",
+      "--check",
+      "54370cc3a6bf20b1e2996000129fd3de8cad6d4e",
+      "HEAD"
+    ]
+  ],
+  "check_environment": [],
+  "check_timeout_ms": 600000,
+  "scopes": [
+    ".agents/skills",
+    ".claude/hooks",
+    ".claude/settings.json",
+    ".claude/skills",
+    ".codex/hooks",
+    ".codex/hooks.json",
+    ".cursor/commands",
+    ".cursor/hooks",
+    ".cursor/hooks.json",
+    ".cursor/rules",
+    ".gitignore",
+    ".work",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "Docs/AGENTS.md",
+    "Docs/CLOSE.md",
+    "Docs/COMMANDS-OVERVIEW.md",
+    "Docs/Development",
+    "Docs/Evidence/f-native-development-workflow/implementation.md",
+    "Docs/Evidence/f-native-development-workflow/target.json",
+    "Docs/Handoffs",
+    "Docs/NOW.md",
+    "Docs/RELEASES.md",
+    "Docs/Research/R-003-mvp-adversarial-audit.md",
+    "Docs/Research/R-003.md",
+    "Docs/Roadmap/Phases/PHASE-001.md",
+    "Docs/Roadmap/Phases/PHASE-002-target-product-design.md",
+    "Docs/Roadmap/Phases/PHASE-002.md",
+    "Docs/Roadmap/Phases/PHASE-003-core-component-architecture.md",
+    "Docs/Roadmap/Phases/PHASE-003.md",
+    "Docs/Roadmap/Phases/PHASE-011-praxis-v2-extract.md",
+    "Docs/Roadmap/Roadmap.md",
+    "Docs/START.md",
+    "Docs/System",
+    "Docs/WORK.yaml",
+    "README.md",
+    "content/promotions/authority.phase-002-run.json",
+    "content/promotions/authority.phase-002.json",
+    "content/promotions/promotion.unit-a1-you-live-here.v1.json",
+    "package-lock.json",
+    "package.json",
+    "packages/lesson-schema/src/index.ts",
+    "tooling/content/README.md",
+    "tooling/content/dialect-contract.ts",
+    "tooling/content/fixtures/run-dialect-fixtures.ts",
+    "tooling/docs",
+    "tools/praxis-cli-0.1.0-alpha.2-d10bfff083e6-0d28f05f6bcb.tgz"
+  ]
+}

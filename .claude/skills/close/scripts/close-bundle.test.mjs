@@ -699,9 +699,9 @@ test("reconciles required gates with independent candidate-bound audit responses
 
     writeAuditResults(repository, manifest);
     audits = JSON.parse(readFileSync(auditsPath, "utf8"));
-    audits.attempts.find((entry) => entry.lens === "API / Provider usage").auditor = "agent-security";
+    audits.attempts.find((entry) => entry.lens === "API / Provider usage").auditor = "agent-claims";
     writeFileSync(auditsPath, `${JSON.stringify(audits, null, 2)}\n`);
-    assert.match(reject(process.execPath, bundleArguments(output), repository), /separate Security/u);
+    assert.match(reject(process.execPath, bundleArguments(output), repository), /safety\/provider reviewer/u);
 
     writeAuditResults(repository, manifest);
     audits = JSON.parse(readFileSync(auditsPath, "utf8"));
@@ -749,11 +749,18 @@ test("enforces candidate-bound risk tier auditor allocation", () => {
     writeFileSync(targetPath, `${JSON.stringify(target, null, 2)}\n`);
     const { output, manifest } = createCandidate(repository);
     writeCloseRecord(repository, manifest);
-    assert.match(reject(process.execPath, bundleArguments(output), repository), /different agents/u);
     const auditsPath = join(repository, "Docs", "Evidence", "task", "audit-results.json");
     const audits = JSON.parse(readFileSync(auditsPath, "utf8"));
-    audits.attempts.find((attempt) => attempt.lens === "MCOO").auditor = "agent-mcoo-seams";
-    audits.attempts.find((attempt) => attempt.lens === "Seams / Integration").auditor = "agent-mcoo-seams";
+    audits.attempts.forEach((attempt) => { attempt.auditor = "agent-one"; });
+    writeFileSync(auditsPath, `${JSON.stringify(audits, null, 2)}\n`);
+    assert.match(reject(process.execPath, bundleArguments(output), repository), /at least 2 declared auditors/u);
+    for (const attempt of audits.attempts) {
+      attempt.auditor = ["Claims / Proof evidence", "Product / Learner journey"].includes(attempt.lens)
+        ? "agent-product"
+        : ["Security / Privacy", "API / Provider usage"].includes(attempt.lens)
+          ? "agent-safety"
+          : "agent-code";
+    }
     writeFileSync(auditsPath, `${JSON.stringify(audits, null, 2)}\n`);
     assert.equal(createBundle(repository, output).verified, true);
   });
@@ -766,10 +773,18 @@ test("enforces candidate-bound risk tier auditor allocation", () => {
     writeFileSync(targetPath, `${JSON.stringify(target, null, 2)}\n`);
     const { output, manifest } = createCandidate(repository);
     writeCloseRecord(repository, manifest);
-    assert.match(reject(process.execPath, bundleArguments(output), repository), /one declared auditor per required lens/u);
     const auditsPath = join(repository, "Docs", "Evidence", "task", "audit-results.json");
     const audits = JSON.parse(readFileSync(auditsPath, "utf8"));
-    audits.attempts.forEach((attempt, index) => { attempt.auditor = `agent-${index}`; });
+    audits.attempts.forEach((attempt) => { attempt.auditor = "agent-one"; });
+    writeFileSync(auditsPath, `${JSON.stringify(audits, null, 2)}\n`);
+    assert.match(reject(process.execPath, bundleArguments(output), repository), /at least 3 declared auditors/u);
+    for (const attempt of audits.attempts) {
+      attempt.auditor = ["Claims / Proof evidence", "Product / Learner journey"].includes(attempt.lens)
+        ? "agent-product"
+        : ["Security / Privacy", "API / Provider usage"].includes(attempt.lens)
+          ? "agent-safety"
+          : "agent-code";
+    }
     writeFileSync(auditsPath, `${JSON.stringify(audits, null, 2)}\n`);
     assert.equal(createBundle(repository, output).verified, true);
   });

@@ -35,7 +35,7 @@ const REPO = resolvePath(HERE, '..', '..');
 export const DEFAULT_DIALECT_PATHS = {
   unit: resolvePath(REPO, 'content', 'units', 'a1', 'unit.a1.you-live-here.json'),
   identity: resolvePath(REPO, 'tooling', 'content', 'config', 'dialect-id-snapshot.json'),
-  authority: resolvePath(REPO, 'content', 'promotions', 'authority.phase-002-run.json'),
+  authority: resolvePath(REPO, 'content', 'promotions', 'authority.phase-002.json'),
   report: resolvePath(REPO, 'content', 'review', 'qa', 'report.unit-a1-you-live-here.deterministic.json'),
   review: resolvePath(REPO, 'content', 'review', 'qa', 'review.unit-a1-you-live-here.adversarial.json'),
   receipt: resolvePath(REPO, 'content', 'promotions', 'promotion.unit-a1-you-live-here.v1.json'),
@@ -358,17 +358,15 @@ export function verifyDialectPackage(paths: DialectPackagePaths = DEFAULT_DIALEC
 
   if (authority) {
     try {
-      const activityPath = resolvePath(REPO, authority.activityEvidence.path);
-      const events = readFileSync(activityPath, 'utf8').split('\n').filter(Boolean).map((line) => JSON.parse(line));
-      const matched = events.some((event) =>
-        event.ts === authority.activityEvidence.ts && event.type === 'run' &&
-        event.ref === authority.workId && event.summary === authority.activityEvidence.summary &&
-        event.actor === 'cli' && event.cmd === '/run' && event.phase === authority.phaseId &&
-        event.status === 'active',
-      );
-      if (!matched) fail('PROMOTION_AUTHORITY', 'Governed run acceptance does not match retained Praxis activity.');
+      const phasePath = resolvePath(REPO, authority.approvalEvidence.path);
+      const phase = readFileSync(phasePath, 'utf8');
+      const phaseId = /^id:\s*(PHASE-\d{3})$/m.exec(phase)?.[1];
+      const phaseState = /^state:\s*([a-z]+)$/m.exec(phase)?.[1];
+      if (phaseId !== authority.phaseId || phaseState !== authority.approvalEvidence.state) {
+        fail('PROMOTION_AUTHORITY', 'Phase approval does not match the canonical closed phase file.');
+      }
     } catch (error) {
-      fail('PROMOTION_AUTHORITY_READ', `Could not verify retained Praxis activity: ${(error as Error).message}`);
+      fail('PROMOTION_AUTHORITY_READ', `Could not verify canonical phase approval: ${(error as Error).message}`);
     }
   }
 

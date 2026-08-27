@@ -5,8 +5,8 @@ description: Close an AIdioma roadmap phase after full candidate-pinned checks a
 
 # /phase-close
 
-1. Read `AGENTS.md`, `Docs/AGENTS.md`, local `Docs/NOW.md` when present, the phase, its target JSON, owning specs, and
-   `Docs/CLOSE.md` completely. Praxis remains parked.
+1. Read `AGENTS.md`, `Docs/AGENTS.md`, local `Docs/NOW.md` when present, the phase, its target JSON,
+   owning specs, and `Docs/CLOSE.md` completely.
 2. Confirm all phase work is represented, unrelated dirty files are excluded, every local item is
    done or explicitly out of scope, and the phase outcome/proof/non-goals still match the product.
 3. Require risk Tier 1, 2, or 3 (never Tier 0) and a filled `## Audit` selection table using the
@@ -14,17 +14,18 @@ description: Close an AIdioma roadmap phase after full candidate-pinned checks a
    selected. Tiers 2–3 also select Seams/Integration and Product/Learner journey; Tier 3 also
    selects Security/Privacy. Select API/Provider usage and other path lenses whenever applicable;
    every skip needs a concrete
-   `n/a` reason. Allocate agents exactly as `Docs/CLOSE.md` prescribes, with separate verdict blocks
-   for every bundled lens.
+   `n/a` reason. Allocate the proportional reviewer groups from `Docs/CLOSE.md`, with separate
+   verdict blocks for every bundled lens.
 4. Require `Docs/Evidence/<phase>/target.json` to name the same risk tier, phase authority, exact
    ordered check command argv arrays, and exact scopes including
    both files. Pin that full phase candidate with the close
    fingerprint script, run the baseline `/check` in an isolated materialization of its retained commit, then
    deploy the named independent read-only agents in audit waves against that exact candidate.
 5. Append every audit and check result to the external `close-audits.md`, never the phase authority.
-   Preserve FAIL/WARN attempts and remediation pointers. Fix outside auditors as coordinator:
-   delegate large remediations by area of concern per `/run`, then fingerprint again, rerun
-   affected lenses, and run a final formal check.
+   Preserve FAIL/WARN attempts and remediation pointers. Route non-blockers to named work. Allow
+   one bounded blocker repair outside auditors, then fingerprint again and rerun affected checks
+   and lenses. A second fundamental blocker returns the phase to active planning rather than
+   starting another close loop.
 6. After every selected lens and the final check pass, change only phase frontmatter `state: closed`,
    real ISO calendar `closed`, and non-empty JSON double-quoted `lessons`. Retain each full response
    once under `audits/`; write `audit-results.json` selecting the hashed final responses,

@@ -4,5 +4,5 @@ description: Place files-first AIdioma work and select its close gates.
 
 # /plan
 
-Read and follow `.claude/skills/plan/SKILL.md`. For phases, fill the audit selection table from
-`Docs/CLOSE.md`, then coordinate implementation per `/run`. Never invoke Praxis.
+Read and follow `.claude/skills/plan/SKILL.md` and `Docs/Development/DELIVERY.md`. Plan one primary
+learner journey with failure behavior and acceptance; split broader work before `/run`.

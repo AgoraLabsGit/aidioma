@@ -543,41 +543,26 @@ function validateDeclaredAuditorAllocation(target, auditors) {
   const entries = [...auditors.entries()];
   if (target.risk_tier === 0) return;
   const distinct = new Set(auditors.values());
-  if (distinct.size < 2) throw new Error("multi-agent close requires at least two declared auditors");
+  const minimumAuditors = target.risk_tier === 1 ? 1 : target.risk_tier === 2 ? 2 : 3;
+  if (distinct.size < minimumAuditors) {
+    throw new Error(`Tier ${target.risk_tier} requires at least ${minimumAuditors} declared auditor${minimumAuditors === 1 ? "" : "s"}`);
+  }
 
   const requireDifferent = (left, right) => {
     if (auditors.has(left) && auditors.has(right) && auditors.get(left) === auditors.get(right)) {
       throw new Error(`declared auditor allocation requires different agents: ${left} <> ${right}`);
     }
   };
-  requireDifferent("Claims / Proof evidence", "Code quality / Standards");
-  if (target.risk_tier === 1) requireDifferent("MCOO", "Code quality / Standards");
+  if (target.risk_tier >= 2) requireDifferent("Claims / Proof evidence", "Code quality / Standards");
 
-  for (const sensitive of ["Security / Privacy", "API / Provider usage"]) {
+  const sensitiveLenses = new Set(["Security / Privacy", "API / Provider usage"]);
+  for (const sensitive of sensitiveLenses) {
     if (!auditors.has(sensitive)) continue;
     for (const [other, otherAuditor] of entries) {
-      if (other !== sensitive && auditors.get(sensitive) === otherAuditor) {
-        throw new Error(`declared auditor allocation requires a separate ${sensitive} agent`);
+      if (!sensitiveLenses.has(other) && auditors.get(sensitive) === otherAuditor) {
+        throw new Error(`declared auditor allocation requires the safety/provider reviewer to be separate from ${other}`);
       }
     }
-  }
-
-  if (target.risk_tier === 2) {
-    const groups = [
-      ["Code quality / Standards"],
-      ["MCOO", "Seams / Integration"],
-      ["Claims / Proof evidence", "Product / Learner journey"],
-    ];
-    for (let left = 0; left < groups.length; left += 1) {
-      for (let right = left + 1; right < groups.length; right += 1) {
-        for (const leftLens of groups[left]) for (const rightLens of groups[right]) {
-          requireDifferent(leftLens, rightLens);
-        }
-      }
-    }
-  }
-  if (target.risk_tier === 3 && distinct.size !== entries.length) {
-    throw new Error("Tier 3 requires one declared auditor per required lens");
   }
 }
 
